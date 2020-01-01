@@ -1,7 +1,9 @@
-# bnlearn - Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.
+# bnlearn - Graphical structure of Bayesian networks, parameter learning, inference and sampling methods.
 
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/erdogant/bnlearn/blob/master/LICENSE)
+
+Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.
 
 ## Method overview
 <p align="center">
@@ -40,11 +42,7 @@ from bnlearn import bnlearn
 
 - Simple example for the sprinkler data set
 ```python
-df = pd.read_csv('https://github.com/erdogant/bnlearn/blob/master/bnlearn/data/sprinkler_1000.csv')['close']
-out = bnlearn.fit(df)
-figHEAT = bnlearn.plot_heatmap(out)
-figNETW = bnlearn.plot_network(out)
-figD3GR = bnlearn.plot_d3graph(out)
+TODO
 ```
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/manuscript/figs/fig2.png" width="900" />
@@ -52,11 +50,7 @@ figD3GR = bnlearn.plot_d3graph(out)
 
 
 ```python
-df=pd.read_csv('https://github.com/erdogant/bnlearn/blob/master/bnlearn/data/titanic_train.csv')['Close']
-out = bnlearn.fit(df)
-figHEAT = bnlearn.plot_heatmap(out)
-figNETW = bnlearn.plot_network(out)
-figD3GR = bnlearn.plot_d3graph(out)
+TODO
 ```
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/manuscript/figs/fig4.png" width="900" />
