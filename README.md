@@ -37,7 +37,7 @@ python setup.py install
 - Import bnlearn method
 
 ```python
-from bnlearn import bnlearn
+import bnlearn as bnlearn
 ```
 
 - Simple example for the sprinkler data set
