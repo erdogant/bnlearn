@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2020 Erdogan Taskesen
+bnlearn - Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

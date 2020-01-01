@@ -1,0 +1,25 @@
+include versioneer.py
+include bnlearn/_version.py
+
+include bnlearn/data/*.zip
+include bnlearn/data/*.json
+
+include bnlearn/data/ALARM/*.bif
+include bnlearn/data/ALARM/*.png
+include bnlearn/data/ALARM/*.txt
+
+include bnlearn/data/ANDES/*.bif
+include bnlearn/data/ANDES/*.png
+include bnlearn/data/ANDES/*.txt
+
+include bnlearn/data/ASIA/*.bif
+include bnlearn/data/ASIA/*.png
+include bnlearn/data/ASIA/*.txt
+
+include bnlearn/data/PATHFINDER/*.bif
+include bnlearn/data/PATHFINDER/*.png
+include bnlearn/data/PATHFINDER/*.txt
+
+include bnlearn/data/SACHS/*.bif
+include bnlearn/data/SACHS/*.png
+include bnlearn/data/SACHS/*.txt

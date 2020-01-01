@@ -1,0 +1,15 @@
+ATHFINDER
+Number of nodes: 109
+Number of arcs: 195
+Number of parameters: 72079
+Average Markov blanket size: 3.81
+Average degree: 3.57
+Maximum in-degree: 5
+
+BIF (119kB)
+DSC (81kB)
+NET (19kB)
+RDA (bn.fit) (34kB)
+RDS (bn.fit) (34kB)
+
+D. Heckerman, E. Horwitz, and B. Nathwani. Towards Normative Expert Systems: Part I. The Pathfinder Project. Methods of Information in Medicine, 31:90-105, 1992.

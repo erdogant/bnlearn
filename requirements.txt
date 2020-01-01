@@ -1,0 +1,4 @@
+#conda create -n env_BNLEARN python=3.6
+#conda activate env_BNLEARN
+pip install networkx==1.11 matplotlib==2.2.3 pgmpy numpy pandas tqdm
+#conda install spyder
