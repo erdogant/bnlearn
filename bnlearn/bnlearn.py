@@ -2,11 +2,11 @@
   
   import bnlearn as bnlearn
 
-  model            = bnlearn.load_examples('sprinkler')
+  model            = bnlearn.load_example('sprinkler')
   df               = bnlearn.sampling(model)
   q                = bnlearn.inference(model)
-  [out, model_1]   = bnlearn.structure_learning(df)
-  model_1          = bnlearn.parameter_learning(model, df)
+  model_sl         = bnlearn.structure_learning(df)
+  model_pl         = bnlearn.parameter_learning(model_sl['model'], df)
   [scores, adjmat] = bnlearn.compare_networks(model['adjmat'], out['adjmat'])
 
   
@@ -26,9 +26,9 @@
                    'cs' or 'constraintsearch'          : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
 
    scoretype:      [string]: Scoring function for the search spaces
-                   'bic'          : 
-                   'k2' (default) : 
-                   'bdeu'         : 
+                   'k2' (default)
+                   'bic'
+                   'bdeu'
 
    n:              [int]: Number of samples to generate from the model for the dataframe
                    n=1000 (default)
@@ -48,6 +48,15 @@
    pos:            [Graph]: Coordinates of the network. If there are provided, the same structure will be used to plot the network.
                    None (default)
                    
+   filepath:       [String]: Either use pre-defined examples as depicted below, or provide the absolute file path to the .bif model file
+                   'sprinkler'(default)
+                   'alarm'
+                   'andes'
+                   'asia'
+                   'pathfinder'
+                   'sachs'
+                   'miserables'
+                   'filepath/to/model.bif'
 
    verbose:        Integer [0..5] if verbose >= DEBUG: print('debug message')
                    0: (default)
@@ -55,30 +64,13 @@
                    2: WARN
                    3: INFO
                    4: DEBUG
-
-   #### DAG_example ####
-
-   models:          [String]: Models that can be used for testing
-                   'sprinkler'
-                   'alarm'
-                   'andes'
-                   'asia'
-                   'pathfinder'
-                   'sachs'
-                   'miserables'
-
-                       
                    
 
  OUTPUT
 	output
 
  DESCRIPTION
-   This function provides several bayesian techniques for structure learning, sampling and parameter learning
-   # http://pgmpy.org/estimators.html#structure-score
-   # https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
-   # http://www.bnlearn.com/bnrepository/
-   # http://www.bnlearn.com/
+   This package provides several bayesian techniques for structure learning, sampling and parameter learning
     
    Learning a Bayesian network can be split into two problems:
       **Parameter learning:** Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
@@ -110,7 +102,7 @@
 
    # ==========================================================================
    # CREATE SPRINKLER DAG
-   model = bnlearn.load_examples('sprinkler')
+   model = bnlearn.load_example('sprinkler')
    bnlearn.plot(model)
 
    # ==========================================================================
@@ -119,7 +111,7 @@
 
    # ==========================================================================
    # PARAMETER LEARNING
-   model   = bnlearn.load_examples('sprinkler', CPD=False)
+   model   = bnlearn.load_example('sprinkler', CPD=False)
    model_update = bnlearn.parameter_learning(model, df)
    bnlearn.plot(model_update)
 
@@ -147,7 +139,7 @@
 
    # ==========================================================================
    # LOAD BIF FILE
-   model=bnlearn.load_examples('alarm', verbose=0)
+   model=bnlearn.load_example('alarm', verbose=0)
    bnlearn.plot(model, width=20, height=12)
    
    df=bnlearn.sampling(model, n=1000)
@@ -155,20 +147,6 @@
    G=bnlearn.plot(out['model'])
    bnlearn.plot(model, pos=G['pos'])
 
-
-   # ==========================================================================
-   # EXAMPLE LARGE AMOUNT OF NODES
-   df=pd.read_csv('../DATA/OTHER/titanic/titanic_train.csv')
-   df = df[['Survived','Sex','Pclass']]
-
-   A = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
-   A = bnlearn.structure_learning(df, methodtype='cs')
-
-   from TRANSFORMERS.df2onehot import df2onehot
-   [_, Xhot, Xlabx, _]=df2onehot(df, min_y=10, hot_only=True)
-#   Xhot = Xhot[['Survived_1.0','Sex_female','Sex_male','Pclass_1.0']].astype(int)
-   out = bnlearn.structure_learning(Xhot, methodtype='hc', scoretype='bic')
-   bnlearn.plot(out)
 
  SEE ALSO
    hnet
@@ -252,6 +230,34 @@ def inference(model, variables=None, evidence=None, verbose=3):
 #%% Sampling from model
 def parameter_learning(model, df, methodtype='bayes', verbose=3):
     '''
+
+    Parameters
+    ----------
+    model       : [DICT] Contains model and adjmat.
+
+    df          : [pd.DataFrame] Pandas DataFrame containing the data
+                   f1  ,f2  ,f3
+                s1 0   ,0   ,1
+                s2 0   ,1   ,0
+                s3 1   ,1   ,0
+
+    methodtype  : [STRING] strategy for parameter learning.
+                'nl' or 'maximumlikelihood' (default) :Learning CPDs using Maximum Likelihood Estimators
+                'bayes' :Bayesian Parameter Estimation
+
+    verbose     : [INT] Print messages to screen.
+                0: NONE
+                1: ERROR
+                2: WARNING
+                3: INFO (default)
+                4: DEBUG
+                5: TRACE
+
+    Returns
+    -------
+    model
+
+
     Parameter learning is the task to estimate the values of the conditional 
     probability distributions (CPDs), for the variables cloudy, sprinkler, rain and wet grass. 
     State counts
@@ -328,6 +334,28 @@ def parameter_learning(model, df, methodtype='bayes', verbose=3):
     
 #%% Sampling from model
 def sampling(model, n=1000, verbose=3):
+    '''
+    
+    Parameters
+    ----------
+    model:      [DICT] Contains model and adjmat
+
+    n:          [INT] Number of samples to generate
+                n=1000 (default)
+
+    verbose:    [INT] Print messages to screen.
+                0: NONE
+                1: ERROR
+                2: WARNING
+                3: INFO (default)
+                4: DEBUG
+                5: TRACE
+    Returns
+    -------
+    Pandas DataFrame
+
+    '''
+    
     assert n>0, 'n must be 1 or larger'
     assert 'BayesianModel' in str(type(model['model'])), 'Model must contain DAG from BayesianModel. Note that <misarables> example does not include DAG.'
 
@@ -339,7 +367,41 @@ def sampling(model, n=1000, verbose=3):
     return(df)
     
 #%% Structure Learning
-def structure_learning(df, methodtype='hc', scoretype='bic', min_y=None, verbose=3):
+def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
+    '''
+
+    Parameters
+    ----------
+    df:         [pd.DataFrame] Pandas DataFrame containing the data
+                   f1  ,f2  ,f3
+                s1 0   ,0   ,1
+                s2 0   ,1   ,0
+                s3 1   ,1   ,0
+
+    methodtype:  [STRING] Search strategy for structure_learning.
+                'hc' or 'hillclimbsearch' (default) : HillClimbSearch implements a greedy local search if many more nodes are involved
+                'ex' or 'exhaustivesearch'          : Exhaustive search for very small networks
+                'cs' or 'constraintsearch'          : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
+
+   scoretype:   [STRING]: Scoring function for the search spaces
+                'bic' (default)
+                'k2' 
+                'bdeu'
+
+    verbose:    [INT] Print messages to screen.
+                0: NONE
+                1: ERROR
+                2: WARNING
+                3: INFO (default)
+                4: DEBUG
+                5: TRACE
+
+    Returns
+    -------
+    model
+
+    '''
+
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')|  (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'
@@ -357,8 +419,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', min_y=None, verbose
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Make onehot
-#    df,labx = makehot(df, min_y=min_y)
-    
+    # df,labx = makehot(df, y_min=y_min)
         
     '''
     Search strategies for structure learning
@@ -553,7 +614,7 @@ def is_independent(model, X, Y, Zs=[], significance_level=0.05):
     return model.test_conditional_independence(X, Y, Zs)[1] >= significance_level
 
 #%% Make one-hot matrix
-def makehot(df, min_y=None):
+def makehot(df, y_min=None):
     labx=[]
     colExpand=[]
 #    colOK=[]
@@ -572,7 +633,7 @@ def makehot(df, min_y=None):
                 #colOK.append(df.columns[i])
     
     if len(colExpand)>0:
-        [_, Xhot, Xlabx, _]=df2onehot(df[colExpand], min_y=min_y, hot_only=True)
+        [_, Xhot, Xlabx, _]=df2onehot(df[colExpand], y_min=y_min, hot_only=True)
         labx.append(Xlabx)
         Xhot=Xhot.astype(int)
     
@@ -582,43 +643,50 @@ def makehot(df, min_y=None):
     return(out, labx[0])
 
 #%% Make DAG
-def load_examples(datatype='sprinkler', CPD=True, verbose=3):
+def load_example(filepath='sprinkler', CPD=True, verbose=3):
     out=dict()
     model=None
-    datatype=datatype.lower()
+    filepath=filepath.lower()
     
     # Load data
-    if datatype=='sprinkler':
+    if filepath=='sprinkler':
         model = DAG_sprinkler(CPD=CPD)
-    if datatype=='asia':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'))
-    if datatype=='alarm':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ALARM/alarm.bif'))
-    if datatype=='andes':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ANDES/andes.bif'))
-    if datatype=='pathfinder':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'PATHFINDER/pathfinder.bif'))
-    if datatype=='sachs':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'SACHS/sachs.bif'))
-    if datatype=='miserables':
+    elif filepath=='asia':
+        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
+    elif filepath=='alarm':
+        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ALARM/alarm.bif'), verbose=verbose)
+    elif filepath=='andes':
+        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ANDES/andes.bif'), verbose=verbose)
+    elif filepath=='pathfinder':
+        model = bif2bayesian(os.path.join(PATH_TO_DATA,'PATHFINDER/pathfinder.bif'), verbose=verbose)
+    elif filepath=='sachs':
+        model = bif2bayesian(os.path.join(PATH_TO_DATA,'SACHS/sachs.bif'), verbose=verbose)
+    elif filepath=='miserables':
         f = open(os.path.join(PATH_TO_DATA,'miserables.json'))
         data = json.loads(f.read())
         L=len(data['links'])
         edges=[(data['links'][k]['source'], data['links'][k]['target']) for k in range(L)]
         model=nx.Graph(edges, directed=False)
+    else:
+        if os.path.isfile(filepath):
+            model = bif2bayesian(filepath, verbose=verbose)
+        else:
+            if verbose>=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
+            return(out)
+
 
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if not isinstance(model, type(None)) and verbose>=3:
         if CPD:
-            print('Model correct: %s' %(model.check_model()))
+            print('[BNLEARN] Model correct: %s' %(model.check_model()))
             for cpd in model.get_cpds():
                 print("CPD of {variable}:".format(variable=cpd.variable))
                 print(cpd)
 
-            print('Nodes: %s' %(model.nodes()))
-            print('Edges: %s' %(model.edges()))
-            print('Independencies:\n%s' %(model.get_independencies()))
+            print('[BNLEARN] Nodes: %s' %(model.nodes()))
+            print('[BNLEARN] Edges: %s' %(model.edges()))
+            print('[BNLEARN] Independencies:\n%s' %(model.get_independencies()))
 
     # Setup simmilarity matrix
     adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
@@ -663,7 +731,7 @@ def DAG_sprinkler(verbose=3, CPD=True):
     return(model)
 
 #%% Convert BIF model to bayesian model
-def bif2bayesian(pathname):
+def bif2bayesian(pathname, verbose=3):
     """
     Returns the fitted bayesian model
  
@@ -674,6 +742,7 @@ def bif2bayesian(pathname):
     >>> reader.get_model()
     <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
     """
+    if verbose>=3: print('[BNLEARN] Loading bif file <%s>' %(pathname))
 
     bifmodel=readwrite.BIF.BIFReader(path=pathname)
     #bifmodel.get_edges()
@@ -701,7 +770,7 @@ def bif2bayesian(pathname):
         return model
  
     except AttributeError:
-        raise AttributeError('First get states of variables, edges, parents and network name')
+        raise AttributeError('[BNLEARN] First get states of variables, edges, parents and network names')
 
 #%% Make directed graph from adjmatrix
 def to_undirected(adjmat):
@@ -733,7 +802,7 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
         model = model.get('model', None)
     
     # Bayesian model
-    if 'BayesianModel' in str(type(model)):
+    if 'pgmpy' or 'BayesianModel' in str(type(model)):
         if verbose>=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
         # positions for all nodes
         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)

@@ -5,6 +5,7 @@ from bnlearn.bnlearn import (
 	parameter_learning,
     load_examples,
 	compare_networks,
+	to_undirected,
     plot,
 )
 
@@ -20,7 +21,7 @@ del get_versions
 
 # module level doc-string
 __doc__ = """
-BNLEARN - bnlearn is an Python package that is build on pgmpy and for the usage of learning the graphical structure of Bayesian networks, estimate their parameters, perform some inference, sampling and comparing networks.
+BNLEARN - bnlearn is an Python package for learning the graphical structure of Bayesian networks, estimate their parameters, perform some inference, sampling and comparing networks.
 =====================================================================
 
 **bnlearn** 
