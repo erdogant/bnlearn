@@ -144,7 +144,7 @@ bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'])
 ```
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks.png" width="600" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks_conf.png" width="100" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks_conf.png" width="300" />
 </p>
 
 ## Citation
