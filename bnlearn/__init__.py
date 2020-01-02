@@ -3,7 +3,7 @@ from bnlearn.bnlearn import (
 	inference,
 	structure_learning,
 	parameter_learning,
-    load_examples,
+    load_example,
 	compare_networks,
 	to_undirected,
     plot,
