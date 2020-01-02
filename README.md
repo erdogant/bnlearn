@@ -65,7 +65,8 @@ model = bnlearn.structure_learning(df)
 G = bnlearn.plot(model)
 ```
 <p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/manuscript/figs/fig_sprinkler_sl.png" width="600" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_sprinkler_sl.png" width="600" />
+  
 </p>
 
 * Choosing various methodtypes and scoringtypes:
@@ -142,8 +143,8 @@ bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'])
 
 ```
 <p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/manuscript/figs/fig_comparing_networks.png" width="600" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/manuscript/figs/fig_comparing_networks_conf.png" width="100" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks.png" width="600" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks_conf.png" width="100" />
 </p>
 
 ## Citation
