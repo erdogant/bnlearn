@@ -1,6 +1,6 @@
 import setuptools
 import versioneer
-new_version='0.1.1'
+new_version='0.1.2'
 # conda install pytorch torchvision
 with open("README.md", "r") as fh:
     long_description = fh.read()
