@@ -10,7 +10,7 @@ Learning a Bayesian network can be split into two problems which are both implem
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
 * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
-##### In addition,the following methods are also included:
+#### In addition,the following methods are also included:
 * inference
 * sampling
 * comparing two networks
