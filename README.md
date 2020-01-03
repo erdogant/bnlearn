@@ -5,19 +5,8 @@
 
 * Bnlearn is Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods. This work is inspired by the R package (bnlearn.com) that has been very usefull to me for many years. Although there are very good Python packages for probabilistic graphical models, it still can remain difficult (and somethimes unnecessarily) to (re)build certain pipelines. Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines.
 
-## Method overview
-Learning a Bayesian network can be split into two problems which are both implemented in this package:
-* Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-* Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
-
-#### In addition,the following methods are also included:
-* inference
-* sampling
-* comparing two networks
-* loading bif files
-* conversion of directed to undirected graphs
-
 ## Contents
+- [Method overview](#-Method overview)
 - [Installation](#-installation)
 - [Requirements](#-Requirements)
 - [Quick Start](#-quick-start)
@@ -25,6 +14,18 @@ Learning a Bayesian network can be split into two problems which are both implem
 - [Citation](#-citation)
 - [Maintainers](#-maintainers)
 - [License](#-copyright)
+
+## Method overview
+Learning a Bayesian network can be split into two problems which are both implemented in this package:
+* Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
+* Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
+
+#### The following methods are also included:
+* inference
+* sampling
+* comparing two networks
+* loading bif files
+* conversion of directed to undirected graphs
 
 ## Installation
 * Install bnlearn from PyPI (recommended). bnlearn is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. 
