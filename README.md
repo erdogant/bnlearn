@@ -10,7 +10,7 @@ Learning a Bayesian network can be split into two problems which are both implem
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
 * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
-** In addition,the following methods are also included:
+##### In addition,the following methods are also included:
 * inference
 * sampling
 * comparing two networks
@@ -31,7 +31,8 @@ Learning a Bayesian network can be split into two problems which are both implem
 * It is distributed under the MIT license.
 
 ## Requirements
-* It is advisable to create a new environment. Pgmpy requires an older version of networkx and matplotlib.
+* It is advisable to create a new environment. 
+* Pgmpy requires an older version of networkx and matplotlib.
 ```python
 conda create -n env_BNLEARN python=3.7
 conda activate env_BNLEARN
@@ -79,7 +80,7 @@ model_ex_k2   = bnlearn.structure_learning(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu')
 ```
 
-* df looks like this:
+#### df looks like this:
 ```
      Cloudy  Sprinkler  Rain  Wet_Grass
 0         0          1     0          1
