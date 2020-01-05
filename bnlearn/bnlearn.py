@@ -403,7 +403,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')|  (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'
-    assert float(nx.__version__)==1.11, 'This function requires networkx to be v1.11 or so. Try to: pip install networkx==v1.11'
+    # assert float(nx.__version__)==1.11, 'This function requires networkx to be v1.11 or so. Try to: pip install networkx==v1.11'
 
     config            = dict()
     config['verbose'] = verbose
@@ -800,12 +800,13 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
         model = model.get('model', None)
     
     # Bayesian model
-    if 'pgmpy' or 'BayesianModel' in str(type(model)):
+    if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
         if verbose<=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
         # positions for all nodes
         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
         # Add directed edge with weigth
-        edges=model.edges()
+        # edges=model.edges()
+        edges=[*model.edges()]
         for i in range(len(edges)):
             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
     elif 'networkx' in str(type(model)):
@@ -831,7 +832,7 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
     # Bootup figure
     plt.figure(figsize=(width,height))
     # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=700, with_labels=True)
+    nx.draw_networkx_nodes(G, pos, node_size=500, with_labels=True, alpha=0.85)
     # edges
     colors  = [G[u][v].get('color','k') for u,v in G.edges()]
     weights = [G[u][v].get('weight',1) for u,v in G.edges()]

@@ -1,12 +1,13 @@
 import setuptools
 import versioneer
-new_version='0.1.2'
+new_version='0.1.3'
 # conda install pytorch
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
      install_requires=['networkx==1.11','matplotlib==2.2.3','pgmpy','numpy','pandas','tqdm','sklearn','funcsigs','statsmodels','community'],
+#     install_requires=['networkx','matplotlib','pgmpy','numpy','pandas','tqdm','sklearn','funcsigs','statsmodels','community'],
      python_requires='>=3',
      name='bnlearn',
      version=new_version,

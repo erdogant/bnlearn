@@ -1,6 +1,7 @@
 #conda create -n env_BNLEARN python=3.6
 #conda activate env_BNLEARN
 
+conda install pytorch
 pgmpy
 numpy
 pandas
@@ -9,6 +10,5 @@ statsmodels
 community
 networkx==1.11
 matplotlib==2.2.3
-conda install pytorch
 
 #conda install spyder
