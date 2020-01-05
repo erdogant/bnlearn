@@ -181,7 +181,7 @@ CPD of Wet_Grass:
 (Wet_Grass _|_ Cloudy | Rain, Sprinkler)
 ```
 
-## Example: Loading model examples from bif files
+## Example: Loading DAG from bif files
 ```python
 bif_file= 'sprinkler'
 bif_file= 'alarm'
