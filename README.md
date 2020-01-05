@@ -204,7 +204,7 @@ model=bnlearn.load_example('asia')
 G=bnlearn.plot(model)
 
 # Sampling
-df=bnlearn.sampling(model, n=2000)
+df=bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
