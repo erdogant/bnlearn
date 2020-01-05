@@ -18,7 +18,6 @@ Learning a Bayesian network can be split into two problems which are both implem
  .inference()
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
-
   # Load five well known examples to play arround with or load your own .bif file.
  .load_example()
   # Compare 2 graphs
@@ -55,9 +54,9 @@ See below for the exact working of the functions
 * It is advisable to create a new environment. 
 * Pgmpy requires an older version of networkx and matplotlib.
 ```python
-conda create -n env_BNLEARN python=3.7
+conda create -n env_BNLEARN python=3.6
 conda activate env_BNLEARN
-conda install pytorch torchvision -c pytorch
+conda install pytorch
 pip install sklearn pandas tqdm funcsigs pgmpy statsmodels community
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
