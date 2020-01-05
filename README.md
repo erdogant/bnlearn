@@ -58,7 +58,7 @@ See below for the exact working of the functions
 conda create -n env_BNLEARN python=3.7
 conda activate env_BNLEARN
 conda install pytorch torchvision -c pytorch
-pip install sklearn pandas tqdm funcsigs pgmpy statsmodels
+pip install sklearn pandas tqdm funcsigs pgmpy statsmodels community
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
 ```
@@ -198,20 +198,36 @@ model = bnlearn.load_example(bif_file)
 
 ## Example: Comparing networks
 ```python
+# Load asia DAG
 model=bnlearn.load_example('asia')
-bnlearn.plot(model)
+# plot ground truth
+G=bnlearn.plot(model)
+
 # Sampling
-df=bnlearn.sampling(model, n=1000)
+df=bnlearn.sampling(model, n=2000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
+# Plot based on structure learning of sampled data
+bnlearn.plot(model_sl, pos=G['pos'])
+
 # Compare networks and make plot
-bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'])
+bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'], pos=G['pos'])
 
 ```
+#### Graph of ground truth
 <p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks.png" width="600" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_comparing_networks_conf.png" width="300" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
 </p>
+#### Graph based on Structure learning
+<p align="center">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2b_asia_structurelearning.png" width="600" />
+</p>
+#### Graph comparison ground truth vs. structure learning
+<p align="center">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2c_asia_comparion.png" width="600" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2d_confmatrix.png" width="300" />
+</p>
+
 
 ## Citation
 Please cite bnlearn in your publications if this is useful for your research. Here is an example BibTeX entry:
