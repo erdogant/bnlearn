@@ -86,22 +86,8 @@ df = pd.read_csv('https://github.com/erdogant/hnet/blob/master/bnlearn/data/spri
 model = bnlearn.structure_learning(df)
 G = bnlearn.plot(model)
 ```
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_sprinkler_sl.png" width="600" />
-  
-</p>
 
-* Choosing various methodtypes and scoringtypes:
-```python
-model_hc_bic  = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
-model_hc_k2   = bnlearn.structure_learning(df, methodtype='hc', scoretype='k2')
-model_hc_bdeu = bnlearn.structure_learning(df, methodtype='hc', scoretype='bdeu')
-model_ex_bic  = bnlearn.structure_learning(df, methodtype='ex', scoretype='bic')
-model_ex_k2   = bnlearn.structure_learning(df, methodtype='ex', scoretype='k2')
-model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu')
-```
-
-#### df looks like this:
+#### df looks like this
 ```
      Cloudy  Sprinkler  Rain  Wet_Grass
 0         0          1     0          1
@@ -115,6 +101,20 @@ model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu'
 997       0          0     1          0
 998       1          1     0          1
 999       1          0     1          1
+```
+
+<p align="center">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_sprinkler_sl.png" width="600" />
+</p>
+
+* Choosing various methodtypes and scoringtypes:
+```python
+model_hc_bic  = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
+model_hc_k2   = bnlearn.structure_learning(df, methodtype='hc', scoretype='k2')
+model_hc_bdeu = bnlearn.structure_learning(df, methodtype='hc', scoretype='bdeu')
+model_ex_bic  = bnlearn.structure_learning(df, methodtype='ex', scoretype='bic')
+model_ex_k2   = bnlearn.structure_learning(df, methodtype='ex', scoretype='k2')
+model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu')
 ```
 
 ## Example: Parameter Learning
@@ -135,6 +135,50 @@ q_2 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1})
 ```python
 model = bnlearn.load_example('sprinkler')
 df = bnlearn.sampling(model, n=1000)
+```
+
+* Output of the model:
+```
+[BNLEARN] Model correct: True
+CPD of Cloudy:
++-----------+-----+
+| Cloudy(0) | 0.5 |
++-----------+-----+
+| Cloudy(1) | 0.5 |
++-----------+-----+
+CPD of Sprinkler:
++--------------+-----------+-----------+
+| Cloudy       | Cloudy(0) | Cloudy(1) |
++--------------+-----------+-----------+
+| Sprinkler(0) | 0.5       | 0.9       |
++--------------+-----------+-----------+
+| Sprinkler(1) | 0.5       | 0.1       |
++--------------+-----------+-----------+
+CPD of Rain:
++---------+-----------+-----------+
+| Cloudy  | Cloudy(0) | Cloudy(1) |
++---------+-----------+-----------+
+| Rain(0) | 0.8       | 0.2       |
++---------+-----------+-----------+
+| Rain(1) | 0.2       | 0.8       |
++---------+-----------+-----------+
+CPD of Wet_Grass:
++--------------+--------------+--------------+--------------+--------------+
+| Sprinkler    | Sprinkler(0) | Sprinkler(0) | Sprinkler(1) | Sprinkler(1) |
++--------------+--------------+--------------+--------------+--------------+
+| Rain         | Rain(0)      | Rain(1)      | Rain(0)      | Rain(1)      |
++--------------+--------------+--------------+--------------+--------------+
+| Wet_Grass(0) | 1.0          | 0.1          | 0.1          | 0.01         |
++--------------+--------------+--------------+--------------+--------------+
+| Wet_Grass(1) | 0.0          | 0.9          | 0.9          | 0.99         |
++--------------+--------------+--------------+--------------+--------------+
+[BNLEARN] Nodes: ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
+[BNLEARN] Edges: [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
+[BNLEARN] Independencies:
+(Cloudy _|_ Wet_Grass | Rain, Sprinkler)
+(Sprinkler _|_ Rain | Cloudy)
+(Rain _|_ Sprinkler | Cloudy)
+(Wet_Grass _|_ Cloudy | Rain, Sprinkler)
 ```
 
 ## Example: Loading model examples from bif files
