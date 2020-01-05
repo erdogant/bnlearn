@@ -58,7 +58,7 @@ See below for the exact working of the functions
 conda create -n env_BNLEARN python=3.7
 conda activate env_BNLEARN
 conda install pytorch torchvision -c pytorch
-pip install sklearn pandas tqdm funcsigs pgmpy
+pip install sklearn pandas tqdm funcsigs pgmpy statsmodels
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
 ```
