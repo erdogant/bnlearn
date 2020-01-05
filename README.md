@@ -218,10 +218,12 @@ bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'], pos=G['pos'])
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
 </p>
+
 #### Graph based on Structure learning
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2b_asia_structurelearning.png" width="600" />
 </p>
+
 #### Graph comparison ground truth vs. structure learning
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2c_asia_comparion.png" width="600" />
