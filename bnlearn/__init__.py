@@ -14,9 +14,9 @@ __email__ = 'erdogant@gmail.com'
 #__version__ = '0.1.0'
 
 # Automatic version control
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions
+# from ._version import get_versions
+# __version__ = get_versions()['version']
+# del get_versions
 
 
 # module level doc-string

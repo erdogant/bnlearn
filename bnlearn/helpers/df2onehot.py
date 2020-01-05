@@ -45,20 +45,11 @@
  DESCRIPTION
    Converts dataframe to one-hot matrix
 
- EXAMPLE
-   %reset -f
-   %matplotlib auto
-   from TRANSFORMERS.df2onehot import df2onehot
-
-   nfeat=100
-   nobservations=50
-   df = pd.DataFrame(np.random.randint(0,2,(nfeat,nobservations)))
-   A = df2onehot(df)
 
 """
 
 #-----------------------------------
-# Name        : cat2onehot.py
+# Name        : df2onehot.py
 # Version     : 1.0
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
@@ -70,8 +61,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
-from hnet.helpers.set_dtypes import set_dtypes
-#from GENERAL.ismember import ismember
+from bnlearn.helpers.set_dtypes import set_dtypes
 label_encoder = LabelEncoder()
 onehot_encoder = OneHotEncoder(sparse=False, categories='auto')
 

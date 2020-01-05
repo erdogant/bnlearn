@@ -29,44 +29,6 @@
    pip install --upgrade networkx
    
 
- EXAMPLE
-   %reset -f
-   %matplotlib auto
-   import matplotlib.pyplot as plt
-   import numpy as np
-   import networkx as nx
-   import NETWORKS.network as network
-   
-   adjmat=np.random.randint(0,2,(10,10))
-
-   G = nx.karate_club_graph()
-   adjmat = nx.adjacency_matrix(G).todense()
-   
-   
-   # Create network
-   G = network.to_graph(adjmat)
-   
-   # Cluster
-   [G,labx]=network.cluster(G)
-   [*G.node.values()]
-   
-   # Plot
-   fig=network.plot(G, node_color=labx, node_size=500)
-   
-   # Plot interactive
-   from NETWORKS.d3graph import d3graph
-   import pandas as pd
-   G = nx.karate_club_graph()
-   nodes=pd.DataFrame([*G.node.values()])['club']
-   adjmat = nx.adjacency_matrix(G).todense()
-   adjmat=pd.DataFrame(index=nodes, data=adjmat, columns=nodes)
-
-   A=d3graph(adjmat, node_color=labx.astype(str))
-   A=d3graph(adjmat)
-   
-
- SEE ALSO
-    d3graph
 """
 
 #--------------------------------------------------------------------------
@@ -378,8 +340,8 @@ def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[2
 
 #%% Comparison of two networks
 def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
-    from hnet.helpers.ismember import ismember
-    import hnet.helpers.twoClassSummary as twoClassSummary
+    from bnlearn.helpers.ismember import ismember
+    import bnlearn.helpers.confmatrix as confmatrix
 
     # Make sure columns and indices to match
     [IArow,IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
@@ -399,8 +361,8 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     y_true = adjmat_true.stack().reset_index()[0].values
     y_pred = adjmat_pred.stack().reset_index()[0].values
     
-    # Compute score
-    scores = twoClassSummary.allresults(y_true, y_pred, showfig=showfig, verbose=verbose)
+    # Confusion matrix
+    out['confmatrix']=confmatrix.twoclass(y_true, y_pred, threshold=0.5, classnames=['Disconnected','Connected'], title='', cmap=plt.cm.Blues, showfig=1, verbose=0)
     #bayes.plot(out_bayes['adjmat'], pos=G['pos'])
     
     # Setup graph
