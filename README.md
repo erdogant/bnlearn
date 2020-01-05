@@ -11,6 +11,26 @@ Learning a Bayesian network can be split into two problems which are both implem
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
 * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
+#### The following functions are available:
+```python
+ .structure_learning()
+ .parameter_learning()
+ .inference()
+  # Based on a DAG, you can sample the number of samples you want.
+ .sampling()
+
+  # Load five well known examples to play arround with or load your own .bif file.
+ .load_example()
+  # Compare 2 graphs
+ .compare_networks()
+  # Plot graph
+ .plot()
+  # To make the directed grapyh undirected
+ .to_undirected()
+ 
+See below for the exact working of the functions
+```
+
 #### The following methods are also included:
 * inference
 * sampling
