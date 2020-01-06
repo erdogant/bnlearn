@@ -123,8 +123,9 @@ model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu'
 
 ## Example: Parameter Learning
 ```python
+df = pd.example_data()
 model = bnlearn.import_DAG('sprinkler')
-model_update = bnlearn.parameter_learning(model)
+model_update = bnlearn.parameter_learning(model, df)
 G = bnlearn.plot(model)
 ```
 
