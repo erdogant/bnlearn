@@ -86,7 +86,7 @@ import bnlearn as bnlearn
 ## Example: Structure Learning
 ```python
 # Example dataframe sprinkler_data.csv can be loaded with: 
-df = pd.import_example()
+df = bnlearn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
 model = bnlearn.structure_learning(df)
 G = bnlearn.plot(model)
