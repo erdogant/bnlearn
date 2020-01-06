@@ -20,6 +20,7 @@ Learning a Bayesian network can be split into two problems which are both implem
  .sampling()
   # Load five well known examples to play arround with or load your own .bif file.
  .import_DAG()
+  # Load simple dataframe of sprinkler dataset.
  .import_example
   # Compare 2 graphs
  .compare_networks()
