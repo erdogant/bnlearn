@@ -124,9 +124,13 @@ model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu'
 
 ## Example: Parameter Learning
 ```python
+# Import dataframe
 df = pd.import_example()
-model = bnlearn.import_DAG('sprinkler')
+# As an example we set the CPD at False which returns an "empty" DAG
+model = bnlearn.import_DAG('sprinkler', CPD=False)
+# Now we learn the parameters of the DAG using the df
 model_update = bnlearn.parameter_learning(model, df)
+# Make plot
 G = bnlearn.plot(model)
 ```
 
