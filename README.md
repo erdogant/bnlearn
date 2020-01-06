@@ -20,7 +20,7 @@ Learning a Bayesian network can be split into two problems which are both implem
  .sampling()
   # Load five well known examples to play arround with or load your own .bif file.
  .import_DAG()
- .example_data()
+ .import_example
   # Compare 2 graphs
  .compare_networks()
   # Plot graph
@@ -85,7 +85,7 @@ import bnlearn as bnlearn
 ## Example: Structure Learning
 ```python
 # Example dataframe sprinkler_data.csv can be loaded with: 
-df = pd.example_data()
+df = pd.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
 model = bnlearn.structure_learning(df)
 G = bnlearn.plot(model)
@@ -123,7 +123,7 @@ model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu'
 
 ## Example: Parameter Learning
 ```python
-df = pd.example_data()
+df = pd.import_example()
 model = bnlearn.import_DAG('sprinkler')
 model_update = bnlearn.parameter_learning(model, df)
 G = bnlearn.plot(model)
