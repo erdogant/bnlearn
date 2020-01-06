@@ -19,7 +19,8 @@ Learning a Bayesian network can be split into two problems which are both implem
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
   # Load five well known examples to play arround with or load your own .bif file.
- .load_example()
+ .import_DAG()
+ .example_data()
   # Compare 2 graphs
  .compare_networks()
   # Plot graph
@@ -83,8 +84,9 @@ import bnlearn as bnlearn
 
 ## Example: Structure Learning
 ```python
-# Example dataset sprinkler_data.csv can be found at: https://github.com/erdogant/hnet/blob/master/bnlearn/data/sprinkler_data.csv
-df = pd.read_csv('sprinkler_data.csv')
+# Example dataframe sprinkler_data.csv can be loaded with: 
+df = pd.example_data()
+# df = pd.read_csv('sprinkler_data.csv')
 model = bnlearn.structure_learning(df)
 G = bnlearn.plot(model)
 ```
@@ -121,21 +123,21 @@ model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu'
 
 ## Example: Parameter Learning
 ```python
-model = bnlearn.load_example('sprinkler')
+model = bnlearn.import_DAG('sprinkler')
 model_update = bnlearn.parameter_learning(model)
 G = bnlearn.plot(model)
 ```
 
 ## Example: Inference
 ```python
-model = bnlearn.load_example('sprinkler')
+model = bnlearn.import_DAG('sprinkler')
 q_1 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
 q_2 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1})
 ```
 
 ## Example: Sampling to create dataframe
 ```python
-model = bnlearn.load_example('sprinkler')
+model = bnlearn.import_DAG('sprinkler')
 df = bnlearn.sampling(model, n=1000)
 ```
 
@@ -195,13 +197,13 @@ bif_file= 'miserables'
 bif_file= 'filepath/to/model.bif'
 
 # Loading example dataset
-model = bnlearn.load_example(bif_file)
+model = bnlearn.import_DAG(bif_file)
 ```
 
 ## Example: Comparing networks
 ```python
 # Load asia DAG
-model=bnlearn.load_example('asia')
+model=bnlearn.import_DAG('asia')
 # plot ground truth
 G=bnlearn.plot(model)
 
