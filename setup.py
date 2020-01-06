@@ -1,6 +1,6 @@
 import setuptools
 import versioneer
-new_version='0.1.3'
+new_version='0.1.4'
 # conda install pytorch
 
 with open("README.md", "r") as fh:

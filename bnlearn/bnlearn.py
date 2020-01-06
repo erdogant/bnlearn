@@ -2,7 +2,8 @@
   
   import bnlearn as bnlearn
 
-  model            = bnlearn.load_example('sprinkler')
+  model            = bnlearn.import_DAG('sprinkler')
+  df               = bnlearn.import_example()
   df               = bnlearn.sampling(model)
   q                = bnlearn.inference(model)
   model_sl         = bnlearn.structure_learning(df)
@@ -102,7 +103,7 @@
 
    # ==========================================================================
    # CREATE SPRINKLER DAG
-   model = bnlearn.load_example('sprinkler')
+   model = bnlearn.import_DAG('sprinkler')
    bnlearn.plot(model)
 
    # ==========================================================================
@@ -111,7 +112,7 @@
 
    # ==========================================================================
    # PARAMETER LEARNING
-   model   = bnlearn.load_example('sprinkler', CPD=False)
+   model   = bnlearn.import_DAG('sprinkler', CPD=False)
    model_update = bnlearn.parameter_learning(model, df)
    bnlearn.plot(model_update)
 
@@ -139,7 +140,7 @@
 
    # ==========================================================================
    # LOAD BIF FILE
-   model=bnlearn.load_example('alarm', verbose=0)
+   model=bnlearn.import_DAG('alarm', verbose=0)
    bnlearn.plot(model, width=20, height=12)
    
    df=bnlearn.sampling(model, n=1000)
@@ -273,7 +274,7 @@ def parameter_learning(model, df, methodtype='bayes', verbose=3):
     config['verbose'] = verbose
     config['method']  = methodtype
     model = model['model']
-    if verbose<=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
+    if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
 
 #    pe = ParameterEstimator(model, df)
 #    print("\n", pe.state_counts('Cloudy'))
@@ -325,8 +326,8 @@ def parameter_learning(model, df, methodtype='bayes', verbose=3):
         model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000) # default equivalent_sample_size=5
 
         for cpd in model.get_cpds():
-            if verbose<=3: print("CPD of {variable}:".format(variable=cpd.variable))
-            if verbose<=3: print(cpd)
+            if verbose>=3: print("CPD of {variable}:".format(variable=cpd.variable))
+            if verbose>=3: print(cpd)
     
     return(model)
     
@@ -412,7 +413,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
     
     # Show warning
     if df.shape[1]>10 and df.shape[1]<15:
-        if verbose<=3: print('[BNLEARN][STRUCTURE LEARNING] Note that computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Note that computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
@@ -439,7 +440,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
         Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). See [1], Section 18.3 for a detailed introduction on scores. As before, BDeu is dependent on an equivalent sample size.
     '''
     
-    if verbose<=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
+    if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
 
     #ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
@@ -597,7 +598,7 @@ def exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
 
 #%% Set scoring type
 def SetScoringType(df, scoretype, verbose=3):
-    if verbose<=3: print('[BNLEARN][STRUCTURE LEARNING] Set scoring type at [%s]' %(scoretype))
+    if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Set scoring type at [%s]' %(scoretype))
     
     if scoretype=='bic':
         scoring_method = BicScore(df)
@@ -641,14 +642,14 @@ def makehot(df, y_min=None):
     return(out, labx[0])
 
 #%% Make DAG
-def load_example(filepath='sprinkler', CPD=True, verbose=3):
+def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     out=dict()
     model=None
     filepath=filepath.lower()
     
     # Load data
     if filepath=='sprinkler':
-        model = DAG_sprinkler(CPD=CPD)
+        model = DAG_sprinkler(CPD=CPD, verbose=verbose)
     elif filepath=='asia':
         model = bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
     elif filepath=='alarm':
@@ -669,13 +670,13 @@ def load_example(filepath='sprinkler', CPD=True, verbose=3):
         if os.path.isfile(filepath):
             model = bif2bayesian(filepath, verbose=verbose)
         else:
-            if verbose<=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
+            if verbose>=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
             return(out)
 
 
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
-    if not isinstance(model, type(None)) and verbose<=3:
+    if not isinstance(model, type(None)) and verbose>=3:
         if CPD:
             print('[BNLEARN] Model correct: %s' %(model.check_model()))
             for cpd in model.get_cpds():
@@ -740,7 +741,7 @@ def bif2bayesian(pathname, verbose=3):
     >>> reader.get_model()
     <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
     """
-    if verbose<=3: print('[BNLEARN] Loading bif file <%s>' %(pathname))
+    if verbose>=3: print('[BNLEARN] Loading bif file <%s>' %(pathname))
 
     bifmodel=readwrite.BIF.BIFReader(path=pathname)
     #bifmodel.get_edges()
@@ -801,7 +802,7 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
     
     # Bayesian model
     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
-        if verbose<=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
+        if verbose>=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
         # positions for all nodes
         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
         # Add directed edge with weigth
@@ -810,11 +811,11 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
         for i in range(len(edges)):
             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
     elif 'networkx' in str(type(model)):
-        if verbose<=3: print('[BNLEARN.plot] Making plot based on networkx model')
+        if verbose>=3: print('[BNLEARN.plot] Making plot based on networkx model')
         G=model
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
     else:
-        if verbose<=3: print('[BNLEARN.plot] Making plot based on adjacency matrix')
+        if verbose>=3: print('[BNLEARN.plot] Making plot based on adjacency matrix')
         G = network.adjmat2graph(model)
         # Convert adjmat to source target
 #        df_edges=model.stack().reset_index()
@@ -852,6 +853,17 @@ def plot(model, pos=None, scale=1, width=15, height=8, verbose=3):
     out['pos']=pos
     out['G']=G
     return(out)
+
+#%% Example data
+def import_example():
+    curpath = os.path.dirname(os.path.abspath( __file__ ))
+    PATH_TO_DATA=os.path.join(curpath,'data','sprinkler_data.zip')
+    if os.path.isfile(PATH_TO_DATA):
+        df=pd.read_csv(PATH_TO_DATA, sep=',')
+        return df
+    else:
+        print('[KM] Oops! Example data not found! Try to get it at: www.github.com/erdogant/bnlearn/')
+        return None
 
 #%% Convert Adjmat to graph (G)
 #def adjmat2graph(adjmat):
