@@ -18,10 +18,10 @@ Learning a Bayesian network can be split into two problems which are both implem
  .inference()
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
-  # Load five well known examples to play arround with or load your own .bif file.
+  # Load well known examples to play arround with or load your own .bif file.
  .import_DAG()
   # Load simple dataframe of sprinkler dataset.
- .import_example
+ .import_example()
   # Compare 2 graphs
  .compare_networks()
   # Plot graph
@@ -60,7 +60,7 @@ conda create -n env_BNLEARN python=3.6
 conda activate env_BNLEARN
 conda install pytorch
 
-# The packages below are handled bij de requirements in the bnlearn pip installer. So you dont need to do them manually.
+# The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
 pip install sklearn pandas tqdm funcsigs pgmpy statsmodels community
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
