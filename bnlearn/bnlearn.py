@@ -435,6 +435,8 @@ def structure_learning(df, methodtype='hc', scoretype='bic', black_list=None, wh
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: blacklist only works in case of methodtype="hc"')
     if (white_list is not None) and methodtype!='hc':
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: white_list only works in case of methodtype="hc"')
+    if (max_indegree is not None) and methodtype!='hc':
+        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: max_indegree only works in case of methodtype="hc"')
     
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
