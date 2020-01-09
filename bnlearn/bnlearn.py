@@ -166,6 +166,7 @@ import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
+import pgmpy
 # STRUCTURE LEARNING
 from pgmpy.estimators import BdeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
@@ -183,11 +184,11 @@ from pgmpy import readwrite
 from bnlearn.helpers.df2onehot import df2onehot
 import bnlearn.helpers.network as network
 # ASSERTS
+from packaging import version # For pgmpy versioning check for black_list/white_list
 assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
 assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
 curpath = os.path.dirname(os.path.abspath( __file__ ))
 PATH_TO_DATA=os.path.join(curpath,'DATA')
-
 
 #%% Exact inference using Variable Elimination
 def inference(model, variables=None, evidence=None, verbose=3):
@@ -366,7 +367,7 @@ def sampling(model, n=1000, verbose=3):
     return(df)
     
 #%% Structure Learning
-def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
+def structure_learning(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
     '''
 
     Parameters
@@ -382,11 +383,20 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
                 'ex' or 'exhaustivesearch'          : Exhaustive search for very small networks
                 'cs' or 'constraintsearch'          : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
 
-   scoretype:   [STRING]: Scoring function for the search spaces
-                'bic' (default)
-                'k2' 
-                'bdeu'
+    scoretype:   [STRING]: Scoring function for the search spaces
+                 'bic' (default)
+                 'k2' 
+                 'bdeu'
 
+    max_indegree: [int] or [None] If provided and unequal None, the procedure only searches among models where all nodes have at most `max_indegree` parents. Defaults to None.
+                  None (default) Works only in case of methodtype='hc'
+
+    black_list:   [list] or [None],  If a list of edges is provided as `black_list`, they are excluded from the search and the resulting model will not contain any of those edges.
+                  None (default) Works only in case of methodtype='hc'
+
+    white_list:   [list] or [None], If a list of edges is provided as `white_list`, the search is limited to those edges. The resulting model will then only contain edges that are in `white_list`.
+                  None (default) Works only in case of methodtype='hc'
+            
     verbose:    [INT] Print messages to screen.
                 0: NONE
                 1: ERROR
@@ -404,16 +414,27 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')|  (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'
-    # assert float(nx.__version__)==1.11, 'This function requires networkx to be v1.11 or so. Try to: pip install networkx==v1.11'
 
     config            = dict()
     config['verbose'] = verbose
     config['method']  = methodtype
     config['scoring'] = scoretype
+    config['black_list'] = black_list
+    config['white_list'] = white_list
+    config['max_indegree'] = max_indegree
+
     
-    # Show warning
+    # Show warnings
+    PGMPY_VER = version.parse(pgmpy.__version__[1:])>version.parse("0.1.9") #Can be be removed if pgmpy >v0.1.9
+    if PGMPY_VER and ((black_list is not None) or  (white_list is not None)): #Can be be removed if pgmpy >v0.1.9
+        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9') #Can be be removed if pgmpy >v0.1.9
+
     if df.shape[1]>10 and df.shape[1]<15:
-        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Note that computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+    if (black_list is not None) and methodtype!='hc':
+        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: blacklist only works in case of methodtype="hc"')
+    if (white_list is not None) and methodtype!='hc':
+        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: white_list only works in case of methodtype="hc"')
     
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
@@ -440,7 +461,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
         Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). See [1], Section 18.3 for a detailed introduction on scores. As before, BDeu is dependent on an equivalent sample size.
     '''
     
-    if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
+    if config['verbose']>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
 
     #ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
@@ -451,7 +472,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
         Despite these bad news, heuristic search strategies often yields good results.
         If only few nodes are involved (read: less than 5), 
         '''
-        assert df.shape[1]<15, 'Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch'
+        if (df.shape[1]>15) and (config['verbose']>=3): print('[BNLEARN][STRUCTURE LEARNING] Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')
         out  = exhaustivesearch(df, scoretype=config['scoring'], verbose=config['verbose'])
 
     # HillClimbSearch
@@ -463,7 +484,7 @@ def structure_learning(df, methodtype='hc', scoretype='bic', verbose=3):
         single-edge manipulations that maximally increase the score. 
         The search terminates once a local maximum is found.
         '''
-        out = hillclimbsearch(df, scoretype=config['scoring'], verbose=config['verbose'])
+        out = hillclimbsearch(df, scoretype=config['scoring'], verbose=config['verbose'], black_list=config['black_list'], white_list=config['white_list'], max_indegree=config['max_indegree'])
     
     # Constraint-based Structure Learning
     if config['method']=='cs' or config['method']=='constraintsearch':
@@ -553,14 +574,19 @@ def constraintsearch(df, significance_level=0.05, verbose=3):
     return(out)
 
 #%% hillclimbsearch
-def hillclimbsearch(df, scoretype='bic', verbose=3):
+def hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
     out=dict()
     # Set scoring type
     scoring_method = SetScoringType(df, scoretype)
     # Set search algorithm
     model = HillClimbSearch(df, scoring_method=scoring_method)
     # Compute best DAG
-    best_model = model.estimate()
+    try:
+        best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
+        # print("Works only for version > v.0.1.9")
+    except:
+        best_model = model.estimate(max_indegree=max_indegree) #Can be be removed if pgmpy >v0.1.9
+            
     # Store
     out['model']=best_model
     out['model_edges']=best_model.edges()
@@ -672,8 +698,6 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         else:
             if verbose>=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
             return(out)
-
-
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if not isinstance(model, type(None)) and verbose>=3:
