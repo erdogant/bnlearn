@@ -226,7 +226,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
 # %% Constraint-based Structure Learning
 def _constraintsearch(df, significance_level=0.05, verbose=3):
-    """.
+    """
 
     test_conditional_independence() returns a tripel (chi2, p_value, sufficient_data),
     consisting in the computed chi2 test statistic, the p_value of the test, and a heuristig
@@ -375,141 +375,14 @@ def _makehot(df, y_min=None):
             else:
                 dfOK = pd.concat([dfOK, Xhot], axis=1)
                 labx.append(df.columns[i])
-                #colOK.append(df.columns[i])
+                # colOK.append(df.columns[i])
 
     if len(colExpand)>0:
         [_, Xhot, Xlabx, _] = df2onehot(df[colExpand], y_min=y_min, hot_only=True)
         labx.append(Xlabx)
         Xhot=Xhot.astype(int)
-    
+
     out = pd.concat([Xhot, dfOK], axis=1)
     out = out.astype(int)
 
     return(out, labx[0])
-
-
-# %% PLOT
-# def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
-#     """Plot the learned stucture.
-
-
-#     Parameters
-#     ----------
-#     model : dict
-#         Learned model from the .fit() function.
-#     pos : graph, optional (default: None)
-#         Coordinates of the network. If there are provided, the same structure will be used to plot the network.
-#     scale : int, optional (default: 1)
-#         Scaling parameter for the network. A larger number will linearily increase the network.
-#     figsize : tuple, optional (default: (15,8))
-#         Figure size.
-#     verbose : int [0-5], optional (default: 3)
-#         Print messages.
-#         0: (default)
-#         1: ERROR
-#         2: WARN
-#         3: INFO
-#         4: DEBUG
-
-
-#     Returns
-#     -------
-#     dict.
-
-#     """
-
-#     out=dict()
-#     G = nx.DiGraph()  # Directed graph
-#     layout='fruchterman_reingold'
-
-#     # Extract model if in dict
-#     if 'dict' in str(type(model)):
-#         model = model.get('model', None)
-
-#     # Bayesian model
-#     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
-#         if verbose>=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
-#         # positions for all nodes
-#         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
-#         # Add directed edge with weigth
-#         # edges=model.edges()
-#         edges=[*model.edges()]
-#         for i in range(len(edges)):
-#             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
-#     elif 'networkx' in str(type(model)):
-#         if verbose>=3: print('[BNLEARN.plot] Making plot based on networkx model')
-#         G=model
-#         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
-#     else:
-#         if verbose>=3: print('[BNLEARN.plot] Making plot based on adjacency matrix')
-#         G = network.adjmat2graph(model)
-#         # Convert adjmat to source target
-# #        df_edges=model.stack().reset_index()
-# #        df_edges.columns=['source', 'target', 'weight']
-# #        df_edges['weight']=df_edges['weight'].astype(float)
-# #
-# #        # Add directed edge with weigth
-# #        for i in range(df_edges.shape[0]):
-# #            if df_edges['weight'].iloc[i]!=0:
-# #                color='k' if df_edges['weight'].iloc[i]>0 else 'r'
-# #                G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
-#         # Get positions
-#         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
-
-#     # Bootup figure
-#     plt.figure(figsize=figsize)
-#     # nodes
-#     nx.draw_networkx_nodes(G, pos, node_size=500, with_labels=True, alpha=0.85)
-#     # edges
-#     colors = [G[u][v].get('color','k') for u,v in G.edges()]
-#     weights = [G[u][v].get('weight',1) for u,v in G.edges()]
-#     nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=colors, width=weights)
-#     # Labels
-#     nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
-#     # Get labels of weights
-#     # labels = nx.get_edge_attributes(G,'weight')
-#     # Plot weights
-#     nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G,'weight'))
-#     # Making figure nice
-#     ax = plt.gca()
-#     ax.set_axis_off()
-#     plt.show()
-
-#     # Store
-#     out['pos']=pos
-#     out['G']=G
-#     return(out)
-
-
-# %% Comparison of two networks
-# def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), verbose=3):
-#     """Compare networks of two models.
-
-
-#     Parameters
-#     ----------
-#     model_1 : dict
-#         Results of model 1.
-#     model_2 : dict
-#         Results of model 2.
-#     pos : graph, optional (default: None)
-#         Coordinates of the network. If there are provided, the same structure will be used to plot the network.
-#     showfig : Bool, optional (default: True)
-#         Show figure.
-#     figsize : tuple, optional (default: (15,8))
-#         Figure size.
-#     verbose : int [0-5], optional (default: 3)
-#         Print messages.
-#         0: (default)
-#         1: ERROR
-#         2: WARN
-#         3: INFO
-#         4: DEBUG
-
-#     Returns
-#     -------
-#     dict.
-
-#     """
-#     [scores, adjmat_diff] = network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], verbose=verbose)
-#     return(scores, adjmat_diff)
