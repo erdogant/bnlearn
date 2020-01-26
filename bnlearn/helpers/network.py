@@ -46,6 +46,8 @@ import community
 import networkx as nx
 from sklearn.preprocessing import minmax_scale
 from sklearn.preprocessing import MinMaxScaler 
+from ismember import ismember
+import bnlearn.helpers.confmatrix as confmatrix
 
 #%% Make graph from adjacency matrix
 def to_graph(adjmat, verbose=3):
@@ -340,9 +342,6 @@ def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[2
 
 #%% Comparison of two networks
 def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
-    from bnlearn.helpers.ismember import ismember
-    import bnlearn.helpers.confmatrix as confmatrix
-
     # Make sure columns and indices to match
     [IArow,IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
     [IAcol,IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
