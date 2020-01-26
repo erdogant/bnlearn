@@ -63,7 +63,8 @@ conda activate env_BNLEARN
 conda install pytorch -c pytorch
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
-pip install sklearn pandas tqdm funcsigs pgmpy statsmodels community
+pip install sklearn pandas tqdm funcsigs statsmodels community
+pip install pgmpy==v0.1.9
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
 ```
