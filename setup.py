@@ -1,18 +1,22 @@
 import setuptools
-import versioneer
-new_version='0.1.4.dev'
-# conda install pytorch
+import re
 
+# versioning ------------
+VERSIONFILE="bnlearn/__init__.py"
+getversion = re.search( r"^__version__ = ['\"]([^'\"]*)['\"]", open(VERSIONFILE, "rt").read(), re.M)
+if getversion:
+    new_version = getversion.group(1)
+else:
+    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+
+# Setup ------------
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     install_requires=['networkx==1.11','matplotlib==2.2.3','pgmpy','numpy','pandas','tqdm','sklearn','funcsigs','statsmodels','community'],
-#     install_requires=['networkx','matplotlib','pgmpy','numpy','pandas','tqdm','sklearn','funcsigs','statsmodels','community'],
+     install_requires=['networkx==1.11','matplotlib==2.2.3','pgmpy==0.1.9','numpy','pandas','tqdm','ismember','sklearn','funcsigs','statsmodels','community'],
      python_requires='>=3',
      name='bnlearn',
      version=new_version,
-#     version=versioneer.get_version(),    # VERSION CONTROL
-#     cmdclass=versioneer.get_cmdclass(),  # VERSION CONTROL
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",
      description="Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.",
