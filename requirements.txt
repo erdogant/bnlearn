@@ -1,14 +1,20 @@
 #conda create -n env_BNLEARN python=3.6
 #conda activate env_BNLEARN
 
-conda install pytorch
-pgmpy
+conda install pytorch torchvision -c pytorch
+pgmpy==0.1.9
 numpy
 pandas
 tqdm
+statsmodels
+community
+sklearn
+funcsigs
 statsmodels
 community
 networkx==1.11
 matplotlib==2.2.3
 
 #conda install spyder
+
+
