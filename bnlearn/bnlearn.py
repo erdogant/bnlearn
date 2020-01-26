@@ -365,329 +365,62 @@ def sampling(model, n=1000, verbose=3):
     # Forward sampling and make dataframe
     df=inference.forward_sample(size=n, return_type='dataframe')
     return(df)
-    
-#%% Structure Learning
-def structure_learning(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
-    '''
+
+
+# %% Make DAG
+def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
+    """
 
     Parameters
     ----------
-    df:         [pd.DataFrame] Pandas DataFrame containing the data
-                   f1  ,f2  ,f3
-                s1 0   ,0   ,1
-                s2 0   ,1   ,0
-                s3 1   ,1   ,0
+    filepath : String, optional (default: 'sprinkler')
+        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.
+        'sprinkler'(default)
+        'alarm'
+        'andes'
+        'asia'
+        'pathfinder'
+        'sachs'
+        'miserables'
+        'filepath/to/model.bif'
 
-    methodtype:  [STRING] Search strategy for structure_learning.
-                'hc' or 'hillclimbsearch' (default) : HillClimbSearch implements a greedy local search if many more nodes are involved
-                'ex' or 'exhaustivesearch'          : Exhaustive search for very small networks
-                'cs' or 'constraintsearch'          : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
+    CPD : Bool, optional (default: True)
+        Directed Acyclic Graph (DAG).
+        True (default)
+        False
 
-    scoretype:   [STRING]: Scoring function for the search spaces
-                 'bic' (default)
-                 'k2' 
-                 'bdeu'
-
-    max_indegree: [int] or [None] If provided and unequal None, the procedure only searches among models where all nodes have at most `max_indegree` parents. Defaults to None.
-                  None (default) Works only in case of methodtype='hc'
-
-    black_list:   [list] or [None],  If a list of edges is provided as `black_list`, they are excluded from the search and the resulting model will not contain any of those edges.
-                  None (default) Works only in case of methodtype='hc'
-
-    white_list:   [list] or [None], If a list of edges is provided as `white_list`, the search is limited to those edges. The resulting model will then only contain edges that are in `white_list`.
-                  None (default) Works only in case of methodtype='hc'
-            
-    verbose:    [INT] Print messages to screen.
-                0: NONE
-                1: ERROR
-                2: WARNING
-                3: INFO (default)
-                4: DEBUG
-                5: TRACE
+    verbose : int [0-5] (default: 3)
+        Print messages to screen.
+        0: NONE
+        1: ERROR
+        2: WARNING
+        3: INFO (default)
+        4: DEBUG
+        5: TRACE
+                   
 
     Returns
     -------
-    model
+    None.
 
-    '''
-
-    assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    assert (methodtype=='hc') | (methodtype=='ex')|  (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'
-
-    config            = dict()
-    config['verbose'] = verbose
-    config['method']  = methodtype
-    config['scoring'] = scoretype
-    config['black_list'] = black_list
-    config['white_list'] = white_list
-    config['max_indegree'] = max_indegree
-
-    
-    # Show warnings
-    PGMPY_VER = version.parse(pgmpy.__version__[1:])>version.parse("0.1.9") #Can be be removed if pgmpy >v0.1.9
-    if PGMPY_VER and ((black_list is not None) or  (white_list is not None)): #Can be be removed if pgmpy >v0.1.9
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9') #Can be be removed if pgmpy >v0.1.9
-
-    if df.shape[1]>10 and df.shape[1]<15:
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
-    if (black_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: blacklist only works in case of methodtype="hc"')
-    if (white_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: white_list only works in case of methodtype="hc"')
-    if (max_indegree is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: max_indegree only works in case of methodtype="hc"')
-    
-    # Make sure columns are of type string
-    df.columns = df.columns.astype(str)
-    # Make onehot
-    # df,labx = makehot(df, y_min=y_min)
-        
-    '''
-    Search strategies for structure learning
-    The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima. 
-    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
-    
-    To learn model structure (a DAG) from a data set, there are three broad techniques:
-        1. Score-based structure learning
-            a. exhaustivesearch
-            b. hillclimbsearch
-        2. Constraint-based structure learning
-            a. chi-square test
-        3. Hybrid structure learning (The combination of both techniques)
-    
-        Score-based Structure Learning
-        This approach construes model selection as an optimization task. It has two building blocks:
-        A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
-        A search strategy to traverse the search space of possible models M and select a model with optimal score.
-        Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). See [1], Section 18.3 for a detailed introduction on scores. As before, BDeu is dependent on an equivalent sample size.
-    '''
-    
-    if config['verbose']>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
-
-    #ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
-    if config['method']=='ex' or config['method']=='exhaustivesearch':
-        '''
-        The first property makes exhaustive search intractable for all but very small networks, 
-        the second prohibits efficient local optimization algorithms to always find the optimal structure. 
-        Thus, identifiying the ideal structure is often not tractable. 
-        Despite these bad news, heuristic search strategies often yields good results.
-        If only few nodes are involved (read: less than 5), 
-        '''
-        if (df.shape[1]>15) and (config['verbose']>=3): print('[BNLEARN][STRUCTURE LEARNING] Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')
-        out  = exhaustivesearch(df, scoretype=config['scoring'], verbose=config['verbose'])
-
-    # HillClimbSearch
-    if config['method']=='hc' or config['method']=='hillclimbsearch':
-        '''
-        Once more nodes are involved, one needs to switch to heuristic search. 
-        HillClimbSearch implements a greedy local search that starts from the DAG 
-        "start" (default: disconnected DAG) and proceeds by iteratively performing 
-        single-edge manipulations that maximally increase the score. 
-        The search terminates once a local maximum is found.
-        '''
-        out = hillclimbsearch(df, scoretype=config['scoring'], verbose=config['verbose'], black_list=config['black_list'], white_list=config['white_list'], max_indegree=config['max_indegree'])
-    
-    # Constraint-based Structure Learning
-    if config['method']=='cs' or config['method']=='constraintsearch':
-        '''
-        Constraint-based Structure Learning
-        A different, but quite straightforward approach to build a DAG from data is this:
-        Identify independencies in the data set using hypothesis tests
-        Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
-        Independencies in the data can be identified using chi2 conditional independence tests. 
-        To this end, constraint-based estimators in pgmpy have a test_conditional_independence(X, Y, Zs)-method, 
-        that performs a hypothesis test on the data sample. It allows to check if X is independent from Y given a set of variables Zs:
-        '''
-        out = constraintsearch(df, verbose=config['verbose'])
-
-    # Setup simmilarity matrix
-    adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('Bool')
-    # Fill adjmat with edges
-    edges=out['model'].edges()
-    for edge in edges:
-        adjmat.loc[edge[0],edge[1]]=True
-    
-    # Store
-    out['adjmat']=adjmat
-    # return
-    return(out)
-
-#%% Constraint-based Structure Learning
-def constraintsearch(df, significance_level=0.05, verbose=3):
-    '''
-    test_conditional_independence() returns a tripel (chi2, p_value, sufficient_data), 
-    consisting in the computed chi2 test statistic, the p_value of the test, and a heuristig 
-    flag that indicates if the sample size was sufficient. 
-    The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), 
-    given the null hypothesis that X and Y are independent given Zs.
-    This can be used to make independence judgements, at a given level of significance:
-    '''
-
-    out=dict()
-    # Set search algorithm
-    model = ConstraintBasedEstimator(df)
-
-    # Some checks for dependency
-    #    print(is_independent(est, 'Sprinkler', 'Rain', significance_level=significance_level))
-    #    print(is_independent(est, 'Cloudy', 'Rain', significance_level=significance_level))
-    #    print(is_independent(est, 'Sprinkler', 'Rain',  ['Wet_Grass'], significance_level=significance_level))
-    
-    '''
-    DAG (pattern) construction
-    With a method for independence testing at hand, we can construct a DAG from the data set in three steps:
-        1. Construct an undirected skeleton - `estimate_skeleton()`
-        2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
-        3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
-        
-        Step 1.&2. form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
-    '''
-    # Estimate using chi2
-    [skel, seperating_sets] = model.estimate_skeleton(significance_level=significance_level)
-
-    print("Undirected edges: ", skel.edges())
-    pdag = model.skeleton_to_pdag(skel, seperating_sets)
-    print("PDAG edges: ", pdag.edges())
-    dag = model.pdag_to_dag(pdag)
-    print("DAG edges: ", dag.edges())
-
-    out['undirected']=skel
-    out['undirected_edges']=skel.edges()
-    out['pdag']=pdag
-    out['pdag_edges']=pdag.edges()
-    out['dag']=dag
-    out['dag_edges']=dag.edges()
-
-    # Search using "estimate()" method provides a shorthand for the three steps above and directly returns a "BayesianModel"
-    best_model = model.estimate(significance_level=significance_level)
-    out['model']=best_model
-    out['model_edges']=best_model.edges()
-
-    print(best_model.edges())
-
-    '''
-    PC PDAG construction is only guaranteed to work under the assumption that the 
-    identified set of independencies is *faithful*, i.e. there exists a DAG that 
-    exactly corresponds to it. Spurious dependencies in the data set can cause 
-    the reported independencies to violate faithfulness. It can happen that the 
-    estimated PDAG does not have any faithful completions (i.e. edge orientations 
-    that do not introduce new v-structures). In that case a warning is issued.
-    '''
-    return(out)
-
-#%% hillclimbsearch
-def hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
-    out=dict()
-    # Set scoring type
-    scoring_method = SetScoringType(df, scoretype)
-    # Set search algorithm
-    model = HillClimbSearch(df, scoring_method=scoring_method)
-    # Compute best DAG
-    try:
-        best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
-        # print("Works only for version > v.0.1.9")
-    except:
-        best_model = model.estimate(max_indegree=max_indegree) #Can be be removed if pgmpy >v0.1.9
-            
-    # Store
-    out['model']=best_model
-    out['model_edges']=best_model.edges()
-    # Return
-    return(out)
-
-#%% ExhaustiveSearch
-def exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
-    out=dict()
-
-    # Set scoring type
-    scoring_method = SetScoringType(df, scoretype)
-    # Exhaustive search across all dags
-    model = ExhaustiveSearch(df, scoring_method=scoring_method)
-    # Compute best DAG
-    best_model = model.estimate()
-    # Store
-    out['model']=best_model
-    out['model_edges']=best_model.edges()
-    
-    # Compute all possible DAGs
-    if return_all_dags:
-        out['scores']=[]
-        out['dag']=[]
-        #print("\nAll DAGs by score:")
-        for [score, dag] in reversed(model.all_scores()):
-            out['scores'].append(score)
-            out['dag'].append(dag)
-            #print(score, dag.edges())
-        
-        plt.plot(out['scores'])
-        plt.show()
-
-    return(out)
-
-#%% Set scoring type
-def SetScoringType(df, scoretype, verbose=3):
-    if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Set scoring type at [%s]' %(scoretype))
-    
-    if scoretype=='bic':
-        scoring_method = BicScore(df)
-    elif scoretype=='k2':
-        scoring_method = K2Score(df)
-    elif scoretype=='bdeu':
-        scoring_method = BdeuScore(df, equivalent_sample_size=5)
-
-    return(scoring_method)
-#%%
-def is_independent(model, X, Y, Zs=[], significance_level=0.05):
-    return model.test_conditional_independence(X, Y, Zs)[1] >= significance_level
-
-#%% Make one-hot matrix
-def makehot(df, y_min=None):
-    labx=[]
-    colExpand=[]
-#    colOK=[]
-    Xhot=pd.DataFrame()
-    dfOK=pd.DataFrame()
-    for i in range(0,df.shape[1]):
-        if len(df.iloc[:,i].unique())>2:
-            colExpand.append(df.columns[i])
-        else:
-            if df[df.columns[i]].dtype=='O':
-                uicol=df[df.columns[i]].unique()
-                dfOK[uicol[0]]=df[df.columns[i]]==uicol[0]
-            else:
-                dfOK = pd.concat([dfOK, Xhot], axis=1)
-                labx.append(df.columns[i])
-                #colOK.append(df.columns[i])
-    
-    if len(colExpand)>0:
-        [_, Xhot, Xlabx, _]=df2onehot(df[colExpand], y_min=y_min, hot_only=True)
-        labx.append(Xlabx)
-        Xhot=Xhot.astype(int)
-    
-    out = pd.concat([Xhot, dfOK], axis=1)
-    out = out.astype(int)
-
-    return(out, labx[0])
-
-#%% Make DAG
-def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
+    """
     out=dict()
     model=None
     filepath=filepath.lower()
-    
+
     # Load data
     if filepath=='sprinkler':
-        model = DAG_sprinkler(CPD=CPD, verbose=verbose)
+        model = _DAG_sprinkler(CPD=CPD, verbose=verbose)
     elif filepath=='asia':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
     elif filepath=='alarm':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ALARM/alarm.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ALARM/alarm.bif'), verbose=verbose)
     elif filepath=='andes':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'ANDES/andes.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ANDES/andes.bif'), verbose=verbose)
     elif filepath=='pathfinder':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'PATHFINDER/pathfinder.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'PATHFINDER/pathfinder.bif'), verbose=verbose)
     elif filepath=='sachs':
-        model = bif2bayesian(os.path.join(PATH_TO_DATA,'SACHS/sachs.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'SACHS/sachs.bif'), verbose=verbose)
     elif filepath=='miserables':
         f = open(os.path.join(PATH_TO_DATA,'miserables.json'))
         data = json.loads(f.read())
@@ -696,7 +429,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         model=nx.Graph(edges, directed=False)
     else:
         if os.path.isfile(filepath):
-            model = bif2bayesian(filepath, verbose=verbose)
+            model = _bif2bayesian(filepath, verbose=verbose)
         else:
             if verbose>=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
             return(out)

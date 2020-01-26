@@ -1,24 +1,21 @@
 from bnlearn.bnlearn import (
     sampling,
 	inference,
-	structure_learning,
 	parameter_learning,
     import_DAG,
     import_example,
-	compare_networks,
 	to_undirected,
+	compare_networks,
     plot,
 )
 
+# Import function in new level
+import bnlearn.structure_learning
+
+
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-#__version__ = '0.1.0'
-
-# Automatic version control
-# from ._version import get_versions
-# __version__ = get_versions()['version']
-# del get_versions
-
+__version__ = '0.1.4'
 
 # module level doc-string
 __doc__ = """
