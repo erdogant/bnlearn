@@ -1,7 +1,7 @@
 #conda create -n env_BNLEARN python=3.6
 #conda activate env_BNLEARN
 
-conda install pytorch torchvision -c pytorch
+conda install pytorch -c pytorch
 pgmpy==0.1.9
 numpy
 pandas

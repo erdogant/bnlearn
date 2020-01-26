@@ -31,7 +31,7 @@
     ------------
     conda create -n env_BNLEARN python=3.6
     conda activate env_BNLEARN
-    conda install pytorch torchvision -c pytorch
+    conda install pytorch -c pytorch
     pip install sklearn pandas tqdm funcsigs numpy
     pip install pgmpy==v0.1.9
     pip install networkx==v1.11
@@ -224,7 +224,7 @@ def parameter_learning(model, df, methodtype='bayes', verbose=3):
     model
 
     """
-    
+
     config = dict()
     config['verbose'] = verbose
     config['method'] = methodtype

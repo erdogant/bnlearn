@@ -17,6 +17,7 @@
 
     import bnlearn as bnlearn
 
+    # =========================================================================
     # Load example dataframe from sprinkler
     df = bnlearn.import_example()
     # Structure learning
@@ -24,12 +25,15 @@
     # Plot
     G = bnlearn.plot(model)
 
+    # =========================================================================
     # Compute structure for many different parameters
     model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
 
+    # =========================================================================
     # Compare networks
     bnlearn.compare_networks(model, model_hc_k2, pos=G['pos'])
 
+    # =========================================================================
     # Example compare networks
     # Load asia DAG
     model = bnlearn.import_DAG('asia')
@@ -65,7 +69,7 @@ import pgmpy
 from pgmpy.estimators import BdeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
 # CUSTOM
-from bnlearn.helpers.df2onehot import df2onehot
+# from bnlearn.helpers.df2onehot import df2onehot
 # ASSERTS
 from packaging import version  # For pgmpy versioning check for black_list/white_list
 assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
@@ -359,30 +363,30 @@ def _is_independent(model, X, Y, Zs=[], significance_level=0.05):
 
 
 # %% Make one-hot matrix
-def _makehot(df, y_min=None):
-    labx=[]
-    colExpand=[]
-#    colOK=[]
-    Xhot=pd.DataFrame()
-    dfOK=pd.DataFrame()
-    for i in range(0,df.shape[1]):
-        if len(df.iloc[:,i].unique())>2:
-            colExpand.append(df.columns[i])
-        else:
-            if df[df.columns[i]].dtype=='O':
-                uicol=df[df.columns[i]].unique()
-                dfOK[uicol[0]]=df[df.columns[i]]==uicol[0]
-            else:
-                dfOK = pd.concat([dfOK, Xhot], axis=1)
-                labx.append(df.columns[i])
-                # colOK.append(df.columns[i])
+# def _makehot(df, y_min=None):
+#     labx=[]
+#     colExpand=[]
+# #    colOK=[]
+#     Xhot=pd.DataFrame()
+#     dfOK=pd.DataFrame()
+#     for i in range(0,df.shape[1]):
+#         if len(df.iloc[:,i].unique())>2:
+#             colExpand.append(df.columns[i])
+#         else:
+#             if df[df.columns[i]].dtype=='O':
+#                 uicol=df[df.columns[i]].unique()
+#                 dfOK[uicol[0]]=df[df.columns[i]]==uicol[0]
+#             else:
+#                 dfOK = pd.concat([dfOK, Xhot], axis=1)
+#                 labx.append(df.columns[i])
+#                 # colOK.append(df.columns[i])
 
-    if len(colExpand)>0:
-        [_, Xhot, Xlabx, _] = df2onehot(df[colExpand], y_min=y_min, hot_only=True)
-        labx.append(Xlabx)
-        Xhot=Xhot.astype(int)
+#     if len(colExpand)>0:
+#         [_, Xhot, Xlabx, _] = df2onehot(df[colExpand], y_min=y_min, hot_only=True)
+#         labx.append(Xlabx)
+#         Xhot=Xhot.astype(int)
 
-    out = pd.concat([Xhot, dfOK], axis=1)
-    out = out.astype(int)
+#     out = pd.concat([Xhot, dfOK], axis=1)
+#     out = out.astype(int)
 
-    return(out, labx[0])
+#     return(out, labx[0])
