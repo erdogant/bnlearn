@@ -15,8 +15,8 @@ Learning a Bayesian network can be split into two problems which are both implem
 
 #### The following functions are available:
 ```python
- .structure_learning()
- .parameter_learning()
+ .structure_learning.fit()
+ .parameter_learning.fit()
  .inference()
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
@@ -63,7 +63,7 @@ conda activate env_BNLEARN
 conda install pytorch -c pytorch
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
-pip install sklearn pandas tqdm funcsigs statsmodels community
+pip install sklearn pandas tqdm funcsigs statsmodels community packaging
 pip install pgmpy==v0.1.9
 pip install networkx==v1.11
 pip install matplotlib==2.2.3
@@ -83,7 +83,7 @@ python setup.py install
 
 ## Import bnlearn package
 ```python
-import bnlearn as bnlearn
+import bnlearn
 ```
 
 ## Example: Structure Learning
@@ -91,7 +91,7 @@ import bnlearn as bnlearn
 # Example dataframe sprinkler_data.csv can be loaded with: 
 df = bnlearn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
-model = bnlearn.structure_learning(df)
+model = bnlearn.structure_learning.fit(df)
 G = bnlearn.plot(model)
 ```
 
@@ -117,12 +117,12 @@ G = bnlearn.plot(model)
 
 * Choosing various methodtypes and scoringtypes:
 ```python
-model_hc_bic  = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
-model_hc_k2   = bnlearn.structure_learning(df, methodtype='hc', scoretype='k2')
-model_hc_bdeu = bnlearn.structure_learning(df, methodtype='hc', scoretype='bdeu')
-model_ex_bic  = bnlearn.structure_learning(df, methodtype='ex', scoretype='bic')
-model_ex_k2   = bnlearn.structure_learning(df, methodtype='ex', scoretype='k2')
-model_ex_bdeu = bnlearn.structure_learning(df, methodtype='ex', scoretype='bdeu')
+model_hc_bic  = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+model_hc_bdeu = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 ```
 
 ## Example: Parameter Learning
@@ -132,9 +132,9 @@ df = pd.import_example()
 # As an example we set the CPD at False which returns an "empty" DAG
 model = bnlearn.import_DAG('sprinkler', CPD=False)
 # Now we learn the parameters of the DAG using the df
-model_update = bnlearn.parameter_learning(model, df)
+model_update = bnlearn.parameter_learning.fit(model, df)
 # Make plot
-G = bnlearn.plot(model)
+G = bnlearn.plot(model_update)
 ```
 
 ## Example: Inference
