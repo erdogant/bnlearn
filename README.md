@@ -219,7 +219,7 @@ G=bnlearn.plot(model)
 # Sampling
 df=bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
-model_sl = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
+model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
 bnlearn.plot(model_sl, pos=G['pos'])
 
