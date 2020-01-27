@@ -1,5 +1,5 @@
-"""This function provides techniques for structure learning.
-  
+"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
+
     import bnlearn as bnlearn
 
 
@@ -11,10 +11,8 @@
         * Constraint-based structure estimation (PC)
         * Hybrid structure estimation (MMHC)
 
-
     Example
     -------
-
     import bnlearn as bnlearn
 
     # =========================================================================
@@ -47,9 +45,7 @@
     bnlearn.plot(model_sl, pos=G['pos'])
     # Compare networks and make plot
     bnlearn.compare_networks(model, model_sl, pos=G['pos'])
-
 """
-
 # ------------------------------------
 # Name        : structure_learning.py
 # Author      : E.Taskesen
@@ -61,26 +57,42 @@
 # %% Libraries
 import os
 import pandas as pd
-import networkx as nx
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pgmpy
 # STRUCTURE LEARNING
 from pgmpy.estimators import BdeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
-# CUSTOM
-# from bnlearn.helpers.df2onehot import df2onehot
 # ASSERTS
 from packaging import version  # For pgmpy versioning check for black_list/white_list
-assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
-assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
 curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA=os.path.join(curpath,'DATA')
+PATH_TO_DATA = os.path.join(curpath,'DATA')
 
 
 # %% Structure Learning
 def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
     """Structure learning fit model.
+
+    Description
+    -----------
+    Search strategies for structure learning
+    The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
+    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
+
+    To learn model structure (a DAG) from a data set, there are three broad techniques:
+        1. Score-based structure learning
+            a. exhaustivesearch
+            b. hillclimbsearch
+        2. Constraint-based structure learning
+            a. chi-square test
+        3. Hybrid structure learning (The combination of both techniques)
+
+        Score-based Structure Learning
+        This approach construes model selection as an optimization task. It has two building blocks:
+        A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
+        A search strategy to traverse the search space of possible models M and select a model with optimal score.
+        Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
+        and the Bayesian Information Criterion (BIC, also called MDL).
+        As before, BDeu is dependent on an equivalent sample size.
 
     Parameters
     ----------
@@ -122,10 +134,9 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     model
 
     """
-
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'
+    assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
 
     config = dict()
     config['verbose'] = verbose
@@ -139,7 +150,6 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     PGMPY_VER = version.parse(pgmpy.__version__[1:])>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
     if PGMPY_VER and ((black_list is not None) or (white_list is not None)):  # Can be be removed if pgmpy >v0.1.9
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
-
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     if (black_list is not None) and methodtype!='hc':
@@ -149,70 +159,42 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if (max_indegree is not None) and methodtype!='hc':
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: max_indegree only works in case of methodtype="hc"')
 
+    if config['verbose']>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
+
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Make onehot
     # df,labx = _makehot(df, y_min=y_min)
 
-    """
-    Search strategies for structure learning
-    The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
-    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
-
-    To learn model structure (a DAG) from a data set, there are three broad techniques:
-        1. Score-based structure learning
-            a. exhaustivesearch
-            b. hillclimbsearch
-        2. Constraint-based structure learning
-            a. chi-square test
-        3. Hybrid structure learning (The combination of both techniques)
-
-        Score-based Structure Learning
-        This approach construes model selection as an optimization task. It has two building blocks:
-        A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
-        A search strategy to traverse the search space of possible models M and select a model with optimal score.
-        Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
-        and the Bayesian Information Criterion (BIC, also called MDL). See [1], Section 18.3 for a detailed introduction on scores.
-        As before, BDeu is dependent on an equivalent sample size.
-    """
-
-    if config['verbose']>=3: print('[BNLEARN][STRUCTURE LEARNING] Computing best DAG using [%s]' %(config['method']))
-
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
-        """
-        The first property makes exhaustive search intractable for all but very small networks,
+        """The first property makes exhaustive search intractable for all but very small networks,
         the second prohibits efficient local optimization algorithms to always find the optimal structure.
         Thus, identifiying the ideal structure is often not tractable.
         Despite these bad news, heuristic search strategies often yields good results
-        If only few nodes are involved (read: less than 5).
-        """
+        If only few nodes are involved (read: less than 5)."""
         if (df.shape[1]>15) and (config['verbose']>=3):
-            print('[BNLEARN][STRUCTURE LEARNING] Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')
+            print('[BNLEARN][STRUCTURE LEARNING] Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
         out = _exhaustivesearch(df, scoretype=config['scoring'], verbose=config['verbose'])
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
-        """
-        Once more nodes are involved, one needs to switch to heuristic search.
+        """Once more nodes are involved, one needs to switch to heuristic search.
         HillClimbSearch implements a greedy local search that starts from the DAG
         "start" (default: disconnected DAG) and proceeds by iteratively performing
         single-edge manipulations that maximally increase the score.
-        The search terminates once a local maximum is found.
-        """
+        The search terminates once a local maximum is found."""
         out = _hillclimbsearch(df, scoretype=config['scoring'], verbose=config['verbose'], black_list=config['black_list'], white_list=config['white_list'], max_indegree=config['max_indegree'])
 
     # Constraint-based Structure Learning
     if config['method']=='cs' or config['method']=='constraintsearch':
-        """
-        Constraint-based Structure Learning
+        """Constraint-based Structure Learning
         A different, but quite straightforward approach to build a DAG from data is this:
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
         Independencies in the data can be identified using chi2 conditional independence tests.
         To this end, constraint-based estimators in pgmpy have a test_conditional_independence(X, Y, Zs)-method,
-        that performs a hypothesis test on the data sample. It allows to check if X is independent from Y given a set of variables Zs:
-        """
+        that performs a hypothesis test on the data sample. It allows to check if X is independent from Y given a set of variables Zs."""
         out = _constraintsearch(df, verbose=config['verbose'])
 
     # Setup simmilarity matrix
@@ -230,7 +212,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
 # %% Constraint-based Structure Learning
 def _constraintsearch(df, significance_level=0.05, verbose=3):
-    """
+    """Contrain search.
 
     test_conditional_independence() returns a tripel (chi2, p_value, sufficient_data),
     consisting in the computed chi2 test statistic, the p_value of the test, and a heuristig
@@ -239,7 +221,6 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     given the null hypothesis that X and Y are independent given Zs.
     This can be used to make independence judgements, at a given level of significance.
     """
-
     out=dict()
     # Set search algorithm
     model = ConstraintBasedEstimator(df)

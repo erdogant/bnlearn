@@ -1,5 +1,5 @@
 """This package provides several bayesian techniques for structure learning, sampling and parameter learning.
-  
+
     import bnlearn as bnlearn
 
     model            = bnlearn.import_DAG('sprinkler')
@@ -56,24 +56,23 @@
     model = bnlearn.import_DAG('sprinkler', CPD=False)
     model_update = bnlearn.parameter_learning(model, df)
     bnlearn.plot(model_update)
-    
+
     # =========================================================================
     # EXACT INFERENCE
     out = bnlearn.inference(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
     out = bnlearn.inference(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
-    
+
     # =========================================================================
     # LOAD BIF FILE
     model = bnlearn.import_DAG('alarm', verbose=0)
     bnlearn.plot(model, figsize=(20,12))
-    
+
     df = bnlearn.sampling(model, n=1000)
     model_alarm = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     G = bnlearn.plot(model_alarm)
     bnlearn.plot(model, pos=G['pos'])
 
 """
-
 # ------------------------------------
 # Name        : bnlearn.py
 # Author      : E.Taskesen
@@ -87,7 +86,7 @@ import os
 import pandas as pd
 import numpy as np
 import networkx as nx
-import matplotlib as mpl
+# import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
 # DAG
@@ -95,18 +94,16 @@ from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
 # SAMPLING
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
-# PARAMETER LEARNING
-from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator  # ParameterEstimator
 # INFERENCE
 from pgmpy.inference import VariableElimination
 from pgmpy import readwrite
 # MICROSERVICES
 import bnlearn.helpers.network as network
 # ASSERTS
-assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
-assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
+# assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
+# assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
 curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA=os.path.join(curpath,'DATA')
+PATH_TO_DATA = os.path.join(curpath,'DATA')
 
 
 # %% Exact inference using Variable Elimination
@@ -115,8 +112,8 @@ def inference(model, variables=None, evidence=None, verbose=3):
 
     Description
     -----------
-    Inference is same as asking conditional probability questions to the models. 
-    i.e., What is the probability of a sprinkler is on given that it is raining which is basically equivalent of asking $ P(g^1 | i^1) $. 
+    Inference is same as asking conditional probability questions to the models.
+    i.e., What is the probability of a sprinkler is on given that it is raining which is basically equivalent of asking $ P(g^1 | i^1) $.
     Inference algorithms deals with efficiently finding these conditional probability queries.
 
 
@@ -210,6 +207,7 @@ def sampling(model, n=1000, verbose=3):
     """
     assert n>0, 'n must be 1 or larger'
     assert 'BayesianModel' in str(type(model['model'])), 'Model must contain DAG from BayesianModel. Note that <misarables> example does not include DAG.'
+    if verbose>=3: print('[BNLEARN][sampling] Forward sampling for %.0d samples..' %(n))
 
     # http://pgmpy.org/sampling.html
     inference = BayesianModelSampling(model['model'])
@@ -221,7 +219,7 @@ def sampling(model, n=1000, verbose=3):
 
 # %% Make DAG
 def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
-    """
+    """Import Directed Acyclic Graph.
 
     Parameters
     ----------
@@ -249,7 +247,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         3: INFO (default)
         4: DEBUG
         5: TRACE
-                   
+
 
     Returns
     -------
@@ -283,20 +281,20 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         if os.path.isfile(filepath):
             model = _bif2bayesian(filepath, verbose=verbose)
         else:
-            if verbose>=3: print('[BNLEARN] Filepath does not exist! <%s>' %(filepath))
+            if verbose>=3: print('[BNLEARN][import_DAG] Filepath does not exist! <%s>' %(filepath))
             return(out)
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if not isinstance(model, type(None)) and verbose>=3:
         if CPD:
-            print('[BNLEARN] Model correct: %s' %(model.check_model()))
+            print('[BNLEARN][import_DAG] Model correct: %s' %(model.check_model()))
             for cpd in model.get_cpds():
                 print("CPD of {variable}:".format(variable=cpd.variable))
                 print(cpd)
 
-            print('[BNLEARN] Nodes: %s' %(model.nodes()))
-            print('[BNLEARN] Edges: %s' %(model.edges()))
-            print('[BNLEARN] Independencies:\n%s' %(model.get_independencies()))
+            print('[BNLEARN][import_DAG] Nodes: %s' %(model.nodes()))
+            print('[BNLEARN][import_DAG] Edges: %s' %(model.edges()))
+            print('[BNLEARN][import_DAG] Independencies:\n%s' %(model.get_independencies()))
 
     # Setup simmilarity matrix
     adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
@@ -311,7 +309,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
 
 # %% Model Sprinkler
-def _DAG_sprinkler(CPD=True, verbose=3):
+def _DAG_sprinkler(CPD=True):
     """Create DAG-model for the sprinkler example.
 
     Parameters
@@ -320,14 +318,6 @@ def _DAG_sprinkler(CPD=True, verbose=3):
         Directed Acyclic Graph (DAG).
         True (default)
         False
-
-    verbose : int [0-5], optional (default: 3)
-        Print messages.
-        0: (default)
-        1: ERROR
-        2: WARN
-        3: INFO
-        4: DEBUG
 
     Returns
     -------
@@ -366,11 +356,10 @@ def _DAG_sprinkler(CPD=True, verbose=3):
 
 # %% Convert BIF model to bayesian model
 def _bif2bayesian(pathname, verbose=3):
-    """
-    Returns the fitted bayesian model
+    """Return the fitted bayesian model.
 
     Example
-    ----------
+    -------
     >>> from pgmpy.readwrite import BIFReader
     >>> reader = BIFReader("bif_test.bif")
     >>> reader.get_model()
@@ -408,8 +397,7 @@ def _bif2bayesian(pathname, verbose=3):
 
 # %% Make directed graph from adjmatrix
 def to_undirected(adjmat):
-    """
-
+    """Transform directed adjacency matrix to undirected.
 
     Parameters
     ----------
@@ -471,7 +459,6 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), v
 def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     """Plot the learned stucture.
 
-
     Parameters
     ----------
     model : dict
@@ -496,7 +483,6 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     dict.
 
     """
-
     out=dict()
     G = nx.DiGraph()  # Directed graph
     layout='fruchterman_reingold'
@@ -507,7 +493,7 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
 
     # Bayesian model
     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
-        if verbose>=3: print('[BNLEARN.plot] Making plot based on BayesianModel')
+        if verbose>=3: print('[BNLEARN][plot] Making plot based on BayesianModel')
         # positions for all nodes
         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
         # Add directed edge with weigth
@@ -516,11 +502,11 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
         for i in range(len(edges)):
             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
     elif 'networkx' in str(type(model)):
-        if verbose>=3: print('[BNLEARN.plot] Making plot based on networkx model')
+        if verbose>=3: print('[BNLEARN][plot] Making plot based on networkx model')
         G=model
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
     else:
-        if verbose>=3: print('[BNLEARN.plot] Making plot based on adjacency matrix')
+        if verbose>=3: print('[BNLEARN][plot] Making plot based on adjacency matrix')
         G = network.adjmat2graph(model)
         # Convert adjmat to source target
 #        df_edges=model.stack().reset_index()
@@ -571,37 +557,36 @@ def import_example():
 
     """
     curpath = os.path.dirname(os.path.abspath(__file__))
-    PATH_TO_DATA=os.path.join(curpath,'data','sprinkler_data.zip')
-    if os.path.isfile(PATH_TO_DATA):
-        df=pd.read_csv(PATH_TO_DATA, sep=',')
+    PATH_TO_DATA_1 = os.path.join(curpath,'data','sprinkler_data.zip')
+    if os.path.isfile(PATH_TO_DATA_1):
+        df=pd.read_csv(PATH_TO_DATA_1, sep=',')
         return df
     else:
         print('[KM] Oops! Example data not found! Try to get it at: www.github.com/erdogant/bnlearn/')
         return None
 
-#%% Convert Adjmat to graph (G)
-#def adjmat2graph(adjmat):
-#    G = nx.DiGraph() # Directed graph
-#    # Convert adjmat to source target
-#    df_edges=adjmat.stack().reset_index()
-#    df_edges.columns=['source', 'target', 'weight']
-#    df_edges['weight']=df_edges['weight'].astype(float)
-#    
-#    # Add directed edge with weigth
-#    for i in range(df_edges.shape[0]):
-#        if df_edges['weight'].iloc[i]!=0:
-#            # Setup color
-#            if df_edges['weight'].iloc[i]==1:
-#                color='k'
-#            elif df_edges['weight'].iloc[i]>1:
-#                color='r'
-#            elif df_edges['weight'].iloc[i]<0:
-#                color='b'
-#            else:
-#                color='p'
-#            
-#            # Create edge in graph
-#            G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)    
-#    # Return
-#    return(G)
-    
+# %% Convert Adjmat to graph (G)
+# def adjmat2graph(adjmat):
+#     G = nx.DiGraph() # Directed graph
+#     # Convert adjmat to source target
+#     df_edges=adjmat.stack().reset_index()
+#     df_edges.columns=['source', 'target', 'weight']
+#     df_edges['weight']=df_edges['weight'].astype(float)
+
+#     # Add directed edge with weigth
+#     for i in range(df_edges.shape[0]):
+#         if df_edges['weight'].iloc[i]!=0:
+#             # Setup color
+#             if df_edges['weight'].iloc[i]==1:
+#                 color='k'
+#             elif df_edges['weight'].iloc[i]>1:
+#                 color='r'
+#             elif df_edges['weight'].iloc[i]<0:
+#                 color='b'
+#             else:
+#                 color='p'
+
+#             # Create edge in graph
+#             G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
+#     # Return
+#     return(G)
