@@ -224,7 +224,7 @@ model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 bnlearn.plot(model_sl, pos=G['pos'])
 
 # Compare networks and make plot
-bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'], pos=G['pos'])
+bnlearn.compare_networks(model, model_sl, pos=G['pos'])
 
 ```
 #### Graph of ground truth
