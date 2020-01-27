@@ -17,7 +17,7 @@ Learning a Bayesian network can be split into two problems which are both implem
 ```python
  .structure_learning.fit()
  .parameter_learning.fit()
- .inference()
+ .inference.fit()
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
   # Load well known examples to play arround with or load your own .bif file.
@@ -31,7 +31,7 @@ Learning a Bayesian network can be split into two problems which are both implem
   # To make the directed grapyh undirected
  .to_undirected()
  
-See below for the exact working of the functions
+# See below for the exact working of the functions
 ```
 
 #### The following methods are also included:
@@ -140,8 +140,8 @@ G = bnlearn.plot(model_update)
 ## Example: Inference
 ```python
 model = bnlearn.import_DAG('sprinkler')
-q_1 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
-q_2 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1})
+q_1 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
+q_2 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
 ```
 
 ## Example: Sampling to create dataframe
