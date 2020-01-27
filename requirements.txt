@@ -2,6 +2,7 @@
 #conda activate env_BNLEARN
 
 conda install pytorch -c pytorch
+packaging
 numpy
 pandas
 tqdm
