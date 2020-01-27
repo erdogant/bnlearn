@@ -260,7 +260,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
     # Load data
     if filepath=='sprinkler':
-        model = _DAG_sprinkler(CPD=CPD, verbose=verbose)
+        model = _DAG_sprinkler(CPD=CPD)
     elif filepath=='asia':
         model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
     elif filepath=='alarm':

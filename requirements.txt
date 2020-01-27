@@ -2,7 +2,6 @@
 #conda activate env_BNLEARN
 
 conda install pytorch -c pytorch
-pgmpy==0.1.9
 numpy
 pandas
 tqdm
@@ -12,6 +11,8 @@ sklearn
 funcsigs
 statsmodels
 community
+packaging
+pgmpy==0.1.9
 networkx==1.11
 matplotlib==2.2.3
 
