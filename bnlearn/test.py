@@ -1,6 +1,8 @@
 import bnlearn as bnlearn
 print(bnlearn.__version__)
 dir(bnlearn)
+
+# %%
 dir(bnlearn.structure_learning)
 
 # %% Load example dataframe from sprinkler
@@ -33,3 +35,17 @@ model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 bnlearn.plot(model_sl, pos=G['pos'])
 # Compare networks and make plot
 bnlearn.compare_networks(model, model_sl, pos=G['pos'])
+
+# %% PARAMETER LEARNING
+dir(bnlearn.parameter_learning)
+
+df = bnlearn.import_example()
+model = bnlearn.import_DAG('sprinkler', CPD=False)
+model_update = bnlearn.parameter_learning.fit(model, df)
+bnlearn.plot(model_update)
+
+# LOAD BIF FILE
+model = bnlearn.import_DAG('alarm')
+df = bnlearn.sampling(model, n=1000)
+model_update = bnlearn.parameter_learning.fit(model, df)
+G = bnlearn.plot(model_update)
