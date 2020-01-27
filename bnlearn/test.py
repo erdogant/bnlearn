@@ -1,4 +1,4 @@
-import bnlearn as bnlearn
+import bnlearn
 print(bnlearn.__version__)
 dir(bnlearn)
 
@@ -13,11 +13,11 @@ model = bnlearn.structure_learning.fit(df)
 G = bnlearn.plot(model)
 
 # %% Try all methods vs score types
-model_hc_bic  = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+model_hc_bic = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_hc_k2 = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
 model_hc_bdeu = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
-model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
-model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+model_ex_bic = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+model_ex_k2 = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 
 bnlearn.compare_networks(model, model_hc_bic, pos=G['pos'])
@@ -49,3 +49,12 @@ model = bnlearn.import_DAG('alarm')
 df = bnlearn.sampling(model, n=1000)
 model_update = bnlearn.parameter_learning.fit(model, df)
 G = bnlearn.plot(model_update)
+
+# %% INFERENCE
+model = bnlearn.import_DAG('sprinkler')
+bnlearn.plot(model)
+q1 = bnlearn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+
+print(q1)
+print(q2)

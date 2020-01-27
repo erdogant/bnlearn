@@ -1,6 +1,5 @@
 from bnlearn.bnlearn import (
     sampling,
-	inference,
     import_DAG,
     import_example,
 	to_undirected,
@@ -11,6 +10,7 @@ from bnlearn.bnlearn import (
 # Import function in new level
 import bnlearn.structure_learning
 import bnlearn.parameter_learning
+import bnlearn.inference
 
 import networkx as nx
 import matplotlib as mpl

@@ -1,14 +1,14 @@
 """This package provides several bayesian techniques for structure learning, sampling and parameter learning.
 
-    import bnlearn as bnlearn
+    import bnlearn
 
     model            = bnlearn.import_DAG('sprinkler')
     df               = bnlearn.import_example()
     df               = bnlearn.sampling(model)
-    q                = bnlearn.inference(model)
+    q                = bnlearn.inference.fit(model)
     model_sl         = bnlearn.structure_learning.fit(df)
-    model_pl         = bnlearn.parameter_learning(model_sl['model'], df)
-    [scores, adjmat] = bnlearn.compare_networks(model_sl, model_pl)
+    model_pl         = bnlearn.parameter_learning.fit(model_sl, df)
+    [scores, adjmat] = bnlearn.compare_networks(model_sl, model)
 
 
     Description
@@ -29,18 +29,12 @@
 
     Requirements
     ------------
-    conda create -n env_BNLEARN python=3.6
-    conda activate env_BNLEARN
-    conda install pytorch -c pytorch
-    pip install sklearn pandas tqdm funcsigs numpy
-    pip install pgmpy==v0.1.9
-    pip install networkx==v1.11
-    pip install matplotlib==2.2.3
+    see requirements.txt
 
 
     Example
     -------
-    import bnlearn as bnlearn
+    import bnlearn
 
     # =========================================================================
     # CREATE SPRINKLER DAG
@@ -50,17 +44,6 @@
     # =========================================================================
     # CREATE DATAFRAME FROM MODEL
     df = bnlearn.sampling(model, n=1000)
-
-    # =========================================================================
-    # PARAMETER LEARNING
-    model = bnlearn.import_DAG('sprinkler', CPD=False)
-    model_update = bnlearn.parameter_learning(model, df)
-    bnlearn.plot(model_update)
-
-    # =========================================================================
-    # EXACT INFERENCE
-    out = bnlearn.inference(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
-    out = bnlearn.inference(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
     # =========================================================================
     # LOAD BIF FILE
@@ -94,88 +77,11 @@ from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
 # SAMPLING
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
-# INFERENCE
-from pgmpy.inference import VariableElimination
 from pgmpy import readwrite
 # MICROSERVICES
 import bnlearn.helpers.network as network
-# ASSERTS
-# assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
-# assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
 curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath,'DATA')
-
-
-# %% Exact inference using Variable Elimination
-def inference(model, variables=None, evidence=None, verbose=3):
-    """Inference using using Variable Elimination.
-
-    Description
-    -----------
-    Inference is same as asking conditional probability questions to the models.
-    i.e., What is the probability of a sprinkler is on given that it is raining which is basically equivalent of asking $ P(g^1 | i^1) $.
-    Inference algorithms deals with efficiently finding these conditional probability queries.
-
-
-    Parameters
-    ----------
-    model : dict
-        Contains model
-
-    variables : list of strings, optional (default: None)
-        For exact inference, P(variables | evidence).
-        ['Name_of_node_1']
-        ['Name_of_node_1', 'Name_of_node_2']
-
-    evidence : dict, optional  (default: None)
-        For exact inference, P(variables | evidence).
-        {'Rain':1}
-        {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
-
-    verbose : int [0-5] (default: 3)
-        Print messages to screen.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
-
-    Returns
-    -------
-    None.
-
-
-    Description Extensive
-    ---------------------
-    There are two main categories for inference algorithms:
-        1. Exact Inference: These algorithms find the exact probability values for our queries.
-        2. Approximate Inference: These algorithms try to find approximate values by saving on computation.
-
-    Exact Inference
-        There are multiple algorithms for doing exact inference.
-
-    Two common Inference algorithms with variable Elimination
-        1. Clique Tree Belief Propagation
-        2. Variable Elimination
-
-    The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
-    But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
-    So basically if we want to eliminate $ X $ from our distribution, then we compute
-    the product of all the factors involving $ X $ and marginalize over them,
-    thus allowing us to work on much smaller factors.
-
-    In the above equation we can see that we pushed the summation inside and operated
-    the summation only factors that involved that variable and hence avoiding computing the
-    complete joint distribution.
-    """
-    if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
-    model_infer = VariableElimination(model['model'])
-    # Computing the probability of Wet Grass given Rain.
-    q = model_infer.query(variables=variables, evidence=evidence)
-    print(q)
-    # for varname in variables: print(q[varname])
-    return(q)
 
 
 # %% Sampling from model
