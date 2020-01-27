@@ -17,7 +17,7 @@ Learning a Bayesian network can be split into two problems which are both implem
 ```python
  .structure_learning.fit()
  .parameter_learning.fit()
- .inference()
+ .inference.fit()
   # Based on a DAG, you can sample the number of samples you want.
  .sampling()
   # Load well known examples to play arround with or load your own .bif file.
@@ -31,7 +31,7 @@ Learning a Bayesian network can be split into two problems which are both implem
   # To make the directed grapyh undirected
  .to_undirected()
  
-See below for the exact working of the functions
+# See below for the exact working of the functions
 ```
 
 #### The following methods are also included:
@@ -140,8 +140,8 @@ G = bnlearn.plot(model_update)
 ## Example: Inference
 ```python
 model = bnlearn.import_DAG('sprinkler')
-q_1 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
-q_2 = bnlearn.inference(model, variables=['Rain'], evidence={'Cloudy':1})
+q_1 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
+q_2 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
 ```
 
 ## Example: Sampling to create dataframe
@@ -219,12 +219,12 @@ G=bnlearn.plot(model)
 # Sampling
 df=bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
-model_sl = bnlearn.structure_learning(df, methodtype='hc', scoretype='bic')
+model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
 bnlearn.plot(model_sl, pos=G['pos'])
 
 # Compare networks and make plot
-bnlearn.compare_networks(model['adjmat'], model_sl['adjmat'], pos=G['pos'])
+bnlearn.compare_networks(model, model_sl, pos=G['pos'])
 
 ```
 #### Graph of ground truth
@@ -271,4 +271,4 @@ Please cite bnlearn in your publications if this is useful for your research. He
 See [LICENSE](LICENSE) for details.
 
 ### Donation
-* This work is created and maintained in my free time. If this package is usefull to you and if want to see more like this, you can show your <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">gratitude</a> :) Thanks!
+* This package is created and maintained in my free time. If this package is usefull, you can show your <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">gratitude</a> :) Thanks!
