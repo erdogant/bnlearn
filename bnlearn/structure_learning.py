@@ -48,18 +48,18 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     Parameters
     ----------
-    df:         [pd.DataFrame] Pandas DataFrame containing the data
+    df:         pd.DataFrame Pandas DataFrame containing the data
                    f1  ,f2  ,f3
                 s1 0   ,0   ,1
                 s2 0   ,1   ,0
                 s3 1   ,1   ,0
 
-    methodtype:  [STRING] Search strategy for structure_learning.
+    methodtype:  String Search strategy for structure_learning.
                 'hc' or 'hillclimbsearch' (default) : HillClimbSearch implements a greedy local search if many more nodes are involved
                 'ex' or 'exhaustivesearch' : Exhaustive search for very small networks
                 'cs' or 'constraintsearch' : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
 
-    scoretype:   [STRING]: Scoring function for the search spaces
+    scoretype:   String: Scoring function for the search spaces
                  'bic' (default)
                  'k2'
                  'bdeu'
@@ -67,13 +67,13 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     max_indegree: [int] or [None] If provided and unequal None, the procedure only searches among models where all nodes have at most `max_indegree` parents. Defaults to None.
                   None (default) Works only in case of methodtype='hc'
 
-    black_list:   [list] or [None],  If a list of edges is provided as `black_list`, they are excluded from the search and the resulting model will not contain any of those edges.
+    black_list:   list or None,  If a list of edges is provided as `black_list`, they are excluded from the search and the resulting model will not contain any of those edges.
                   None (default) Works only in case of methodtype='hc'
 
-    white_list:   [list] or [None], If a list of edges is provided as `white_list`, the search is limited to those edges. The resulting model will then only contain edges that are in `white_list`.
+    white_list:   list or None, If a list of edges is provided as `white_list`, the search is limited to those edges. The resulting model will then only contain edges that are in `white_list`.
                   None (default) Works only in case of methodtype='hc'
 
-    verbose:    [INT] Print messages to screen.
+    verbose:    int Print messages to screen.
                 0: NONE
                 1: ERROR
                 2: WARNING
