@@ -217,18 +217,16 @@ model = bnlearn.import_DAG(bif_file)
 model = bnlearn.import_DAG('asia')
 # plot ground truth
 G = bnlearn.plot(model)
-
 # Sampling
 df = bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
 bnlearn.plot(model_sl, pos=G['pos'])
-
 # Compare networks and make plot
 bnlearn.compare_networks(model, model_sl, pos=G['pos'])
-
 ```
+
 #### Graph of ground truth
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
