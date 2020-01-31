@@ -60,13 +60,15 @@ Learning a Bayesian network can be split into two problems which are both implem
 ```python
 conda create -n env_BNLEARN python=3.6
 conda activate env_BNLEARN
-conda install pytorch -c pytorch
+conda install -c ankurankan pgmpy
+#conda install pytorch -c pytorch
+
+# You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
+conda deactivate
+conda activate env_BNLEARN
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
 pip install sklearn pandas tqdm funcsigs statsmodels community packaging
-pip install pgmpy==v0.1.9
-pip install networkx==v1.11
-pip install matplotlib==2.2.3
 ```
 
 ## Quick Start
@@ -212,12 +214,12 @@ model = bnlearn.import_DAG(bif_file)
 ## Example: Comparing networks
 ```python
 # Load asia DAG
-model=bnlearn.import_DAG('asia')
+model = bnlearn.import_DAG('asia')
 # plot ground truth
-G=bnlearn.plot(model)
+G = bnlearn.plot(model)
 
 # Sampling
-df=bnlearn.sampling(model, n=10000)
+df = bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
