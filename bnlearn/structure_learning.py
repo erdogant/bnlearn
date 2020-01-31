@@ -307,7 +307,7 @@ def _SetScoringType(df, scoretype, verbose=3):
     elif scoretype=='k2':
         scoring_method = K2Score(df)
     elif scoretype=='bdeu':
-        scoring_method = BdeuScore(df, equivalent_sample_size=5)
+        scoring_method = BDeuScore(df, equivalent_sample_size=5)
 
     return(scoring_method)
 
