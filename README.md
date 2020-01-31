@@ -13,23 +13,26 @@ Learning a Bayesian network can be split into two problems which are both implem
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
 * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
-#### The following functions are available:
+#### The following functions are available after import bnlearn:
 ```python
- .structure_learning.fit()
- .parameter_learning.fit()
- .inference.fit()
-  # Based on a DAG, you can sample the number of samples you want.
- .sampling()
-  # Load well known examples to play arround with or load your own .bif file.
- .import_DAG()
-  # Load simple dataframe of sprinkler dataset.
- .import_example()
-  # Compare 2 graphs
- .compare_networks()
-  # Plot graph
- .plot()
-  # To make the directed grapyh undirected
- .to_undirected()
+# Structure learning
+bnlearn.structure_learning.fit()
+# Parameter learning
+bnlearn.parameter_learning.fit()
+# Inference
+bnlearn.inference.fit()
+# Based on a DAG, you can sample the number of samples you want.
+bnlearn.sampling()
+# Load well known examples to play arround with or load your own .bif file.
+bnlearn.import_DAG()
+# Load simple dataframe of sprinkler dataset.
+bnlearn.import_example()
+# Compare 2 graphs
+bnlearn.compare_networks()
+# Plot graph
+bnlearn.plot()
+# To make the directed grapyh undirected
+bnlearn.to_undirected()
  
 # See below for the exact working of the functions
 ```
@@ -60,13 +63,15 @@ Learning a Bayesian network can be split into two problems which are both implem
 ```python
 conda create -n env_BNLEARN python=3.6
 conda activate env_BNLEARN
-conda install pytorch -c pytorch
+conda install -c ankurankan pgmpy
+#conda install pytorch -c pytorch
+
+# You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
+conda deactivate
+conda activate env_BNLEARN
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
 pip install sklearn pandas tqdm funcsigs statsmodels community packaging
-pip install pgmpy==v0.1.9
-pip install networkx==v1.11
-pip install matplotlib==2.2.3
 ```
 
 ## Quick Start
@@ -212,21 +217,19 @@ model = bnlearn.import_DAG(bif_file)
 ## Example: Comparing networks
 ```python
 # Load asia DAG
-model=bnlearn.import_DAG('asia')
+model = bnlearn.import_DAG('asia')
 # plot ground truth
-G=bnlearn.plot(model)
-
+G = bnlearn.plot(model)
 # Sampling
-df=bnlearn.sampling(model, n=10000)
+df = bnlearn.sampling(model, n=10000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
 bnlearn.plot(model_sl, pos=G['pos'])
-
 # Compare networks and make plot
 bnlearn.compare_networks(model, model_sl, pos=G['pos'])
-
 ```
+
 #### Graph of ground truth
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
