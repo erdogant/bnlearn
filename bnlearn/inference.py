@@ -1,10 +1,4 @@
-"""This function provides techniques for inference.
-
-    import bnlearn
-
-    q = bnlearn.inference.fit(model)
-
-"""
+"""This function provides techniques for inference."""
 # ------------------------------------
 # Name        : inference.py
 # Author      : E.Taskesen

@@ -1,59 +1,35 @@
 """This package provides several bayesian techniques for structure learning, sampling and parameter learning.
 
-    import bnlearn
+import bnlearn
 
-    model            = bnlearn.import_DAG('sprinkler')
-    df               = bnlearn.import_example()
-    df               = bnlearn.sampling(model)
-    q                = bnlearn.inference.fit(model)
-    model_sl         = bnlearn.structure_learning.fit(df)
-    model_pl         = bnlearn.parameter_learning.fit(model_sl, df)
-    [scores, adjmat] = bnlearn.compare_networks(model_sl, model)
-
-
-    Description
-    -----------
-    Learning a Bayesian network can be split into two problems:
-        * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables,
-          estimate the (conditional) probability distributions of the individual variables.
-        * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-    Currently, the library supports:
-        * Parameter learning for *discrete* nodes:
-        * Maximum Likelihood Estimation
-        * Bayesian Estimation
-    Structure learning for *discrete*, *fully observed* networks:
-        * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-        * Constraint-based structure estimation (PC)
-        * Hybrid structure estimation (MMHC)
+model            = bnlearn.import_DAG('sprinkler')
+df               = bnlearn.import_example()
+df               = bnlearn.sampling(model)
+q                = bnlearn.inference.fit(model)
+model_sl         = bnlearn.structure_learning.fit(df)
+model_pl         = bnlearn.parameter_learning.fit(model_sl, df)
+[scores, adjmat] = bnlearn.compare_networks(model_sl, model)
 
 
-    Requirements
-    ------------
-    see requirements.txt
+Description
+-----------
+Learning a Bayesian network can be split into two problems:
+    * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables,
+      estimate the (conditional) probability distributions of the individual variables.
+    * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
+Currently, the library supports:
+    * Parameter learning for *discrete* nodes:
+    * Maximum Likelihood Estimation
+    * Bayesian Estimation
+Structure learning for *discrete*, *fully observed* networks:
+    * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+    * Constraint-based structure estimation (PC)
+    * Hybrid structure estimation (MMHC)
 
 
-    Example
-    -------
-    import bnlearn
-
-    # =========================================================================
-    # CREATE SPRINKLER DAG
-    model = bnlearn.import_DAG('sprinkler')
-    bnlearn.plot(model)
-
-    # =========================================================================
-    # CREATE DATAFRAME FROM MODEL
-    df = bnlearn.sampling(model, n=1000)
-
-    # =========================================================================
-    # LOAD BIF FILE
-    model = bnlearn.import_DAG('alarm', verbose=0)
-    bnlearn.plot(model, figsize=(20,12))
-
-    df = bnlearn.sampling(model, n=1000)
-    model_alarm = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    G = bnlearn.plot(model_alarm)
-    bnlearn.plot(model, pos=G['pos'])
+Requirements
+------------
+see requirements.txt
 
 """
 # ------------------------------------
@@ -69,7 +45,6 @@ import os
 import pandas as pd
 import numpy as np
 import networkx as nx
-# import matplotlib as mpl
 import matplotlib.pyplot as plt
 import json
 # DAG
@@ -109,6 +84,13 @@ def sampling(model, n=1000, verbose=3):
     Returns
     -------
     Pandas DataFrame
+    
+
+    Example
+    -------
+    import bnlearn
+    model = bnlearn.import_DAG('sprinkler')
+    df = bnlearn.sampling(model, n=1000)
 
     """
     assert n>0, 'n must be 1 or larger'
@@ -158,6 +140,12 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     Returns
     -------
     None.
+    
+
+    Example
+    -------
+    model = bnlearn.import_DAG('sprinkler')
+    bnlearn.plot(model)
 
     """
     out=dict()

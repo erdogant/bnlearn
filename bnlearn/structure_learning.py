@@ -1,51 +1,4 @@
-"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-
-    import bnlearn as bnlearn
-
-
-    Description
-    -----------
-    Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-    Structure learning for *discrete*, *fully observed* networks:
-        * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-        * Constraint-based structure estimation (PC)
-        * Hybrid structure estimation (MMHC)
-
-    Example
-    -------
-    import bnlearn as bnlearn
-
-    # =========================================================================
-    # Load example dataframe from sprinkler
-    df = bnlearn.import_example()
-    # Structure learning
-    model = bnlearn.structure_learning.fit(df)
-    # Plot
-    G = bnlearn.plot(model)
-
-    # =========================================================================
-    # Compute structure for many different parameters
-    model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
-
-    # =========================================================================
-    # Compare networks
-    bnlearn.compare_networks(model, model_hc_k2, pos=G['pos'])
-
-    # =========================================================================
-    # Example compare networks
-    # Load asia DAG
-    model = bnlearn.import_DAG('asia')
-    # plot ground truth
-    G = bnlearn.plot(model)
-    # Sampling
-    df = bnlearn.sampling(model, n=10000)
-    # Structure learning of sampled dataset
-    model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    # Plot based on structure learning of sampled data
-    bnlearn.plot(model_sl, pos=G['pos'])
-    # Compare networks and make plot
-    bnlearn.compare_networks(model, model_sl, pos=G['pos'])
-"""
+"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables."""
 # ------------------------------------
 # Name        : structure_learning.py
 # Author      : E.Taskesen
@@ -60,7 +13,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pgmpy
 # STRUCTURE LEARNING
-from pgmpy.estimators import BdeuScore, K2Score, BicScore
+from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
 # ASSERTS
 from packaging import version  # For pgmpy versioning check for black_list/white_list
@@ -76,15 +29,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     -----------
     Search strategies for structure learning
     The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
-    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
 
     To learn model structure (a DAG) from a data set, there are three broad techniques:
-        1. Score-based structure learning
+        1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
             a. exhaustivesearch
             b. hillclimbsearch
-        2. Constraint-based structure learning
+        2. Constraint-based structure learning (PC)
             a. chi-square test
-        3. Hybrid structure learning (The combination of both techniques)
+        3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
         Score-based Structure Learning
         This approach construes model selection as an optimization task. It has two building blocks:
@@ -132,6 +84,28 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     Returns
     -------
     model
+    
+
+    Example
+    -------
+    # Load asia DAG
+    model = bnlearn.import_DAG('asia')
+    # plot ground truth
+    G = bnlearn.plot(model)
+    # Sampling
+    df = bnlearn.sampling(model, n=10000)
+    # Structure learning of sampled dataset
+    model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    # Plot based on structure learning of sampled data
+    bnlearn.plot(model_sl, pos=G['pos'])
+    # Compare networks and make plot
+    bnlearn.compare_networks(model, model_sl, pos=G['pos'])
+
+
+    References
+    ----------
+    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
+
 
     """
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'

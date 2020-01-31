@@ -1,33 +1,4 @@
-"""This function provides techniques for parameter learning.
-
-    import bnlearn
-
-    Description
-    -----------
-    Currently, the library supports:
-        * Parameter learning for *discrete* nodes:
-        * Maximum Likelihood Estimation
-        * Bayesian Estimation
-
-
-    Example
-    -------
-    import bnlearn as bnlearn
-
-    # =========================================================================
-    # PARAMETER LEARNING
-    df = bnlearn.import_example()
-    model = bnlearn.import_DAG('sprinkler', CPD=False)
-    model_update = bnlearn.parameter_learning.fit(model, df)
-    bnlearn.plot(model_update)
-
-    # =========================================================================
-    # LOAD BIF FILE
-    model = bnlearn.import_DAG('alarm')
-    df = bnlearn.sampling(model, n=1000)
-    model_update = bnlearn.parameter_learning.fit(model, df)
-    G = bnlearn.plot(model_update)
-"""
+"""This function provides techniques for parameter learning."""
 # ------------------------------------
 # Name        : parameter_learning.py
 # Author      : E.Taskesen
@@ -52,6 +23,11 @@ def fit(model, df, methodtype='bayes', verbose=3):
         To make sense of the given data, we can start by counting how often each state of the variable occurs.
         If the variable is dependent on parents, the counts are done conditionally on the parents states,
         i.e. for seperately for each parent configuration
+
+    Currently, the library supports:
+        * Parameter learning for *discrete* nodes:
+        * Maximum Likelihood Estimation
+        * Bayesian Estimation
 
 
     Parameters
@@ -80,6 +56,21 @@ def fit(model, df, methodtype='bayes', verbose=3):
     Returns
     -------
     model
+    
+
+    Example
+    -------
+    df = bnlearn.import_example()
+    model = bnlearn.import_DAG('sprinkler', CPD=False)
+    model_update = bnlearn.parameter_learning.fit(model, df)
+    bnlearn.plot(model_update)
+
+    # LOAD BIF FILE
+    model = bnlearn.import_DAG('alarm')
+    df = bnlearn.sampling(model, n=1000)
+    model_update = bnlearn.parameter_learning.fit(model, df)
+    G = bnlearn.plot(model_update)
+    
     """
     config = dict()
     config['verbose'] = verbose
