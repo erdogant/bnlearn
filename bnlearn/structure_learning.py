@@ -105,6 +105,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     References
     ----------
     http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
+	https://pgmpy.org/estimators.html?highlight=black_list
 
 
     """
