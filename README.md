@@ -274,4 +274,4 @@ Please cite bnlearn in your publications if this is useful for your research. He
 See [LICENSE](LICENSE) for details.
 
 ### Donation
-* This package is created and maintained in my free time. If this package is usefull, you can show your <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">gratitude</a> :) Thanks!
+This package is created and maintained in my free time. If this package is usefull, feel free to use more of my packages. Sponser <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">here</a>.
