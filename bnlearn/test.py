@@ -42,7 +42,7 @@ bnlearn.compare_networks(model, model_sl, pos=G['pos'])
 
 
 # Structure learning with black list
-model_bl = bnlearn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray'])
+model_bl = bnlearn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'])
 bnlearn.plot(model_bl, pos=G['pos'])
 bnlearn.compare_networks(model, model_bl, pos=G['pos'])
 
