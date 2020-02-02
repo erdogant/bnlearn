@@ -122,7 +122,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['max_indegree'] = max_indegree
 
     # Show warnings
-    PGMPY_VER = version.parse(pgmpy.__version__[1:])>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
+    PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
     if PGMPY_VER and ((black_list is not None) or (white_list is not None)):  # Can be be removed if pgmpy >v0.1.9
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
     if df.shape[1]>10 and df.shape[1]<15:

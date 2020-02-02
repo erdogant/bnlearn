@@ -12,10 +12,9 @@ import bnlearn.structure_learning
 import bnlearn.parameter_learning
 import bnlearn.inference
 
-import networkx as nx
-import matplotlib as mpl
-#assert (nx.__version__)=='1.11', 'This function requires networkx to be v1.11. Try to: pip install networkx==v1.11'
-#assert (mpl.__version__)=='2.2.3', 'This function requires matplotlib to be v2.2.3. Try to: pip install matplotlib==v2.2.3'
+import pgmpy
+from packaging import version
+assert version.parse(pgmpy.__version__)>=version.parse("0.1.10"), 'This release requires pgmpy to be v0.1.10. or higher. Try to: conda install -c ankurankan pgmpy'
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
