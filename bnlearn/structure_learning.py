@@ -84,7 +84,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     Returns
     -------
     model
-    
+
 
     Example
     -------
@@ -123,7 +123,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Show warnings
     PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
-    if PGMPY_VER and ((black_list is not None) or (white_list is not None)):  # Can be be removed if pgmpy >v0.1.9
+    if ((black_list is not None) or (white_list is not None)):  # Can be be removed if pgmpy >v0.1.9
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
@@ -257,8 +257,10 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     model = HillClimbSearch(df, scoring_method=scoring_method)
     # Compute best DAG
     try:
-        best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
+        if ((black_list is not None) or (white_list is not None)):
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] black_list and/or white_list are incorporated..')  # Can be be removed if pgmpy >v0.1.9
         # print("Works only for version > v.0.1.9")
+        best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
     except:
         best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
 
