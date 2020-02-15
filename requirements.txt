@@ -10,7 +10,6 @@ statsmodels
 community
 sklearn
 funcsigs
-community
 networkx
 matplotlib
 # networkx==1.11
