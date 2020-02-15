@@ -2,15 +2,17 @@
 #conda activate env_BNLEARN
 
 # conda install -c ankurankan pgmpy
-packaging
+networkx
+matplotlib
 numpy
 pandas
 tqdm
-statsmodels
-community
+ismember
 sklearn
 funcsigs
-networkx
-matplotlib
+statsmodels
+community
+packaging
+
 # networkx==1.11
 # matplotlib==2.2.3
