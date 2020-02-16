@@ -12,35 +12,40 @@ WORK IN PROGRES!
 
 
 Content
-=======
+========
 
 .. toctree::
    :maxdepth: 1
    :caption: Introduction
+
    Introduction
 
 
 .. toctree::
    :maxdepth: 1
    :caption: Quickstart
+
    Quickstart
 
 
 .. toctree::
   :maxdepth: 1
   :caption: Structure learning
+
   Structure learning
 
 
 .. toctree::
   :maxdepth: 1
   :caption: Parameter learning
+
   Parameter learning
 
 
 .. toctree::
   :maxdepth: 1
   :caption: Inference
+
   Inference
 
 

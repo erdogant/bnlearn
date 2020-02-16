@@ -167,9 +167,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         A different, but quite straightforward approach to build a DAG from data is this:
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
-        Independencies in the data can be identified using chi2 conditional independence tests.
-        To this end, constraint-based estimators in pgmpy have a test_conditional_independence(X, Y, Zs)-method,
-        that performs a hypothesis test on the data sample. It allows to check if X is independent from Y given a set of variables Zs."""
+        Independencies in the data can be identified using chi2 conditional independence tests."""
         out = _constraintsearch(df, verbose=config['verbose'])
 
     # Setup simmilarity matrix
