@@ -53,6 +53,7 @@ Installation
    conda deactivate
    conda activate env_BNLEARN
 
+.. code-block:: console
    pip install bnlearn
 
 
