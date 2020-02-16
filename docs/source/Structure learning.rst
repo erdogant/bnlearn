@@ -14,7 +14,8 @@ However, realize that the search space of DAGs is super-exponential in the numbe
       b. hillclimbsearch
   2. Constraint-based structure learning (PC)
       a. chi-square test
-  3. Hybrid structure learning (The combination of both techniques) (MMHC)
+  3. Hybrid structure learning 
+      a. The combination of both techniques (MMHC)
 
 
 Learning the graph of the data using structure learning and a score-based approach.
