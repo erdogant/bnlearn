@@ -22,10 +22,44 @@ __version__ = '0.2.1'
 
 # module level doc-string
 __doc__ = """
-BNLEARN - bnlearn is an Python package for learning the graphical structure of Bayesian networks, estimate their parameters, perform some inference, sampling and comparing networks.
-=====================================================================
+BNLEARN - bnlearn is an Python package for learning the graphical structure of Bayesian networks, estimate their parameters, perform inference, sampling and comparing networks.
+================================================================================================================================================================================
 
-**bnlearn** 
-See README.md file for more information.
+Description
+-----------
+bnlearn
+
+Example
+-------
+import bnlearn
+
+model            = bnlearn.import_DAG('sprinkler')
+df               = bnlearn.import_example()
+df               = bnlearn.sampling(model)
+q                = bnlearn.inference.fit(model)
+model_sl         = bnlearn.structure_learning.fit(df)
+model_pl         = bnlearn.parameter_learning.fit(model_sl, df)
+[scores, adjmat] = bnlearn.compare_networks(model_sl, model)
+
+
+Description
+-----------
+Learning a Bayesian network can be split into two problems:
+    * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables,
+      estimate the (conditional) probability distributions of the individual variables.
+    * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
+Currently, the library supports:
+    * Parameter learning for *discrete* nodes:
+    * Maximum Likelihood Estimation
+    * Bayesian Estimation
+Structure learning for *discrete*, *fully observed* networks:
+    * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+    * Constraint-based structure estimation (PC)
+    * Hybrid structure estimation (MMHC)
+
+References
+----------
+https://bnlearn.readthedocs.io
+https://github.com/erdogant/bnlearn
 
 """
