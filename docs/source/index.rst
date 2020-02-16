@@ -44,8 +44,16 @@ Installation
 
 .. code-block:: console
 
-   pip install bnlearn
+   # It is advisable to create a new environment. 
+   conda create -n env_BNLEARN python=3.6
+   conda activate env_BNLEARN
+   conda install -c ankurankan pgmpy
 
+   # You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
+   conda deactivate
+   conda activate env_BNLEARN
+
+   pip install bnlearn
 
 
 Source code and issue tracker
