@@ -29,7 +29,7 @@ Content
 
 
 .. toctree::
-  :maxdepth: 1
+  :maxdepth: 2
   :caption: Structure learning
 
   Structure learning
