@@ -18,6 +18,29 @@ However, realize that the search space of DAGs is super-exponential in the numbe
       a. The combination of both techniques (MMHC)
 
 
+exhaustivesearch
+''''''''''''''''
+
+ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one.
+This search approach is only atractable for very small networks, and prohibits efficient local optimization algorithms to always find the optimal structure. Thus, identifiying the ideal structure is often not tractable. Despite these bad news, heuristic search strategies often yields good results. If only few nodes are involved (read: less than 5 or so).
+
+
+hillclimbsearch
+''''''''''''''''
+
+Once more nodes are involved, one needs to switch to heuristic search. HillClimbSearch implements a greedy local search that starts from the DAG "start" (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
+
+
+Constraint-based
+''''''''''''''''''
+
+A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristig flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
+
+  1. Hypothesis tests
+  2. Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
+  3. Independencies in the data can be identified using chi2 conditional independence tests.
+
+
 
 Learning the graph of the data using structure learning and a score-based approach.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
