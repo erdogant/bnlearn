@@ -11,13 +11,13 @@ Let's bring in our dataset.
 .. code-block:: python
 
   import bnlearn
-
   df = bnlearn.import_example()
   df.head()
 
 
 .. table::
-       Cloudy  Sprinkler  Rain  Wet_Grass
+
+  Cloudy  Sprinkler  Rain  Wet_Grass
   0         0          1     0          1
   1         1          1     1          1
   2         1          0     1          1
@@ -34,7 +34,9 @@ Let's bring in our dataset.
 From the *bnlearn* library, we'll need the
 :class:`~bnlearn.fitters.structure_learning.fit` for this exercise:
 
+
 .. code-block:: python
+
   model = bnlearn.structure_learning.fit(df)
   G = bnlearn.plot(model)
 
