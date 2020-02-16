@@ -3,7 +3,7 @@ bnlearn's documentation!
 
 WORK IN PROGRES!
 
-*bnlearn* is Python package for learning the graphical structure of Bayesian networks. What benefits does bnlearn offer over other bayesian analysis implementations?
+*bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 
 * build on top of pgmpy library
 * contains the most-wanted pipelines
@@ -13,10 +13,12 @@ WORK IN PROGRES!
 
 Content
 =======
+
 .. toctree::
    :maxdepth: 1
    :caption: Introduction
    Introduction
+
 
 .. toctree::
    :maxdepth: 1
@@ -44,8 +46,10 @@ Content
 
 Installation
 ------------
+
 It is advisable to create a new environment. 
 You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
+
 
 .. code-block:: console
 
