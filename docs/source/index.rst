@@ -64,17 +64,6 @@ Source code and issue tracker
 Available on Github, `erdogant/bnlearn <https://github.com/erdogant/bnlearn/>`_.
 Please report bugs, issues and feature extensions there.
 
-Citing *bnlearn*
-----------------
-Here is an example BibTeX entry:
-
-@misc{erdogant2019bnlearn,
-  title={bnlearn},
-  author={Erdogan Taskesen},
-  year={2019},
-  howpublished={\url{https://github.com/erdogant/bnlearn}}}
-
-
 
 Indices and tables
 ==================
