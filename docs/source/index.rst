@@ -23,15 +23,18 @@ Content
    :caption: Quickstart
    Quickstart
 
+
 .. toctree::
   :maxdepth: 1
   :caption: Structure learning
   Structure learning
 
+
 .. toctree::
   :maxdepth: 1
   :caption: Parameter learning
   Parameter learning
+
 
 .. toctree::
   :maxdepth: 1
@@ -41,17 +44,18 @@ Content
 
 Installation
 ------------
+It is advisable to create a new environment. 
+You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
 
 .. code-block:: console
 
-   # It is advisable to create a new environment. 
    conda create -n env_BNLEARN python=3.6
    conda activate env_BNLEARN
    conda install -c ankurankan pgmpy
 
-   # You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
    conda deactivate
    conda activate env_BNLEARN
+
 
 .. code-block:: console
 
