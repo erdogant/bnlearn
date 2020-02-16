@@ -28,8 +28,8 @@ You may need to deactivate and then activate your environment otherwise the pack
    pip install bnlearn
     
 
-bnlearn
--------------
+Quickstart
+-----------
 
 Let's start by importing some data. We need a DAG and CPD.
 
