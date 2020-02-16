@@ -15,7 +15,7 @@ Learning a Bayesian network can be split into two problems which are both implem
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
 * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
-#### The following functions are available after import bnlearn:
+#### The following functions are available after importing bnlearn.
 ```python
 # Structure learning
 bnlearn.structure_learning.fit()
