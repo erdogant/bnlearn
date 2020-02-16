@@ -16,6 +16,7 @@ The following functions are available after importing bnlearn.
 * Parameter learning
 * Inference
 * Sampling
-* Compare 2 graphs
 * Plot
-* Make graph undirected
+* comparing two networks
+* loading bif files
+* conversion of directed to undirected graphs
