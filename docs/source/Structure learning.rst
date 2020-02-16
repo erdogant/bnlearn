@@ -32,7 +32,7 @@ Let's bring in our dataset.
 
 
 From the *bnlearn* library, we'll need the
-:class:`~bnlearn.fitters.structure_learning.fit` for this exercise:
+:class:`~bnlearn.structure_learning.fit` for this exercise:
 
 
 .. code-block:: python
