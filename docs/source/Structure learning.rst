@@ -18,14 +18,17 @@ However, realize that the search space of DAGs is super-exponential in the numbe
       a. The combination of both techniques (MMHC)
 
 
+
 Learning the graph of the data using structure learning and a score-based approach.
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 
+Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). BDeu is dependent on an equivalent sample size.
+
 This approach contains model selection as an optimization task with two building blocks:
+
   1. A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
   2. A search strategy to traverse the search space of possible models M and select a model with optimal score.
   
-Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). BDeu is dependent on an equivalent sample size.
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -65,7 +68,7 @@ From the *bnlearn* library, we'll need the
 
 .. code-block:: python
 
-  model = bnlearn.structure_learning.fit(df)
+  model = bnlearn.structure_learning.fit(df,  methodtype='hc', scoretype='bic')
   G = bnlearn.plot(model)
 
 
