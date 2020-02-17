@@ -76,7 +76,21 @@ Let's bring in our dataset.
   |    1   |      0    |  1   |      1      |
   +--------+-----------+------+-------------+
 
-From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise.
+From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise:
+
+.. code-block:: python
+
+  model = bnlearn.structure_learning.fit(df)
+  G = bnlearn.plot(model)
+
+
+.. _fig-main:
+
+.. figure:: ../figs/fig_sprinkler_sl.png
+
+  Learned structure on the Sprinkler data set.
+   
+
 We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
 
 Method types:
@@ -88,15 +102,11 @@ Scoring types:
   2. k2
   3. bdeu
 
+
 .. code-block:: python
-
-  model = bnlearn.structure_learning.fit(df,  methodtype='hc', scoretype='bic')
-  G = bnlearn.plot(model)
-
-
-.. _fig-main:
-
-.. figure:: ../figs/fig_sprinkler_sl.png
-
-  Learned structure on the Sprinkler data set.
-   
+  model_hc_bic  = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+  model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+  model_hc_bdeu = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+  model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+  model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+  model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
