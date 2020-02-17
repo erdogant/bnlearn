@@ -1,28 +1,14 @@
-.. _code_directive:
-
--------------------------------------
-
 API Reference
-==============
+==================================
 
 
-plotting
-''''''''''''''''
+.. toctree::
 
-datasets
-''''''''''''''''
+    bnlearn.structure_learning
+    bnlearn.parameter_learning
+    bnlearn.inference
+    bnlearn.plot
+    bnlearn.sampling
+    bnlearn.import_example
+    bnlearn.import_DAG
 
-sampling
-''''''''''''''''
-
-creating DAG
-''''''''''''''''
-
-structure learning
-''''''''''''''''''''
-
-parameter learning
-''''''''''''''''''''
-
-inference
-''''''''''''''''''''

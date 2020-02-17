@@ -1,4 +1,26 @@
-"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables."""
+"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
+
+Description
+-----------
+Search strategies for structure learning
+The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
+
+To learn model structure (a DAG) from a data set, there are three broad techniques:
+    1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+        a. exhaustivesearch
+        b. hillclimbsearch
+    2. Constraint-based structure learning (PC)
+        a. chi-square test
+    3. Hybrid structure learning (The combination of both techniques) (MMHC)
+
+    Score-based Structure Learning
+    This approach construes model selection as an optimization task. It has two building blocks:
+    A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
+    A search strategy to traverse the search space of possible models M and select a model with optimal score.
+    Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
+    and the Bayesian Information Criterion (BIC, also called MDL).
+    As before, BDeu is dependent on an equivalent sample size.
+"""
 # ------------------------------------
 # Name        : structure_learning.py
 # Author      : E.Taskesen
@@ -25,88 +47,63 @@ PATH_TO_DATA = os.path.join(curpath,'DATA')
 def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
     """Structure learning fit model.
 
-    Description
-    -----------
-    Search strategies for structure learning
-    The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
-
-    To learn model structure (a DAG) from a data set, there are three broad techniques:
-        1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-            a. exhaustivesearch
-            b. hillclimbsearch
-        2. Constraint-based structure learning (PC)
-            a. chi-square test
-        3. Hybrid structure learning (The combination of both techniques) (MMHC)
-
-        Score-based Structure Learning
-        This approach construes model selection as an optimization task. It has two building blocks:
-        A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
-        A search strategy to traverse the search space of possible models M and select a model with optimal score.
-        Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
-        and the Bayesian Information Criterion (BIC, also called MDL).
-        As before, BDeu is dependent on an equivalent sample size.
-
     Parameters
     ----------
-    df:         pd.DataFrame Pandas DataFrame containing the data
-                   f1  ,f2  ,f3
-                s1 0   ,0   ,1
-                s2 0   ,1   ,0
-                s3 1   ,1   ,0
+    df : pd.DataFrame()
+        Input dataframe.
+    methodtype : str, optional
+        String Search strategy for structure_learning. The default is 'hc'.
+        'hc' or 'hillclimbsearch' (default)
+        'ex' or 'exhaustivesearch'
+        'cs' or 'constraintsearch'
+    scoretype : str, optional
+        Scoring function for the search spaces. The default is 'bic'.
+        'bic'
+        'k2'
+        'bdeu'
+    black_list : List, optional
+        If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges.. The default is None.
+        Works only in case of methodtype='hc'
+    white_list : List, optional
+        If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
+        Works only in case of methodtype='hc'
+    max_indegree : int, optional
+        If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. The default is None.
+        Works only in case of methodtype='hc'
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: NONE
+        1: ERROR
+        2: WARNING
+        3: INFO (default)
+        4: DEBUG
+        5: TRACE
 
-    methodtype:  String Search strategy for structure_learning.
-                'hc' or 'hillclimbsearch' (default) : HillClimbSearch implements a greedy local search if many more nodes are involved
-                'ex' or 'exhaustivesearch' : Exhaustive search for very small networks
-                'cs' or 'constraintsearch' : Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test (chi2)
-
-    scoretype:   String: Scoring function for the search spaces
-                 'bic' (default)
-                 'k2'
-                 'bdeu'
-
-    max_indegree: [int] or [None] If provided and unequal None, the procedure only searches among models where all nodes have at most `max_indegree` parents. Defaults to None.
-                  None (default) Works only in case of methodtype='hc'
-
-    black_list:   list or None,  If a list of edges is provided as `black_list`, they are excluded from the search and the resulting model will not contain any of those edges.
-                  None (default) Works only in case of methodtype='hc'
-
-    white_list:   list or None, If a list of edges is provided as `white_list`, the search is limited to those edges. The resulting model will then only contain edges that are in `white_list`.
-                  None (default) Works only in case of methodtype='hc'
-
-    verbose:    int Print messages to screen.
-                0: NONE
-                1: ERROR
-                2: WARNING
-                3: INFO (default)
-                4: DEBUG
-                5: TRACE
 
     Returns
     -------
-    model
+    dict with model.
 
 
-    Example
-    -------
-    # Load asia DAG
-    model = bnlearn.import_DAG('asia')
-    # plot ground truth
-    G = bnlearn.plot(model)
-    # Sampling
-    df = bnlearn.sampling(model, n=10000)
-    # Structure learning of sampled dataset
-    model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    # Plot based on structure learning of sampled data
-    bnlearn.plot(model_sl, pos=G['pos'])
-    # Compare networks and make plot
-    bnlearn.compare_networks(model, model_sl, pos=G['pos'])
-
-
-    References
-    ----------
-    http://pgmpy.chrisittner.de/pages/gsoc-proposal.html
-	https://pgmpy.org/estimators.html?highlight=black_list
-
+    Examples
+    --------
+    >>> # Load asia DAG
+    >>> model = bnlearn.import_DAG('asia')
+    >>>
+    >>> # plot ground truth
+    >>> G = bnlearn.plot(model)
+    >>>
+    >>> # Sampling
+    >>> df = bnlearn.sampling(model, n=10000)
+    >>>
+    >>> # Structure learning of sampled dataset
+    >>> model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    >>>
+    >>> # Plot based on structure learning of sampled data
+    >>> bnlearn.plot(model_sl, pos=G['pos'])
+    >>>
+    >>> # Compare networks and make plot
+    >>> bnlearn.compare_networks(model, model_sl, pos=G['pos'])
 
     """
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'

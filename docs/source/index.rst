@@ -46,15 +46,9 @@ Content
 
 .. toctree::
   :maxdepth: 2
-  :caption: API Reference
+  :caption: Additional Documentation
 
-  plotting
-  datasets
-  sampling
-  creating DAG
-  structure learning
-  parameter learning
-  inference
+  API Reference
   
   
 Installation

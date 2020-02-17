@@ -94,9 +94,9 @@ From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.f
 We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
 
 Method types:
-  1. hillclimbsearch or hc
-  2. exhaustivesearch or ex
-  3. constraintsearch or cs
+  1. hillclimbsearch or hc (greedy local search if many more nodes are involved)
+  2. exhaustivesearch or ex (exhaustive search for very small networks)
+  3. constraintsearch or cs (Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test, chi2)
 Scoring types:
   1. bic
   2. k2
