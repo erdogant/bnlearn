@@ -11,4 +11,5 @@ API Reference
     bnlearn.sampling
     bnlearn.import_example
     bnlearn.import_DAG
+    bnlearn.bnlearn
 
