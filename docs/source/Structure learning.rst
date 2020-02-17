@@ -77,7 +77,7 @@ Let's bring in our dataset.
   +--------+-----------+------+-------------+
 
 From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise.
-We can specificy the method type and scoring type.
+We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
 
 Method types:
   1. hillclimbsearch or hc
