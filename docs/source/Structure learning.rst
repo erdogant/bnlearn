@@ -76,9 +76,17 @@ Let's bring in our dataset.
   |    1   |      0    |  1   |      1      |
   +--------+-----------+------+-------------+
 
-From the *bnlearn* library, we'll need the
-:class:`~bnlearn.structure_learning.fit` for this exercise:
+From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise.
+We can specificy the method type and scoring type.
 
+Method types:
+  1. hillclimbsearch or hc
+  2. exhaustivesearch or ex
+  3. constraintsearch or cs
+Scoring types:
+  1. bic
+  2. k2
+  3. bdeu
 
 .. code-block:: python
 
