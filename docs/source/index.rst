@@ -49,6 +49,20 @@ Content
   Inference
 
 
+.. toctree::
+  :maxdepth: 2
+  :caption: API Reference
+
+  plotting
+  datasets
+  sampling
+  creating DAG
+  structure learning
+  parameter learning
+  inference
+  
+
+
 Installation
 ------------
 
