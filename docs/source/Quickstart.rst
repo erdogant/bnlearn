@@ -1,9 +1,5 @@
-.. _code_directive:
-
--------------------------------------
-
 Quickstart
-''''''''''
+==========
 
 
 Installation
@@ -28,8 +24,8 @@ You may need to deactivate and then activate your environment otherwise the pack
    pip install bnlearn
     
 
-Quickstart
------------
+Examples
+--------
 
 Let's start by importing some data. We need a DAG and CPD.
 
