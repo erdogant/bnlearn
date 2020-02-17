@@ -104,9 +104,11 @@ Scoring types:
 
 
 .. code-block:: python
+
   model_hc_bic  = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
   model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
   model_hc_bdeu = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
   model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
   model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
   model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+
