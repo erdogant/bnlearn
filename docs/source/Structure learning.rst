@@ -94,3 +94,9 @@ Scoring types:
   G = bnlearn.plot(model)
 
 
+.. _fig-main:
+
+.. figure:: figs/fig_sprinkler_sl.png
+
+  Learned structure on the Sprinkler data set.
+   
