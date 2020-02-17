@@ -96,7 +96,7 @@ Scoring types:
 
 .. _fig-main:
 
-.. figure:: ../../figs/fig_sprinkler_sl.png
+.. figure:: ../figs/fig_sprinkler_sl.png
 
   Learned structure on the Sprinkler data set.
    
