@@ -1,15 +1,4 @@
-"""This package provides several bayesian techniques for structure learning, sampling and parameter learning.
-
-import bnlearn
-
-model            = bnlearn.import_DAG('sprinkler')
-df               = bnlearn.import_example()
-df               = bnlearn.sampling(model)
-q                = bnlearn.inference.fit(model)
-model_sl         = bnlearn.structure_learning.fit(df)
-model_pl         = bnlearn.parameter_learning.fit(model_sl, df)
-[scores, adjmat] = bnlearn.compare_networks(model_sl, model)
-
+"""Bayesian techniques for structure learning, sampling and parameter learning.
 
 Description
 -----------
@@ -25,11 +14,6 @@ Structure learning for *discrete*, *fully observed* networks:
     * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
     * Constraint-based structure estimation (PC)
     * Hybrid structure estimation (MMHC)
-
-
-Requirements
-------------
-see requirements.txt
 
 """
 # ------------------------------------
@@ -47,13 +31,12 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import json
-# DAG
+
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
-# SAMPLING
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
+
 from pgmpy import readwrite
-# MICROSERVICES
 import bnlearn.helpers.network as network
 curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath,'DATA')
@@ -66,14 +49,11 @@ def sampling(model, n=1000, verbose=3):
     Parameters
     ----------
     model : dict
-        Contains model and adjmat
-
-    n : int
-        Number of samples to generate
-        n=1000 (default)
-
-    verbose : int [0-5] (default: 3)
-        Print messages to screen.
+        Contains model and adjmat.
+    n : int, optional
+        Number of samples to generate. The default is 1000.
+    verbose : int, optional
+        Print progress to screen. The default is 3.
         0: NONE
         1: ERROR
         2: WARNING
@@ -83,14 +63,14 @@ def sampling(model, n=1000, verbose=3):
 
     Returns
     -------
-    Pandas DataFrame
-    
+    df : pd.DataFrame().
+
 
     Example
     -------
-    import bnlearn
-    model = bnlearn.import_DAG('sprinkler')
-    df = bnlearn.sampling(model, n=1000)
+    >>> import bnlearn
+    >>> model = bnlearn.import_DAG('sprinkler')
+    >>> df = bnlearn.sampling(model, n=1000)
 
     """
     assert n>0, 'n must be 1 or larger'
@@ -111,8 +91,8 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
     Parameters
     ----------
-    filepath : String, optional (default: 'sprinkler')
-        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.
+    filepath : str, optional
+        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
         'sprinkler'(default)
         'alarm'
         'andes'
@@ -121,14 +101,10 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         'sachs'
         'miserables'
         'filepath/to/model.bif'
-
-    CPD : Bool, optional (default: True)
-        Directed Acyclic Graph (DAG).
-        True (default)
-        False
-
-    verbose : int [0-5] (default: 3)
-        Print messages to screen.
+    CPD : bool, optional
+        Directed Acyclic Graph (DAG). The default is True.
+    verbose : int, optional
+        Print progress to screen. The default is 3.
         0: NONE
         1: ERROR
         2: WARNING
@@ -136,16 +112,15 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         4: DEBUG
         5: TRACE
 
-
     Returns
     -------
-    None.
-    
+    dict.
 
-    Example
-    -------
-    model = bnlearn.import_DAG('sprinkler')
-    bnlearn.plot(model)
+
+    Examples
+    --------
+    >>> model = bnlearn.import_DAG('sprinkler')
+    >>> bnlearn.plot(model)
 
     """
     out=dict()
@@ -208,10 +183,8 @@ def _DAG_sprinkler(CPD=True):
 
     Parameters
     ----------
-    CPD : Bool, optional (default: True)
-        Directed Acyclic Graph (DAG).
-        True (default)
-        False
+    CPD : bool, optional
+        Directed Acyclic Graph (DAG).. The default is True.
 
     Returns
     -------
@@ -295,7 +268,7 @@ def to_undirected(adjmat):
 
     Parameters
     ----------
-    adjmat : numpy aray
+    adjmat : np.array()
         Adjacency matrix.
 
     Returns
@@ -323,22 +296,23 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), v
     Parameters
     ----------
     model_1 : dict
-        Results of model 1.
+        Results of model 1..
     model_2 : dict
-        Results of model 2.
-    pos : graph, optional (default: None)
-        Coordinates of the network. If there are provided, the same structure will be used to plot the network.
-    showfig : Bool, optional (default: True)
-        Show figure.
-    figsize : tuple, optional (default: (15,8))
-        Figure size.
-    verbose : int [0-5], optional (default: 3)
-        Print messages.
-        0: (default)
+        Results of model 2..
+    pos : graph, optional
+        Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
+    showfig : bool, optional
+        plot figure. The default is True.
+    figsize : tuple, optional
+        Figure size.. The default is (15,8).
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: NONE
         1: ERROR
-        2: WARN
-        3: INFO
+        2: WARNING
+        3: INFO (default)
         4: DEBUG
+        5: TRACE
 
     Returns
     -------
@@ -356,21 +330,21 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     Parameters
     ----------
     model : dict
-        Learned model from the .fit() function.
-    pos : graph, optional (default: None)
-        Coordinates of the network. If there are provided, the same structure will be used to plot the network.
-    scale : int, optional (default: 1)
-        Scaling parameter for the network. A larger number will linearily increase the network.
-    figsize : tuple, optional (default: (15,8))
-        Figure size.
-    verbose : int [0-5], optional (default: 3)
-        Print messages.
-        0: (default)
+        Learned model from the .fit() function..
+    pos : graph, optional
+        Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
+    scale : int, optional
+        Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.
+    figsize : tuple, optional
+        Figure size.. The default is (15,8).
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: NONE
         1: ERROR
-        2: WARN
-        3: INFO
+        2: WARNING
+        3: INFO (default)
         4: DEBUG
-
+        5: TRACE
 
     Returns
     -------
@@ -446,8 +420,7 @@ def import_example():
 
     Returns
     -------
-    df : pd.DataFrame
-        Dataframe.
+    df : pd.DataFrame()
 
     """
     curpath = os.path.dirname(os.path.abspath(__file__))

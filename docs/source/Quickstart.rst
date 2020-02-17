@@ -36,7 +36,6 @@ Let's start by importing some data. We need a DAG and CPD.
 
 .. code:: python
 
-    # Example dataframe sprinkler_data.csv can be loaded with: 
     import bnlearn
 
     df = bnlearn.import_example()
@@ -45,3 +44,22 @@ Let's start by importing some data. We need a DAG and CPD.
 
     G = bnlearn.plot(model)
 
+
+
+.. code:: python
+
+    import bnlearn
+
+    model = bnlearn.import_DAG('sprinkler')
+
+    df = bnlearn.import_example()
+
+    df = bnlearn.sampling(model)
+
+    q = bnlearn.inference.fit(model)
+
+    model_sl = bnlearn.structure_learning.fit(df)
+
+    model_pl = bnlearn.parameter_learning.fit(model_sl, df)
+
+    [scores, adjmat] = bnlearn.compare_networks(model_sl, model)

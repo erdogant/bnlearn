@@ -1,4 +1,20 @@
-"""This function provides techniques for parameter learning."""
+"""Techniques for parameter learning.
+
+Description
+-----------
+Parameter learning is the task to estimate the values of the conditional
+probability distributions (CPDs), for the variables cloudy, sprinkler, rain and wet grass.
+
+State counts:
+    To make sense of the given data, we can start by counting how often each state of the variable occurs.
+    If the variable is dependent on parents, the counts are done conditionally on the parents states,
+    i.e. for seperately for each parent configuration
+
+Currently, the library supports:
+    * Parameter learning for *discrete* nodes:
+    * Maximum Likelihood Estimation
+    * Bayesian Estimation
+"""
 # ------------------------------------
 # Name        : parameter_learning.py
 # Author      : E.Taskesen
@@ -13,39 +29,20 @@ from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator  # Pa
 
 # %% Sampling from model
 def fit(model, df, methodtype='bayes', verbose=3):
-    """Parameter Learning.
-
-    Description
-    ----------
-    Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs),
-    for the variables cloudy, sprinkler, rain and wet grass.
-    State counts
-        To make sense of the given data, we can start by counting how often each state of the variable occurs.
-        If the variable is dependent on parents, the counts are done conditionally on the parents states,
-        i.e. for seperately for each parent configuration
-
-    Currently, the library supports:
-        * Parameter learning for *discrete* nodes:
-        * Maximum Likelihood Estimation
-        * Bayesian Estimation
-
+    """Learn the parameters given the DAG and data.
 
     Parameters
     ----------
-    model       : [DICT] Contains model and adjmat.
-
-    df          : [pd.DataFrame] Pandas DataFrame containing the data
-                   f1  ,f2  ,f3
-                s1 0   ,0   ,1
-                s2 0   ,1   ,0
-                s3 1   ,1   ,0
-
-    methodtype  : [STRING] strategy for parameter learning.
-                'nl' or 'maximumlikelihood' (default) :Learning CPDs using Maximum Likelihood Estimators
-                'bayes' :Bayesian Parameter Estimation
-
-    verbose : int [0-5] (default: 3)
-        Print messages to screen.
+    model : dict
+        Contains key model and adjmat (adjacency matrix).
+    df : pd.DataFrame()
+        Pandas DataFrame containing the data.
+    methodtype : str, optional
+        strategy for parameter learning.. The default is 'bayes'.
+        'nl' or 'maximumlikelihood' (default) :Learning CPDs using Maximum Likelihood Estimators
+        'bayes' :Bayesian Parameter Estimation
+    verbose : int, optional
+        Print progress to screen. The default is 3.
         0: NONE
         1: ERROR
         2: WARNING
@@ -53,24 +50,25 @@ def fit(model, df, methodtype='bayes', verbose=3):
         4: DEBUG
         5: TRACE
 
+
     Returns
     -------
-    model
-    
+    dict with model.
 
-    Example
-    -------
-    df = bnlearn.import_example()
-    model = bnlearn.import_DAG('sprinkler', CPD=False)
-    model_update = bnlearn.parameter_learning.fit(model, df)
-    bnlearn.plot(model_update)
 
-    # LOAD BIF FILE
-    model = bnlearn.import_DAG('alarm')
-    df = bnlearn.sampling(model, n=1000)
-    model_update = bnlearn.parameter_learning.fit(model, df)
-    G = bnlearn.plot(model_update)
-    
+    Examples
+    --------
+    >>> df = bnlearn.import_example()
+    >>> model = bnlearn.import_DAG('sprinkler', CPD=False)
+    >>> model_update = bnlearn.parameter_learning.fit(model, df)
+    >>> bnlearn.plot(model_update)
+    >>>
+    >>> # LOAD BIF FILE
+    >>> model = bnlearn.import_DAG('alarm')
+    >>> df = bnlearn.sampling(model, n=1000)
+    >>> model_update = bnlearn.parameter_learning.fit(model, df)
+    >>> G = bnlearn.plot(model_update)
+
     """
     config = dict()
     config['verbose'] = verbose
