@@ -20,13 +20,11 @@ Content
 
    Introduction
 
-
 .. toctree::
    :maxdepth: 1
    :caption: Quickstart
 
    Quickstart
-
 
 .. toctree::
   :maxdepth: 2
@@ -34,20 +32,17 @@ Content
 
   Structure learning
 
-
 .. toctree::
   :maxdepth: 1
   :caption: Parameter learning
 
   Parameter learning
 
-
 .. toctree::
   :maxdepth: 1
   :caption: Inference
 
   Inference
-
 
 .. toctree::
   :maxdepth: 2
@@ -61,8 +56,7 @@ Content
   parameter learning
   inference
   
-
-
+  
 Installation
 ------------
 
