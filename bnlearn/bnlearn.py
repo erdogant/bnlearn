@@ -1,21 +1,4 @@
-"""Bayesian techniques for structure learning, sampling and parameter learning.
-
-Description
------------
-Learning a Bayesian network can be split into two problems:
-    * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables,
-      estimate the (conditional) probability distributions of the individual variables.
-    * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-Currently, the library supports:
-    * Parameter learning for *discrete* nodes:
-    * Maximum Likelihood Estimation
-    * Bayesian Estimation
-Structure learning for *discrete*, *fully observed* networks:
-    * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-    * Constraint-based structure estimation (PC)
-    * Hybrid structure estimation (MMHC)
-
-"""
+"""Bayesian techniques for structure learning, parameter learning, inference and sampling."""
 # ------------------------------------
 # Name        : bnlearn.py
 # Author      : E.Taskesen

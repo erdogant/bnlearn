@@ -5,31 +5,6 @@ Description
 Inference is same as asking conditional probability questions to the models.
 i.e., What is the probability of a sprinkler is on given that it is raining which is basically equivalent of asking $ P(g^1 | i^1) $.
 Inference algorithms deals with efficiently finding these conditional probability queries.
-
-
-Description Extensive
----------------------
-There are two main categories for inference algorithms:
-    1. Exact Inference: These algorithms find the exact probability values for our queries.
-    2. Approximate Inference: These algorithms try to find approximate values by saving on computation.
-
-Exact Inference
-    There are multiple algorithms for doing exact inference.
-
-Two common Inference algorithms with variable Elimination
-    1. Clique Tree Belief Propagation
-    2. Variable Elimination
-
-The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
-But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
-So basically if we want to eliminate $ X $ from our distribution, then we compute
-the product of all the factors involving $ X $ and marginalize over them,
-thus allowing us to work on much smaller factors.
-
-In the above equation we can see that we pushed the summation inside and operated
-the summation only factors that involved that variable and hence avoiding computing the
-complete joint distribution.
-
 """
 # ------------------------------------
 # Name        : inference.py

@@ -36,8 +36,8 @@ A different, but quite straightforward approach to build a DAG from data is to i
   3. Independencies in the data can be identified using chi2 conditional independence tests.
 
 
-Example
-''''''''
+Example 1
+'''''''''
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -79,7 +79,7 @@ From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.f
   G = bnlearn.plot(model)
 
 
-.. _fig-main:
+.. _fig-sl:
 
 .. figure:: ../figs/fig_sprinkler_sl.png
 
@@ -106,4 +106,55 @@ Scoring types:
   model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
   model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
   model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+
+
+
+Example 2
+'''''''''
+
+Lets learn the structure of a more complex data set and compare it to another one.
+
+.. code-block:: python
+
+  import bnlearn
+  # Load asia DAG
+  model_true = bnlearn.import_DAG('asia')
+  # plot ground truth
+  G = bnlearn.plot(model_true)
+
+.. _fig2a_asia_groundtruth:
+
+.. figure:: ../figs/fig2a_asia_groundtruth.png
+
+  True DAG of the Asia data set.
+
+  
+.. code-block:: python
+
+  # Sampling
+  df = bnlearn.sampling(model_true, n=10000)
+  # Structure learning of sampled dataset
+  model_learned = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+
+.. _fig2b_asia_structurelearning:
+
+.. figure:: ../figs/fig2b_asia_structurelearning.png
+
+  Learned DAG based on data set.
+
+
+.. code-block:: python
+
+  # Plot based on structure learning of sampled data
+  bnlearn.plot(model_learned, pos=G['pos'])
+  # Compare networks and make plot
+  bnlearn.compare_networks(model_true, model_learned, pos=G['pos'])
+
+.. _fig2c_asia_comparion:
+
+.. figure:: ../figs/fig2c_asia_comparion.png
+.. figure:: ../figs/fig2d_confmatrix.png
+
+  Comparison True vs. learned DAG.
+
 

@@ -54,7 +54,9 @@ model = bnlearn.import_DAG('sprinkler', CPD=False)
 model_update = bnlearn.parameter_learning.fit(model, df)
 bnlearn.plot(model_update)
 
-# LOAD BIF FILE
+model_true = bnlearn.import_DAG('sprinkler', CPD=True)
+
+# %% LOAD BIF FILE
 model = bnlearn.import_DAG('alarm')
 df = bnlearn.sampling(model, n=1000)
 model_update = bnlearn.parameter_learning.fit(model, df)

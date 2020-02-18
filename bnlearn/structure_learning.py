@@ -6,12 +6,12 @@ Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
 
 To learn model structure (a DAG) from a data set, there are three broad techniques:
-1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-    a. exhaustivesearch
-    b. hillclimbsearch
-2. Constraint-based structure learning (PC)
-    a. chi-square test
-3. Hybrid structure learning (The combination of both techniques) (MMHC)
+    1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+        a. exhaustivesearch
+        b. hillclimbsearch
+    2. Constraint-based structure learning (PC)
+        a. chi-square test
+    3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
 Score-based Structure Learning
 This approach construes model selection as an optimization task. It has two building blocks:
