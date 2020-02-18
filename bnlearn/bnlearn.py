@@ -336,7 +336,7 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     scale : int, optional
         Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.
     figsize : tuple, optional
-        Figure size.. The default is (15,8).
+        Figure size. The default is (15,8).
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: NONE

@@ -6,20 +6,20 @@ Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
 
 To learn model structure (a DAG) from a data set, there are three broad techniques:
-    1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-        a. exhaustivesearch
-        b. hillclimbsearch
-    2. Constraint-based structure learning (PC)
-        a. chi-square test
-    3. Hybrid structure learning (The combination of both techniques) (MMHC)
+1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+    a. exhaustivesearch
+    b. hillclimbsearch
+2. Constraint-based structure learning (PC)
+    a. chi-square test
+3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
-    Score-based Structure Learning
-    This approach construes model selection as an optimization task. It has two building blocks:
-    A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
-    A search strategy to traverse the search space of possible models M and select a model with optimal score.
-    Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
-    and the Bayesian Information Criterion (BIC, also called MDL).
-    As before, BDeu is dependent on an equivalent sample size.
+Score-based Structure Learning
+This approach construes model selection as an optimization task. It has two building blocks:
+A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
+A search strategy to traverse the search space of possible models M and select a model with optimal score.
+Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
+and the Bayesian Information Criterion (BIC, also called MDL).
+As before, BDeu is dependent on an equivalent sample size.
 """
 # ------------------------------------
 # Name        : structure_learning.py

@@ -6,14 +6,14 @@ Parameter learning is the task to estimate the values of the conditional
 probability distributions (CPDs), for the variables cloudy, sprinkler, rain and wet grass.
 
 State counts:
-    To make sense of the given data, we can start by counting how often each state of the variable occurs.
-    If the variable is dependent on parents, the counts are done conditionally on the parents states,
-    i.e. for seperately for each parent configuration
+To make sense of the given data, we can start by counting how often each state of the variable occurs.
+If the variable is dependent on parents, the counts are done conditionally on the parents states,
+i.e. for seperately for each parent configuration
 
 Currently, the library supports:
-    * Parameter learning for *discrete* nodes:
-    * Maximum Likelihood Estimation
-    * Bayesian Estimation
+* Parameter learning for *discrete* nodes:
+* Maximum Likelihood Estimation
+* Bayesian Estimation
 """
 # ------------------------------------
 # Name        : parameter_learning.py
