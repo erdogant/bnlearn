@@ -4,13 +4,18 @@ Structure learning
 With structure learning we can estimate a DAG that captures the dependencies between the variables in the data set.
 However, realize that the search space of DAGs is super-exponential in the number of variables and you may end up in finding a local maxima. Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). BDeu is dependent on an equivalent sample size. To learn model structure (a DAG) from a data set, there are three broad techniques:
 
-  1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-      a. exhaustivesearch
-      b. hillclimbsearch
-  2. Constraint-based structure learning (PC)
-      a. chi-square test
-  3. Hybrid structure learning 
-      a. The combination of both techniques (MMHC)
+**Score-based structure learning:**
+
+* exhaustivesearch
+* hillclimbsearch
+
+**Constraint-based structure learning:**
+
+* chi-square test
+
+**Hybrid structure learning:**
+
+* The combination of both techniques (MMHC)
 
 
 Exhaustivesearch
@@ -88,14 +93,17 @@ From the *bnlearn* library, we'll need the :class:`~bnlearn.structure_learning.f
 
 We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
 
-Method types:
-  1. hillclimbsearch or hc (greedy local search if many more nodes are involved)
-  2. exhaustivesearch or ex (exhaustive search for very small networks)
-  3. constraintsearch or cs (Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test, chi2)
-Scoring types:
-  1. bic
-  2. k2
-  3. bdeu
+**Method types:**
+
+* hillclimbsearch or hc (greedy local search if many more nodes are involved)
+* exhaustivesearch or ex (exhaustive search for very small networks)
+* constraintsearch or cs (Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test, chi2)
+
+**Scoring types:**
+
+* bic
+* k2
+* bdeu
 
 
 .. code-block:: python

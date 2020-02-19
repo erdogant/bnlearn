@@ -209,7 +209,7 @@ CPD of Wet_Grass:
 
 
 
-Lets generate more samples and learn again the parameters. You will see that these results are much more closer to the true values.
+Lets generate more samples and learn again the parameters. You will see that these results are much closer to the true values.
 
 .. code-block:: python
 

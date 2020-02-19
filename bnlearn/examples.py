@@ -71,3 +71,14 @@ q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Spr
 
 print(q1)
 print(q2)
+
+
+# %% INFERENCE 2
+model = bnlearn.import_DAG('asia')
+bnlearn.plot(model)
+q1 = bnlearn.inference.fit(model, variables=['lung'], evidence={'bronc':1, 'smoke':1})
+q2 = bnlearn.inference.fit(model, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0, 'tub':1})
+q3 = bnlearn.inference.fit(model, variables=['lung'], evidence={'bronc':1, 'smoke':1})
+
+print(q1)
+print(q2)

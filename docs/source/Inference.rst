@@ -60,3 +60,26 @@ The highest probability is that in these condition, there is wet grass and no ra
   +--------------+---------+-----------------------+
   | Wet_Grass(1) | Rain(1) |                0.2970 |
   +--------------+---------+-----------------------+
+
+
+Example 3
+'''''''''
+
+Given our model, what is the probability on lung cancer given that the person is a smoker and xray is negative?
+P(lung | smoker=1, xray=0)
+
+>>> # Lets create the dataset
+>>> model = bnlearn.import_DAG('asia')
+
+Lets make the inference:
+
+>>> q1 = bnlearn.inference.fit(model, variables=['lung'], evidence={'xray':0, 'smoke':1})
+
+  +---------+-------------+
+  | lung    |   phi(lung) |
+  +=========+=============+
+  | lung(0) |      0.1423 |
+  +---------+-------------+
+  | lung(1) |      0.8577 |
+  +---------+-------------+
+

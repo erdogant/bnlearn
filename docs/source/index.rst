@@ -26,21 +26,14 @@ Content
 
 .. toctree::
   :maxdepth: 2
-  :caption: Structure learning
+  :caption: Methods
 
   Structure learning
-
-.. toctree::
-  :maxdepth: 1
-  :caption: Parameter learning
-
   Parameter learning
-
-.. toctree::
-  :maxdepth: 1
-  :caption: Inference
-
   Inference
+  Sampling
+  Datasets
+  Creating DAG
 
 .. toctree::
   :maxdepth: 2

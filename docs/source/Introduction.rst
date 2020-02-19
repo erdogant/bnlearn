@@ -21,7 +21,7 @@ Structure learning for *discrete*, *fully observed* networks:
   * Hybrid structure estimation (MMHC)
 
 
-**The following functions are available after importing bnlearn.**
+**The following functions are available after importing bnlearn:**
 
 * Structure learning
 * Parameter learning
