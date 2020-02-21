@@ -38,7 +38,7 @@ Lets make the plot. Note that the plot can be differently orientiated if you re-
   Created DAG.
 
 
-For each node we can define the CPDs:
+For each node we can specifying the probability distributions:
 
 .. code-block:: python
 
