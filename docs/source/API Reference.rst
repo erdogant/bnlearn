@@ -10,5 +10,5 @@ API Reference
     bnlearn.plot
     bnlearn.import_example
     bnlearn.import_DAG
-    print_DAG
+    bnlearn.print_DAG
 
