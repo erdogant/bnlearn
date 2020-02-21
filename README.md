@@ -11,7 +11,7 @@
 * Bnlearn is Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods. This work is inspired by the R package (bnlearn.com) that has been very usefull to me for many years. Although there are very good Python packages for probabilistic graphical models, it still can remain difficult (and somethimes unnecessarily) to (re)build certain pipelines. Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines.
 
 ### Docs
-Navigate to [docs](https://bnlearn.readthedocs.io/en/latest/index.html) for more information.
+Navigate to [API documentations](https://bnlearn.readthedocs.io/en/latest/index.html) for a more detailed information.
 
 ### Method overview
 Learning a Bayesian network can be split into two problems which are both implemented in this package:
