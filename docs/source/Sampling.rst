@@ -1,5 +1,0 @@
-Sampling
-========
-
-TODO.
-

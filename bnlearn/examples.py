@@ -57,17 +57,17 @@ bnlearn.plot(model_update)
 model_true = bnlearn.import_DAG('sprinkler', CPD=True)
 
 # %% LOAD BIF FILE
-model = bnlearn.import_DAG('alarm')
-df = bnlearn.sampling(model, n=1000)
-model_update = bnlearn.parameter_learning.fit(model, df)
+DAG = bnlearn.import_DAG('alarm')
+df = bnlearn.sampling(DAG, n=1000)
+model_update = bnlearn.parameter_learning.fit(DAG, df)
 G = bnlearn.plot(model_update)
 
 
 # %% INFERENCE
-model = bnlearn.import_DAG('sprinkler')
-bnlearn.plot(model)
-q1 = bnlearn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
-q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+DAG = bnlearn.import_DAG('sprinkler')
+bnlearn.plot(DAG)
+q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q2 = bnlearn.inference.fit(DAG, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
 print(q1)
 print(q2)

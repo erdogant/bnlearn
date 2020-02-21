@@ -58,7 +58,10 @@ def fit(model, variables=None, evidence=None, verbose=3):
 
     """
     if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
-    model_infer = VariableElimination(model['model'])
+    if isinstance(model, dict):
+        model = model['model']
+
+    model_infer = VariableElimination(model)
     # Computing the probability of Wet Grass given Rain.
     q = model_infer.query(variables=variables, evidence=evidence)
     print(q)

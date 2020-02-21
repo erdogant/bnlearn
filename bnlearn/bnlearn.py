@@ -137,16 +137,8 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
             return(out)
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
-    if not isinstance(model, type(None)) and verbose>=3:
-        if CPD:
-            print('[BNLEARN][import_DAG] Model correct: %s' %(model.check_model()))
-            for cpd in model.get_cpds():
-                print("CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
-
-            print('[BNLEARN][import_DAG] Nodes: %s' %(model.nodes()))
-            print('[BNLEARN][import_DAG] Edges: %s' %(model.edges()))
-            print('[BNLEARN][import_DAG] Independencies:\n%s' %(model.get_independencies()))
+    if not isinstance(model, type(None)) and verbose>=3 and CPD:
+        print_DAG(model)
 
     # Setup simmilarity matrix
     adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
@@ -158,6 +150,33 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     out['model']=model
     out['adjmat']=adjmat
     return(out)
+
+
+# %% Print DAG
+def print_DAG(DAG):
+    """Print DAG-model to screen.
+
+    Parameters
+    ----------
+    DAG : pgmpy.models.BayesianModel.BayesianModel
+        model of the DAG.
+
+    Returns
+    -------
+    None.
+
+    """
+    if isinstance(DAG, dict):
+        DAG = DAG['model']
+
+    print('[BNLEARN][import_DAG] Model correct: %s' %(DAG.check_model()))
+    for cpd in DAG.get_cpds():
+        print("CPD of {variable}:".format(variable=cpd.variable))
+        print(cpd)
+    
+    print('[BNLEARN][import_DAG] Nodes: %s' %(DAG.nodes()))
+    print('[BNLEARN][import_DAG] Edges: %s' %(DAG.edges()))
+    print('[BNLEARN][import_DAG] Independencies:\n%s' %(DAG.get_independencies()))
 
 
 # %% Model Sprinkler

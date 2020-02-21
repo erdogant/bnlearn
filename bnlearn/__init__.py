@@ -5,6 +5,7 @@ from bnlearn.bnlearn import (
 	to_undirected,
 	compare_networks,
     plot,
+    print_DAG,
 )
 
 # Import function in new level

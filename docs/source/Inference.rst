@@ -23,7 +23,7 @@ Example 1
 Lets load the Sprinkler data set and make some inferences.
 
 
-What is the probability of wet grass given that it *Rains*, the *sprinkler is off* and its *cloudy*?
+What is the probability of *wet grass* given that it *Rains*, and the *sprinkler* is off and its *cloudy*: P(wet grass | rain=1, sprinkler=0, cloudy=1)?
 
 >>> import bnlearn
 >>> model = bnlearn.import_DAG('sprinkler')

@@ -1,8 +1,8 @@
-bnlearn
-==================
+print DAG
+=========
 
 
-.. automodule:: bnlearn.bnlearn
+.. automodule:: bnlearn.print_DAG
     :members:
     :undoc-members:
     :show-inheritance:

@@ -46,7 +46,7 @@ Example 1
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0].
 The question we can ask: What are the parameters for the DAG given a dataset? Note that his data set is already pre-processed and no missing values are present.
-We need both a directed acycle graph (DAG) and dataset with the same variables. So again, the idea is to link the dataset with the DAG.
+We need both a directed acycle graph (DAG) and dataset with the same variables. The idea is to link the dataset with the DAG.
 
 
 Let's bring in our dataset. 
@@ -81,8 +81,8 @@ Let's bring in our dataset.
 
 .. code-block:: python
 
-  model = bnlearn.import_DAG('sprinkler', CPD=False)
-  print(model)
+  DAG = bnlearn.import_DAG('sprinkler', CPD=False)
+  print(DAG)
 
 
 .. table::
@@ -102,7 +102,7 @@ Let's bring in our dataset.
 
 .. code-block:: python
 
-  bnlearn.plot(model)
+  bnlearn.plot(DAG)
 
 
 
@@ -120,7 +120,7 @@ From the *bnlearn* library, we'll need the :class:`~bnlearn.parameter_learning.f
 
 .. code-block:: python
 
-  model_update = bnlearn.parameter_learning.fit(model, df)
+   DAG_update = bnlearn.parameter_learning.fit(DAG, df)
 
 
 CPD of Cloudy:
@@ -168,7 +168,7 @@ The main reason is because the dataframe only contains 1000 samples.
 
 .. code-block:: python
 
-  model_true = bnlearn.import_DAG('sprinkler', CPD=True)
+  DAG_true = bnlearn.import_DAG('sprinkler', CPD=True)
 
 
 CPD of Cloudy:
@@ -213,8 +213,8 @@ Lets generate more samples and learn again the parameters. You will see that the
 
 .. code-block:: python
 
-  df = bnlearn.sampling(model, n=10000)
-  model_update = bnlearn.parameter_learning.fit(model, df)
+  df = bnlearn.sampling(DAG, n=10000)
+  DAG_update = bnlearn.parameter_learning.fit(DAG, df)
 
 
 
@@ -232,9 +232,9 @@ Let's bring in the **asia** dataset.
   import bnlearn
 
   # Load asia data set
-  model = bnlearn.import_DAG('asia')
+  DAG = bnlearn.import_DAG('asia')
   # Plot
-  G = bnlearn.plot(model)
+  G = bnlearn.plot(DAG)
 
 
 .. figure:: ../figs/fig2a_asia_groundtruth.png
@@ -245,76 +245,77 @@ Let's bring in the **asia** dataset.
 .. code-block:: python
 
   # Generate samples
-  df = bnlearn.sampling(model, n=10000)
+  df = bnlearn.sampling(DAG, n=10000)
 
   # Learn parameters
-  model_update = bnlearn.parameter_learning.fit(model, df)
+  DAG_update = bnlearn.parameter_learning.fit(DAG, df)
 
 
 
 This DAG is now updated with parameters which is great because it opens many possibilities in terms of inference or you can start sampling any number of samples you desire.
 
 CPD of asia:
-  +---------+-----------+
-  | asia(0) | 0.0551818 |
-  +---------+-----------+
-  | asia(1) | 0.944818  |
-  +---------+-----------+
+  +---------+-------+
+  | asia(0) | 0.055 |
+  +---------+-------+
+  | asia(1) | 0.944 |
+  +---------+-------+
 CPD of bronc:
-  +----------+---------------------+---------------------+
-  | smoke    | smoke(0)            | smoke(1)            |
-  +----------+---------------------+---------------------+
-  | bronc(0) | 0.5853257893776237  | 0.31986958884260097 |
-  +----------+---------------------+---------------------+
-  | bronc(1) | 0.41467421062237636 | 0.680130411157399   |
-  +----------+---------------------+---------------------+
+  +----------+----------+----------+
+  | smoke    | smoke(0) | smoke(1) |
+  +----------+----------+----------+
+  | bronc(0) | 0.585    | 0.319    |
+  +----------+----------+----------+
+  | bronc(1) | 0.414    | 0.680    |
+  +----------+----------+----------+
 CPD of dysp:
-  +---------+---------------------+---------------------+---------------------+---------------------+
-  | bronc   | bronc(0)            | bronc(0)            | bronc(1)            | bronc(1)            |
-  +---------+---------------------+---------------------+---------------------+---------------------+
-  | either  | either(0)           | either(1)           | either(0)           | either(1)           |
-  +---------+---------------------+---------------------+---------------------+---------------------+
-  | dysp(0) | 0.7140468227424749  | 0.7874285714285715  | 0.5866666666666667  | 0.12322791712104689 |
-  +---------+---------------------+---------------------+---------------------+---------------------+
-  | dysp(1) | 0.28595317725752506 | 0.21257142857142858 | 0.41333333333333333 | 0.8767720828789531  |
-  +---------+---------------------+---------------------+---------------------+---------------------+
+  +---------+-----------+-----------+-----------+-----------+
+  | bronc   | bronc(0)  | bronc(0)  | bronc(1)  | bronc(1)  |
+  +---------+-----------+-----------+-----------+-----------+
+  | either  | either(0) | either(1) | either(0) | either(1) |
+  +---------+-----------+-----------+-----------+-----------+
+  | dysp(0) | 0.714     | 0.787     | 0.586     | 0.123     |
+  +---------+-----------+-----------+-----------+-----------+
+  | dysp(1) | 0.285     | 0.212     | 0.413     | 0.876     |
+  +---------+-----------+-----------+-----------+-----------+
 CPD of either:
-  +-----------+--------------------+--------------------+---------------------+----------------------+
-  | lung      | lung(0)            | lung(0)            | lung(1)             | lung(1)              |
-  +-----------+--------------------+--------------------+---------------------+----------------------+
-  | tub       | tub(0)             | tub(1)             | tub(0)              | tub(1)               |
-  +-----------+--------------------+--------------------+---------------------+----------------------+
-  | either(0) | 0.5078740157480315 | 0.8374512353706112 | 0.6428571428571429  | 0.012984314947543367 |
-  +-----------+--------------------+--------------------+---------------------+----------------------+
-  | either(1) | 0.4921259842519685 | 0.1625487646293888 | 0.35714285714285715 | 0.9870156850524566   |
-  +-----------+--------------------+--------------------+---------------------+----------------------+
+  +-----------+---------+---------+---------+---------+
+  | lung      | lung(0) | lung(0) | lung(1) | lung(1) |
+  +-----------+---------+---------+---------+---------+
+  | tub       | tub(0)  | tub(1)  | tub(0)  | tub(1)  |
+  +-----------+---------+---------+---------+---------+
+  | either(0) | 0.507   | 0.837   | 0.642   | 0.012   |
+  +-----------+---------+---------+---------+---------+
+  | either(1) | 0.492   | 0.1625  | 0.357   | 0.987   |
+  +-----------+---------+---------+---------+---------+
 CPD of lung:
-  +---------+--------------------+---------------------+
-  | smoke   | smoke(0)           | smoke(1)            |
-  +---------+--------------------+---------------------+
-  | lung(0) | 0.1325059317393685 | 0.05379460242709654 |
-  +---------+--------------------+---------------------+
-  | lung(1) | 0.8674940682606315 | 0.9462053975729035  |
-  +---------+--------------------+---------------------+
+  +---------+----------+----------+
+  | smoke   | smoke(0) | smoke(1) |
+  +---------+----------+----------+
+  | lung(0) | 0.132    | 0.0537   |
+  +---------+----------+----------+
+  | lung(1) | 0.867    | 0.9462   |
+  +---------+----------+----------+
 CPD of smoke:
-  +----------+----------+
-  | smoke(0) | 0.498091 |
-  +----------+----------+
-  | smoke(1) | 0.501909 |
-  +----------+----------+
+  +----------+-------+
+  | smoke(0) | 0.498 |
+  +----------+-------+
+  | smoke(1) | 0.501 |
+  +----------+-------+
 CPD of tub:
-  +--------+--------------------+----------------------+
-  | asia   | asia(0)            | asia(1)              |
-  +--------+--------------------+----------------------+
-  | tub(0) | 0.4184514003294893 | 0.033676513037621474 |
-  +--------+--------------------+----------------------+
-  | tub(1) | 0.5815485996705108 | 0.9663234869623786   |
-  +--------+--------------------+----------------------+
+  +--------+---------+---------+
+  | asia   | asia(0) | asia(1) |
+  +--------+---------+---------+
+  | tub(0) | 0.418   | 0.0336  |
+  +--------+---------+---------+
+  | tub(1) | 0.581   | 0.9663  |
+  +--------+---------+---------+
 CPD of xray:
-  +---------+---------------------+---------------------+
-  | either  | either(0)           | either(1)           |
-  +---------+---------------------+---------------------+
-  | xray(0) | 0.7693677649154052  | 0.07087172218284904 |
-  +---------+---------------------+---------------------+
-  | xray(1) | 0.23063223508459482 | 0.9291282778171509  |
-  +---------+---------------------+---------------------+
+  +---------+-----------+-----------+
+  | either  | either(0) | either(1) |
+  +---------+-----------+-----------+
+  | xray(0) | 0.7693    | 0.070     |
+  +---------+-----------+-----------+
+  | xray(1) | 0.230     | 0.929     |
+  +---------+-----------+-----------+
+

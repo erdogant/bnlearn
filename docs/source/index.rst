@@ -31,12 +31,11 @@ Content
   Structure learning
   Parameter learning
   Inference
-  Sampling
-  Datasets
-  Creating DAG
+  Sampling and datasets
+  Create DAG
 
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 1
   :caption: Additional Documentation
 
   API Reference

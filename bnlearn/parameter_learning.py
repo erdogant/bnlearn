@@ -69,7 +69,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
     config = dict()
     config['verbose'] = verbose
     config['method'] = methodtype
-    model = model['model']
+    if isinstance(model, dict):
+        model = model['model']
     if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
 
 #    pe = ParameterEstimator(model, df)
