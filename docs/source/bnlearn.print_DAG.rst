@@ -2,5 +2,6 @@ print DAG
 =========
 
 
-.. autoclass:: bnlearn.print_DAG
+.. automodule:: bnlearn.print_DAG
     :members:
+    :undoc-members:
