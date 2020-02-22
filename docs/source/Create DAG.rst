@@ -5,29 +5,29 @@ It is also possible to create a DAG manually. In this example I will create the 
 
 First we need to define the one-to-one relationships (edges) between the variables. Here we make the edges:
 
-* Cloudy->Sprinkler
-* Cloudy->Rain
-* Sprinkler->Wet_Grass
-* Rain->Wet_Grass
+* Cloudy    -> Sprinkler
+* Cloudy    -> Rain
+* Sprinkler -> Wet_Grass
+* Rain      -> Wet_Grass
 
 
 .. code-block:: python
 
    # Import the library
    from pgmpy.models import BayesianModel
-   from pgmpy.factors.discrete import TabularCPD
 
    # Define the network structure
    DAG = BayesianModel([('Cloudy', 'Sprinkler'),
-                          ('Cloudy', 'Rain'),
-                          ('Sprinkler', 'Wet_Grass'),
-                          ('Rain', 'Wet_Grass')])
+                        ('Cloudy', 'Rain'),
+                        ('Sprinkler', 'Wet_Grass'),
+                        ('Rain', 'Wet_Grass')])
 
 
 Lets make the plot. Note that the plot can be differently orientiated if you re-make the plot.
 
 .. code-block:: python
-
+   
+   import bnlearn
    bnlearn.plot(model)
 
 
@@ -38,9 +38,12 @@ Lets make the plot. Note that the plot can be differently orientiated if you re-
   Created DAG.
 
 
-For each node we can specifying the probability distributions:
+For each node we can specify the probability distributions:
 
 .. code-block:: python
+
+   # Import the library
+   from pgmpy.factors.discrete import TabularCPD
 
    # Cloudy
    cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])

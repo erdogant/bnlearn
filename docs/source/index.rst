@@ -13,13 +13,14 @@ Content
 ========
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Introduction
 
    Introduction
+   Installation
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Quickstart
 
    Quickstart
@@ -35,34 +36,18 @@ Content
   Create DAG
 
 .. toctree::
+   :maxdepth: 1
+   :caption: Extensive examples
+
+   Example causal DAG
+
+.. toctree::
   :maxdepth: 1
   :caption: Additional Documentation
 
   API Reference
   
   
-Installation
-------------
-
-It is advisable to create a new environment. 
-You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
-
-
-.. code-block:: console
-
-   conda create -n env_BNLEARN python=3.6
-   conda activate env_BNLEARN
-   conda install -c ankurankan pgmpy
-
-   conda deactivate
-   conda activate env_BNLEARN
-
-
-.. code-block:: console
-
-   pip install bnlearn
-
-
 Source code and issue tracker
 ------------------------------
 

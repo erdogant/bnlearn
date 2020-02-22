@@ -5,24 +5,20 @@ Quickstart
 Installation
 ------------
 
+Installation of bnlearn is straightforward. 
 It is advisable to create a new environment. 
-You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
-
 
 .. code-block:: console
 
-   conda create -n env_BNLEARN python=3.6
-   conda activate env_BNLEARN
+   conda create -n BNLEARN python=3.6
+   conda activate BNLEARN
    conda install -c ankurankan pgmpy
 
    conda deactivate
-   conda activate env_BNLEARN
-
-
-.. code-block:: console
+   conda activate BNLEARN
 
    pip install bnlearn
-    
+
 
 Examples
 --------

@@ -82,3 +82,32 @@ q3 = bnlearn.inference.fit(model, variables=['lung'], evidence={'bronc':1, 'smok
 
 print(q1)
 print(q2)
+
+
+# %% Create a simple DAG:
+DAG = BayesianModel([('Cloudy', 'Sprinkler'),
+                       ('Cloudy', 'Rain'),
+                       ('Sprinkler', 'Wet_Grass'),
+                       ('Rain', 'Wet_Grass')])
+
+# Cloudy
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
+
+# Sprinkler
+cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                           values=[[0.5, 0.9], [0.5, 0.1]],
+                           evidence=['Cloudy'], evidence_card=[2])
+# Rain
+cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                      values=[[0.8, 0.2], [0.2, 0.8]],
+                      evidence=['Cloudy'], evidence_card=[2])
+
+# Wet Grass
+cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                           values=[[1, 0.1, 0.1, 0.01],
+                                  [0, 0.9, 0.9, 0.99]],
+                           evidence=['Sprinkler', 'Rain'],
+                           evidence_card=[2, 2])
+
+DAG.add_cpds(cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass)
+

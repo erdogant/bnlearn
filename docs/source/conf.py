@@ -34,14 +34,16 @@ release = 'bnlearn'
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode",
-    "sphinx.ext.todo",
+	"sphinx.ext.intersphinx",
 ]
 
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+
 #extensions = [
+#    "sphinx.ext.autodoc",
 #    "sphinx.ext.coverage",
 #    "sphinx.ext.mathjax",
-#    "sphinx.ext.autodoc",
 #    "sphinx.ext.autosectionlabel",
 #    "sphinx.ext.napoleon",
 #]
