@@ -1,9 +1,9 @@
 from bnlearn.bnlearn import (
-    sampling,
     make_DAG,
     print_DAG,
     import_DAG,
     import_example,
+    sampling,
 	to_undirected,
 	compare_networks,
     plot,

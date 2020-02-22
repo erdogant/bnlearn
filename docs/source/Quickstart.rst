@@ -3,7 +3,7 @@ Quickstart
 
 
 Installation (short)
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Installation of bnlearn is straightforward. 
 It is advisable to create a new environment. 
@@ -21,7 +21,7 @@ It is advisable to create a new environment.
 
 
 Examples
---------
+^^^^^^^^
 
 Let's start by importing some data. We need a DAG and CPD.
 

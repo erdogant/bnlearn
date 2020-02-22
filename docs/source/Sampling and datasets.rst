@@ -4,6 +4,8 @@ Sampling and datasets
 Generating samples can be very usefull. In order to do that, it requires a DAG connected with CPDs.
 It is also possible to create a DAG manually (see the create DAG) or load an existing one as shown below.
 
+Datasets
+''''''''
 
 Various DAGs available that can be easily loaded:
 
@@ -32,8 +34,9 @@ Models are usually stored in bif files which can also be imported:
    DAG = bnlearn.import_DAG(filepath)
 
 
-Example Sampling 1
-''''''''''''''''''
+
+Example Sampling
+''''''''''''''''
 
 
 .. code-block:: python

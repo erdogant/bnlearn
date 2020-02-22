@@ -88,29 +88,58 @@ print(q2)
 DAG1 = bnlearn.import_DAG('sprinkler', CPD=False)
 DAG = bnlearn.import_DAG('asia')
 bnlearn.plot(DAG)
+bnlearn.print_DAG(DAG)
 
+df = bnlearn.sampling(DAG, n=1000)
 vector = bnlearn.adjmat2vec(DAG['adjmat'])
 adjmat = bnlearn.vec2adjmat(vector['source'], vector['target'])
 
+# %%
+from pgmpy.factors.discrete import TabularCPD
+edges = [('A', 'E'),
+         ('S', 'E'),
+         ('E', 'O'),
+         ('E', 'R'),
+         ('O', 'T'),
+         ('R', 'T')]
+
+DAG = bnlearn.make_DAG(edges)
+bnlearn.plot(DAG)
+
+
+cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
+print(cpd_A)
+cpd_S = TabularCPD(variable='S', variable_card=2, values=[[0.6],[ 0.4]])
+print(cpd_S)
+cpd_E = TabularCPD(variable='E', variable_card=2,
+                           values=[
+                               [0.75,0.72,0.88,0.64,0.70,0.90],
+                               [0.25,0.28,0.12,0.36,0.30,0.10]
+                               ],
+                           evidence=['A', 'S'],
+                           evidence_card=[3, 2])
+print(cpd_E)
+
+
+DAG = bnlearn.make_DAG(DAG, CPD=cpd_A, checkmodel=False)
+bnlearn.print_DAG(DAG, checkmodel=False)
 
 # %% Create a simple DAG:
 from pgmpy.factors.discrete import TabularCPD
 
-DAG = [('Cloudy', 'Sprinkler'),
+edges = [('Cloudy', 'Sprinkler'),
        ('Cloudy', 'Rain'),
        ('Sprinkler', 'Wet_Grass'),
        ('Rain', 'Wet_Grass')]
 
-DAG = bnlearn.make_DAG(DAG)
+DAG = bnlearn.make_DAG(edges)
 bnlearn.plot(DAG)
 bnlearn.print_DAG(DAG)
 
 
-import pandas as pd
-df = pd.DataFrame(index=['Cloudy_0','Cloudy_1'], data=[[0,3, 0.7]])
-df.index.name='cloudy'
 # Cloudy
 cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
+print(cpt_cloudy)
 
 # Sprinkler
 cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
@@ -128,5 +157,8 @@ cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
                            evidence=['Sprinkler', 'Rain'],
                            evidence_card=[2, 2])
 
-DAG.add_cpds(cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass)
+DAG = bnlearn.make_DAG(DAG, CPD=cpt_cloudy, checkmodel=False)
+DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler])
+DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+bnlearn.print_DAG(DAG)
 

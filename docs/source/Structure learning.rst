@@ -41,8 +41,13 @@ A different, but quite straightforward approach to build a DAG from data is to i
   3. Independencies in the data can be identified using chi2 conditional independence tests.
 
 
-Example Structure learning 1
+
+Examples Structure learning
 ''''''''''''''''''''''''''''
+
+
+Example Structure learning 1
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -118,8 +123,7 @@ We can specificy the method and scoring type. As described previously, some meth
 
 
 Example Structure learning 2
-''''''''''''''''''''''''''''
-
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Lets learn the structure of a more complex data set and compare it to another one.
 

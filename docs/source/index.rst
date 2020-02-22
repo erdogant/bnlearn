@@ -36,12 +36,6 @@ Content
   Create DAG
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Extensive examples
-
-   Example causal DAG
-
-.. toctree::
   :maxdepth: 1
   :caption: Additional Documentation
 

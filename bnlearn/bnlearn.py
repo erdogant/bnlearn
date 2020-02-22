@@ -27,13 +27,17 @@ PATH_TO_DATA = os.path.join(curpath,'DATA')
 
 
 # %% Make DAG
-def make_DAG(DAG, verbose=3):
-    """Create Directed Acyclic Graph based on list
+def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
+    """Create Directed Acyclic Graph based on list.
 
     Parameters
     ----------
     DAG : list
         list containing source and target in the form of [('A','B'), ('B','C')].
+    CPD : list, array-like
+        Containing TabularCPD for each node.
+    checkmodel : bool
+        Check the validity of the model. The default is True
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None
@@ -54,21 +58,38 @@ def make_DAG(DAG, verbose=3):
         model of the DAG.
 
     """
-    if not isinstance(DAG, list): raise Exception("[BNLEARN] ERROR: Input DAG should be a list. in the form [('A','B'), ('B','C')]")
-    
-    #print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
+    if (CPD is not None) and (not isinstance(CPD, list)):
+        CPD=[CPD]
 
-    return BayesianModel(DAG)
+    if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
+        raise Exception("[BNLEARN] ERROR: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
+    elif ('pgmpy' in str(type(DAG))):
+        if verbose>=3: print('[BNLEARN] No changes made to existing Bayesian DAG.')
+    elif isinstance(DAG, list):
+        if verbose>=3: print('[BNLEARN] Bayesian DAG created.')
+        DAG = BayesianModel(DAG)
+
+    if CPD is not None:
+        for cpd in CPD:
+            DAG.add_cpds(cpd)
+            if verbose>=3: print('[BNLEARN] Add CPD: %s' %(cpd.variable))
+
+        if checkmodel:
+            print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
+
+    return DAG
 
 
 # %% Print DAG
-def print_DAG(DAG):
+def print_DAG(DAG, checkmodel=False):
     """Print DAG-model to screen.
 
     Parameters
     ----------
     DAG : pgmpy.models.BayesianModel.BayesianModel
         model of the DAG.
+    checkmodel : bool
+        Check the validity of the model. The default is True
 
     Returns
     -------
@@ -77,19 +98,21 @@ def print_DAG(DAG):
     """
     if isinstance(DAG, dict):
         DAG = DAG['model']
-    
+
     if len(DAG.get_cpds())==0:
         print('[BNLEARN.print_DAG] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
         return
 
+    print('[BNLEARN.print_DAG] Independencies:\n%s' %(DAG.get_independencies()))
+    print('[BNLEARN.print_DAG] Nodes: %s' %(DAG.nodes()))
+    print('[BNLEARN.print_DAG] Edges: %s' %(DAG.edges()))
+
     for cpd in DAG.get_cpds():
         print("CPD of {variable}:".format(variable=cpd.variable))
         print(cpd)
-    
-    print('[BNLEARN.print_DAG] Nodes: %s' %(DAG.nodes()))
-    print('[BNLEARN.print_DAG] Edges: %s' %(DAG.edges()))
-    print('[BNLEARN.print_DAG] Independencies:\n%s' %(DAG.get_independencies()))
-    print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
+
+    if checkmodel:
+        print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
 
 
 # %% Make DAG
