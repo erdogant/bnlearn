@@ -38,6 +38,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
 	"sphinx.ext.intersphinx",
+	"sphinx.ext.autosectionlabel",
 ]
 
 napoleon_google_docstring = False

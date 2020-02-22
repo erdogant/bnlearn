@@ -1,5 +1,5 @@
-parameter_learning
-===================
+parameter_learning (API)
+========================
 
 
 .. automodule:: bnlearn.parameter_learning

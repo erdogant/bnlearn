@@ -1,11 +1,14 @@
 from bnlearn.bnlearn import (
     sampling,
+    make_DAG,
+    print_DAG,
     import_DAG,
     import_example,
 	to_undirected,
 	compare_networks,
     plot,
-    print_DAG,
+    adjmat2vec,
+    vec2adjmat,
 )
 
 # Import function in new level

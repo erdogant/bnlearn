@@ -74,28 +74,47 @@ print(q2)
 
 
 # %% INFERENCE 2
-model = bnlearn.import_DAG('asia')
-bnlearn.plot(model)
-q1 = bnlearn.inference.fit(model, variables=['lung'], evidence={'bronc':1, 'smoke':1})
-q2 = bnlearn.inference.fit(model, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0, 'tub':1})
-q3 = bnlearn.inference.fit(model, variables=['lung'], evidence={'bronc':1, 'smoke':1})
+DAG = bnlearn.import_DAG('asia')
+bnlearn.plot(DAG)
+q1 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'bronc':1, 'smoke':1})
+q2 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0, 'tub':1})
+q3 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'bronc':1, 'smoke':1})
 
 print(q1)
 print(q2)
 
 
-# %% Create a simple DAG:
-DAG = BayesianModel([('Cloudy', 'Sprinkler'),
-                       ('Cloudy', 'Rain'),
-                       ('Sprinkler', 'Wet_Grass'),
-                       ('Rain', 'Wet_Grass')])
+# %%
+DAG1 = bnlearn.import_DAG('sprinkler', CPD=False)
+DAG = bnlearn.import_DAG('asia')
+bnlearn.plot(DAG)
 
+vector = bnlearn.adjmat2vec(DAG['adjmat'])
+adjmat = bnlearn.vec2adjmat(vector['source'], vector['target'])
+
+
+# %% Create a simple DAG:
+from pgmpy.factors.discrete import TabularCPD
+
+DAG = [('Cloudy', 'Sprinkler'),
+       ('Cloudy', 'Rain'),
+       ('Sprinkler', 'Wet_Grass'),
+       ('Rain', 'Wet_Grass')]
+
+DAG = bnlearn.make_DAG(DAG)
+bnlearn.plot(DAG)
+bnlearn.print_DAG(DAG)
+
+
+import pandas as pd
+df = pd.DataFrame(index=['Cloudy_0','Cloudy_1'], data=[[0,3, 0.7]])
+df.index.name='cloudy'
 # Cloudy
-cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
 
 # Sprinkler
 cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
-                           values=[[0.5, 0.9], [0.5, 0.1]],
+                           values=[[0.4, 0.9], [0.6, 0.1]],
                            evidence=['Cloudy'], evidence_card=[2])
 # Rain
 cpt_rain = TabularCPD(variable='Rain', variable_card=2,

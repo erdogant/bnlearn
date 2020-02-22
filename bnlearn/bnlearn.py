@@ -14,6 +14,7 @@ import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import json
+from ismember import ismember
 
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
@@ -25,47 +26,70 @@ curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath,'DATA')
 
 
-# %% Sampling from model
-def sampling(model, n=1000, verbose=3):
-    """Sample based on DAG.
+# %% Make DAG
+def make_DAG(DAG, verbose=3):
+    """Create Directed Acyclic Graph based on list
 
     Parameters
     ----------
-    model : dict
-        Contains model and adjmat.
-    n : int, optional
-        Number of samples to generate. The default is 1000.
+    DAG : list
+        list containing source and target in the form of [('A','B'), ('B','C')].
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
+        0: None
         1: ERROR
         2: WARNING
-        3: INFO (default)
+        3: INFO
         4: DEBUG
         5: TRACE
 
+    Raises
+    ------
+    Exception
+        Should be list.
+
     Returns
     -------
-    df : pd.DataFrame().
-
-
-    Example
-    -------
-    >>> import bnlearn
-    >>> model = bnlearn.import_DAG('sprinkler')
-    >>> df = bnlearn.sampling(model, n=1000)
+    pgmpy.models.BayesianModel.BayesianModel
+        model of the DAG.
 
     """
-    assert n>0, 'n must be 1 or larger'
-    assert 'BayesianModel' in str(type(model['model'])), 'Model must contain DAG from BayesianModel. Note that <misarables> example does not include DAG.'
-    if verbose>=3: print('[BNLEARN][sampling] Forward sampling for %.0d samples..' %(n))
+    if not isinstance(DAG, list): raise Exception("[BNLEARN] ERROR: Input DAG should be a list. in the form [('A','B'), ('B','C')]")
+    
+    #print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
 
-    # http://pgmpy.org/sampling.html
-    inference = BayesianModelSampling(model['model'])
-    # inference = GibbsSampling(model)
-    # Forward sampling and make dataframe
-    df=inference.forward_sample(size=n, return_type='dataframe')
-    return(df)
+    return BayesianModel(DAG)
+
+
+# %% Print DAG
+def print_DAG(DAG):
+    """Print DAG-model to screen.
+
+    Parameters
+    ----------
+    DAG : pgmpy.models.BayesianModel.BayesianModel
+        model of the DAG.
+
+    Returns
+    -------
+    None.
+
+    """
+    if isinstance(DAG, dict):
+        DAG = DAG['model']
+    
+    if len(DAG.get_cpds())==0:
+        print('[BNLEARN.print_DAG] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
+        return
+
+    for cpd in DAG.get_cpds():
+        print("CPD of {variable}:".format(variable=cpd.variable))
+        print(cpd)
+    
+    print('[BNLEARN.print_DAG] Nodes: %s' %(DAG.nodes()))
+    print('[BNLEARN.print_DAG] Edges: %s' %(DAG.edges()))
+    print('[BNLEARN.print_DAG] Independencies:\n%s' %(DAG.get_independencies()))
+    print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
 
 
 # %% Make DAG
@@ -88,10 +112,10 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
         Directed Acyclic Graph (DAG). The default is True.
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
+        0: None
         1: ERROR
         2: WARNING
-        3: INFO (default)
+        3: INFO
         4: DEBUG
         5: TRACE
 
@@ -152,31 +176,119 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     return(out)
 
 
-# %% Print DAG
-def print_DAG(DAG):
-    """Print DAG-model to screen.
+# %%  Convert adjacency matrix to vector
+def vec2adjmat(source, target, symmetric=True):
+    """Convert source and target into adjacency matrix.
 
     Parameters
     ----------
-    DAG : pgmpy.models.BayesianModel.BayesianModel
-        model of the DAG.
+    source : list
+        The source node.
+    target : list
+        The target node.
+    symmetric : bool, optional
+        Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.
 
     Returns
     -------
-    None.
+    adjacency matrix : pd.DataFrame().
 
     """
-    if isinstance(DAG, dict):
-        DAG = DAG['model']
-
-    print('[BNLEARN][import_DAG] Model correct: %s' %(DAG.check_model()))
-    for cpd in DAG.get_cpds():
-        print("CPD of {variable}:".format(variable=cpd.variable))
-        print(cpd)
+    # Make adjacency matrix
+    adjmat = pd.crosstab(source, target)
+    # Get all unique nodes
+    nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
     
-    print('[BNLEARN][import_DAG] Nodes: %s' %(DAG.nodes()))
-    print('[BNLEARN][import_DAG] Edges: %s' %(DAG.edges()))
-    print('[BNLEARN][import_DAG] Independencies:\n%s' %(DAG.get_independencies()))
+    # Make the adjacency matrix symmetric
+    if symmetric:
+        # Add missing columns
+        node_columns = np.setdiff1d(nodes, adjmat.columns.values)
+        for node in node_columns:
+            adjmat[node]=0
+    
+        # Add missing rows
+        node_rows = np.setdiff1d(nodes, adjmat.index.values)
+        adjmat=adjmat.T
+        for node in node_rows:
+            adjmat[node]=0
+        adjmat=adjmat.T
+        
+        # Sort to make ordering of columns and rows similar
+        [IA, IB] = ismember(adjmat.columns.values, adjmat.index.values)
+        adjmat = adjmat.iloc[IB,:]
+
+    return(adjmat)
+
+
+# %%  Convert adjacency matrix to vector
+def adjmat2vec(adjmat):
+    """Convert adjacency matrix into vector with source and target.
+
+    Parameters
+    ----------
+    adjmat : pd.DataFrame()
+        Adjacency matrix.
+
+    Returns
+    -------
+    nodes that are connected based on source and target : pd.DataFrame()
+
+    """
+    # Convert adjacency matrix into vector
+    adjmat = adjmat.stack().reset_index()
+    # Set columns
+    adjmat.columns = ['source', 'target', 'weight']
+    # Remove self loops and no-connected edges
+    Iloc1 = adjmat['source']!=adjmat['target']
+    Iloc2 = adjmat['weight']>0
+    Iloc  = Iloc1 & Iloc2
+    # Take only connected nodes
+    adjmat = adjmat.loc[Iloc,:]
+    adjmat.reset_index(drop=True, inplace=True)
+    return(adjmat)
+
+
+# %% Sampling from model
+def sampling(model, n=1000, verbose=3):
+    """Sample based on DAG.
+
+    Parameters
+    ----------
+    model : dict
+        Contains model and adjmat.
+    n : int, optional
+        Number of samples to generate. The default is 1000.
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: NONE
+        1: ERROR
+        2: WARNING
+        3: INFO (default)
+        4: DEBUG
+        5: TRACE
+
+    Returns
+    -------
+    df : pd.DataFrame().
+
+
+    Example
+    -------
+    >>> import bnlearn
+    >>> model = bnlearn.import_DAG('sprinkler')
+    >>> df = bnlearn.sampling(model, n=1000)
+
+    """
+    assert n>0, 'n must be 1 or larger'
+    assert 'BayesianModel' in str(type(model['model'])), 'Model must contain DAG from BayesianModel. Note that <misarables> example does not include DAG.'
+    if verbose>=3: print('[BNLEARN][sampling] Forward sampling for %.0d samples..' %(n))
+
+    # http://pgmpy.org/sampling.html
+    inference = BayesianModelSampling(model['model'])
+    # inference = GibbsSampling(model)
+    # Forward sampling and make dataframe
+    df=inference.forward_sample(size=n, return_type='dataframe')
+    return(df)
 
 
 # %% Model Sprinkler

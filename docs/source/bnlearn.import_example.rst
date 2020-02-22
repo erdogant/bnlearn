@@ -1,5 +1,5 @@
-import_example
-===================
+import_example (API)
+====================
 
 
 .. automodule:: bnlearn.import_example

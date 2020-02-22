@@ -17,8 +17,8 @@ The main categories for inference algorithms:
   b. Variable Elimination
 
 
-Example 1
-'''''''''
+Example Inference 1
+'''''''''''''''''''
 
 Lets load the Sprinkler data set and make some inferences.
 
@@ -40,8 +40,8 @@ The probability having wet grass is 0.9 and not-wet-gras is 0.1.
   +--------------+------------------+
 
 
-Example 2
-'''''''''
+Example Inference 2
+'''''''''''''''''''
 
 What is the probability of wet grass given and Rain given that the *Sprinkler* is on?
 
@@ -62,8 +62,8 @@ The highest probability is that in these condition, there is wet grass and no ra
   +--------------+---------+-----------------------+
 
 
-Example 3
-'''''''''
+Example Inference 3
+'''''''''''''''''''
 
 Given our model, what is the probability on lung cancer given that the person is a smoker and xray is negative?
 P(lung | smoker=1, xray=0)

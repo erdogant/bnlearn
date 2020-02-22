@@ -32,8 +32,9 @@ Models are usually stored in bif files which can also be imported:
    DAG = bnlearn.import_DAG(filepath)
 
 
-Example 1
-'''''''''
+Example Sampling 1
+''''''''''''''''''
+
 
 .. code-block:: python
  

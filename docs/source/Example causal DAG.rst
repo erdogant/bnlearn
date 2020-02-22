@@ -1,12 +1,13 @@
 Causal Generative Modeling with Bayesian Networks
 =================================================
 
-This example is a (twin of the R based bnlearn package)[https://rpubs.com/osazuwa/causaldag1] but now in Python!
+This example is a `twin of the R based bnlearn package <https://rpubs.com/osazuwa/causaldag1>`_ but now in Python!
 You first need to install bnlearn. Checkout the installation pages if you did not do this yet.
 
 
+
 Overview
-^^^^^^^^
+''''''''
 
 * Build DAG
 * plot DAG

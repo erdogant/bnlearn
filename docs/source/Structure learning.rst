@@ -1,5 +1,5 @@
 Structure learning
-==================
+===================
 
 With structure learning we can estimate a DAG that captures the dependencies between the variables in the data set.
 However, realize that the search space of DAGs is super-exponential in the number of variables and you may end up in finding a local maxima. Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL). BDeu is dependent on an equivalent sample size. To learn model structure (a DAG) from a data set, there are three broad techniques:
@@ -41,8 +41,8 @@ A different, but quite straightforward approach to build a DAG from data is to i
   3. Independencies in the data can be identified using chi2 conditional independence tests.
 
 
-Example 1
-'''''''''
+Example Structure learning 1
+''''''''''''''''''''''''''''
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -117,8 +117,9 @@ We can specificy the method and scoring type. As described previously, some meth
 
 
 
-Example 2
-'''''''''
+Example Structure learning 2
+''''''''''''''''''''''''''''
+
 
 Lets learn the structure of a more complex data set and compare it to another one.
 

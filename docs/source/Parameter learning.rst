@@ -1,5 +1,5 @@
 Parameter learning
-==================
+===================
 
 Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
 To make sense of the given data, we can start by counting how often each state of the variable occurs.
@@ -41,8 +41,8 @@ A somewhat more sensible choice of prior is *BDeu* (Bayesian Dirichlet equivalen
 For BDeu we need to specify an *equivalent sample size* "N" and then the pseudo-counts are the equivalent of having observed `N` uniform samples of each variable (and each parent configuration).
 
 
-Example 1
-'''''''''
+Example Parameter learning 1
+''''''''''''''''''''''''''''
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0].
 The question we can ask: What are the parameters for the DAG given a dataset? Note that his data set is already pre-processed and no missing values are present.
@@ -218,8 +218,8 @@ Lets generate more samples and learn again the parameters. You will see that the
 
 
 
-Example 2
-'''''''''
+Example Parameter learning 2
+''''''''''''''''''''''''''''
 
 Lets try out a more complexer model. We need both a directed acycle graph (DAG) and dataset with the same variables. 
 So again, the idea is to link the dataset with the DAG.

@@ -1,5 +1,5 @@
-inference
-===================
+Inference (API)
+===============
 
 
 .. automodule:: bnlearn.inference

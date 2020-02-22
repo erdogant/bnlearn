@@ -1,5 +1,5 @@
-plot
-==================
+plot (API)
+==========
 
 
 .. automodule:: bnlearn.plot

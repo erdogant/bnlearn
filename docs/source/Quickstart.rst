@@ -2,8 +2,8 @@ Quickstart
 ==========
 
 
-Installation
-------------
+Installation (short)
+--------------------
 
 Installation of bnlearn is straightforward. 
 It is advisable to create a new environment. 

@@ -1,5 +1,5 @@
-structure_learning
-===================
+structure_learning (API)
+========================
 
 
 .. automodule:: bnlearn.structure_learning
