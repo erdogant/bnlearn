@@ -65,8 +65,8 @@ After creating the environment and installing pgmpy, you can simply install bnle
   Install bnlearn.
 
 
-Validate working
-================
+Validate
+========
 
 Lets checkout whether it works by a simple example. Start python in your console:
 

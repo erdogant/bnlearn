@@ -2,5 +2,5 @@ print DAG
 =========
 
 
-.. automodule:: bnlearn.print_DAG
+.. autoclass:: bnlearn.print_DAG
     :members:

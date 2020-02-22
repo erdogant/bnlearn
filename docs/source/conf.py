@@ -28,6 +28,9 @@ release = 'bnlearn'
 
 # -- General configuration ---------------------------------------------------
 
+# Mock importing packages to avoid complicated dependencies that needs to be installed
+# autodoc_mock_imports = ['pgmpy', 'networkx', 'sklearn', 'statsmodels']
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.

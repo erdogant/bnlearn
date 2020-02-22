@@ -3,10 +3,10 @@ bnlearn's documentation!
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 
-* build on top of pgmpy library
-* contains the most-wanted pipelines
-* simple and intuitive
-* focus on structure learning, parameter learning and inference.
+* Build on top of the pgmpy library
+* Contains the most-wanted bayesian pipelines
+* Simple and intuitive
+* Focus on structure learning, parameter learning and inference.
 
 
 Content

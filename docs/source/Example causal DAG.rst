@@ -5,8 +5,8 @@ This example is a (twin of the R based bnlearn package)[https://rpubs.com/osazuw
 You first need to install bnlearn. Checkout the installation pages if you did not do this yet.
 
 
-Approach
-''''''''
+Overview
+^^^^^^^^
 
 * Build DAG
 * plot DAG
