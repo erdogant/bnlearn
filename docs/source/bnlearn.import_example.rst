@@ -1,4 +1,4 @@
-import_example (API)
+import_example
 ====================
 
 

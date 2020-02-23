@@ -1,4 +1,4 @@
-Inference (API)
+Inference
 ===============
 
 

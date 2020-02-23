@@ -1,4 +1,4 @@
-structure_learning (API)
+structure_learning
 ========================
 
 

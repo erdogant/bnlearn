@@ -1,4 +1,4 @@
-parameter_learning (API)
+parameter_learning
 ========================
 
 
