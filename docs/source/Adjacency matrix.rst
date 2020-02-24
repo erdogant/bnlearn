@@ -128,3 +128,37 @@ Extracting adjacency matrix after Parameter learning:
   +-----------+--------+-----------+-------+-----------+
   | Wet_Grass | False  | False     | False | False     |
   +-----------+--------+-----------+-------+-----------+
+
+
+**Converting adjacency matrix into vector**
+
+.. code-block:: python
+   
+   # Load DAG
+   DAG = bnlearn.import_DAG('Sprinkler')
+   # Convert adjmat to vector:
+   vector = bnlearn.adjmat2vec(DAG['adjmat'])
+
+.. table::
+
+   +------------+------------+---------+
+   |  source    |  target    | weight  |
+   +------------+------------+---------+
+   |  Cloudy    | Sprinkler  | True    |
+   +------------+------------+---------+
+   |  Cloudy    | Rain       | True    |
+   +------------+------------+---------+
+   |  Sprinkler | Wet_Grass  | True    |
+   +------------+------------+---------+
+   |  Rain      | Wet_Grass  | True    |
+   +------------+------------+---------+
+
+
+
+**Converting vector into adjacency matrix**
+
+.. code-block:: python
+   
+   # Load DAG
+   adjmat = bnlearn.vec2adjmat(vector['source'], vector['target'])
+
