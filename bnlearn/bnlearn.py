@@ -185,7 +185,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if not isinstance(model, type(None)) and verbose>=3 and CPD:
-        print_DAG(model)
+        print_CPD(model)
 
     # Setup simmilarity matrix
     adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
@@ -193,6 +193,8 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     edges=model.edges()
     for edge in edges:
         adjmat.loc[edge[0],edge[1]]=True
+    adjmat.index.name='source'
+    adjmat.columns.name='target'
 
     out['model']=model
     out['adjmat']=adjmat
@@ -221,24 +223,26 @@ def vec2adjmat(source, target, symmetric=True):
     adjmat = pd.crosstab(source, target)
     # Get all unique nodes
     nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
-    
+
     # Make the adjacency matrix symmetric
     if symmetric:
         # Add missing columns
         node_columns = np.setdiff1d(nodes, adjmat.columns.values)
         for node in node_columns:
             adjmat[node]=0
-    
+
         # Add missing rows
         node_rows = np.setdiff1d(nodes, adjmat.index.values)
         adjmat=adjmat.T
         for node in node_rows:
             adjmat[node]=0
         adjmat=adjmat.T
-        
+
         # Sort to make ordering of columns and rows similar
         [IA, IB] = ismember(adjmat.columns.values, adjmat.index.values)
         adjmat = adjmat.iloc[IB,:]
+        adjmat.index.name='source'
+        adjmat.columns.name='target'
 
     return(adjmat)
 
@@ -264,7 +268,7 @@ def adjmat2vec(adjmat):
     # Remove self loops and no-connected edges
     Iloc1 = adjmat['source']!=adjmat['target']
     Iloc2 = adjmat['weight']>0
-    Iloc  = Iloc1 & Iloc2
+    Iloc = Iloc1 & Iloc2
     # Take only connected nodes
     adjmat = adjmat.loc[Iloc,:]
     adjmat.reset_index(drop=True, inplace=True)

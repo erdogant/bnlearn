@@ -69,6 +69,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
     config = dict()
     config['verbose'] = verbose
     config['method'] = methodtype
+    adjmat = model['adjmat']
+
     if isinstance(model, dict):
         model = model['model']
     if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
@@ -124,5 +126,9 @@ def fit(model, df, methodtype='bayes', verbose=3):
         for cpd in model.get_cpds():
             if verbose>=3: print("CPD of {variable}:".format(variable=cpd.variable))
             if verbose>=3: print(cpd)
+    
+    out = {}
+    out['model'] = model
+    out['adjmat'] = adjmat
 
-    return(model)
+    return(out)

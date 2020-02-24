@@ -173,6 +173,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     edges=out['model'].edges()
     for edge in edges:
         adjmat.loc[edge[0],edge[1]]=True
+    adjmat.index.name='source'
+    adjmat.columns.name='target'
 
     # Store
     out['adjmat']=adjmat
