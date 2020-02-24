@@ -8,7 +8,7 @@ In graph theory, it is a square matrix used to represent a finite graph. The ele
 Algorithms
 ''''''''''
 
-The main functionalities in bnlearn output an adjacency matrix. Nodes that have value 0 or False are not connected whereas paris of vertices of value >0 or True are connected.
+Bnlearn outputs an adjacency matrix in some functionalities. Values 0 or False indicate that nodes are not connected whereas pairs of vertices with value >0 or True are connected.
 
 
 **Importing a DAG**
