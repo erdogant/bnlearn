@@ -75,13 +75,13 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
             if verbose>=3: print('[BNLEARN] Add CPD: %s' %(cpd.variable))
 
         if checkmodel:
-            print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
+            print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
 
     return DAG
 
 
 # %% Print DAG
-def print_DAG(DAG, checkmodel=False):
+def print_CPD(DAG, checkmodel=False):
     """Print DAG-model to screen.
 
     Parameters
@@ -100,19 +100,19 @@ def print_DAG(DAG, checkmodel=False):
         DAG = DAG['model']
 
     if len(DAG.get_cpds())==0:
-        print('[BNLEARN.print_DAG] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
+        print('[BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
         return
 
-    print('[BNLEARN.print_DAG] Independencies:\n%s' %(DAG.get_independencies()))
-    print('[BNLEARN.print_DAG] Nodes: %s' %(DAG.nodes()))
-    print('[BNLEARN.print_DAG] Edges: %s' %(DAG.edges()))
+    print('[BNLEARN.print_CPD] Independencies:\n%s' %(DAG.get_independencies()))
+    print('[BNLEARN.print_CPD] Nodes: %s' %(DAG.nodes()))
+    print('[BNLEARN.print_CPD] Edges: %s' %(DAG.edges()))
 
     for cpd in DAG.get_cpds():
         print("CPD of {variable}:".format(variable=cpd.variable))
         print(cpd)
 
     if checkmodel:
-        print('[BNLEARN.print_DAG] Model correct: %s' %(DAG.check_model()))
+        print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
 
 
 # %% Make DAG

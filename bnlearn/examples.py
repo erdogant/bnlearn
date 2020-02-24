@@ -57,10 +57,11 @@ bnlearn.plot(model_update)
 model_true = bnlearn.import_DAG('sprinkler', CPD=True)
 
 # %% LOAD BIF FILE
-DAG = bnlearn.import_DAG('alarm')
+DAG = bnlearn.import_DAG('alarm', verbose=0)
 df = bnlearn.sampling(DAG, n=1000)
 model_update = bnlearn.parameter_learning.fit(DAG, df)
 G = bnlearn.plot(model_update)
+bnlearn.print_CPD(model_update)
 
 
 # %% INFERENCE
@@ -88,7 +89,7 @@ print(q2)
 DAG1 = bnlearn.import_DAG('sprinkler', CPD=False)
 DAG = bnlearn.import_DAG('asia')
 bnlearn.plot(DAG)
-bnlearn.print_DAG(DAG)
+bnlearn.print_CPD(DAG)
 
 df = bnlearn.sampling(DAG, n=1000)
 vector = bnlearn.adjmat2vec(DAG['adjmat'])
@@ -122,7 +123,7 @@ print(cpd_E)
 
 
 DAG = bnlearn.make_DAG(DAG, CPD=cpd_A, checkmodel=False)
-bnlearn.print_DAG(DAG, checkmodel=False)
+bnlearn.print_CPD(DAG, checkmodel=False)
 
 # %% Create a simple DAG:
 from pgmpy.factors.discrete import TabularCPD
@@ -134,7 +135,7 @@ edges = [('Cloudy', 'Sprinkler'),
 
 DAG = bnlearn.make_DAG(edges)
 bnlearn.plot(DAG)
-bnlearn.print_DAG(DAG)
+bnlearn.print_CPD(DAG)
 
 
 # Cloudy
@@ -160,5 +161,5 @@ cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
 DAG = bnlearn.make_DAG(DAG, CPD=cpt_cloudy, checkmodel=False)
 DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler])
 DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
-bnlearn.print_DAG(DAG)
+bnlearn.print_CPD(DAG)
 
