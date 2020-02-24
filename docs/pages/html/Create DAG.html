@@ -35,7 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="API Reference" href="API Reference.html" />
+    <link rel="next" title="Adjacency matrix" href="Adjacency matrix.html" />
     <link rel="prev" title="Sampling and datasets" href="Sampling and datasets.html" /> 
 </head>
 
@@ -105,6 +105,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#inference-on-the-causal-generative-model">Inference on the causal generative model</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption"><span class="caption-text">Various</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adjacency matrix.html">Adjacency matrix</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Additional Documentation</span></p>
 <ul>
@@ -224,9 +228,9 @@ In bnlearn, we can graphically represent the relationships between variables. To
 <div class="section" id="the-causal-dag-as-a-generative-representation-of-joint-probability">
 <h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this headline">¶</a></h2>
 <p>Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_DAG</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 
-<span class="c1"># [BNLEARN.print_DAG] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
+<span class="c1"># [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
 </pre></div>
 </div>
 <p>There are no CPDs attached to the DAG yet. Therefore there is nothing to show.</p>
@@ -285,7 +289,7 @@ Here again, the term CPD is more often used than CMK.</p>
 </div>
 <p>Nice work! You created a directed acyclic graph with probability tables connected to it.
 To further examine the CPDs, print the DAG as following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">print_DAG</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -306,7 +310,7 @@ To further examine the CPDs, print the DAG as following:</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="API Reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="Adjacency matrix.html" class="btn btn-neutral float-right" title="Adjacency matrix" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="Sampling and datasets.html" class="btn btn-neutral float-left" title="Sampling and datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -35,6 +35,14 @@ Content
   Sampling and datasets
   Create DAG
 
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Various
+
+  Adjacency matrix
+
+
 .. toctree::
   :maxdepth: 1
   :caption: Additional Documentation

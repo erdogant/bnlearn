@@ -65,9 +65,9 @@ Any DAG (causal or otherwise) that we might specify for this data represents a f
 
 .. code-block:: python
    
-   bnlearn.print_DAG(DAG)
+   bnlearn.print_CPD(DAG)
 
-   # [BNLEARN.print_DAG] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
+   # [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
 
 
 There are no CPDs attached to the DAG yet. Therefore there is nothing to show.
