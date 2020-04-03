@@ -8,8 +8,8 @@ the product of all the factors involving **X** and marginalize over them,
 thus allowing us to work on much smaller factors.
 
 
-Algorithms
-''''''''''
+Inference Algorithms
+''''''''''''''''''''
 
 The main categories for inference algorithms:
   1. Exact Inference: These algorithms find the exact probability values for our queries.

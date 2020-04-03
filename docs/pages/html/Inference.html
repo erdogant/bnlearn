@@ -96,7 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure learning.html">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter learning.html">Parameter learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#algorithms">Algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#examples-inference">Examples Inference</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-inference-1">Example Inference 1</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-inference-2">Example Inference 2</a></li>
@@ -115,6 +115,9 @@
 <p class="caption"><span class="caption-text">Additional Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="API Reference.html">API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.Parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.Structure_learning</a></li>
 </ul>
 
             
@@ -186,8 +189,8 @@ But variable elimination avoids computing the Joint Distribution by doing margin
 So basically if we want to eliminate <strong>X</strong> from our distribution, then we compute
 the product of all the factors involving <strong>X</strong> and marginalize over them,
 thus allowing us to work on much smaller factors.</p>
-<div class="section" id="algorithms">
-<h2>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="inference-algorithms">
+<h2>Inference Algorithms<a class="headerlink" href="#inference-algorithms" title="Permalink to this headline">¶</a></h2>
 <dl class="simple">
 <dt>The main categories for inference algorithms:</dt><dd><ol class="arabic simple">
 <li><p>Exact Inference: These algorithms find the exact probability values for our queries.</p></li>

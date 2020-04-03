@@ -1,0 +1,14 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+pgmpy = ">=0.1.10"
+torch ="*"
+bnlearn = "*"
+
+[requires]
+python_version = "3.6"

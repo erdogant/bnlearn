@@ -1,5 +1,5 @@
-vec2adjmat
-========================
+bnlearn.vec2adjmat
+------------------------------------------------
 
 
 .. automodule:: bnlearn.vec2adjmat

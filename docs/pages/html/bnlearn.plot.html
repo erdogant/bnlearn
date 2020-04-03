@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>plot &mdash; bnlearn bnlearn documentation</title>
+  <title>bnlearn.plot &mdash; bnlearn bnlearn documentation</title>
   
 
   
@@ -35,8 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="import_example" href="bnlearn.import_example.html" />
-    <link rel="prev" title="Inference" href="bnlearn.inference.html" /> 
+    <link rel="next" title="bnlearn.import_example" href="bnlearn.import_example.html" />
+    <link rel="prev" title="API Reference" href="API Reference.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -106,18 +106,18 @@
 <p class="caption"><span class="caption-text">Additional Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="API Reference.html">API Reference</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.structure_learning.html">structure_learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.parameter_learning.html">parameter_learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.inference.html">Inference</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">plot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.import_example.html">import_example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.import_DAG.html">import_DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.print_CPD.html">print_CPD</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.make_DAG.html">make_DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.adjmat2vec.html">adjmat2vec</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.vec2adjmat.html">vec2adjmat</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">bnlearn.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.import_example.html">bnlearn.import_example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.import_DAG.html">bnlearn.import_DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.print_CPD.html">bnlearn.print_CPD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.make_DAG.html">bnlearn.make_DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.adjmat2vec.html">bnlearn.adjmat2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.vec2adjmat.html">bnlearn.vec2adjmat</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.Parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.Structure_learning</a></li>
 </ul>
 
             
@@ -165,7 +165,7 @@
         
           <li><a href="API Reference.html">API Reference</a> &raquo;</li>
         
-      <li>plot</li>
+      <li>bnlearn.plot</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -185,51 +185,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="module-bnlearn.plot">
-<span id="plot"></span><h1>plot<a class="headerlink" href="#module-bnlearn.plot" title="Permalink to this headline">¶</a></h1>
-<p>Plot the learned stucture.</p>
-<dl class="field-list simple">
-<dt class="field-odd">param model</dt>
-<dd class="field-odd"><p>Learned model from the .fit() function..</p>
-</dd>
-<dt class="field-even">type model</dt>
-<dd class="field-even"><p>dict</p>
-</dd>
-<dt class="field-odd">param pos</dt>
-<dd class="field-odd"><p>Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p>
-</dd>
-<dt class="field-even">type pos</dt>
-<dd class="field-even"><p>graph, optional</p>
-</dd>
-<dt class="field-odd">param scale</dt>
-<dd class="field-odd"><p>Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.</p>
-</dd>
-<dt class="field-even">type scale</dt>
-<dd class="field-even"><p>int, optional</p>
-</dd>
-<dt class="field-odd">param figsize</dt>
-<dd class="field-odd"><p>Figure size. The default is (15,8).</p>
-</dd>
-<dt class="field-even">type figsize</dt>
-<dd class="field-even"><p>tuple, optional</p>
-</dd>
-<dt class="field-odd">param verbose</dt>
-<dd class="field-odd"><p>Print progress to screen. The default is 3.
-0: NONE
-1: ERROR
-2: WARNING
-3: INFO (default)
-4: DEBUG
-5: TRACE</p>
-</dd>
-<dt class="field-even">type verbose</dt>
-<dd class="field-even"><p>int, optional</p>
-</dd>
-<dt class="field-odd">returns</dt>
-<dd class="field-odd"><p></p></dd>
-<dt class="field-even">rtype</dt>
-<dd class="field-even"><p>dict.</p>
-</dd>
-</dl>
+<span id="bnlearn-plot"></span><h1>bnlearn.plot<a class="headerlink" href="#module-bnlearn.plot" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -240,10 +196,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="bnlearn.import_example.html" class="btn btn-neutral float-right" title="import_example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="bnlearn.import_example.html" class="btn btn-neutral float-right" title="bnlearn.import_example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="bnlearn.inference.html" class="btn btn-neutral float-left" title="Inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="API Reference.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

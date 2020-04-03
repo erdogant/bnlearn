@@ -48,6 +48,9 @@ Content
   :caption: Additional Documentation
 
   API Reference
+  bnlearn.inference
+  bnlearn.parameter_learning
+  bnlearn.structure_learning
   
   
 Source code and issue tracker

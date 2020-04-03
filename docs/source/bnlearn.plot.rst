@@ -1,5 +1,5 @@
-plot
-==========
+bnlearn.plot
+-------------------
 
 
 .. automodule:: bnlearn.plot

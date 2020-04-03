@@ -1,5 +1,5 @@
-print_CPD
-================
+bnlearn.print_CPD
+-------------------
 
 
 .. automodule:: bnlearn.print_CPD

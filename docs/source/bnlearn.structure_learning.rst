@@ -1,9 +1,7 @@
-structure_learning
-========================
+bnlearn.Structure_learning
+------------------------------------------------
 
 
 .. automodule:: bnlearn.structure_learning
     :members:
     :undoc-members:
-    :show-inheritance:
-

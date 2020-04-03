@@ -1,5 +1,5 @@
-import_DAG
-=================
+bnlearn.import_DAG
+-------------------
 
 
 .. automodule:: bnlearn.import_DAG
