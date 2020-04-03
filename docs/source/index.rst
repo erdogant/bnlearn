@@ -45,13 +45,14 @@ Content
 
 .. toctree::
   :maxdepth: 1
-  :caption: Additional Documentation
+  :caption: API References
 
-  API Reference
-  bnlearn.inference
-  bnlearn.parameter_learning
+
   bnlearn.structure_learning
-  
+  bnlearn.parameter_learning
+  bnlearn.inference
+  bnlearn.bnlearn
+
   
 Source code and issue tracker
 ------------------------------

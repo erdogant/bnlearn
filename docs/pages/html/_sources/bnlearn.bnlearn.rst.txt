@@ -1,8 +1,7 @@
-vec2adjmat
+bnlearn functionalities
 ========================
 
 
-.. automodule:: bnlearn.vec2adjmat
+.. automodule:: bnlearn.bnlearn
     :members:
     :undoc-members:
-

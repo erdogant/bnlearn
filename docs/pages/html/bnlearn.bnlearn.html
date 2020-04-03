@@ -1,0 +1,479 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>bnlearn functionalities &mdash; bnlearn bnlearn documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="bnlearn.inference" href="bnlearn.inference.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bnlearn
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Methods</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling and datasets.html">Sampling and datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create DAG.html">Directed Acyclic Graphs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Various</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Adjacency matrix.html">Adjacency matrix</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API References</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn functionalities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>bnlearn functionalities</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/bnlearn.bnlearn.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-bnlearn.bnlearn">
+<span id="bnlearn-functionalities"></span><h1>bnlearn functionalities<a class="headerlink" href="#module-bnlearn.bnlearn" title="Permalink to this headline">¶</a></h1>
+<p>Bayesian techniques for structure learning, parameter learning, inference and sampling.</p>
+<dl class="function">
+<dt id="bnlearn.bnlearn.adjmat2vec">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">adjmat2vec</code><span class="sig-paren">(</span><em class="sig-param">adjmat</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert adjacency matrix into vector with source and target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>nodes that are connected based on source and target</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.compare_networks">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">compare_networks</code><span class="sig-paren">(</span><em class="sig-param">model_1</em>, <em class="sig-param">model_2</em>, <em class="sig-param">pos=None</em>, <em class="sig-param">showfig=True</em>, <em class="sig-param">figsize=(15</em>, <em class="sig-param">8)</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.compare_networks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare networks of two models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_1</strong> (<em>dict</em>) – Results of model 1..</p></li>
+<li><p><strong>model_2</strong> (<em>dict</em>) – Results of model 2..</p></li>
+<li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
+<li><p><strong>showfig</strong> (<em>bool</em><em>, </em><em>optional</em>) – plot figure. The default is True.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size.. The default is (15,8).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: NONE
+1: ERROR
+2: WARNING
+3: INFO (default)
+4: DEBUG
+5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.import_DAG">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_DAG</code><span class="sig-paren">(</span><em class="sig-param">filepath='sprinkler'</em>, <em class="sig-param">CPD=True</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import Directed Acyclic Graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is ‘sprinkler’.
+‘sprinkler’(default)
+‘alarm’
+‘andes’
+‘asia’
+‘pathfinder’
+‘sachs’
+‘miserables’
+‘filepath/to/model.bif’</p></li>
+<li><p><strong>CPD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Directed Acyclic Graph (DAG). The default is True.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None
+1: ERROR
+2: WARNING
+3: INFO
+4: DEBUG
+5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.import_example">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_example</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load sprinkler example.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>df</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.make_DAG">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">make_DAG</code><span class="sig-paren">(</span><em class="sig-param">DAG</em>, <em class="sig-param">CPD=None</em>, <em class="sig-param">checkmodel=True</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.make_DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Directed Acyclic Graph based on list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DAG</strong> (<em>list</em>) – list containing source and target in the form of [(‘A’,’B’), (‘B’,’C’)].</p></li>
+<li><p><strong>CPD</strong> (<em>list</em><em>, </em><em>array-like</em>) – Containing TabularCPD for each node.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None
+1: ERROR
+2: WARNING
+3: INFO
+4: DEBUG
+5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – Should be list.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>model of the DAG.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pgmpy.models.BayesianModel.BayesianModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.plot">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">pos=None</em>, <em class="sig-param">scale=1</em>, <em class="sig-param">figsize=(15</em>, <em class="sig-param">8)</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the learned stucture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) – Learned model from the .fit() function..</p></li>
+<li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
+<li><p><strong>scale</strong> (<em>int</em><em>, </em><em>optional</em>) – Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size. The default is (15,8).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: NONE
+1: ERROR
+2: WARNING
+3: INFO (default)
+4: DEBUG
+5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.print_CPD">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">print_CPD</code><span class="sig-paren">(</span><em class="sig-param">DAG</em>, <em class="sig-param">checkmodel=False</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.print_CPD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print DAG-model to screen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DAG</strong> (<em>pgmpy.models.BayesianModel.BayesianModel</em>) – model of the DAG.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.sampling">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">sampling</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">n=1000</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sample based on DAG.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) – Contains model and adjmat.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: NONE
+1: ERROR
+2: WARNING
+3: INFO (default)
+4: DEBUG
+5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.to_undirected">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">to_undirected</code><span class="sig-paren">(</span><em class="sig-param">adjmat</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_undirected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform directed adjacency matrix to undirected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>adjmat</strong> (<em>np.array</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Directed adjacency matrix.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.vec2adjmat">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">vec2adjmat</code><span class="sig-paren">(</span><em class="sig-param">source</em>, <em class="sig-param">target</em>, <em class="sig-param">symmetric=True</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2adjmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert source and target into adjacency matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>list</em>) – The source node.</p></li>
+<li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
+<li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>adjacency matrix</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="bnlearn.inference.html" class="btn btn-neutral float-left" title="bnlearn.inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Erdogan Taskesen
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

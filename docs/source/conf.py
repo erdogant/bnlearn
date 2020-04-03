@@ -67,7 +67,7 @@ exclude_patterns = ["_build"]
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
 
-autodoc_mock_imports = ['torch','pgmpy','bnlearn']
+autodoc_mock_imports = ['torch','pgmpy']
 
 # -- Options for HTML output -------------------------------------------------
 

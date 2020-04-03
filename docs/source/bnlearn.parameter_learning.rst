@@ -1,5 +1,5 @@
-bnlearn.Parameter_learning
-------------------------------------------------
+bnlearn.parameter_learning
+============================
 
 
 .. automodule:: bnlearn.parameter_learning
