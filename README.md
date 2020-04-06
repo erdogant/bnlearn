@@ -4,7 +4,7 @@
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/erdogant/bnlearn/blob/master/LICENSE)
 [![Downloads](https://pepy.tech/badge/bnlearn)](https://pepy.tech/project/bnlearn)
-[![Sphinx](https://img.shields.io/badge/Sphinx-Documentation-blue)](https://erdogant.github.io/bnlearn/)
+[![Sphinx](https://img.shields.io/badge/Sphinx-Docs-blue)](https://erdogant.github.io/bnlearn/)
 [![Donate](https://img.shields.io/badge/donate-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)
 
 
