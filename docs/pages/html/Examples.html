@@ -1,0 +1,308 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Examples &mdash; bnlearn bnlearn documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bnlearn.structure_learning" href="bnlearn.structure_learning.html" />
+    <link rel="prev" title="Adjacency matrix" href="Adjacency matrix.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bnlearn
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Methods</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling and datasets.html">Sampling and datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create DAG.html">Directed Acyclic Graphs</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Various</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Adjacency matrix.html">Adjacency matrix</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-with-dataframes">Example with DataFrames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-with-dag">Example with DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-from-bif">Import from BIF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#import-from-csv">Import from csv</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn functionalities</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Examples</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
+<div class="section" id="example-with-dataframes">
+<h2>Example with DataFrames<a class="headerlink" href="#example-with-dataframes" title="Permalink to this headline">¶</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, there is one example dataset that can be imported; the <strong>sprinkler</strong> dataset. Note this dataset is readily one-hot, without missing values, and as such does not require any further pre-processing steps. The DAG example models (see Example DAG section) can however be converted from the model to a dataframe.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Plot</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="example-with-dag">
+<h2>Example with DAG<a class="headerlink" href="#example-with-dag" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several example Directed Acyclic Graphs:</dt><dd><ul class="simple">
+<li><p>‘sprinkler’ (default)</p></li>
+<li><p>‘alarm’</p></li>
+<li><p>‘andes’</p></li>
+<li><p>‘asia’</p></li>
+<li><p>‘pathfinder’</p></li>
+<li><p>‘sachs’</p></li>
+<li><p>‘miserables’</p></li>
+</ul>
+</dd>
+</dl>
+<p>Each DAG can be loaded using the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> function. With the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling" title="bnlearn.bnlearn.sampling"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.sampling()</span></code></a> function a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be created for <em>n</em> samples.
+The sprinkler DAG is a special case because it is not loaded from a <em>bif</em> file but created manually. Therefore, the <strong>sprinkler</strong> model can be generated with(out) a CPD by: <code class="docutils literal notranslate"><span class="pre">CPD=False</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sachs&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="c1"># plot the keys of the DAG</span>
+<span class="n">DAG</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+<span class="c1"># dict_keys([&#39;model&#39;, &#39;adjmat&#39;])</span>
+
+<span class="c1"># The model contains the BayesianModel with the CPDs.</span>
+<span class="c1"># The adjmat contains the adjacency matrix with the relationships between the nodes.</span>
+
+<span class="c1"># plot ground truth</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Sampling</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-from-bif">
+<h2>Import from BIF<a class="headerlink" href="#import-from-bif" title="Permalink to this headline">¶</a></h2>
+<p>Each Bayesian DAG model that is loaded with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> is derived from a <em>bif</em> file. The <em>bif</em> file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[<a class="reference external" href="http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm">http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm</a>].</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;filepath/to/model.bif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-from-csv">
+<h2>Import from csv<a class="headerlink" href="#import-from-csv" title="Permalink to this headline">¶</a></h2>
+<p>Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example" title="bnlearn.bnlearn.import_example"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_example()</span></code></a>.
+With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a> it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load titanic dataset containing mixed variables</span>
+<span class="n">df_raw</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
+<span class="c1"># Pre-processing of the input dataset to onehot</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">perc_min_num</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Plot</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-titanic">
+<img alt="_images/fig_titanic.png" src="_images/fig_titanic.png" />
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="bnlearn.structure_learning.html" class="btn btn-neutral float-right" title="bnlearn.structure_learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Adjacency matrix.html" class="btn btn-neutral float-left" title="Adjacency matrix" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Erdogan Taskesen
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
