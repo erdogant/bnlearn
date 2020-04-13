@@ -40,12 +40,7 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
         Check the validity of the model. The default is True
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: None
-        1: ERROR
-        2: WARNING
-        3: INFO
-        4: DEBUG
-        5: TRACE
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Raises
     ------
@@ -123,29 +118,25 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     ----------
     filepath : str, optional
         Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
-        'sprinkler'(default)
-        'alarm'
-        'andes'
-        'asia'
-        'pathfinder'
-        'sachs'
-        'miserables'
-        'filepath/to/model.bif'
+        'sprinkler'(default),
+        'alarm',
+        'andes',
+        'asia',
+        'pathfinder',
+        'sachs',
+        'miserables',
+        'filepath/to/model.bif',
     CPD : bool, optional
         Directed Acyclic Graph (DAG). The default is True.
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: None
-        1: ERROR
-        2: WARNING
-        3: INFO
-        4: DEBUG
-        5: TRACE
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
-    dict.
-
+    dict containing model and adjmat.
+        model : BayesianModel
+        adjmat : Adjacency matrix
 
     Examples
     --------
@@ -216,7 +207,8 @@ def vec2adjmat(source, target, symmetric=True):
 
     Returns
     -------
-    adjacency matrix : pd.DataFrame().
+    adjacency matrix
+        Converted vector into adjacency matrix : pd.DataFrame().
 
     """
     # Make adjacency matrix
@@ -258,7 +250,8 @@ def adjmat2vec(adjmat):
 
     Returns
     -------
-    nodes that are connected based on source and target : pd.DataFrame()
+    adjacency matrix : pd.DataFrame()
+        Nodes that are connected based on source and target.
 
     """
     # Convert adjacency matrix into vector
@@ -287,16 +280,12 @@ def sampling(model, n=1000, verbose=3):
         Number of samples to generate. The default is 1000.
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
     df : pd.DataFrame().
+        Dataframe containing sampled data from the input DAG model.
 
 
     Example
@@ -414,7 +403,8 @@ def to_undirected(adjmat):
 
     Returns
     -------
-    Directed adjacency matrix.
+    Directed adjacency matrix : pd.DataFrame()
+        Converted adjmat with undirected edges.
 
     """
     num_rows=adjmat.shape[0]
@@ -448,16 +438,13 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), v
         Figure size.. The default is (15,8).
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
-    dict.
+    tuple containing (scores, adjmat_diff)
+        scores : Score of differences between the two input models.
+        adjmat_diff : Adjacency matrix depicting the differences between the two input models.
 
     """
     [scores, adjmat_diff] = network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], verbose=verbose)
@@ -480,16 +467,15 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
         Figure size. The default is (15,8).
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
-    dict.
+    dict containing pos and G
+        pos : list
+            Positions of the nodes.
+        G : Graph
+            Graph model
 
     """
     out=dict()
@@ -556,22 +542,76 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
 
 
 # %% Example data
-def import_example():
-    """Load sprinkler example.
+def import_example(data='sprinkler', verbose=3):
+    """Load example dataset.
+
+    Parameters
+    ----------
+    data : str, optional
+        'sprinkler'
+        'titanic'
+    verbose : int, optional
+        Print message to screen. The default is 3.
 
     Returns
     -------
     df : pd.DataFrame()
 
     """
-    curpath = os.path.dirname(os.path.abspath(__file__))
-    PATH_TO_DATA_1 = os.path.join(curpath,'data','sprinkler_data.zip')
-    if os.path.isfile(PATH_TO_DATA_1):
-        df=pd.read_csv(PATH_TO_DATA_1, sep=',')
-        return df
+    import wget
+
+    url = 'https://erdogant.github.io/datasets/'
+    if data=='sprinkler':
+        url=url + 'sprinkler.zip'
+    elif data=='titanic':
+        url=url + 'titanic_train.zip'
     else:
-        print('[KM] Oops! Example data not found! Try to get it at: www.github.com/erdogant/bnlearn/')
+        print('[BNLEARN] Oops! Example dataset not found!')
         return None
+
+    curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
+
+    # Check file exists.
+    if not os.path.isfile(PATH_TO_DATA):
+        if verbose>=3: print('[BNLEARN] Downloading example dataset..')
+        wget.download(url, curpath)
+
+    # Import local dataset
+    if verbose>=3: print('[BNLEARN] Import dataset..')
+    df = pd.read_csv(PATH_TO_DATA)
+    return df
+
+
+# %% Pre-processing of input raw dataset
+def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background='0.0', verbose=3):
+    """Convert dataframe to one-hot matrix.
+
+    Parameters
+    ----------
+    df : pd.DataFrame()
+        Input dataframe for which the rows are the features, and colums are the samples.
+    dtypes : list of str or 'pandas', optional
+        Representation of the columns in the form of ['cat','num']. By default the dtype is determiend based on the pandas dataframe.
+    y_min : int [0..len(y)], optional
+        Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.
+    perc_min_num : float [None, 0..1], optional
+        Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8
+    verbose : int, optional
+        Print message to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    pd.DataFrame()
+        One-hot dataframe.
+
+    """
+    from df2onehot import df2onehot
+    # Convert dataframe to onehot by keeping only categorical variables.
+    df_onehot = df2onehot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)['onehot']
+    return df_onehot
+
 
 # %% Convert Adjmat to graph (G)
 # def adjmat2graph(adjmat):
