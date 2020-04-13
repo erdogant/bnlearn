@@ -14,16 +14,18 @@ Content
 
 .. toctree::
    :maxdepth: 2
+   :caption: Quickstart
+
+   Quickstart
+
+
+.. toctree::
+   :maxdepth: 2
    :caption: Introduction
 
    Introduction
    Installation
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Quickstart
-
-   Quickstart
 
 .. toctree::
   :maxdepth: 2
@@ -41,6 +43,7 @@ Content
   :caption: Various
 
   Adjacency matrix
+  Examples
 
 
 .. toctree::

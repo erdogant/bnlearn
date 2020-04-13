@@ -46,6 +46,7 @@ napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 # pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Erdogan Taskesen'),]
 
+autodoc_mock_imports = ['torch','pgmpy']
 
 #extensions = [
 #    "sphinx.ext.autodoc",
@@ -66,8 +67,6 @@ exclude_patterns = ["_build"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = "sphinx"
-
-autodoc_mock_imports = ['torch','pgmpy']
 
 # -- Options for HTML output -------------------------------------------------
 

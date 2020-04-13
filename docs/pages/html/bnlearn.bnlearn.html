@@ -79,16 +79,16 @@
               
             
             
-              <p class="caption"><span class="caption-text">Introduction</span></p>
+              <p class="caption"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Quickstart</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Methods</span></p>
 <ul>
@@ -101,6 +101,7 @@
 <p class="caption"><span class="caption-text">Various</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Adjacency matrix.html">Adjacency matrix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API References</span></p>
 <ul class="current">
@@ -184,7 +185,7 @@
 <dd class="field-odd"><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>nodes that are connected based on source and target</strong></p>
+<dd class="field-even"><p><strong>adjacency matrix</strong> – Nodes that are connected based on source and target.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
@@ -205,19 +206,39 @@
 <li><p><strong>showfig</strong> (<em>bool</em><em>, </em><em>optional</em>) – plot figure. The default is True.</p></li>
 <li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size.. The default is (15,8).</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: NONE
-1: ERROR
-2: WARNING
-3: INFO (default)
-4: DEBUG
-5: TRACE</p></li>
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p>scores : Score of differences between the two input models.
+adjmat_diff : Adjacency matrix depicting the differences between the two input models.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict.</p>
+<dd class="field-odd"><p>tuple containing (scores, adjmat_diff)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="bnlearn.bnlearn.df2onehot">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">df2onehot</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">y_min=10</em>, <em class="sig-param">perc_min_num=0.8</em>, <em class="sig-param">dtypes='pandas'</em>, <em class="sig-param">excl_background='0.0'</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.df2onehot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert dataframe to one-hot matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe for which the rows are the features, and colums are the samples.</p></li>
+<li><p><strong>dtypes</strong> (<em>list of str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
+<li><p><strong>y_min</strong> (<em>int</em><em> [</em><em>0..len</em><em>(</em><em>y</em><em>)</em><em>]</em><em>, </em><em>optional</em>) – Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.</p></li>
+<li><p><strong>perc_min_num</strong> (<em>float</em><em> [</em><em>None</em><em>, </em><em>0..1</em><em>]</em><em>, </em><em>optional</em>) – Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print message to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>One-hot dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -230,29 +251,25 @@
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>optional</em>) – Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is ‘sprinkler’.
-‘sprinkler’(default)
-‘alarm’
-‘andes’
-‘asia’
-‘pathfinder’
-‘sachs’
-‘miserables’
-‘filepath/to/model.bif’</p></li>
+‘sprinkler’(default),
+‘alarm’,
+‘andes’,
+‘asia’,
+‘pathfinder’,
+‘sachs’,
+‘miserables’,
+‘filepath/to/model.bif’,</p></li>
 <li><p><strong>CPD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Directed Acyclic Graph (DAG). The default is True.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: None
-1: ERROR
-2: WARNING
-3: INFO
-4: DEBUG
-5: TRACE</p></li>
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p>model : BayesianModel
+adjmat : Adjacency matrix</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict.</p>
+<dd class="field-odd"><p>dict containing model and adjmat.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -264,14 +281,21 @@
 
 <dl class="function">
 <dt id="bnlearn.bnlearn.import_example">
-<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_example</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_example" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load sprinkler example.</p>
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_example</code><span class="sig-paren">(</span><em class="sig-param">data='sprinkler'</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load example dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>df</strong></p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘sprinkler’
+‘titanic’</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print message to screen. The default is 3.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pd.DataFrame()</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -287,12 +311,7 @@
 <li><p><strong>CPD</strong> (<em>list</em><em>, </em><em>array-like</em>) – Containing TabularCPD for each node.</p></li>
 <li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: None
-1: ERROR
-2: WARNING
-3: INFO
-4: DEBUG
-5: TRACE</p></li>
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
@@ -319,19 +338,20 @@
 <li><p><strong>scale</strong> (<em>int</em><em>, </em><em>optional</em>) – Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.</p></li>
 <li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size. The default is (15,8).</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: NONE
-1: ERROR
-2: WARNING
-3: INFO (default)
-4: DEBUG
-5: TRACE</p></li>
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p><dl class="simple">
+<dt>pos<span class="classifier">list</span></dt><dd><p>Positions of the nodes.</p>
+</dd>
+<dt>G<span class="classifier">Graph</span></dt><dd><p>Graph model</p>
+</dd>
+</dl>
+</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict.</p>
+<dd class="field-odd"><p>dict containing pos and G</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,16 +386,11 @@
 <li><p><strong>model</strong> (<em>dict</em>) – Contains model and adjmat.</p></li>
 <li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: NONE
-1: ERROR
-2: WARNING
-3: INFO (default)
-4: DEBUG
-5: TRACE</p></li>
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>df</strong></p>
+<dd class="field-even"><p><strong>df</strong> – Dataframe containing sampled data from the input DAG model.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
@@ -398,10 +413,10 @@
 <dd class="field-odd"><p><strong>adjmat</strong> (<em>np.array</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p><strong>Directed adjacency matrix</strong> – Converted adjmat with undirected edges.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Directed adjacency matrix.</p>
+<dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
 </dd></dl>
@@ -419,10 +434,10 @@
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>adjacency matrix</strong></p>
+<dd class="field-even"><p>Converted vector into adjacency matrix : pd.DataFrame().</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame()</p>
+<dd class="field-odd"><p>adjacency matrix</p>
 </dd>
 </dl>
 </dd></dl>
