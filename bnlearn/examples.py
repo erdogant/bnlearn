@@ -96,13 +96,25 @@ print(q2)
 # %% Import titanic case
 import bnlearn
 # Load example mixed dataset
-df_raw = bnlearn.import_example(data='titanic')
+df_raw = bnlearn.import_example(data='sprinkler')
 # Convert to onehot
 df = bnlearn.df2onehot(df_raw)
+df.columns=df.columns.str.replace('_1.0','')
 # Structure learning
-model = bnlearn.structure_learning.fit(df)
+DAG = bnlearn.structure_learning.fit(df)
 # Plot
-G = bnlearn.plot(model)
+G = bnlearn.plot(DAG)
+
+bnlearn.plot(DAG)
+q1 = bnlearn.inference.fit(DAG['model'], variables=['survived_1.0'], evidence={'Sex_male':1, 'Pclass_3.0':1})
+q1 = bnlearn.inference.fit(DAG['model'], variables=['Wet_Grass_1.0'], evidence={'Rain_1.0':1, 'Sprinkler_1.0':0, 'Cloudy_1.0':1})
+q2 = bnlearn.inference.fit(DAG, variables=['Wet_Grass_1.0','Rain_1.0'], evidence={'Sprinkler_1.0':1})
+
+
+DAG = bnlearn.import_DAG('sprinkler')
+bnlearn.plot(DAG)
+q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q2 = bnlearn.inference.fit(DAG, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
 
 # %%
