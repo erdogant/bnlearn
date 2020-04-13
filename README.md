@@ -41,6 +41,8 @@ bnlearn.compare_networks()
 bnlearn.plot()
 # To make the directed grapyh undirected
 bnlearn.to_undirected()
+# Convert to one-hot datamatrix
+bnlearn.df2onehot()
  
 # See below for the exact working of the functions
 ```
