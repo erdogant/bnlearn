@@ -9,6 +9,7 @@ from bnlearn.bnlearn import (
     plot,
     adjmat2vec,
     vec2adjmat,
+    df2onehot,
 )
 
 # Import function in new level
@@ -24,6 +25,11 @@ except:
 
 # Check version pgmpy
 assert version.parse(pgmpy.__version__)>=version.parse("0.1.10"), 'This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>'
+# Version check
+import matplotlib
+if not version.parse(matplotlib.__version__) > version.parse("3.1.1"):
+    print('[BNLEARN] Error: Matplotlib version is advised to be to be > v3.1.1.\nTry to: pip install -U matplotlib')
+
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'

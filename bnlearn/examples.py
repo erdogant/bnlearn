@@ -26,13 +26,19 @@ model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='b
 bnlearn.compare_networks(model, model_hc_bic, pos=G['pos'])
 
 
+# %% Example with dataset
+DAG = bnlearn.import_DAG()
+# plot ground truth
+G = bnlearn.plot(DAG)
+
+
 # %% Example compare networks
 # Load asia DAG
-model = bnlearn.import_DAG('asia')
+DAG = bnlearn.import_DAG('asia')
 # plot ground truth
-G = bnlearn.plot(model)
+G = bnlearn.plot(DAG)
 # Sampling
-df = bnlearn.sampling(model, n=10000)
+df = bnlearn.sampling(DAG, n=10000)
 # Structure learning of sampled dataset
 model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
@@ -46,6 +52,7 @@ model_bl = bnlearn.structure_learning.fit(df, methodtype='hc', white_list=['asia
 bnlearn.plot(model_bl, pos=G['pos'])
 bnlearn.compare_networks(model, model_bl, pos=G['pos'])
 
+
 # %% PARAMETER LEARNING
 dir(bnlearn.parameter_learning)
 
@@ -55,6 +62,7 @@ model_update = bnlearn.parameter_learning.fit(model, df)
 bnlearn.plot(model_update)
 
 model_true = bnlearn.import_DAG('sprinkler', CPD=True)
+
 
 # %% LOAD BIF FILE
 DAG = bnlearn.import_DAG('alarm', verbose=0)
@@ -83,6 +91,18 @@ q3 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'bronc':1, 'smoke'
 
 print(q1)
 print(q2)
+
+
+# %% Import titanic case
+import bnlearn
+# Load example mixed dataset
+df_raw = bnlearn.import_example(data='titanic')
+# Convert to onehot
+df = bnlearn.df2onehot(df_raw)
+# Structure learning
+model = bnlearn.structure_learning.fit(df)
+# Plot
+G = bnlearn.plot(model)
 
 
 # %%
