@@ -68,7 +68,7 @@ Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` i
 
 
 
-Import from csv
+Start with RAW data
 '''''''''''''''''''
 
 Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using :func:`bnlearn.bnlearn.import_example`.
@@ -81,12 +81,27 @@ With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the m
    df_raw = bnlearn.import_example(data='titanic')
    # Pre-processing of the input dataset to onehot
    df = bnlearn.df2onehot(df_raw, y_min=10, perc_min_num=0.8)
+   df.columns=df.columns.str.replace('_1.0','')
    # Structure learning
    model = bnlearn.structure_learning.fit(df)
    # Plot
    G = bnlearn.plot(model)
 
-
 .. _fig-titanic:
 
 .. figure:: ../figs/fig_titanic.png
+
+
+From this point we can learn the parameters using the DAG and input dataframe.
+
+.. code-block:: python
+
+   # Parameter learning
+   model = bnlearn.parameter_learning.fit(DAG, df)
+
+Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive).
+
+.. code-block:: python
+
+   # Make inference
+   q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex_female':1, 'Pclass':1})

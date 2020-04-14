@@ -193,7 +193,7 @@ In graph theory, it is a square matrix used to represent a finite graph. The ele
 <span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
 
 <span class="c1"># print</span>
-<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Reading the table from left to right, we see that gene Erk is connected to Akt in a directed manner.
@@ -382,7 +382,7 @@ This indicates that Erk influences gene Ark but not the otherway arround because
 <span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
 
 <span class="c1"># print</span>
-<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Reading the table from left to right we see that Cloudy is connected to Sprinkler and also to Rain in a directed manner.
@@ -437,14 +437,14 @@ Wet_grass is connected to nothing.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load dataframe</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 <span class="c1"># Import DAG</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Learn parameters</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="c1"># adjacency matrix:</span>
 <span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
 
 <span class="c1"># print</span>
-<span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <table class="docutils align-default">

@@ -106,10 +106,7 @@
 </ul>
 <p class="caption"><span class="caption-text">API References</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.structure_learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.structure_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn functionalities</a></li>
@@ -180,8 +177,10 @@
   <div class="section" id="module-bnlearn.structure_learning">
 <span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Permalink to this headline">¶</a></h1>
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
-<div class="section" id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="bnlearn.structure_learning.fit">
+<code class="sig-prename descclassname">bnlearn.structure_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">methodtype='hc'</em>, <em class="sig-param">scoretype='bic'</em>, <em class="sig-param">black_list=None</em>, <em class="sig-param">white_list=None</em>, <em class="sig-param">max_indegree=None</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
 <dl class="simple">
@@ -212,10 +211,6 @@ A search strategy to traverse the search space of possible models M and select a
 Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
 and the Bayesian Information Criterion (BIC, also called MDL).
 As before, BDeu is dependent on an equivalent sample size.</p>
-<dl class="function">
-<dt id="bnlearn.structure_learning.fit">
-<code class="sig-prename descclassname">bnlearn.structure_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">methodtype='hc'</em>, <em class="sig-param">scoretype='bic'</em>, <em class="sig-param">black_list=None</em>, <em class="sig-param">white_list=None</em>, <em class="sig-param">max_indegree=None</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Structure learning fit model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -272,7 +267,6 @@ Works only in case of methodtype=’hc’</p></li>
 </div>
 </dd></dl>
 
-</div>
 </div>
 
 

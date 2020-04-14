@@ -282,8 +282,8 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </tr>
 </tbody>
 </table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-<span class="k">print</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
@@ -450,7 +450,7 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 <p>Great! We have the probabilities! Lets check how much they differ from the truth.
 In general it can be seen that the estimated values are not very close at every point to the true values.
 The main reason is because the dataframe only contains 1000 samples.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG_true</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG_true</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <dl>
