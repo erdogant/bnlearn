@@ -627,7 +627,7 @@ def import_example(data='sprinkler', verbose=3):
 
 
 # %% Pre-processing of input raw dataset
-def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background='0.0', verbose=3):
+def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=None, verbose=3):
     """Convert dataframe to one-hot matrix.
 
     Parameters
@@ -651,9 +651,22 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background='
 
     """
     from df2onehot import df2onehot
+
     # Convert dataframe to onehot by keeping only categorical variables.
-    df_onehot = df2onehot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)['onehot']
-    return df_onehot
+    out = df2onehot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)
+    # Numerical
+    df_num = out['numeric'].iloc[:,out['dtypes']=='cat']
+    df_num = df_num.astype(int)
+    # One-hot
+    df_hot = out['onehot']
+    df_hot.columns=df_hot.columns.str.replace('_4.0','_4')
+    df_hot.columns=df_hot.columns.str.replace('_3.0','_3')
+    df_hot.columns=df_hot.columns.str.replace('_2.0','_2')
+    df_hot.columns=df_hot.columns.str.replace('_1.0','_1')
+    df_hot.columns=df_hot.columns.str.replace('_0.0','_0')
+    
+    
+    return df_hot, df_num
 
 
 # %% Convert Adjmat to graph (G)

@@ -242,11 +242,10 @@ The sprinkler DAG is a special case because it is not loaded from a <em>bif</em>
 With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a> it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load titanic dataset containing mixed variables</span>
 <span class="n">df_raw</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
-<span class="c1"># Pre-processing of the input dataset to onehot</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">perc_min_num</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_1.0&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="c1"># Pre-processing of the input dataset</span>
+<span class="n">dfhot</span><span class="p">,</span> <span class="n">dfnum</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">)</span>
 <span class="c1"># Plot</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
@@ -260,10 +259,31 @@ With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlea
 </pre></div>
 </div>
 <p>Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make inference</span>
-<span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex_female&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
+<span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># Make inference</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 43%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Survived</p></th>
+<th class="head"><p>phi(Survived)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Survived(0)</p></td>
+<td><p>0.3312</p></td>
+</tr>
+<tr class="row-odd"><td><p>Survived(1)</p></td>
+<td><p>0.6688</p></td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

@@ -112,17 +112,18 @@ import bnlearn
 # Load example mixed dataset
 df_raw = bnlearn.import_example(data='titanic')
 # Convert to onehot
-df = bnlearn.df2onehot(df_raw)
-df.columns=df.columns.str.replace('_1.0','')
+dfhot, dfnum = bnlearn.df2onehot(df_raw)
 # Structure learning
-DAG = bnlearn.structure_learning.fit(df)
+DAG = bnlearn.structure_learning.fit(dfnum)
 # Plot
 G = bnlearn.plot(DAG)
 # Parameter learning
 model = bnlearn.parameter_learning.fit(DAG, df)
 # Make inference
-q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex_female':1, 'Pclass':1})
+q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
 
+bnlearn.print_CPD(model)
 
 # %%
 DAG1 = bnlearn.import_DAG('sprinkler', CPD=False)

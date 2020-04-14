@@ -79,11 +79,10 @@ With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the m
 
    # Load titanic dataset containing mixed variables
    df_raw = bnlearn.import_example(data='titanic')
-   # Pre-processing of the input dataset to onehot
-   df = bnlearn.df2onehot(df_raw, y_min=10, perc_min_num=0.8)
-   df.columns=df.columns.str.replace('_1.0','')
+   # Pre-processing of the input dataset
+   dfhot, dfnum = bnlearn.df2onehot(df_raw)
    # Structure learning
-   DAG = bnlearn.structure_learning.fit(df)
+   DAG = bnlearn.structure_learning.fit(dfnum)
    # Plot
    G = bnlearn.plot(DAG)
 
@@ -103,5 +102,16 @@ Finally, we can start making inferences. Note that the variable and evidence nam
 
 .. code-block:: python
 
+   # Print CPDs
+   bnlearn.print_CPD(model)
    # Make inference
-   q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex_female':1, 'Pclass':1})
+   q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+
+
++-------------+-----------------+
+| Survived    |   phi(Survived) |
++=============+=================+
+| Survived(0) |          0.3312 |
++-------------+-----------------+
+| Survived(1) |          0.6688 |
++-------------+-----------------+
