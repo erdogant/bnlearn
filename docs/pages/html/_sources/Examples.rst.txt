@@ -83,9 +83,9 @@ With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the m
    df = bnlearn.df2onehot(df_raw, y_min=10, perc_min_num=0.8)
    df.columns=df.columns.str.replace('_1.0','')
    # Structure learning
-   model = bnlearn.structure_learning.fit(df)
+   DAG = bnlearn.structure_learning.fit(df)
    # Plot
-   G = bnlearn.plot(model)
+   G = bnlearn.plot(DAG)
 
 .. _fig-titanic:
 

@@ -246,9 +246,9 @@ With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlea
 <span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">,</span> <span class="n">y_min</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">perc_min_num</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_1.0&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 <span class="c1"># Plot</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-titanic">
