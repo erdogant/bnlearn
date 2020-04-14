@@ -54,14 +54,28 @@ bnlearn.compare_networks(model, model_bl, pos=G['pos'])
 
 
 # %% PARAMETER LEARNING
-dir(bnlearn.parameter_learning)
-
 df = bnlearn.import_example()
-model = bnlearn.import_DAG('sprinkler', CPD=False)
-model_update = bnlearn.parameter_learning.fit(model, df)
+DAG = bnlearn.import_DAG('sprinkler', CPD=False)
+model_update = bnlearn.parameter_learning.fit(DAG, df)
 bnlearn.plot(model_update)
 
 model_true = bnlearn.import_DAG('sprinkler', CPD=True)
+
+# %% Example with one-hot RAW dataset: sprinkler.
+# Load processed data
+DAG = bnlearn.import_DAG('sprinkler')
+
+# Read raw data and process
+df_raw = bnlearn.import_example(data='sprinkler')
+df = bnlearn.df2onehot(df_raw, verbose=0)
+df.columns=df.columns.str.replace('_1.0','')
+
+# Learn structure
+DAG = bnlearn.structure_learning.fit(df)
+# Learn CPDs
+model = bnlearn.parameter_learning.fit(DAG, df)
+q1 = bnlearn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
 
 # %% LOAD BIF FILE
@@ -93,10 +107,10 @@ print(q1)
 print(q2)
 
 
-# %% Import titanic case
+# %% Example with mixed dataset: titanic case
 import bnlearn
 # Load example mixed dataset
-df_raw = bnlearn.import_example(data='sprinkler')
+df_raw = bnlearn.import_example(data='titanic')
 # Convert to onehot
 df = bnlearn.df2onehot(df_raw)
 df.columns=df.columns.str.replace('_1.0','')
@@ -104,17 +118,10 @@ df.columns=df.columns.str.replace('_1.0','')
 DAG = bnlearn.structure_learning.fit(df)
 # Plot
 G = bnlearn.plot(DAG)
-
-bnlearn.plot(DAG)
-q1 = bnlearn.inference.fit(DAG['model'], variables=['survived_1.0'], evidence={'Sex_male':1, 'Pclass_3.0':1})
-q1 = bnlearn.inference.fit(DAG['model'], variables=['Wet_Grass_1.0'], evidence={'Rain_1.0':1, 'Sprinkler_1.0':0, 'Cloudy_1.0':1})
-q2 = bnlearn.inference.fit(DAG, variables=['Wet_Grass_1.0','Rain_1.0'], evidence={'Sprinkler_1.0':1})
-
-
-DAG = bnlearn.import_DAG('sprinkler')
-bnlearn.plot(DAG)
-q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
-q2 = bnlearn.inference.fit(DAG, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+# Parameter learning
+model = bnlearn.parameter_learning.fit(DAG, df)
+# Make inference
+q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex_female':1, 'Pclass':1})
 
 
 # %%

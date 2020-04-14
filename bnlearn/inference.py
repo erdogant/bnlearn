@@ -16,7 +16,8 @@ Inference algorithms deals with efficiently finding these conditional probabilit
 
 # %% Libraries
 from pgmpy.inference import VariableElimination
-
+from bnlearn.bnlearn import to_BayesianModel
+import numpy as np
 
 # %% Exact inference using Variable Elimination
 def fit(model, variables=None, evidence=None, verbose=3):
@@ -58,10 +59,25 @@ def fit(model, variables=None, evidence=None, verbose=3):
 
     """
     if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
+    adjmat = model['adjmat']
+
+    if not np.all(np.isin(variables, adjmat.columns)):
+        raise Exception('[BNLEARN] ERROR: [variables] should match names in the model (Case sensitive!)')
+    if not np.all(np.isin([*evidence.keys()], adjmat.columns)):
+        raise Exception('[BNLEARN] ERROR: [evidence] should match names in the model (Case sensitive!)')
+
+    # Extract model
     if isinstance(model, dict):
         model = model['model']
+    # Convert to BayesianModel
+    if 'BayesianModel' not in str(type(model)):
+        model = to_BayesianModel(adjmat, verbose=verbose)
+    
+    try:
+        model_infer = VariableElimination(model)
+    except:
+        raise Exception('[BNLEARN] ERROR: Input model should contain learned CPDs. Hint: did you run parameter_learning.fit?')
 
-    model_infer = VariableElimination(model)
     # Computing the probability of Wet Grass given Rain.
     q = model_infer.query(variables=variables, evidence=evidence)
     print(q)

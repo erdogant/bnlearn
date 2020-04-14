@@ -21,16 +21,53 @@ Currently, the library supports parameter learning for *discrete* nodes:
 
 # %% Libraries
 from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator  # ParameterEstimator
+from pgmpy.models import BayesianModel
+from bnlearn.bnlearn import adjmat2vec
+from bnlearn.bnlearn import to_BayesianModel
 
 
 # %% Sampling from model
 def fit(model, df, methodtype='bayes', verbose=3):
     """Learn the parameters given the DAG and data.
+    
+    Description
+    -----------
+    Maximum Likelihood Estimation
+        A natural estimate for the CPDs is to simply use the *relative frequencies*,
+        with which the variable states have occured. We observed x cloudy` among a total of `all clouds`,
+        so we might guess that about `50%` of `cloudy` are `sprinkler or so.
+        According to MLE, we should fill the CPDs in such a way, that $P(\text{data}|\text{model})$ is maximal.
+        This is achieved when using the *relative frequencies*.
+
+        While very straightforward, the ML estimator has the problem of *overfitting* to the data.
+        If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
+        When estimating parameters for Bayesian networks, lack of data is a frequent problem.
+        Even if the total sample size is very large, the fact that state counts are done conditionally
+        for each parents configuration causes immense fragmentation.
+        If a variable has 3 parents that can each take 10 states, then state counts will
+        be done seperately for `10^3 = 1000` parents configurations.
+        This makes MLE very fragile and unstable for learning Bayesian Network parameters.
+        A way to mitigate MLE's overfitting is *Bayesian Parameter Estimation*.
+    
+    Bayesian Parameter Estimation
+        The Bayesian Parameter Estimator starts with already existing prior CPDs,
+        that express our beliefs about the variables *before* the data was observed.
+        Those "priors" are then updated, using the state counts from the observed data.
+
+        One can think of the priors as consisting in *pseudo state counts*, that are added
+        to the actual counts before normalization. Unless one wants to encode specific beliefs
+        about the distributions of the variables, one commonly chooses uniform priors,
+        i.e. ones that deem all states equiprobable.
+    
+        A very simple prior is the so-called *K2* prior, which simply adds `1` to the count of every single state.
+        A somewhat more sensible choice of prior is *BDeu* (Bayesian Dirichlet equivalent uniform prior).
+        For BDeu we need to specify an *equivalent sample size* `N` and then the pseudo-counts are
+        the equivalent of having observed `N` uniform samples of each variable (and each parent configuration).
 
     Parameters
     ----------
     model : dict
-        Contains key model and adjmat (adjacency matrix).
+        Contains a model object with a key 'adjmat' (adjacency matrix).
     df : pd.DataFrame()
         Pandas DataFrame containing the data.
     methodtype : str, optional
@@ -51,7 +88,6 @@ def fit(model, df, methodtype='bayes', verbose=3):
     -------
     dict with model.
 
-
     Examples
     --------
     >>> df = bnlearn.import_example()
@@ -71,32 +107,17 @@ def fit(model, df, methodtype='bayes', verbose=3):
     config['method'] = methodtype
     adjmat = model['adjmat']
 
+    if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
+    # Extract model
     if isinstance(model, dict):
         model = model['model']
-    if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
+    # Convert to BayesianModel
+    if 'BayesianModel' not in str(type(model)):
+        model = to_BayesianModel(adjmat, verbose=verbose)
 
 #    pe = ParameterEstimator(model, df)
 #    print("\n", pe.state_counts('Cloudy'))
 #    print("\n", pe.state_counts('Sprinkler'))
-
-    """
-    Maximum Likelihood Estimation
-        A natural estimate for the CPDs is to simply use the *relative frequencies*,
-        with which the variable states have occured. We observed x cloudy` among a total of `all clouds`,
-        so we might guess that about `50%` of `cloudy` are `sprinkler or so.
-        According to MLE, we should fill the CPDs in such a way, that $P(\text{data}|\text{model})$ is maximal.
-        This is achieved when using the *relative frequencies*.
-
-    While very straightforward, the ML estimator has the problem of *overfitting* to the data.
-    If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
-    When estimating parameters for Bayesian networks, lack of data is a frequent problem.
-    Even if the total sample size is very large, the fact that state counts are done conditionally
-    for each parents configuration causes immense fragmentation.
-    If a variable has 3 parents that can each take 10 states, then state counts will
-    be done seperately for `10^3 = 1000` parents configurations.
-    This makes MLE very fragile and unstable for learning Bayesian Network parameters.
-    A way to mitigate MLE's overfitting is *Bayesian Parameter Estimation*.
-    """
 
     # Learning CPDs using Maximum Likelihood Estimators
     if config['method']=='ml' or config['method']=='maximumlikelihood':
@@ -104,22 +125,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
         for node in mle.state_names:
             print(mle.estimate_cpd(node))
 
-    """
-    Bayesian Parameter Estimation
-        The Bayesian Parameter Estimator starts with already existing prior CPDs,
-        that express our beliefs about the variables *before* the data was observed.
-        Those "priors" are then updated, using the state counts from the observed data.
-
-    One can think of the priors as consisting in *pseudo state counts*, that are added
-    to the actual counts before normalization. Unless one wants to encode specific beliefs
-    about the distributions of the variables, one commonly chooses uniform priors,
-    i.e. ones that deem all states equiprobable.
-
-    A very simple prior is the so-called *K2* prior, which simply adds `1` to the count of every single state.
-    A somewhat more sensible choice of prior is *BDeu* (Bayesian Dirichlet equivalent uniform prior).
-    For BDeu we need to specify an *equivalent sample size* `N` and then the pseudo-counts are
-    the equivalent of having observed `N` uniform samples of each variable (and each parent configuration).
-    """
+    #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
         model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000)  # default equivalent_sample_size=5
 

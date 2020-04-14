@@ -1,26 +1,4 @@
-"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-
-Description
------------
-Search strategies for structure learning
-The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
-
-To learn model structure (a DAG) from a data set, there are three broad techniques:
-    1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-        a. exhaustivesearch
-        b. hillclimbsearch
-    2. Constraint-based structure learning (PC)
-        a. chi-square test
-    3. Hybrid structure learning (The combination of both techniques) (MMHC)
-
-Score-based Structure Learning
-This approach construes model selection as an optimization task. It has two building blocks:
-A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
-A search strategy to traverse the search space of possible models M and select a model with optimal score.
-Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
-and the Bayesian Information Criterion (BIC, also called MDL).
-As before, BDeu is dependent on an equivalent sample size.
-"""
+"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables. """
 # ------------------------------------
 # Name        : structure_learning.py
 # Author      : E.Taskesen
@@ -38,14 +16,35 @@ import pgmpy
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
 # ASSERTS
-from packaging import version  # For pgmpy versioning check for black_list/white_list
-curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA = os.path.join(curpath,'DATA')
+from packaging import version
+# curpath = os.path.dirname(os.path.abspath(__file__))
+# PATH_TO_DATA = os.path.join(curpath,'DATA')
 
 
 # %% Structure Learning
 def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
     """Structure learning fit model.
+    
+    Description
+    -----------
+    Search strategies for structure learning
+    The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
+    
+    To learn model structure (a DAG) from a data set, there are three broad techniques:
+        1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
+            a. exhaustivesearch
+            b. hillclimbsearch
+        2. Constraint-based structure learning (PC)
+            a. chi-square test
+        3. Hybrid structure learning (The combination of both techniques) (MMHC)
+    
+    Score-based Structure Learning
+    This approach construes model selection as an optimization task. It has two building blocks:
+    A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
+    A search strategy to traverse the search space of possible models M and select a model with optimal score.
+    Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
+    and the Bayesian Information Criterion (BIC, also called MDL).
+    As before, BDeu is dependent on an equivalent sample size.
 
     Parameters
     ----------
@@ -315,33 +314,3 @@ def _SetScoringType(df, scoretype, verbose=3):
 # %%
 def _is_independent(model, X, Y, Zs=[], significance_level=0.05):
     return model.test_conditional_independence(X, Y, Zs)[1] >= significance_level
-
-
-# %% Make one-hot matrix
-# def _makehot(df, y_min=None):
-#     labx=[]
-#     colExpand=[]
-# #    colOK=[]
-#     Xhot=pd.DataFrame()
-#     dfOK=pd.DataFrame()
-#     for i in range(0,df.shape[1]):
-#         if len(df.iloc[:,i].unique())>2:
-#             colExpand.append(df.columns[i])
-#         else:
-#             if df[df.columns[i]].dtype=='O':
-#                 uicol=df[df.columns[i]].unique()
-#                 dfOK[uicol[0]]=df[df.columns[i]]==uicol[0]
-#             else:
-#                 dfOK = pd.concat([dfOK, Xhot], axis=1)
-#                 labx.append(df.columns[i])
-#                 # colOK.append(df.columns[i])
-
-#     if len(colExpand)>0:
-#         [_, Xhot, Xlabx, _] = df2onehot(df[colExpand], y_min=y_min, hot_only=True)
-#         labx.append(Xlabx)
-#         Xhot=Xhot.astype(int)
-
-#     out = pd.concat([Xhot, dfOK], axis=1)
-#     out = out.astype(int)
-
-#     return(out, labx[0])
