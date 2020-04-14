@@ -22,8 +22,51 @@ from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 
 from pgmpy import readwrite
 import bnlearn.helpers.network as network
+
 curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath,'DATA')
+
+
+# %% Convert adjmat to bayesian model
+def to_BayesianModel(model, verbose=3):
+    """ Convert adjacency matrix to BayesianModel.
+
+    Description
+    -----------
+    Convert a adjacency to a BayesianModel. This is required as some of the
+    functionalities, such as ``structure_learning`` output a DAGmodel.
+    If the output of ``structure_learning`` is provided, the adjmat is extracted and processed.
+
+    Parameters
+    ----------
+    model : pd.DataFrame()
+        Adjacency matrix.
+
+    Raises
+    ------
+    Exception
+        The input should not be None and if a model (as dict) is provided, the key 'adjmat' should be included.
+
+    Returns
+    -------
+    bayesianmodel : Object
+        BayesianModel that can be used in ``parameter_learning.fit``.
+
+    """
+    if isinstance(model, dict):
+        adjmat = model.get('adjmat',None)
+    else:
+        adjmat = model
+    if adjmat is None: raise Exception('[BNLEARN] Error: input for "to_BayesianModel" should be adjmat or a dict containing a key "adjmat".')
+
+    if verbose>=3: print('[BNLEARN] Conversion of adjmat to BayesianModel.')
+    
+    # Convert to vector
+    vec = adjmat2vec(adjmat)[['source','target']].values.tolist()
+    # Make BayesianModel
+    bayesianmodel = BayesianModel(vec)
+    # Return
+    return bayesianmodel
 
 
 # %% Make DAG

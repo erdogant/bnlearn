@@ -10,6 +10,7 @@ from bnlearn.bnlearn import (
     adjmat2vec,
     vec2adjmat,
     df2onehot,
+    to_BayesianModel,
 )
 
 # Import function in new level
