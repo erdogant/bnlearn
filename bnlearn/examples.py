@@ -114,14 +114,14 @@ df_raw = bnlearn.import_example(data='titanic')
 # Convert to onehot
 dfhot, dfnum = bnlearn.df2onehot(df_raw)
 # Structure learning
-DAG = bnlearn.structure_learning.fit(dfnum)
+DAG = bnlearn.structure_learning.fit(dfnum, black_list=['Survived','Pclass','Sex','Embarked','Parch'])
 # Plot
 G = bnlearn.plot(DAG)
 # Parameter learning
-model = bnlearn.parameter_learning.fit(DAG, df)
+model = bnlearn.parameter_learning.fit(DAG, dfnum)
 # Make inference
-q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
-q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':1, 'Pclass':1})
+q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 
 bnlearn.print_CPD(model)
 

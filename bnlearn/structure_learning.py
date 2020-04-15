@@ -60,10 +60,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'bic'
         'k2'
         'bdeu'
-    black_list : List, optional
+    black_list : List or None
         If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges.. The default is None.
         Works only in case of methodtype='hc'
-    white_list : List, optional
+    white_list : List or None
         If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
         Works only in case of methodtype='hc'
     max_indegree : int, optional
@@ -119,7 +119,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Show warnings
     PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
-    if ((black_list is not None) or (white_list is not None)):  # Can be be removed if pgmpy >v0.1.9
+    if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
@@ -252,12 +252,15 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Set search algorithm
     model = HillClimbSearch(df, scoring_method=scoring_method)
     # Compute best DAG
-    try:
-        if ((black_list is not None) or (white_list is not None)):
-            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] black_list and/or white_list are incorporated..')  # Can be be removed if pgmpy >v0.1.9
+    PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")
+    if PGMPY_VER:
         # print("Works only for version > v.0.1.9")
+        if black_list is not None:
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated..')
+        if white_list is not None:
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated..')
         best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
-    except:
+    else:
         best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
 
     # Store
