@@ -250,12 +250,19 @@ def vec2adjmat(source, target, symmetric=True):
 
     Returns
     -------
-    adjacency matrix
-        Converted vector into adjacency matrix : pd.DataFrame().
+    pd.DataFrame
+        adjacency matrix.
+    
+    Examples
+    --------
+    >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
+    >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+    >>> vec2adjmat(source, target)
 
     """
+    df = pd.DataFrame(np.c_[source, target], columns=['source','target'])
     # Make adjacency matrix
-    adjmat = pd.crosstab(source, target)
+    adjmat = pd.crosstab(df['source'], df['target'])
     # Get all unique nodes
     nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
 
@@ -283,7 +290,7 @@ def vec2adjmat(source, target, symmetric=True):
 
 
 # %%  Convert adjacency matrix to vector
-def adjmat2vec(adjmat):
+def adjmat2vec(adjmat, min_weight=1):
     """Convert adjacency matrix into vector with source and target.
 
     Parameters
@@ -291,10 +298,20 @@ def adjmat2vec(adjmat):
     adjmat : pd.DataFrame()
         Adjacency matrix.
 
+    min_weight : float
+        edges are returned with a minimum weight.
+
     Returns
     -------
-    adjacency matrix : pd.DataFrame()
-        Nodes that are connected based on source and target.
+    pd.DataFrame()
+        nodes that are connected based on source and target
+
+    Examples
+    --------
+    >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
+    >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+    >>> adjmat = vec2adjmat(source, target)
+    >>> vector = adjmat2vec(adjmat)
 
     """
     # Convert adjacency matrix into vector
@@ -303,7 +320,7 @@ def adjmat2vec(adjmat):
     adjmat.columns = ['source', 'target', 'weight']
     # Remove self loops and no-connected edges
     Iloc1 = adjmat['source']!=adjmat['target']
-    Iloc2 = adjmat['weight']>0
+    Iloc2 = adjmat['weight']>=min_weight
     Iloc = Iloc1 & Iloc2
     # Take only connected nodes
     adjmat = adjmat.loc[Iloc,:]
