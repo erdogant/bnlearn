@@ -264,7 +264,8 @@ def vec2adjmat(source, target, symmetric=True):
     # Make adjacency matrix
     adjmat = pd.crosstab(df['source'], df['target'])
     # Get all unique nodes
-    nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
+    # nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
+    nodes = np.unique(list(adjmat.columns.values)+list(adjmat.index.values))
 
     # Make the adjacency matrix symmetric
     if symmetric:
