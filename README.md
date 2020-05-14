@@ -3,6 +3,7 @@
 [![Python](https://img.shields.io/pypi/pyversions/bnlearn)](https://img.shields.io/pypi/pyversions/bnlearn)
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/erdogant/bnlearn/blob/master/LICENSE)
+[![Coffee](https://img.shields.io/badge/-coffee-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)
 [![Downloads](https://pepy.tech/badge/bnlearn)](https://pepy.tech/project/bnlearn)
 [![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/bnlearn/)
 
@@ -270,15 +271,9 @@ Please cite bnlearn in your publications if this is useful for your research. He
 * https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
 * http://www.bnlearn.com/
 * http://www.bnlearn.com/bnrepository/
-   
-## Maintainers
+
+
+### Maintainer
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
-
-## Contribute
-* All kinds of contributions are welcome!
-
-## Licence
-See [LICENSE](LICENSE) for details.
-
-### Donation
-* This work is created and maintained in my free time. If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated.
+* Contributions are welcome.
+* If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated :)
