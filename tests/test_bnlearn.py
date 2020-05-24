@@ -6,6 +6,7 @@ import numpy as np
 
 
 def test_import_DAG():
+    print('test')
     DAG = bnlearn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
     assert [*DAG.keys()]==['model','adjmat']
@@ -26,7 +27,7 @@ def test_make_DAG():
     edges = [('Cloudy', 'Sprinkler')]
     DAG = bnlearn.make_DAG(edges)
     # TEST 1
-    assert 'pgmpy.models.BayesianModel.BayesianModel' in str(type(DAG))
+    assert 'pgmpy.models.BayesianModel.BayesianModel' in str(type(DAG['model']))
     # TEST 2
     cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
     cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['Cloudy'], evidence_card=[2])

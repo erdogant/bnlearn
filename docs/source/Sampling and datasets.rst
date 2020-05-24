@@ -1,8 +1,9 @@
 Sampling and datasets
 =====================
 
-Generating samples can be very usefull. In order to do that, it requires a DAG connected with CPDs.
-It is also possible to create a DAG manually (see the create DAG) or load an existing one as shown below.
+Sampling of data is based on forward sampling from joint distribution of the bayesian network.
+In order to do that, it requires as input a DAG connected with CPDs.
+It is also possible to create a DAG manually (see create DAG section) or load an existing one as depicted below.
 
 Datasets
 ''''''''

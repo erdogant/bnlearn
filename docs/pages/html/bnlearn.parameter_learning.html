@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling and datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Various</span></p>
 <ul>
@@ -112,7 +113,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn functionalities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
 
             
@@ -193,9 +194,9 @@ i.e. for seperately for each parent configuration</p>
 </ul>
 </dd>
 </dl>
-<dl class="function">
+<dl class="py function">
 <dt id="bnlearn.parameter_learning.fit">
-<code class="sig-prename descclassname">bnlearn.parameter_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">model</em>, <em class="sig-param">df</em>, <em class="sig-param">methodtype='bayes'</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.parameter_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">methodtype</span><span class="o">=</span><span class="default_value">'bayes'</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Learn the parameters given the DAG and data.</p>
 <dl>
 <dt>Maximum Likelihood Estimation</dt><dd><p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>,

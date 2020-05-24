@@ -1,4 +1,4 @@
-bnlearn functionalities
+bnlearn.bnlearn
 ========================
 
 

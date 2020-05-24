@@ -36,6 +36,7 @@ Content
   Inference
   Sampling and datasets
   Create DAG
+  whitelist_blacklist
 
 
 .. toctree::
@@ -55,6 +56,7 @@ Content
   bnlearn.parameter_learning
   bnlearn.inference
   bnlearn.bnlearn
+
 
   
 Source code and issue tracker

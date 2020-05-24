@@ -1,7 +1,7 @@
-bnlearn functionalities
+bnlearn.bnlearn
 ========================
 
 
-.. automodule:: bnlearn.bnlearn
+.. automodule:: bnlearn.bnlearn.bnlearn
     :members:
     :undoc-members:

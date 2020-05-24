@@ -98,6 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling and datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Various</span></p>
 <ul>
@@ -109,7 +110,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.structure_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn functionalities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
 
             
@@ -177,9 +178,9 @@
   <div class="section" id="module-bnlearn.structure_learning">
 <span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Permalink to this headline">¶</a></h1>
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
-<dl class="function">
+<dl class="py function">
 <dt id="bnlearn.structure_learning.fit">
-<code class="sig-prename descclassname">bnlearn.structure_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">df</em>, <em class="sig-param">methodtype='hc'</em>, <em class="sig-param">scoretype='bic'</em>, <em class="sig-param">black_list=None</em>, <em class="sig-param">white_list=None</em>, <em class="sig-param">max_indegree=None</em>, <em class="sig-param">verbose=3</em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.structure_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">methodtype</span><span class="o">=</span><span class="default_value">'hc'</span></em>, <em class="sig-param"><span class="n">scoretype</span><span class="o">=</span><span class="default_value">'bic'</span></em>, <em class="sig-param"><span class="n">black_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">white_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_indegree</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
@@ -223,9 +224,9 @@ As before, BDeu is dependent on an equivalent sample size.</p>
 ‘bic’
 ‘k2’
 ‘bdeu’</p></li>
-<li><p><strong>black_list</strong> (<em>List</em><em>, </em><em>optional</em>) – If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges.. The default is None.
+<li><p><strong>black_list</strong> (<em>List</em><em> or </em><em>None</em>) – If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges. The default is None.
 Works only in case of methodtype=’hc’</p></li>
-<li><p><strong>white_list</strong> (<em>List</em><em>, </em><em>optional</em>) – If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
+<li><p><strong>white_list</strong> (<em>List</em><em> or </em><em>None</em>) – If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
 Works only in case of methodtype=’hc’</p></li>
 <li><p><strong>max_indegree</strong> (<em>int</em><em>, </em><em>optional</em>) – If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. The default is None.
 Works only in case of methodtype=’hc’</p></li>
