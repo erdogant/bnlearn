@@ -110,7 +110,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
 
-    config = dict()
+    config = {}
     config['verbose'] = verbose
     config['method'] = methodtype
     config['scoring'] = scoretype
@@ -222,17 +222,17 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     dag = model.pdag_to_dag(pdag)
     print("DAG edges: ", dag.edges())
 
-    out['undirected']=skel
-    out['undirected_edges']=skel.edges()
-    out['pdag']=pdag
-    out['pdag_edges']=pdag.edges()
-    out['dag']=dag
-    out['dag_edges']=dag.edges()
+    out['undirected'] = skel
+    out['undirected_edges'] = skel.edges()
+    out['pdag'] = pdag
+    out['pdag_edges'] = pdag.edges()
+    out['dag'] = dag
+    out['dag_edges'] = dag.edges()
 
     # Search using "estimate()" method provides a shorthand for the three steps above and directly returns a "BayesianModel"
     best_model = model.estimate(significance_level=significance_level)
-    out['model']=best_model
-    out['model_edges']=best_model.edges()
+    out['model'] = best_model
+    out['model_edges'] = best_model.edges()
 
     print(best_model.edges())
 
@@ -259,9 +259,9 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     if PGMPY_VER:
         # print("Works only for version > v.0.1.9")
         if black_list is not None:
-            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated..')
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated.')
         if white_list is not None:
-            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated..')
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated.')
         best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
     else:
         best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9

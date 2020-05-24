@@ -67,7 +67,7 @@ DAG = bnlearn.import_DAG('sprinkler')
 
 # Read raw data and process
 df_raw = bnlearn.import_example(data='sprinkler')
-df = bnlearn.df2onehot(df_raw, verbose=0)
+df = bnlearn.df2onehot(df_raw, verbose=0)[1]
 df.columns=df.columns.str.replace('_1.0','')
 
 # Learn structure
@@ -98,6 +98,7 @@ print(q2)
 
 # %% INFERENCE 2
 DAG = bnlearn.import_DAG('asia')
+# DAG = bnlearn.import_DAG('sprinkler')
 bnlearn.plot(DAG)
 q1 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'bronc':1, 'smoke':1})
 q2 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0, 'tub':1})
@@ -126,7 +127,7 @@ q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 bnlearn.print_CPD(model)
 
 # %%
-DAG1 = bnlearn.import_DAG('sprinkler', CPD=False)
+DAG = bnlearn.import_DAG('sprinkler', CPD=False)
 DAG = bnlearn.import_DAG('asia')
 bnlearn.plot(DAG)
 bnlearn.print_CPD(DAG)
@@ -166,6 +167,7 @@ DAG = bnlearn.make_DAG(DAG, CPD=cpd_A, checkmodel=False)
 bnlearn.print_CPD(DAG, checkmodel=False)
 
 # %% Create a simple DAG:
+# Building a causal DAG
 from pgmpy.factors.discrete import TabularCPD
 
 edges = [('Cloudy', 'Sprinkler'),
@@ -173,10 +175,10 @@ edges = [('Cloudy', 'Sprinkler'),
        ('Sprinkler', 'Wet_Grass'),
        ('Rain', 'Wet_Grass')]
 
+# DAG = bnlearn.import_DAG('sprinkler')
 DAG = bnlearn.make_DAG(edges)
 bnlearn.plot(DAG)
 bnlearn.print_CPD(DAG)
-
 
 # Cloudy
 cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
@@ -186,10 +188,13 @@ print(cpt_cloudy)
 cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
                            values=[[0.4, 0.9], [0.6, 0.1]],
                            evidence=['Cloudy'], evidence_card=[2])
+print(cpt_sprinkler)
+
 # Rain
 cpt_rain = TabularCPD(variable='Rain', variable_card=2,
                       values=[[0.8, 0.2], [0.2, 0.8]],
                       evidence=['Cloudy'], evidence_card=[2])
+print(cpt_rain)
 
 # Wet Grass
 cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
@@ -197,9 +202,12 @@ cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
                                   [0, 0.9, 0.9, 0.99]],
                            evidence=['Sprinkler', 'Rain'],
                            evidence_card=[2, 2])
+print(cpt_wet_grass)
 
+# The make_DAG function will required a CPD for each node. If this is not the case, use the checkmodel=False
 DAG = bnlearn.make_DAG(DAG, CPD=cpt_cloudy, checkmodel=False)
-DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler])
+DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler], checkmodel=False)
 DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
 bnlearn.print_CPD(DAG)
 
+q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
