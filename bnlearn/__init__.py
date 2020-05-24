@@ -25,7 +25,8 @@ except:
     raise ImportError('pgmpy v0.1.10 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy>')
 
 # Check version pgmpy
-assert version.parse(pgmpy.__version__)>=version.parse("0.1.10"), 'This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>'
+if version.parse(pgmpy.__version__)<version.parse("0.1.10"): raise Exception('This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>')
+
 # Version check
 import matplotlib
 if not version.parse(matplotlib.__version__) > version.parse("3.1.1"):
@@ -34,7 +35,7 @@ if not version.parse(matplotlib.__version__) > version.parse("3.1.1"):
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 
 # module level doc-string
 __doc__ = """
