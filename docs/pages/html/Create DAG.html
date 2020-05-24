@@ -274,11 +274,14 @@ Here again, the term CPD is more often used than CMK.</p>
                            <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
                                    <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span>
                            <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_sprinkler</span><span class="p">)</span>
+
 <span class="c1"># Rain</span>
 <span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                       <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
                               <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span>
                       <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_rain</span><span class="p">)</span>
 
 <span class="c1"># Wet Grass</span>
 <span class="n">cpt_wet_grass</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
@@ -286,6 +289,7 @@ Here again, the term CPD is more often used than CMK.</p>
                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]],</span>
                            <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span>
                            <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_wet_grass</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Now need to connect the DAG with CPDs.</p>

@@ -109,11 +109,14 @@ For each node we can specify the probability distributions as following:
                               values=[[0.5, 0.9], 
 			              [0.5, 0.1]],
                               evidence=['Cloudy'], evidence_card=[2])
+   print(cpt_sprinkler)
+
    # Rain
    cpt_rain = TabularCPD(variable='Rain', variable_card=2,
                          values=[[0.8, 0.2],
 			         [0.2, 0.8]],
                          evidence=['Cloudy'], evidence_card=[2])
+   print(cpt_rain)
 
    # Wet Grass
    cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
@@ -121,6 +124,7 @@ For each node we can specify the probability distributions as following:
                                       [0, 0.9, 0.9, 0.99]],
                               evidence=['Sprinkler', 'Rain'],
                               evidence_card=[2, 2])
+   print(cpt_wet_grass)
 
 Now need to connect the DAG with CPDs.
 

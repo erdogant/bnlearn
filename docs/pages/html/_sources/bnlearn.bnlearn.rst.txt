@@ -2,6 +2,6 @@ bnlearn.bnlearn
 ========================
 
 
-.. automodule:: bnlearn.bnlearn.bnlearn
+.. automodule:: bnlearn.bnlearn
     :members:
     :undoc-members:
