@@ -98,7 +98,8 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
     """
     if (CPD is not None) and (not isinstance(CPD, list)):
         CPD=[CPD]
-
+    if isinstance(DAG, dict):
+        DAG = DAG.get('model', None)
     if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
         raise Exception("[BNLEARN] ERROR: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
     elif ('pgmpy' in str(type(DAG))):
@@ -114,8 +115,13 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
 
         if checkmodel:
             print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
-
-    return DAG
+    
+    # Create adjacency matrix from DAG
+    out = {}
+    out['adjmat'] = _dag2adjmat(DAG)
+    out['model'] = DAG
+    return out
+    # return DAG
 
 
 # %% Print DAG
@@ -221,18 +227,30 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     if not isinstance(model, type(None)) and verbose>=3 and CPD:
         print_CPD(model)
 
-    # Setup simmilarity matrix
-    adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
-    # Fill adjmat with edges
-    edges=model.edges()
-    for edge in edges:
-        adjmat.loc[edge[0],edge[1]]=True
-    adjmat.index.name='source'
-    adjmat.columns.name='target'
-
+    # Setup adjacency matrix
+    adjmat = _dag2adjmat(model)
+    
+    # Store
     out['model']=model
     out['adjmat']=adjmat
     return(out)
+
+
+# %% Convert DAG into adjacency matrix
+def _dag2adjmat(model, verbose=3):
+    adjmat = None
+    if hasattr(model,'nodes') and  hasattr(model,'edges'):
+        adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
+        # Fill adjmat with edges
+        edges = model.edges()
+        # Run over the edges
+        for edge in edges:
+            adjmat.loc[edge[0],edge[1]]=True
+        adjmat.index.name='source'
+        adjmat.columns.name='target'
+    else:
+        if verbose>=1: print('[bnlearn] >Could not convert to adjmat because nodes and/or edges were missing.')
+    return(adjmat)
 
 
 # %%  Convert adjacency matrix to vector
@@ -331,7 +349,7 @@ def adjmat2vec(adjmat, min_weight=1):
 
 # %% Sampling from model
 def sampling(model, n=1000, verbose=3):
-    """Sample based on DAG.
+    """Generates sample(s) using forward sampling from joint distribution of the bayesian network.
 
     Parameters
     ----------
@@ -539,7 +557,7 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
             Graph model
 
     """
-    out=dict()
+    out = {}
     G = nx.DiGraph()  # Directed graph
     layout='fruchterman_reingold'
 
@@ -559,21 +577,21 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
     elif 'networkx' in str(type(model)):
         if verbose>=3: print('[BNLEARN][plot] Making plot based on networkx model')
-        G=model
+        G = model
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
     else:
         if verbose>=3: print('[BNLEARN][plot] Making plot based on adjacency matrix')
         G = network.adjmat2graph(model)
         # Convert adjmat to source target
-#        df_edges=model.stack().reset_index()
-#        df_edges.columns=['source', 'target', 'weight']
-#        df_edges['weight']=df_edges['weight'].astype(float)
-#
-#        # Add directed edge with weigth
-#        for i in range(df_edges.shape[0]):
-#            if df_edges['weight'].iloc[i]!=0:
-#                color='k' if df_edges['weight'].iloc[i]>0 else 'r'
-#                G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
+        # df_edges=model.stack().reset_index()
+        # df_edges.columns=['source', 'target', 'weight']
+        # df_edges['weight']=df_edges['weight'].astype(float)
+
+        # # Add directed edge with weigth
+        # for i in range(df_edges.shape[0]):
+        #     if df_edges['weight'].iloc[i]!=0:
+        #         color='k' if df_edges['weight'].iloc[i]>0 else 'r'
+        #         G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
         # Get positions
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
 
@@ -632,6 +650,8 @@ def import_example(data='sprinkler', verbose=3):
 
     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
+    if not os.path.isdir(curpath):
+        os.mkdir(curpath)
 
     # Check file exists.
     if not os.path.isfile(PATH_TO_DATA):
@@ -682,7 +702,6 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     df_hot.columns=df_hot.columns.str.replace('_2.0','_2')
     df_hot.columns=df_hot.columns.str.replace('_1.0','_1')
     df_hot.columns=df_hot.columns.str.replace('_0.0','_0')
-    
     
     return df_hot, df_num
 

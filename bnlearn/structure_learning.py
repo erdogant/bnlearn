@@ -19,6 +19,7 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedE
 from packaging import version
 # curpath = os.path.dirname(os.path.abspath(__file__))
 # PATH_TO_DATA = os.path.join(curpath,'DATA')
+from bnlearn.bnlearn import _dag2adjmat
 
 
 # %% Structure Learning
@@ -61,7 +62,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'k2'
         'bdeu'
     black_list : List or None
-        If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges.. The default is None.
+        If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges. The default is None.
         Works only in case of methodtype='hc'
     white_list : List or None
         If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
@@ -167,16 +168,18 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         out = _constraintsearch(df, verbose=config['verbose'])
 
     # Setup simmilarity matrix
-    adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('Bool')
-    # Fill adjmat with edges
-    edges=out['model'].edges()
-    for edge in edges:
-        adjmat.loc[edge[0],edge[1]]=True
-    adjmat.index.name='source'
-    adjmat.columns.name='target'
+    adjmat = _dag2adjmat(out['model'])
+
+    # adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('Bool')
+    # # Fill adjmat with edges
+    # edges = out['model'].edges()
+    # for edge in edges:
+    #     adjmat.loc[edge[0],edge[1]]=True
+    # adjmat.index.name = 'source'
+    # adjmat.columns.name = 'target'
 
     # Store
-    out['adjmat']=adjmat
+    out['adjmat'] = adjmat
     # return
     return(out)
 

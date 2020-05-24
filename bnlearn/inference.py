@@ -48,7 +48,6 @@ def fit(model, variables=None, evidence=None, verbose=3):
     -------
     q.
 
-
     Examples
     --------
     >>> import bnlearn
@@ -72,7 +71,7 @@ def fit(model, variables=None, evidence=None, verbose=3):
     # Convert to BayesianModel
     if 'BayesianModel' not in str(type(model)):
         model = to_BayesianModel(adjmat, verbose=verbose)
-    
+
     try:
         model_infer = VariableElimination(model)
     except:
