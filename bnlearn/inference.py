@@ -57,7 +57,7 @@ def fit(model, variables=None, evidence=None, verbose=3):
     >>> q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
     """
-    if not isinstance(model, dict): raise Exception('[bnlearn] >Error: Input requires a DAG that contains the key: model.')
+    if not isinstance(model, dict): raise Exception('[BNLEARN] >ERROR: Input requires a DAG that contains the key: model.')
         
     if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
     adjmat = model['adjmat']

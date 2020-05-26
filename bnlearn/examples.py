@@ -34,6 +34,7 @@ G = bnlearn.plot(DAG)
 
 # %% Example compare networks
 # Load asia DAG
+import bnlearn
 DAG = bnlearn.import_DAG('asia')
 # plot ground truth
 G = bnlearn.plot(DAG)
@@ -48,9 +49,14 @@ bnlearn.compare_networks(model, model_sl, pos=G['pos'])
 
 
 # Structure learning with black list
-model_bl = bnlearn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'])
+model_wl = bnlearn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'])
+bnlearn.plot(model_wl, pos=G['pos'])
+
+model_bl = bnlearn.structure_learning.fit(df, methodtype='hc', black_list=['asia','tub'])
 bnlearn.plot(model_bl, pos=G['pos'])
-bnlearn.compare_networks(model, model_bl, pos=G['pos'])
+
+# Compare models
+bnlearn.compare_networks(model_bl, model_wl, pos=G['pos'])
 
 
 # %% PARAMETER LEARNING

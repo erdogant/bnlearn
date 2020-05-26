@@ -10,15 +10,12 @@
 # %% Libraries
 import os
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import pgmpy
-# STRUCTURE LEARNING
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
-# ASSERTS
 from packaging import version
-# curpath = os.path.dirname(os.path.abspath(__file__))
-# PATH_TO_DATA = os.path.join(curpath,'DATA')
 from bnlearn.bnlearn import _dag2adjmat
 
 
@@ -109,6 +106,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
+    if isinstance(white_list, str): white_list=[white_list]
+    if isinstance(black_list, str): black_list=[black_list]
+    if (white_list is not None) and len(white_list)==0: white_list=None
+    if (black_list is not None) and len(black_list)==0: black_list=None
 
     config = {}
     config['verbose'] = verbose
@@ -135,8 +136,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
-    # Make onehot
-    # df,labx = _makehot(df, y_min=y_min)
+    # Filter on white_list and black_list
+    df = _white_black_list(df, white_list, black_list, verbose=verbose)
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
@@ -183,6 +184,27 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # return
     return(out)
 
+
+# %% white_list and black_list
+def _white_black_list(df, white_list, black_list, verbose=3):
+    # Keep only variables that are in white_list.
+    if white_list is not None:
+        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated.')
+        white_list = [x.lower() for x in white_list]
+        Iloc = np.isin(df.columns.str.lower(), white_list)
+        df = df.loc[:,Iloc]
+
+    # Exclude variables that are in black_list.
+    if black_list is not None:
+        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated.')
+        black_list = [x.lower() for x in black_list]
+        Iloc = ~np.isin(df.columns.str.lower(), black_list)
+        df = df.loc[:,Iloc]
+        
+    if (white_list is not None) or (black_list is not None):
+        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Number of features after white/black listing: %d' %(df.shape[1]))
+    if df.shape[1]<=1: raise Exception('[BNLEARN] >ERROR: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
+    return df
 
 # %% Constraint-based Structure Learning
 def _constraintsearch(df, significance_level=0.05, verbose=3):
@@ -254,17 +276,17 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     scoring_method = _SetScoringType(df, scoretype)
     # Set search algorithm
     model = HillClimbSearch(df, scoring_method=scoring_method)
+
     # Compute best DAG
-    PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")
-    if PGMPY_VER:
-        # print("Works only for version > v.0.1.9")
-        if black_list is not None:
-            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated.')
-        if white_list is not None:
-            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated.')
-        best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
-    else:
-        best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
+    # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")
+    # if PGMPY_VER:
+    #     best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
+    # else:
+    #     best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
+
+    # Compute best DAG
+    # best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
+    best_model = model.estimate(max_indegree=max_indegree)
 
     # Store
     out['model']=best_model
