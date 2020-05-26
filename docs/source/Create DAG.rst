@@ -139,7 +139,7 @@ To further examine the CPDs, print the DAG as following:
 
 .. code-block:: python
 
-   DAG = bnlearn.print_CPD(DAG)
+   bnlearn.print_CPD(DAG)
 
 
 Inference on the causal generative model

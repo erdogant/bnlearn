@@ -211,3 +211,59 @@ DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_gr
 bnlearn.print_CPD(DAG)
 
 q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+
+# %% Example from sphinx
+# Import dataset
+# Import the library
+import bnlearn
+
+# Define the network structure
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bnlearn.make_DAG(edges)
+
+bnlearn.plot(DAG)
+
+
+bnlearn.print_CPD(DAG)
+
+# Import the library
+from pgmpy.factors.discrete import TabularCPD
+
+# Cloudy
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
+print(cpt_cloudy)
+
+# Sprinkler
+cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                           values=[[0.5, 0.9],
+                                   [0.5, 0.1]],
+                           evidence=['Cloudy'], evidence_card=[2])
+print(cpt_sprinkler)
+
+# Rain
+cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                      values=[[0.8, 0.2],
+                              [0.2, 0.8]],
+                      evidence=['Cloudy'], evidence_card=[2])
+print(cpt_rain)
+
+# Wet Grass
+cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                           values=[[1, 0.1, 0.1, 0.01],
+                                   [0, 0.9, 0.9, 0.99]],
+                           evidence=['Sprinkler', 'Rain'],
+                           evidence_card=[2, 2])
+print(cpt_wet_grass)
+
+DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+
+
+bnlearn.print_CPD(DAG)
+
+
+q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
