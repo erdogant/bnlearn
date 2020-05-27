@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import pgmpy
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
-from packaging import version
+# from packaging import version
 from bnlearn.bnlearn import _dag2adjmat
 
 
@@ -120,9 +120,9 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['max_indegree'] = max_indegree
 
     # Show warnings
-    PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
-    if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
-        if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
+    # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
+    # if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
+        # if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[BNLEARN][STRUCTURE LEARNING] Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     if (black_list is not None) and methodtype!='hc':
