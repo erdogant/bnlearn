@@ -105,8 +105,12 @@ Finally, we can start making inferences. Note that the variable and evidence nam
    # Print CPDs
    bnlearn.print_CPD(model)
    # Make inference
-   q1 = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
-
+   q = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+   
+   print(q.values)
+   print(q.variables)
+   print(q._str())
+   
 
 +-------------+-----------------+
 | Survived    |   phi(Survived) |
