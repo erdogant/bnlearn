@@ -20,14 +20,14 @@ from bnlearn.bnlearn import _dag2adjmat
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method='enforce', max_indegree=None, epsilon=1e-4, max_iter=1e6, verbose=3):
     """Structure learning fit model.
-    
+
     Description
     -----------
     Search strategies for structure learning
     The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
-    
+
     To learn model structure (a DAG) from a data set, there are three broad techniques:
         1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
             a. exhaustivesearch
@@ -35,7 +35,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         2. Constraint-based structure learning (PC)
             a. chi-square test
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
-    
+
     Score-based Structure Learning
     This approach construes model selection as an optimization task. It has two building blocks:
     A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
@@ -48,27 +48,32 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     ----------
     df : pd.DataFrame()
         Input dataframe.
-    methodtype : str, optional
-        String Search strategy for structure_learning. The default is 'hc'.
+    methodtype : str, (default : 'hc')
+        String Search strategy for structure_learning.
         'hc' or 'hillclimbsearch' (default)
         'ex' or 'exhaustivesearch'
         'cs' or 'constraintsearch'
-    scoretype : str, optional
-        Scoring function for the search spaces. The default is 'bic'.
-        'bic'
-        'k2'
-        'bdeu'
-    black_list : List or None
+    scoretype : str, (default : 'bic')
+        Scoring function for the search spaces.
+        'bic', 'k2', 'bdeu'
+    black_list : List or None, (default : None)
         If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges. The default is None.
-        Works only in case of methodtype='hc'
-    white_list : List or None
+        Works only in case of methodtype='hc'. See also paramter: `bw_list_method`
+    white_list : List or None, (default : None)
         If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
+        Works only in case of methodtype='hc'/ See also paramter: `bw_list_method`
+    bw_list_method : str, (default : 'enforce')
+        'enforce' : A list of edges can optionally be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
+        'filter' : Filter the dataframe based on `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
+    max_indegree : int, (default : None)
+        If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents.
         Works only in case of methodtype='hc'
-    max_indegree : int, optional
-        If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. The default is None.
-        Works only in case of methodtype='hc'
-    verbose : int, optional
-        Print progress to screen. The default is 3.
+    epsilon: float (default: 1e-4)
+        Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned.
+    max_iter: int (default: 1e6)
+        The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`
+    verbose : int, (default : 3)
+        Print progress to screen.
         0: NONE
         1: ERROR
         2: WARNING
@@ -76,11 +81,9 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         4: DEBUG
         5: TRACE
 
-
     Returns
     -------
     dict with model.
-
 
     Examples
     --------
@@ -110,6 +113,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if isinstance(black_list, str): black_list=[black_list]
     if (white_list is not None) and len(white_list)==0: white_list=None
     if (black_list is not None) and len(black_list)==0: black_list=None
+    if (bw_list_method is None) : bw_list_method='enforce'
 
     config = {}
     config['verbose'] = verbose
@@ -117,7 +121,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['scoring'] = scoretype
     config['black_list'] = black_list
     config['white_list'] = white_list
+    config['bw_list_method'] = bw_list_method
     config['max_indegree'] = max_indegree
+    config['epsilon'] = epsilon
+    config['max_iter'] = max_iter
 
     # Show warnings
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
@@ -137,7 +144,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
-    df = _white_black_list(df, white_list, black_list, verbose=verbose)
+    df = _white_black_list(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
@@ -152,12 +159,16 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
-        """Once more nodes are involved, one needs to switch to heuristic search.
-        HillClimbSearch implements a greedy local search that starts from the DAG
-        "start" (default: disconnected DAG) and proceeds by iteratively performing
-        single-edge manipulations that maximally increase the score.
-        The search terminates once a local maximum is found."""
-        out = _hillclimbsearch(df, scoretype=config['scoring'], verbose=config['verbose'], black_list=config['black_list'], white_list=config['white_list'], max_indegree=config['max_indegree'])
+        out = _hillclimbsearch(df, 
+                               scoretype=config['scoring'],
+                               black_list=config['black_list'],
+                               white_list=config['white_list'],
+                               max_indegree=config['max_indegree'],
+                               bw_list_method=config['bw_list_method'],
+                               epsilon=config['epsilon'],
+                               max_iter=config['max_iter'],
+                               verbose=config['verbose'],
+                               )
 
     # Constraint-based Structure Learning
     if config['method']=='cs' or config['method']=='constraintsearch':
@@ -186,25 +197,27 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
 
 # %% white_list and black_list
-def _white_black_list(df, white_list, black_list, verbose=3):
-    # Keep only variables that are in white_list.
-    if white_list is not None:
-        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] White list is incorporated.')
-        white_list = [x.lower() for x in white_list]
-        Iloc = np.isin(df.columns.str.lower(), white_list)
-        df = df.loc[:,Iloc]
+def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verbose=3):
+    if bw_list_method=='filter':
+        # Keep only variables that are in white_list.
+        if white_list is not None:
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Filter variables on white_list..')
+            white_list = [x.lower() for x in white_list]
+            Iloc = np.isin(df.columns.str.lower(), white_list)
+            df = df.loc[:,Iloc]
 
-    # Exclude variables that are in black_list.
-    if black_list is not None:
-        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Black list is incorporated.')
-        black_list = [x.lower() for x in black_list]
-        Iloc = ~np.isin(df.columns.str.lower(), black_list)
-        df = df.loc[:,Iloc]
-        
-    if (white_list is not None) or (black_list is not None):
-        if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Number of features after white/black listing: %d' %(df.shape[1]))
-    if df.shape[1]<=1: raise Exception('[BNLEARN] >ERROR: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
+        # Exclude variables that are in black_list.
+        if black_list is not None:
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Filter variables on black_list..')
+            black_list = [x.lower() for x in black_list]
+            Iloc = ~np.isin(df.columns.str.lower(), black_list)
+            df = df.loc[:,Iloc]
+
+        if (white_list is not None) or (black_list is not None):
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Number of features after white/black listing: %d' %(df.shape[1]))
+        if df.shape[1]<=1: raise Exception('[BNLEARN] >ERROR: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
+
 
 # %% Constraint-based Structure Learning
 def _constraintsearch(df, significance_level=0.05, verbose=3):
@@ -270,7 +283,30 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, verbose=3):
+def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, epsilon=1e-4, max_iter=1e6, bw_list_method='enforce', verbose=3):
+    """ heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
+    
+    Description
+    -----------
+    Performs local hill climb search to estimates the `DAG` structure
+    that has optimal score, according to the scoring method supplied in the constructor.
+    Starts at model `start` and proceeds by step-by-step network modifications
+    until a local maximum is reached. Only estimates network structure, no parametrization.
+        
+    Once more nodes are involved, one needs to switch to heuristic search.
+    HillClimbSearch implements a greedy local search that starts from the DAG
+    "start" (default: disconnected DAG) and proceeds by iteratively performing
+    single-edge manipulations that maximally increase the score.
+    The search terminates once a local maximum is found.
+    
+    For details on scoring see Koller & Friedman, Probabilistic Graphical Models, Section 18.4.3.3 (page 818).
+    If a number `max_indegree` is provided, only modifications that keep the number
+    of parents for each node below `max_indegree` are considered. A list of
+    edges can optionally be passed as `black_list` or `white_list` to exclude those
+    edges or to limit the search.
+    
+    """
+
     out=dict()
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype)
@@ -285,8 +321,13 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     #     best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
 
     # Compute best DAG
-    # best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
-    best_model = model.estimate(max_indegree=max_indegree)
+    if bw_list_method=='enforce':
+        if (black_list is not None) or (white_list is not None):
+            if verbose>=3: print('[BNLEARN][STRUCTURE LEARNING] Enforcing structure learning based on black_list and/or white_list.')
+        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list)
+    else:
+        # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
+        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter)
 
     # Store
     out['model']=best_model
