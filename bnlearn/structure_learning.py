@@ -66,12 +66,11 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'enforce' : A list of edges can optionally be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
         'filter' : Filter the dataframe based on `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
     max_indegree : int, (default : None)
-        If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents.
-        Works only in case of methodtype='hc'
+        If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype='hc')
     epsilon: float (default: 1e-4)
-        Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned.
+        Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned. (only in case of methodtype='hc')
     max_iter: int (default: 1e6)
-        The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`
+        The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
     verbose : int, (default : 3)
         Print progress to screen.
         0: NONE
