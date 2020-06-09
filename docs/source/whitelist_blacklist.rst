@@ -15,11 +15,16 @@ When variables are black listed, they are excluded from the search and the resul
     # Convert to onehot
     dfhot, dfnum = bnlearn.df2onehot(df_raw)
 
-    # Structure learning
-    DAG = bnlearn.structure_learning.fit(dfnum, white_list=['Survived','Pclass','Sex','Embarked','Parch'])
+    # Structure learning by including only 'Survived','Pclass','Sex','Embarked','Parch'.
+    DAG_filtered = bnlearn.structure_learning.fit(dfnum, white_list=['Survived','Pclass','Sex','Embarked','Parch'], bw_list_method='filter')
+
+    # Structure learning by enforcing variables 'Survived','Pclass','Sex','Embarked','Parch'.
+    DAG_enforced = bnlearn.structure_learning.fit(dfnum, white_list=['Survived','Pclass','Sex','Embarked','Parch'], bw_list_method='enforce')
 
     # Plot
-    G = bnlearn.plot(DAG)
+    Gf = bnlearn.plot(DAG_filtered)
+    Ge = bnlearn.plot(DAG_enforced)
+
 
 
 **Black list example**
@@ -33,9 +38,12 @@ When variables are black listed, they are excluded from the search and the resul
     # Convert to onehot
     dfhot, dfnum = bnlearn.df2onehot(df_raw)
 
-    # Structure learning
-    DAG = bnlearn.structure_learning.fit(dfnum, black_list=['Survived','Pclass','Sex','Embarked','Parch'])
+    # Structure learning after removing 'Survived','Pclass','Sex','Embarked','Parch'.
+    DAG_filtered = bnlearn.structure_learning.fit(dfnum, black_list=['Survived','Pclass','Sex','Embarked','Parch'], bw_list_method='filter')
+
+    # Structure learning by enforcing variables 'Survived','Pclass','Sex','Embarked','Parch'.
+    DAG_enforced = bnlearn.structure_learning.fit(dfnum, black_list=['Survived','Pclass','Sex','Embarked','Parch'], bw_list_method='enforce')
 
     # Plot
-    G = bnlearn.plot(DAG)
-
+    Gf = bnlearn.plot(DAG_filtered)
+    Ge = bnlearn.plot(DAG_enforced)
