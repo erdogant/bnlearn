@@ -280,3 +280,40 @@ bnlearn.print_CPD(DAG)
 
 
 q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+
+
+# %% Example to create a Bayesian Network, learn its parameters from data and perform the inference.
+
+import bnlearn
+
+# Import example dataset
+df = bnlearn.import_example('sprinkler')
+
+# Define the network structure
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bnlearn.make_DAG(edges)
+# [BNLEARN] Bayesian DAG created.
+
+# Print the CPDs
+bnlearn.print_CPD(DAG)
+# [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
+
+# Plot the DAG
+bnlearn.plot(DAG)
+
+# Parameter learning on the user-defined DAG and input data using maximumlikelihood
+DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+
+# Print the learned CPDs
+bnlearn.print_CPD(DAG)
+
+# Make inference
+q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+
+print(q1.values)
+
