@@ -70,10 +70,9 @@ def fit(model, df, methodtype='bayes', verbose=3):
         Contains a model object with a key 'adjmat' (adjacency matrix).
     df : pd.DataFrame()
         Pandas DataFrame containing the data.
-    methodtype : str, optional
-        strategy for parameter learning.. The default is 'bayes'.
-        'ml' or 'maximumlikelihood' (default) :Learning CPDs using Maximum Likelihood Estimators
-        'bayes' :Bayesian Parameter Estimation
+    methodtype : str, (default: 'bayes')
+        strategy for parameter learning.
+        Options are: 'ml' or 'maximumlikelihood' for learning CPDs using Maximum Likelihood Estimators. or 'bayes' for Bayesian Parameter Estimation.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: NONE
