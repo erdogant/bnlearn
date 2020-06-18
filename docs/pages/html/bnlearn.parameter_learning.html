@@ -232,9 +232,8 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>dict</em>) – Contains a model object with a key ‘adjmat’ (adjacency matrix).</p></li>
 <li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Pandas DataFrame containing the data.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>optional</em>) – strategy for parameter learning.. The default is ‘bayes’.
-‘ml’ or ‘maximumlikelihood’ (default) :Learning CPDs using Maximum Likelihood Estimators
-‘bayes’ :Bayesian Parameter Estimation</p></li>
+<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'bayes'</em><em>)</em>) – strategy for parameter learning.
+Options are: ‘ml’ or ‘maximumlikelihood’ for learning CPDs using Maximum Likelihood Estimators. or ‘bayes’ for Bayesian Parameter Estimation.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: NONE
 1: ERROR
