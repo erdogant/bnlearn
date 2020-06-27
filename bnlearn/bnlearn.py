@@ -645,8 +645,13 @@ def import_example(data='sprinkler', verbose=3):
     elif data=='titanic':
         url=url + 'titanic_train.zip'
     else:
-        print('[BNLEARN] Oops! Example dataset not found!')
-        return None
+        try:
+            DAG = import_DAG(data, verbose=2)
+            df = sampling(DAG, n=1000, verbose=2)
+        except:
+            print('[BNLEARN] Oops! Example dataset not found!')
+            df = None
+        return df
 
     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
