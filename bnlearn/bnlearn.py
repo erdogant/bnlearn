@@ -140,20 +140,33 @@ def print_CPD(DAG, checkmodel=False):
     None.
 
     """
+    config = DAG.get('config', None)
     if isinstance(DAG, dict):
         DAG = DAG['model']
 
-    if len(DAG.get_cpds())==0:
+    if config is None:
         print('[BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
         return
 
-    print('[BNLEARN.print_CPD] Independencies:\n%s' %(DAG.get_independencies()))
-    print('[BNLEARN.print_CPD] Nodes: %s' %(DAG.nodes()))
-    print('[BNLEARN.print_CPD] Edges: %s' %(DAG.edges()))
+    # Print CPDs
+    # if config['method']=='ml' or config['method']=='maximumlikelihood':
+    if 'MaximumLikelihood' in str(type(DAG)):
+        # print CPDs using Maximum Likelihood Estimators
+        for node in DAG.state_names:
+            print(DAG.estimate_cpd(node))
+    elif 'BayesianModel' in str(type(DAG)):
+    # elif config['method']=='bayes':
+        # print CPDs using Bayesian Parameter Estimation
+        if len(DAG.get_cpds())==0:
+            print('[BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
+            return
+        for cpd in DAG.get_cpds():
+            print("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
 
-    for cpd in DAG.get_cpds():
-        print("CPD of {variable}:".format(variable=cpd.variable))
-        print(cpd)
+        print('[BNLEARN.print_CPD] Independencies:\n%s' %(DAG.get_independencies()))
+        print('[BNLEARN.print_CPD] Nodes: %s' %(DAG.nodes()))
+        print('[BNLEARN.print_CPD] Edges: %s' %(DAG.edges()))
 
     if checkmodel:
         print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
