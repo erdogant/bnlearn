@@ -191,6 +191,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Store
     out['adjmat'] = adjmat
+    out['config'] = config
+    
     # return
     return(out)
 
