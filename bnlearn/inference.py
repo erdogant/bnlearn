@@ -58,18 +58,22 @@ def fit(model, variables=None, evidence=None, verbose=3):
 
     """
     if not isinstance(model, dict): raise Exception('[BNLEARN] >ERROR: Input requires a DAG that contains the key: model.')
-        
-    if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
     adjmat = model['adjmat']
-
     if not np.all(np.isin(variables, adjmat.columns)):
         raise Exception('[BNLEARN] ERROR: [variables] should match names in the model (Case sensitive!)')
     if not np.all(np.isin([*evidence.keys()], adjmat.columns)):
         raise Exception('[BNLEARN] ERROR: [evidence] should match names in the model (Case sensitive!)')
+    if verbose>=3: print('[BNLEARN][inference] Variable Elimination..')
 
     # Extract model
     if isinstance(model, dict):
         model = model['model']
+
+    # Check BayesianModel
+    if 'BayesianModel' not in str(type(model)):
+        if verbose>=1: print('[bnlearn] >Warning: Inference requires BayesianModel. hint: try: parameter_learning.fit(DAG, df, methodtype="bayes") <return>')
+        return None
+
     # Convert to BayesianModel
     if 'BayesianModel' not in str(type(model)):
         model = to_BayesianModel(adjmat, verbose=verbose)
@@ -77,7 +81,7 @@ def fit(model, variables=None, evidence=None, verbose=3):
     try:
         model_infer = VariableElimination(model)
     except:
-        raise Exception('[BNLEARN] ERROR: Input model should contain learned CPDs. Hint: did you run parameter_learning.fit?')
+        raise Exception('[BNLEARN] >Error: Input model does not contain learned CPDs. hint: did you run parameter_learning.fit?')
 
     # Computing the probability of Wet Grass given Rain.
     q = model_infer.query(variables=variables, evidence=evidence)
