@@ -702,13 +702,44 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     df_num = df_num.astype(int)
     # One-hot
     df_hot = out['onehot']
-    df_hot.columns=df_hot.columns.str.replace('_4.0','_4')
-    df_hot.columns=df_hot.columns.str.replace('_3.0','_3')
-    df_hot.columns=df_hot.columns.str.replace('_2.0','_2')
-    df_hot.columns=df_hot.columns.str.replace('_1.0','_1')
-    df_hot.columns=df_hot.columns.str.replace('_0.0','_0')
-    
+    df_hot.columns = df_hot.columns.str.replace('_4.0','_4')
+    df_hot.columns = df_hot.columns.str.replace('_3.0','_3')
+    df_hot.columns = df_hot.columns.str.replace('_2.0','_2')
+    df_hot.columns = df_hot.columns.str.replace('_1.0','_1')
+    df_hot.columns = df_hot.columns.str.replace('_0.0','_0')
+
     return df_hot, df_num
+
+
+def _filter_df(adjmat, df, verbose=3):
+    """Adjacency matrix and dataframe columns are checked for consistency."""
+    remcols = df.columns[~np.isin(df.columns.values, adjmat.columns.values)].values
+    if len(remcols)>0:
+        if verbose>=3: print('[BNLEARN] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
+        df.drop(labels=remcols, axis=1, inplace=True)
+    return df
+
+# def _check_adjmat(model, df):
+#     """Adjacency matrix and dataframe columns are checked for consistency."""
+#     adjmat = model['adjmat'].copy()
+#     cols = df.columns[~np.isin(df.columns.values, adjmat.columns.values)].values
+#     rows = df.columns[~np.isin(df.columns.values, adjmat.index.values)].values
+#     # Check the columns of adjmat
+#     if np.any(cols):
+#         for col in cols:
+#             adjmat[col] = False
+#     # Check the rows of adjmat
+#     if np.any(rows):
+#         adjmat = adjmat.T
+#         for row in rows:
+#             adjmat[row] = False
+#         adjmat = adjmat.T
+#     # Sort cols/rows similar
+#     idx = np.argsort(adjmat.columns.values)
+#     adjmat = adjmat.iloc[idx,idx]
+#     # Return
+#     model['adjmat'] = adjmat
+#     return adjmat, model
 
 
 # %% Convert Adjmat to graph (G)
