@@ -23,8 +23,9 @@ Currently, the library supports parameter learning for *discrete* nodes:
 from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator  # ParameterEstimator
 from pgmpy.models import BayesianModel
 from bnlearn.bnlearn import adjmat2vec
+from bnlearn.bnlearn import _filter_df
 from bnlearn.bnlearn import to_BayesianModel
-
+import numpy as np
 
 # %% Sampling from model
 def fit(model, df, methodtype='bayes', verbose=3):
@@ -101,39 +102,46 @@ def fit(model, df, methodtype='bayes', verbose=3):
     >>> G = bnlearn.plot(model_update)
 
     """
-    config = dict()
+    config = {}
     config['verbose'] = verbose
     config['method'] = methodtype
     adjmat = model['adjmat']
 
-    if verbose>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
+    # Check whether all labels in the adjacency matrix are included from the dataframe
+    # adjmat, model = _check_adjmat(model, df)
+    df = _filter_df(adjmat, df, verbose=config['verbose'])
+
+    if config['verbose']>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
     # Extract model
     if isinstance(model, dict):
         model = model['model']
+
     # Convert to BayesianModel
     if 'BayesianModel' not in str(type(model)):
-        model = to_BayesianModel(adjmat, verbose=verbose)
+        model = to_BayesianModel(adjmat, verbose=config['verbose'])
 
-#    pe = ParameterEstimator(model, df)
-#    print("\n", pe.state_counts('Cloudy'))
-#    print("\n", pe.state_counts('Sprinkler'))
+    # pe = ParameterEstimator(model, df)
+    # print("\n", pe.state_counts('Cloudy'))
+    # print("\n", pe.state_counts('Sprinkler'))
 
     # Learning CPDs using Maximum Likelihood Estimators
     if config['method']=='ml' or config['method']=='maximumlikelihood':
-        mle = MaximumLikelihoodEstimator(model, df)
-        for node in mle.state_names:
-            print(mle.estimate_cpd(node))
+        # mle = MaximumLikelihoodEstimator(model, df)
+        model = MaximumLikelihoodEstimator(model, df)
+        for node in model.state_names:
+            print(model.estimate_cpd(node))
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
-        model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000)  # default equivalent_sample_size=5
+        model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000)
 
         for cpd in model.get_cpds():
-            if verbose>=3: print("CPD of {variable}:".format(variable=cpd.variable))
-            if verbose>=3: print(cpd)
-    
+            if config['verbose']>=3: print("CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=3: print(cpd)
+
     out = {}
     out['model'] = model
     out['adjmat'] = adjmat
+    out['config'] = config
 
     return(out)
