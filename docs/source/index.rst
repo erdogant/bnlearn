@@ -66,7 +66,7 @@ References
 * `If correlation doesn't imply causation, then what does? from Michael Nielsen <http://www.michaelnielsen.org/ddi/if-correlation-doesnt-imply-causation-then-what-does/>`_
 * `Lecture notes from Jonas Peters <http://www.math.ku.dk/~peters/jonas_files/scriptChapter1-4.pdf>`_
 * `Elements of Causal Inference <http://www.math.ku.dk/~peters/jonas_files/bookDRAFT5-online-2017-02-27.pdf>`_
-* `Causality <http://mlss.tuebingen.mpg.de/2017/speaker_slides/Causality.pdf>`_
+* `Causality slides <http://mlss.tuebingen.mpg.de/2017/speaker_slides/Causality.pdf>`_
 
 Related Packages
 ------------------------------

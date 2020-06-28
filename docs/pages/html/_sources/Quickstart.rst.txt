@@ -20,8 +20,8 @@ It is advisable to create a new environment.
    pip install bnlearn
 
 
-Examples
-^^^^^^^^
+Quick Examples
+^^^^^^^^^^^^^^^^
 
 Let's start by importing some data. We need a DAG and CPD.
 
