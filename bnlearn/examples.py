@@ -33,7 +33,7 @@ DAG = bnlearn.import_DAG()
 G = bnlearn.plot(DAG)
 
 
-# %%
+# %% Inference using custom DAG
 from tabulate import tabulate
 # Load asia DAG
 import bnlearn
@@ -63,7 +63,7 @@ q1 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1})
 q2 = bnlearn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1})
 q3 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
 q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
-q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':1})
+q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
 
 # DAGmle = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 # bnlearn.print_CPD(DAGmle)
@@ -77,6 +77,33 @@ q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1,
 
 # bnlearn.compare_networks(DAGbay, DAGnew)
 # bnlearn.compare_networks(DAGnew, DAGbay)
+
+# %% compute causalities
+# Load asia DAG
+import bnlearn
+df = bnlearn.import_example('asia')
+# print(tabulate(df.head(), tablefmt="grid", headers="keys"))
+# print(df)
+
+# Structure learning
+model = bnlearn.structure_learning.fit(df)
+# Plot the DAG
+bnlearn.plot(model)
+# Print the CPDs
+bnlearn.print_CPD(model)
+# Comparison
+bnlearn.compare_networks(DAG, model)
+bnlearn.compare_networks(model, DAG)
+
+# Learn its parameters from data and perform the inference.
+DAGnew = bnlearn.parameter_learning.fit(model, df, methodtype='bayes')
+# Print the CPDs
+bnlearn.print_CPD(DAGnew)
+
+# Make inference
+q4 = bnlearn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+# q4 = bnlearn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
+
 
 # %% Example compare networks
 # Load asia DAG
