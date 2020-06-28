@@ -33,6 +33,51 @@ DAG = bnlearn.import_DAG()
 G = bnlearn.plot(DAG)
 
 
+# %%
+from tabulate import tabulate
+# Load asia DAG
+import bnlearn
+df = bnlearn.import_example('asia')
+# print(tabulate(df.head(), tablefmt="grid", headers="keys"))
+print(df)
+
+edges = [('smoke', 'lung'),
+         ('smoke', 'bronc'),
+         ('lung', 'xray'),
+         ('bronc', 'xray')]
+
+# Make the actual Bayesian DAG
+DAG = bnlearn.make_DAG(edges)
+# Plot the DAG
+bnlearn.plot(DAG)
+# Print the CPDs
+bnlearn.print_CPD(DAG)
+
+# Learn its parameters from data and perform the inference.
+DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='bayes')
+# Print the CPDs
+bnlearn.print_CPD(DAG)
+
+# Make inference
+q1 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1})
+q2 = bnlearn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1})
+q3 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
+q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':1})
+
+# DAGmle = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+# bnlearn.print_CPD(DAGmle)
+# bnlearn.print_CPD(DAGbay)
+
+# # Make inference
+# q1 = bnlearn.inference.fit(DAGmle, variables=['lung'], evidence={'smoke':1})
+# q2 = bnlearn.inference.fit(DAGmle, variables=['bronc'], evidence={'smoke':1})
+# q3 = bnlearn.inference.fit(DAGmle, variables=['lung'], evidence={'smoke':1, 'bronc':1})
+# q4 = bnlearn.inference.fit(DAGmle, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+
+# bnlearn.compare_networks(DAGbay, DAGnew)
+# bnlearn.compare_networks(DAGnew, DAGbay)
+
 # %% Example compare networks
 # Load asia DAG
 import bnlearn
@@ -307,13 +352,16 @@ bnlearn.print_CPD(DAG)
 bnlearn.plot(DAG)
 
 # Parameter learning on the user-defined DAG and input data using maximumlikelihood
-DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+DAGmle = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+DAGbay = bnlearn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
 # Print the learned CPDs
-bnlearn.print_CPD(DAG)
+bnlearn.print_CPD(DAGmle)
+bnlearn.print_CPD(DAGbay)
 
 # Make inference
-q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q1 = bnlearn.inference.fit(DAGmle, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q1 = bnlearn.inference.fit(DAGbay, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
 print(q1.values)
 
