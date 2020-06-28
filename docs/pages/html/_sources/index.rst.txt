@@ -38,13 +38,14 @@ Content
   Create DAG
   whitelist_blacklist
 
-
 .. toctree::
   :maxdepth: 2
-  :caption: Various
+  :caption: Examples
 
-  Adjacency matrix
   Examples
+  UseCases
+
+
 
 
 .. toctree::
@@ -58,7 +59,23 @@ Content
   bnlearn.bnlearn
 
 
-  
+References
+------------------------------
+* [Causality, Pearl, 2009, 2nd Editing](http://ftp.cs.ucla.edu/pub/stat_ser/r350.pdf)
+* [If correlation doesn't imply causation, then what does? from Michael Nielsen](http://www.michaelnielsen.org/ddi/if-correlation-doesnt-imply-causation-then-what-does/)
+* [Lecture notes from Jonas Peters](http://www.math.ku.dk/~peters/jonas_files/scriptChapter1-4.pdf)
+* (Elements of Causal Inference)[http://www.math.ku.dk/~peters/jonas_files/bookDRAFT5-online-2017-02-27.pdf]
+* (Causality)[http://mlss.tuebingen.mpg.de/2017/speaker_slides/Causality.pdf]
+
+
+Related Packages
+------------------------------
+(Probabilistic Graphical Models using pgmpy)[https://conference.scipy.org/proceedings/scipy2015/pdfs/ankur_ankan.pdf]
+(Causal graphical models)[https://github.com/ijmbarr/causalgraphicalmodels]
+(Causality)[https://github.com/akelleh/causality]
+(Causal Inference)[https://github.com/laurencium/causalinference]
+
+
 Source code and issue tracker
 ------------------------------
 
