@@ -108,10 +108,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
     assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
-    if isinstance(white_list, str): white_list=[white_list]
-    if isinstance(black_list, str): black_list=[black_list]
-    if (white_list is not None) and len(white_list)==0: white_list=None
-    if (black_list is not None) and len(black_list)==0: black_list=None
+    if isinstance(white_list, str): white_list = [white_list]
+    if isinstance(black_list, str): black_list = [black_list]
+    if (white_list is not None) and len(white_list)==0: white_list = None
+    if (black_list is not None) and len(black_list)==0: black_list = None
     if (bw_list_method is None) : bw_list_method='enforce'
 
     config = {}
@@ -192,7 +192,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # Store
     out['adjmat'] = adjmat
     out['config'] = config
-    
+
     # return
     return(out)
 
@@ -369,7 +369,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
 
 # %% Set scoring type
 def _SetScoringType(df, scoretype, verbose=3):
-    if verbose>=3: print('[bnlearn]  >Set scoring type at [%s]' %(scoretype))
+    if verbose>=3: print('[bnlearn] >Set scoring type at [%s]' %(scoretype))
 
     if scoretype=='bic':
         scoring_method = BicScore(df)
