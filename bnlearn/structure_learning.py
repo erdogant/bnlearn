@@ -128,17 +128,17 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # Show warnings
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
     # if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
-        # if config['verbose']>=2: print('[bnlearn][Structure Learning] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
+        # if config['verbose']>=2: print('[bnlearn] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
     if df.shape[1]>10 and df.shape[1]<15:
-        if config['verbose']>=2: print('[bnlearn][Structure Learning] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+        if config['verbose']>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     if (black_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn][Structure Learning] >Warning: blacklist only works in case of methodtype="hc"')
+        if config['verbose']>=2: print('[bnlearn] >Warning: blacklist only works in case of methodtype="hc"')
     if (white_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn][Structure Learning] >Warning: white_list only works in case of methodtype="hc"')
+        if config['verbose']>=2: print('[bnlearn] >Warning: white_list only works in case of methodtype="hc"')
     if (max_indegree is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn][Structure Learning] >Warning: max_indegree only works in case of methodtype="hc"')
+        if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
 
-    if config['verbose']>=3: print('[bnlearn][Structure Learning] >Computing best DAG using [%s]' %(config['method']))
+    if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
 
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
@@ -153,7 +153,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Despite these bad news, heuristic search strategies often yields good results
         If only few nodes are involved (read: less than 5)."""
         if (df.shape[1]>15) and (config['verbose']>=3):
-            print('[bnlearn][Structure Learning] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
+            print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
         out = _exhaustivesearch(df, scoretype=config['scoring'], verbose=config['verbose'])
 
     # HillClimbSearch
@@ -202,20 +202,20 @@ def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verb
     if bw_list_method=='filter':
         # Keep only variables that are in white_list.
         if white_list is not None:
-            if verbose>=3: print('[bnlearn][Structure Learning] >Filter variables on white_list..')
+            if verbose>=3: print('[bnlearn] >Filter variables on white_list..')
             white_list = [x.lower() for x in white_list]
             Iloc = np.isin(df.columns.str.lower(), white_list)
             df = df.loc[:,Iloc]
 
         # Exclude variables that are in black_list.
         if black_list is not None:
-            if verbose>=3: print('[bnlearn][Structure Learning] >Filter variables on black_list..')
+            if verbose>=3: print('[bnlearn] >Filter variables on black_list..')
             black_list = [x.lower() for x in black_list]
             Iloc = ~np.isin(df.columns.str.lower(), black_list)
             df = df.loc[:,Iloc]
 
         if (white_list is not None) or (black_list is not None):
-            if verbose>=3: print('[bnlearn][Structure Learning] >Number of features after white/black listing: %d' %(df.shape[1]))
+            if verbose>=3: print('[bnlearn]  >Number of features after white/black listing: %d' %(df.shape[1]))
         if df.shape[1]<=1: raise Exception('[bnlearn] >Error: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
 
@@ -324,7 +324,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Compute best DAG
     if bw_list_method=='enforce':
         if (black_list is not None) or (white_list is not None):
-            if verbose>=3: print('[bnlearn][Structure Learning] >Enforcing nodes based on black_list and/or white_list.')
+            if verbose>=3: print('[bnlearn]  >Enforcing nodes based on black_list and/or white_list.')
         best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
@@ -369,7 +369,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
 
 # %% Set scoring type
 def _SetScoringType(df, scoretype, verbose=3):
-    if verbose>=3: print('[bnlearn][Structure Learning] >Set scoring type at [%s]' %(scoretype))
+    if verbose>=3: print('[bnlearn]  >Set scoring type at [%s]' %(scoretype))
 
     if scoretype=='bic':
         scoring_method = BicScore(df)
