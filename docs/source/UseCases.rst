@@ -17,7 +17,7 @@ Motivation of Lauritzen and Spiegelhalter (1988)
 Source
 	*Lauritzen S, Spiegelhalter D (1988). Local Computation with Probabilities on Graphical Structures and their Application to Expert Systems (with discussion). Journal of the Royal Statistical Society*
 
-Aim: what are possible causalities for shortness-of-breath (dyspnoea) when:
+Aim: Make inferences about shortness-of-breath (dyspnoea) when:
 	1. You have measured data
 	2. You have know-how/expert knowledge
 
