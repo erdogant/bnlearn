@@ -57,9 +57,9 @@ def to_BayesianModel(model, verbose=3):
         adjmat = model.get('adjmat',None)
     else:
         adjmat = model
-    if adjmat is None: raise Exception('[BNLEARN] Error: input for "to_BayesianModel" should be adjmat or a dict containing a key "adjmat".')
+    if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_BayesianModel" should be adjmat or a dict containing a key "adjmat".')
 
-    if verbose>=3: print('[BNLEARN] Conversion of adjmat to BayesianModel.')
+    if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianModel.')
     
     # Convert to vector
     vec = adjmat2vec(adjmat)[['source','target']].values.tolist()
@@ -101,20 +101,20 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
     if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
-        raise Exception("[BNLEARN] ERROR: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
+        raise Exception("[bnlearn] >Error: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
     elif ('pgmpy' in str(type(DAG))):
-        if verbose>=3: print('[BNLEARN] No changes made to existing Bayesian DAG.')
+        if verbose>=3: print('[bnlearn] >No changes made to existing Bayesian DAG.')
     elif isinstance(DAG, list):
-        if verbose>=3: print('[BNLEARN] Bayesian DAG created.')
+        if verbose>=3: print('[bnlearn] >Bayesian DAG created.')
         DAG = BayesianModel(DAG)
 
     if CPD is not None:
         for cpd in CPD:
             DAG.add_cpds(cpd)
-            if verbose>=3: print('[BNLEARN] Add CPD: %s' %(cpd.variable))
+            if verbose>=3: print('[bnlearn] >Add CPD: %s' %(cpd.variable))
 
         if checkmodel:
-            print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
+            print('[bnlearn] >Model correct: %s' %(DAG.check_model()))
     
     # Create adjacency matrix from DAG
     out = {}
@@ -145,7 +145,7 @@ def print_CPD(DAG, checkmodel=False):
         DAG = DAG['model']
 
     if config is None:
-        print('[BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
+        print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
         return
 
     # Print CPDs
@@ -158,18 +158,18 @@ def print_CPD(DAG, checkmodel=False):
     # elif config['method']=='bayes':
         # print CPDs using Bayesian Parameter Estimation
         if len(DAG.get_cpds())==0:
-            print('[BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.')
+            print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
             return
         for cpd in DAG.get_cpds():
             print("CPD of {variable}:".format(variable=cpd.variable))
             print(cpd)
 
-        print('[BNLEARN.print_CPD] Independencies:\n%s' %(DAG.get_independencies()))
-        print('[BNLEARN.print_CPD] Nodes: %s' %(DAG.nodes()))
-        print('[BNLEARN.print_CPD] Edges: %s' %(DAG.edges()))
+        print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
+        print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
+        print('[bnlearn] >Edges: %s' %(DAG.edges()))
 
     if checkmodel:
-        print('[BNLEARN.print_CPD] Model correct: %s' %(DAG.check_model()))
+        print('[bnlearn] >Model correct: %s' %(DAG.check_model()))
 
 
 # %% Make DAG
@@ -178,16 +178,9 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
     Parameters
     ----------
-    filepath : str, optional
+    filepath : str, (default: sprinkler)
         Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
-        'sprinkler'(default),
-        'alarm',
-        'andes',
-        'asia',
-        'pathfinder',
-        'sachs',
-        'miserables',
-        'filepath/to/model.bif',
+        'sprinkler', 'alarm', 'andes', 'asia', 'pathfinder', 'sachs', 'miserables', 'filepath/to/model.bif',
     CPD : bool, optional
         Directed Acyclic Graph (DAG). The default is True.
     verbose : int, optional
@@ -454,7 +447,7 @@ def _bif2bayesian(pathname, verbose=3):
     >>> reader.get_model()
     <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
     """
-    if verbose>=3: print('[BNLEARN] Loading bif file <%s>' %(pathname))
+    if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
 
     bifmodel=readwrite.BIF.BIFReader(path=pathname)
 
@@ -481,7 +474,7 @@ def _bif2bayesian(pathname, verbose=3):
         return model
 
     except AttributeError:
-        raise AttributeError('[BNLEARN] First get states of variables, edges, parents and network names')
+        raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
 
 
 # %% Make directed graph from adjmatrix
@@ -634,16 +627,19 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
 
 
 # %% Example data
-def import_example(data='sprinkler', verbose=3):
+def import_example(data='sprinkler', n=10000, verbose=3):
     """Load example dataset.
 
     Parameters
     ----------
-    data : str, optional
-        'sprinkler'
-        'titanic'
-    verbose : int, optional
-        Print message to screen. The default is 3.
+    data : str, (default: sprinkler)
+        Pre-defined examples. 
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'pathfinder', 'sachs'
+    n : int, optional
+        Number of samples to generate. The default is 1000.
+    verbose : int, (default: 3)
+        Print progress to screen.
+        0: None, 1: ERROR, 2: WARN, 3: INFO, 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -660,9 +656,9 @@ def import_example(data='sprinkler', verbose=3):
     else:
         try:
             DAG = import_DAG(data, verbose=2)
-            df = sampling(DAG, n=1000, verbose=2)
+            df = sampling(DAG, n=n, verbose=2)
         except:
-            print('[BNLEARN] Oops! Example dataset not found!')
+            print('[bnlearn] >Oops! Example dataset not found!')
             df = None
         return df
 
@@ -673,11 +669,11 @@ def import_example(data='sprinkler', verbose=3):
 
     # Check file exists.
     if not os.path.isfile(PATH_TO_DATA):
-        if verbose>=3: print('[BNLEARN] Downloading example dataset..')
+        if verbose>=3: print('[bnlearn] >Downloading example dataset..')
         wget.download(url, curpath)
 
     # Import local dataset
-    if verbose>=3: print('[BNLEARN] Import dataset..')
+    if verbose>=3: print('[bnlearn] >Import dataset..')
     df = pd.read_csv(PATH_TO_DATA)
     return df
 
@@ -728,7 +724,7 @@ def _filter_df(adjmat, df, verbose=3):
     """Adjacency matrix and dataframe columns are checked for consistency."""
     remcols = df.columns[~np.isin(df.columns.values, adjmat.columns.values)].values
     if len(remcols)>0:
-        if verbose>=3: print('[BNLEARN] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
+        if verbose>=3: print('[bnlearn] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
         df.drop(labels=remcols, axis=1, inplace=True)
     return df
 
