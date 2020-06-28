@@ -216,7 +216,7 @@ def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verb
 
         if (white_list is not None) or (black_list is not None):
             if verbose>=3: print('[bnlearn][Structure Learning] >Number of features after white/black listing: %d' %(df.shape[1]))
-        if df.shape[1]<=1: raise Exception('[bnlearn] >ERROR: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
+        if df.shape[1]<=1: raise Exception('[bnlearn] >Error: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
 
 
