@@ -5,7 +5,7 @@ In this section I will describe some use cases using ``bnlearn``. The difference
 
 
 Make inferences when you have data and know-how
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+''''''''''''''''''''''''''''''''''''''''''''''''
 
 Suppose you work in the medical field and you have records of hundreds or even thousands patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily expect/know few associatons from literature and/or experience, like smoking is related to lung cancer. The data I will use is a small synthetic data set from Lauritzen and Spiegelhalter (1988) about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia. The exact motivation is described below.
 
@@ -268,6 +268,9 @@ Lets plot the learned DAG and examine the structure!
     
     # Plot the DAG
     bnlearn.plot(model)
+
+    # Plot differences between previous and new model
+    bnlearn.compare_networks(model, DAG)
 
 
 .. _fig_asia_structurelearning:

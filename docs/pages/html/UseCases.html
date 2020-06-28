@@ -582,6 +582,9 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 <p>Lets plot the learned DAG and examine the structure!</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the DAG</span>
 <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Plot differences between previous and new model</span>
+<span class="n">bnlearn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig-asia-structurelearning">

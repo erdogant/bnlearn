@@ -269,6 +269,9 @@ Lets plot the learned DAG and examine the structure!
     # Plot the DAG
     bnlearn.plot(model)
 
+    # Plot differences between previous and new model
+    bnlearn.compare_networks(model, DAG)
+
 
 .. _fig_asia_structurelearning:
 
