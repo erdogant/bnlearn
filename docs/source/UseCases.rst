@@ -21,9 +21,10 @@ Aim: Make inferences about shortness-of-breath (dyspnoea) when:
 	1. You have measured data
 	2. You have know-how/expert knowledge
 
+
 Import data
 ^^^^^^^^^^^^
-The first step is to import the data. In my case I will load the data, which is readily a **structured** dataset. If you have **unstructured** data, you can use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The *examples section* also contains examples how to import raw data followed by (basic) structering approaches (see the *Titanic* example).
+The first step is to import the data. In my case I will load the data, which is readily a **structured** dataset. If you have **unstructured** data, you can use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The :ref:`Examples` section also contains examples how to import raw data followed by (basic) structering approaches (section: :ref:`Start with RAW data`).
 
 .. code-block:: python
 
@@ -50,7 +51,7 @@ The asia data set contains only yes/no, true/false or 1/0 values. ``bnlearn`` ca
 In case of the **sprinkler** data set, 1000 samples is sufficient because there are only 4 variables, each with discrete states (yes/no). Some other data sets (such as **alarm**) are way more complicated and 1000 samples would not be sufficient.
 
 
-Define Directed Acyclic Graph
+Create custom Directed Acyclic Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 At this point, the data set is pre-processed and ready. The second step is to include expert knowledge in the form of a Directed Acyclic Graph (DAG). The DAG will describe the relationships between variables and with this we will learn the CPDs. 
@@ -83,7 +84,7 @@ Lets plot the Bayesian DAG.
 Compute Conditional Probability Distributions (CPDs)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-At this point we have the data set in our dataframe (df), and we have the DAG based on expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function :func:`bnlearn.bnlearn.parameter_learning.fit`. See section **Parameter learning** to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general, it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!
+At this point we have the data set in our dataframe (df), and we have the DAG based on expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function :func:`bnlearn.bnlearn.parameter_learning.fit`. See section :ref:`Parameter learning` to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!
 
 
 Parameter learning on the user-defined DAG and input data set.
@@ -237,9 +238,161 @@ The highest probability for the patient under these condition is that lung-cance
 
 Determine causalities when you have data
 '''''''''''''''''''''''''''''''''''''''''
-Comming soon.
+
+Suppose that we have the medical records of hundreds or even thousands patients treatments regarding shortness-of-breath (dyspnoea). What we want to know is to determine the dependencies and causality across variables given the data set.
+
+Steps to take
+	1. Import the data as described in :ref:`Import data`.
+	2. Compute Directed Acyclic Graph by means of structure learning.
+	3. Compare to DAG from expert knowledge.
+
+
+Compute Directed Acyclic Graph from data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After importing and pre-processing the data set, we can start learning the structure in the form of a Directed Acyclic Graphs. More about Directed Acyclic Graphs can be found in the section :ref:`Directed Acyclic Graphs`. For this use-case we will compute the best performing DAG given the data set. ``bnlearn`` will do the heavy lifting, you only need to provide the dataframe into the function :func:`bnlearn.bnlearn.structure_learning.fit`.
+
+.. code-block:: python
+    
+    # Structure learning on the data set
+    model = bnlearn.structure_learning.fit(df)
+    
+    # [bnlearn] >Computing best DAG using [hc]
+    # [bnlearn]  >Set scoring type at [bic]
+
+The computations can take seconds to hours or even days, depending on the complexity of your data set. In this case we have few variables, each with two states. If you readily have suspicion you can use the black_list or white_list parameters. 
+
+Lets plot the learned DAG and examine the structure!
+
+.. code-block:: python
+    
+    # Plot the DAG
+    bnlearn.plot(model)
+
+
+.. _fig_asia_structurelearning:
+
+.. figure:: ../figs/asia_structurelearning.png
+
+
+A comparison with our initial expert-knowledge DAG shows few differences in **red**. As an example, we did not include the *either* variable, which describes either being lung-cancer or bronchitus.
+
+.. _fig_asia_structurelearning:
+
+.. figure:: ../figs/asia_dag_vs_model.png
 
 
 Make inference when you have data
 '''''''''''''''''''''''''''''''''''''''''
-Comming soon.
+
+In this scenario we have the medical records of hundreds or even thousands patients treatments regarding shortness-of-breath (dyspnoea). The goal is to make inferences across variables given the data set.
+
+Steps to take
+	1. Import the data as described in :ref:`Import data`
+	2. Compute Directed Acyclic Graph (DAG)
+	3. Compute Conditional Probability Distributions (CPDs)
+
+The first step is to import and pre-process the data set as depicted in :ref:`Import data`. Then we compute the DAG by means of structure learning as depicted in :ref:`Directed Acyclic Graphs`. To make inferences, we first need to compute the CPDs which we can do with :func:`bnlearn.bnlearn.parameter_learning.fit`.
+
+.. code-block:: python
+    
+    # Learning the CPDs using parameter learning
+    model = bnlearn.parameter_learning.fit(model, df, methodtype='bayes')
+    # Print the CPDs
+    bnlearn.print_CPD(model)
+
+
+CPD of smoke:
+
++----------+----------+
+| smoke(0) | 0.495455 |
++----------+----------+
+| smoke(1) | 0.504545 |
++----------+----------+
+
+CPD of bronc:
+
++----------+---------------------+---------------------+
+| smoke    | smoke(0)            | smoke(1)            |
++----------+---------------------+---------------------+
+| bronc(0) | 0.6009174311926605  | 0.31675675675675674 |
++----------+---------------------+---------------------+
+| bronc(1) | 0.39908256880733944 | 0.6832432432432433  |
++----------+---------------------+---------------------+
+
+CPD of lung:
+
++---------+-------------------+---------------------+
+| smoke   | smoke(0)          | smoke(1)            |
++---------+-------------------+---------------------+
+| lung(0) | 0.138348623853211 | 0.05333333333333334 |
++---------+-------------------+---------------------+
+| lung(1) | 0.861651376146789 | 0.9466666666666667  |
++---------+-------------------+---------------------+
+
+CPD of dysp:
+
++---------+---------------------+---------------------+---------------------+---------------------+
+| bronc   | bronc(0)            | bronc(0)            | bronc(1)            | bronc(1)            |
++---------+---------------------+---------------------+---------------------+---------------------+
+| either  | either(0)           | either(1)           | either(0)           | either(1)           |
++---------+---------------------+---------------------+---------------------+---------------------+
+| dysp(0) | 0.7508090614886731  | 0.7821064552661382  | 0.6189591078066915  | 0.12156934978817462 |
++---------+---------------------+---------------------+---------------------+---------------------+
+| dysp(1) | 0.24919093851132687 | 0.21789354473386183 | 0.38104089219330856 | 0.8784306502118254  |
++---------+---------------------+---------------------+---------------------+---------------------+
+
+CPD of either:
+
++-----------+---------------------+---------------------+-------------------+---------------------+
+| lung      | lung(0)             | lung(0)             | lung(1)           | lung(1)             |
++-----------+---------------------+---------------------+-------------------+---------------------+
+| tub       | tub(0)              | tub(1)              | tub(0)            | tub(1)              |
++-----------+---------------------+---------------------+-------------------+---------------------+
+| either(0) | 0.5098039215686274  | 0.8427672955974843  | 0.648876404494382 | 0.01302897644361059 |
++-----------+---------------------+---------------------+-------------------+---------------------+
+| either(1) | 0.49019607843137253 | 0.15723270440251572 | 0.351123595505618 | 0.9869710235563894  |
++-----------+---------------------+---------------------+-------------------+---------------------+
+
+CPD of tub:
+
++--------+-----------+
+| tub(0) | 0.0555455 |
++--------+-----------+
+| tub(1) | 0.944455  |
++--------+-----------+
+
+CPD of xray:
+
++---------+---------------------+--------------------+
+| either  | either(0)           | either(1)          |
++---------+---------------------+--------------------+
+| xray(0) | 0.7716262975778547  | 0.0750711093051605 |
++---------+---------------------+--------------------+
+| xray(1) | 0.22837370242214533 | 0.9249288906948395 |
++---------+---------------------+--------------------+
+
+From this point on we can start making inferences given the DAG and the CPDs. For demonstration purposes I will repeat question 4.
+
+
+**Question**
+
+What is the probability of lung-cancer or bronchitis, given that we know that patient does smoke but did **not** had xray?
+
+.. code-block:: python
+    
+    q = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+
++---------+----------+-------------------+
+| lung    | bronc    |   phi(lung,bronc) |
++=========+==========+===================+
+| lung(0) | bronc(0) |            0.0797 |
++---------+----------+-------------------+
+| lung(0) | bronc(1) |            0.1720 |
++---------+----------+-------------------+
+| lung(1) | bronc(0) |            0.2370 |
++---------+----------+-------------------+
+| lung(1) | bronc(1) |            0.5113 |
++---------+----------+-------------------+
+
+The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51). 
