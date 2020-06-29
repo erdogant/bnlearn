@@ -46,7 +46,7 @@ napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 # pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Erdogan Taskesen'),]
 
-autodoc_mock_imports = ['torch','pgmpy']
+autodoc_mock_imports = ['torch']
 
 #extensions = [
 #    "sphinx.ext.autodoc",
