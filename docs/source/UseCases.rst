@@ -1,9 +1,7 @@
 Use Case Medical domain
 =======================
 
-In this section I will describe some use cases using ``bnlearn``. The differences with the examples section is that we will start with a possible goal. Perhaps you can use it, or will inspire you for something new.
-
-Suppose you work in the medical field and you have records of hundreds or even thousands patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily expect/know few associatons from literature and/or experience, like smoking is related to lung cancer. We will use your knowledge in the models. The data is small and synthetic from Lauritzen and Spiegelhalter (1988) about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia.
+In this section I will describe the use-case to analyse patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily know some associatons from literature and/or experience, like smoking is related to dyspnoea. In this use-case I will demonstrate how to use your expert-knowledge in a bayesian model. Furthermore, the data set is small (few variables) and synthetic from Lauritzen and Spiegelhalter (1988), and is about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia.
 
 Description
 ''''''''''''
@@ -18,11 +16,12 @@ Source
 Import data
 ''''''''''''
 
-The first step is to import the data. In my case I will load the data, which is readily a **structured** dataset. If you have **unstructured** data, you can use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The :ref:`Examples` section also contains examples how to import raw data followed by (basic) structering approaches (section: :ref:`Start with RAW data`).
+The first step is to import the data set. If you have **unstructured** data, use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The :ref:`Examples` section contains examples how to import a raw data set followed by (basic) structering approaches (section: :ref:`Start with RAW data`). In my case I will load the data from ``bnlearn``, which is readily a **structured** dataset.
+
 
 .. code-block:: python
 
-    # Load dataset with 10000 samples
+    # Load dataset with 10.000 samples
     df = bnlearn.import_example('asia', n=10000)
     # Print to screen
     print(df)
@@ -41,23 +40,23 @@ The first step is to import the data. In my case I will load the data, which is 
 |9999|       0 |       1 |      1 |      1 |     1 |        1 |      0 |      1 |
 +----+---------+---------+--------+--------+-------+----------+--------+--------+
 
-The data set contains only yes/no, true/false or 1/0 values. ``bnlearn`` can also handle multiple catagories or non-numerical values if thats your case. For this example we generated 10.000 samples (aka  the patients). You may ask yourself, *is this a appropriate number?* Well, it depends on the number of variables and the number of catagories per variable. The ground-truth of the example data sets are available too, so you can play arround with various number of samples and determine when you can re-construct the entire DAG. In case of the **sprinkler** data set, 1000 samples is sufficient because there are only 4 variables, each with discrete states (yes/no). Some other data sets (such as **alarm**) are way more complicated and 1000 samples would not be sufficient.
+This data set contains 8 variables with discrete values, meaning that the variables have the state yes/no, true/false or 1/0 values. ``bnlearn`` can handle multiple catagories (also non-numerical, :ref:`Start with RAW data`). In this example we generate 10.000 samples (representing the patients). Note that the number of variables depends on the complexity of the data set (number of variables and the catagories per variable). If you want to get *feeling* of the performance of bayesian models, I would advice to play arround with various example data sets in ``bnlearn`` and determine when you can re-construct the entire DAG given the complexity of the data set. As an example, 1000 samples is sufficient for the **sprinkler** data set because there are only 4 variables, each with state yes/no. Some other data sets (such as **alarm**) are way more complicated and 1000 samples would not be sufficient.
 
 
 Make inferences when you have data and know-how
 ''''''''''''''''''''''''''''''''''''''''''''''''
+
+Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, :ref:`Directed Acyclic Graphs`). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences :ref:`Inference`.
 
 Aim: Make inferences about shortness-of-breath (dyspnoea) when:
 	1. You have measured data and imported: :ref:`Import data`.
 	2. You have know-how/expert knowledge.
 
 
-To way to include expert knowledge is by using graphs in the form of a Directed Acyclic Graph (DAG). The DAG describes the relationships between variables. Lets create a custom DAG.
-
 Create a custom Directed Acyclic Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-My knowledge about *dyspnoea* is limited to: smoking is related to lung cancer, smoking is related to bronchitis, and if you have lung or bronchitus you may need an xray examination. Basically, I will create a simple DAG. Note that bayesian modeling is especially fun because you can make very complex DAGs. Note that the direction is very important. The first column is "from" or "source" and the second column "to" or "destination". Furthermore, this is a **very simple model** and **not** representative in real-life applications. But it is a easy example for demonstration purposes.
+My knowledge about *dyspnoea* is limited to: smoking is related to lung cancer, smoking is related to bronchitis, and if you have lung or bronchitus you may need an xray examination. Basically, I will create a simple DAG. Note that bayesian modeling is especially fun because you can make very complex DAGs. Note that the direction is very important. The first column is "from" or "source" and the second column "to" or "destination". Note, this is a **very simple model** that is designed for demonstration purposes only.
 
 .. code-block:: python
 
@@ -85,25 +84,28 @@ Plot the Bayesian DAG.
 Compute Conditional Probability Distributions (CPDs)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-At this point we have the data set in our dataframe (df), and we have the DAG based on expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function :func:`bnlearn.bnlearn.parameter_learning.fit` which will compute the CPDs. See section :ref:`Parameter learning` to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!
+At this point we have the data set in our dataframe (df), and we have the **DAG** based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function :func:`bnlearn.bnlearn.parameter_learning.fit` which will compute the CPDs. See section :ref:`Parameter learning` to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!
 
 
-Parameter learning on the user-defined DAG and input data set.
+Parameter learning on the expert-DAG using the input data set.
 
 .. code-block:: python
 
-    # Check the current CPDs in the DAG. None are specified at this point so this will print empty.
+    # Check the current CPDs in the DAG.
     bnlearn.print_CPD(DAG)
     # [bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.
+    # This is correct, we dit not yet specify any CPD.
 
-    # Learn its parameters from data and perform the inference. As input we have the DAG without CPDs, the output will be a DAG with learned CPDs.
+    # Learn the parameters from data set. 
+    # As input we have the DAG without CPDs.
     DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
     # Print the CPDs
     bnlearn.print_CPD(DAG)
+    # At this point we have a DAG with the learned CPDs
 
 
-The learned Conditional Probability Distributions are depicted in the tables below. As an example, it can be seen that the probability of smoking (or not smoking) is similar. The probability that a patient does **not** smoke: P(smoke=0)=0.49 whereas the probability of a patient smoking, P(smoke=1)=0.5. 
+The learned Conditional Probability Distributions are depicted in the tables below. As an example, the probability that a patient does **not** smoke is P(smoke=0)=0.49 whereas the probability of a patient smoking is P(smoke=1)=0.5. 
 
 CPD of smoke:
 
@@ -113,7 +115,7 @@ CPD of smoke:
 | smoke(1) | 0.504727 |
 +----------+----------+
 
-Slightly more complicated are the patients that smoke and have lung-cancer which is basically a intersection. Logically, the more edges towards a node in combination with multiple catagories, the more complicated it becomes. Luckily we have ``bnlearn`` to do the heavy lifting!
+Slightly more complicated are the patients that smoke and have lung-cancer which is basically the intersection. The more edges towards a node the more complicated the CPD becomes. Luckily we have ``bnlearn`` to do the heavy lifting!
 
 CPD of lung:
 
@@ -151,7 +153,7 @@ CPD of xray:
 Make inferences
 ^^^^^^^^^^^^^^^^^^^
 
-When you are at this part, you combined your expert knowledge with a data set! Now we can make inferences which allows to ask questions to the model. I will demonstrate a few questions.
+When you are at this part, you combined your expert knowledge with a data set! Now we can make inferences which allows to ask questions to the model. Let me demonstrate a few questions.
 
 
 **Question 1**
@@ -247,18 +249,18 @@ The highest probability for the patient under these condition is that lung-cance
 Determine causalities when you have data
 '''''''''''''''''''''''''''''''''''''''''
 
-Suppose that we have the medical records of hundreds or even thousands patients treatments regarding shortness-of-breath (dyspnoea). What we want to know is to determine the dependencies and causality across variables given the data set.
+Suppose that we have the medical records of hundreds or even thousands patients treatment regarding shortness-of-breath (dyspnoea). Our goal is to determine the causality across variables given the data set.
 
 Steps to take
-	1. Import the data as described.
+	1. Import the data set.
 	2. Compute Directed Acyclic Graph by means of structure learning.
-	3. Compare to DAG from expert knowledge.
+	3. Compare to DAG to that of the expert-DAG.
 
 
 Compute Directed Acyclic Graph from data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-After importing and pre-processing the data set (:ref:`Import data`), we can start learning the structure in the form of a Directed Acyclic Graphs. More about Directed Acyclic Graphs can be found in the section :ref:`Directed Acyclic Graphs`. For this use-case we will compute the best performing DAG given the data set. ``bnlearn`` will do the heavy lifting, you only need to provide the dataframe into the function :func:`bnlearn.bnlearn.structure_learning.fit`.
+Import and process teh data set (:ref:`Import data`). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into ``bnlearn`` :func:`bnlearn.bnlearn.structure_learning.fit`. More about Directed Acyclic Graphs can be found in the section :ref:`Directed Acyclic Graphs`.
 
 .. code-block:: python
     
@@ -268,7 +270,7 @@ After importing and pre-processing the data set (:ref:`Import data`), we can sta
     # [bnlearn] >Computing best DAG using [hc]
     # [bnlearn] >Set scoring type at [bic]
 
-The computations can take seconds to hours or even days, depending on the complexity of your data set. In this case we have few variables, each with two states. If you readily have suspicion you can use the black_list or white_list parameters. 
+The computations can take seconds to days or even never-ending, depending on the complexity of your data set and the method in ``bnlearn`` you choose. This use-case contains only 8 variables, each with two states and will be computed within seconds. If your data set is huge, and readily have suspicion you can use the black_list or white_list parameters (:ref:`Black and white lists`).
 
 Lets plot the learned DAG and examine the structure!
 
@@ -277,7 +279,7 @@ Lets plot the learned DAG and examine the structure!
     # Plot the DAG
     bnlearn.plot(model)
 
-    # Plot differences between previous and new model
+    # Plot differences between expert-DAG and the computed-DAG
     bnlearn.compare_networks(model, DAG)
 
 
@@ -286,9 +288,9 @@ Lets plot the learned DAG and examine the structure!
 .. figure:: ../figs/asia_structurelearning.png
 
 
-A comparison with our initial expert-knowledge DAG shows few differences in **red**. As an example, we did not include the *either* variable, which describes either being lung-cancer or bronchitus.
+A comparison with our initial expert-DAG shows few differences in **red**. As an example, we did not include the *either* variable, which describes either being lung-cancer or bronchitus.
 
-.. _fig_asia_structurelearning:
+.. _fig_asia_dag_vs_model:
 
 .. figure:: ../figs/asia_dag_vs_model.png
 
@@ -296,10 +298,10 @@ A comparison with our initial expert-knowledge DAG shows few differences in **re
 Make inference when you have data
 '''''''''''''''''''''''''''''''''''''''''
 
-In this scenario we have the medical records of hundreds or even thousands patients treatments regarding shortness-of-breath (dyspnoea). The goal is to make inferences across variables given the data set.
+In this scenario we the goal is to make inferences across variables given the data set.
 
 Steps to take
-	1. Import the data
+	1. Import the data set
 	2. Compute Directed Acyclic Graph (DAG)
 	3. Compute Conditional Probability Distributions (CPDs)
 
@@ -407,3 +409,4 @@ What is the probability of lung-cancer or bronchitis, given that we know that pa
 +---------+----------+-------------------+
 
 The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51). 
+
