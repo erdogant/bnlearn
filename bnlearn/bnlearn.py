@@ -142,34 +142,32 @@ def print_CPD(DAG, checkmodel=False):
     """
     config = None
     if isinstance(DAG, dict):
-        config = DAG.get('config', None)
         DAG = DAG.get('model', None)
-
-    if config is None:
-        print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
-        return
 
     # Print CPDs
     # if config['method']=='ml' or config['method']=='maximumlikelihood':
-    if 'MaximumLikelihood' in str(type(DAG)):
-        # print CPDs using Maximum Likelihood Estimators
-        for node in DAG.state_names:
-            print(DAG.estimate_cpd(node))
-    elif 'BayesianModel' in str(type(DAG)):
-        # print CPDs using Bayesian Parameter Estimation
-        if len(DAG.get_cpds())==0:
-            print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
-            return
-        for cpd in DAG.get_cpds():
-            print("CPD of {variable}:".format(variable=cpd.variable))
-            print(cpd)
-
-        print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
-        print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
-        print('[bnlearn] >Edges: %s' %(DAG.edges()))
-
-    if checkmodel:
-        print('[bnlearn] >Model correct: %s' %(DAG.check_model()))
+    try:
+        if 'MaximumLikelihood' in str(type(DAG)):
+            # print CPDs using Maximum Likelihood Estimators
+            for node in DAG.state_names:
+                print(DAG.estimate_cpd(node))
+        elif 'BayesianModel' in str(type(DAG)):
+            # print CPDs using Bayesian Parameter Estimation
+            if len(DAG.get_cpds())==0:
+                print('[bnlearn] >This seems like an Bayesian DAG containing only edges, and no CPDs. Tip: use bnlearn.plot(DAG) to make a plot of the edges.')
+                return
+            for cpd in DAG.get_cpds():
+                print("CPD of {variable}:".format(variable=cpd.variable))
+                print(cpd)
+    
+            print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
+            print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
+            print('[bnlearn] >Edges: %s' %(DAG.edges()))
+    
+        if checkmodel:
+            print('[bnlearn] >Model correct: %s' %(DAG.check_model()))
+    except:
+        print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
 
 
 # %% Make DAG
@@ -236,7 +234,7 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     # Store
     out['model']=model
     out['adjmat']=adjmat
-    out['config']={}
+    # out['config']={}
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and (verbose>=3) and CPD:
