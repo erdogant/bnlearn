@@ -2,8 +2,8 @@
 #conda activate env_BNLEARN
 
 # conda install -c ankurankan pgmpy
-networkx
-matplotlib
+networkx>='2.5'
+matplotlib>='3.3.2'
 numpy
 pandas
 tqdm
