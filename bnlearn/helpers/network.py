@@ -378,7 +378,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
         # Bootup figure
         plt.figure(figsize=(width,height))
         # nodes
-        nx.draw_networkx_nodes(G_diff, pos, node_size=700, with_labels=True)
+        nx.draw_networkx_nodes(G_diff, pos, node_size=700)
         # edges
         colors  = [G_diff[u][v]['color'] for u,v in G_diff.edges()]
         #weights = [G_diff[u][v]['weight'] for u,v in G_diff.edges()]

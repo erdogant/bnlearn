@@ -604,7 +604,7 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     # Bootup figure
     plt.figure(figsize=figsize)
     # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=500, with_labels=True, alpha=0.85)
+    nx.draw_networkx_nodes(G, pos, node_size=500, alpha=0.85)
     # edges
     colors = [G[u][v].get('color','k') for u,v in G.edges()]
     weights = [G[u][v].get('weight',1) for u,v in G.edges()]
