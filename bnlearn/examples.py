@@ -1,7 +1,7 @@
 # %%
 import bnlearn as bn
 print(bn.__version__)
-dir(bn)
+print(dir(bn))
 
 # %%
 dir(bn.structure_learning)
@@ -15,7 +15,7 @@ G = bn.plot(model)
 
 
 # %% Load example dataframe from sprinkler
-df = bn.import_example()
+df = bn.import_example('sprinkler')
 # Structure learning
 model = bn.structure_learning.fit(df)
 # Plot
@@ -37,14 +37,16 @@ bn.compare_networks(model, model_hc_bic, pos=G['pos'])
 # %% Example with dataset
 import bnlearn as bn
 DAG = bn.import_DAG('sprinkler')
+# Print cpds
+bn.print_CPD(DAG)
 # plot ground truth
 G = bn.plot(DAG)
 
 # %% Inference using custom DAG
-from tabulate import tabulate
-# Load asia DAG
 import bnlearn as bn
+# Load asia DAG
 df = bn.import_example('asia')
+# from tabulate import tabulate
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 print(df)
 
@@ -52,6 +54,9 @@ edges = [('smoke', 'lung'),
          ('smoke', 'bronc'),
          ('lung', 'xray'),
          ('bronc', 'xray')]
+
+# edges = [('smoke', 'xray'),
+         # ('bronc', 'lung')]
 
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges)
@@ -61,7 +66,7 @@ bn.plot(DAG)
 bn.print_CPD(DAG)
 
 # Learn its parameters from data and perform the inference.
-DAG = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
+DAG = bn.parameter_learning.fit(DAG, df)
 # Print the CPDs
 bn.print_CPD(DAG)
 
