@@ -20,17 +20,15 @@ Currently, the library supports parameter learning for *discrete* nodes:
 
 
 # %% Libraries
-from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator  # ParameterEstimator
-from pgmpy.models import BayesianModel
-from bnlearn.bnlearn import adjmat2vec
+from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator
 from bnlearn.bnlearn import _filter_df
 from bnlearn.bnlearn import to_BayesianModel
-import numpy as np
+
 
 # %% Sampling from model
 def fit(model, df, methodtype='bayes', verbose=3):
     """Learn the parameters given the DAG and data.
-    
+
     Description
     -----------
     Maximum Likelihood Estimation

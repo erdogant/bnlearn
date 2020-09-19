@@ -1,4 +1,4 @@
-"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables. """
+"""Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables."""
 # ------------------------------------
 # Name        : structure_learning.py
 # Author      : E.Taskesen
@@ -8,11 +8,10 @@
 
 
 # %% Libraries
-import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pgmpy
+# import pgmpy
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
 # from packaging import version
