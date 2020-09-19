@@ -22,21 +22,25 @@ from packaging import version
 try:
     import pgmpy
 except:
-    raise ImportError('pgmpy v0.1.10 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy>')
+    raise ImportError('[bnlearn] >Error: pgmpy v0.1.10 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy>')
 
 # Check version pgmpy
 if version.parse(pgmpy.__version__)<version.parse("0.1.10"): 
-    raise Exception('This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>')
+    raise Exception('[bnlearn] >Error: This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>')
 
 # Version check
 import matplotlib
 if not version.parse(matplotlib.__version__) > version.parse("3.1.1"):
-    print('[BNLEARN] Error: Matplotlib version is advised to be to be > v3.1.1.\nTry to: pip install -U matplotlib')
+    print('[bnlearn] >Error: Matplotlib version should be > v3.1.1.\nTry to: pip install -U matplotlib')
+
+import networkx as nx
+if not version.parse(nx.__version__) > version.parse("2.5"):
+    print('[bnlearn] >Error: networkx version should be > 2.5.\nTry to: pip install -U networkx')
 
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.7'
+__version__ = '0.3.8'
 
 # module level doc-string
 __doc__ = """
@@ -61,15 +65,25 @@ Description
 
 Example
 -------
->>> import bnlearn
->>> model = bnlearn.import_DAG('sprinkler')
->>> df = bnlearn.import_example()
->>> df = bnlearn.sampling(model)
->>> q = bnlearn.inference.fit(model)
->>> model_sl = bnlearn.structure_learning.fit(df)
->>> model_pl = bnlearn.parameter_learning.fit(model_sl, df)
->>> [scores, adjmat] = bnlearn.compare_networks(model_sl, model)
-
+>>> # Import library
+>>> import bnlearn as bn
+>>> model = bn.import_DAG('sprinkler')
+>>> bn.plot(model)
+>>>
+>>> # Import example
+>>> df = bn.import_example('sprinkler')
+>>> df = bn.sampling(model)
+>>>
+>>> # Do the inference
+>>> q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+>>> q2 = bn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+>>>
+>>> # Structure learning
+>>> model_sl = bn.structure_learning.fit(df)
+>>> # Parameter learning
+>>> model_pl = bn.parameter_learning.fit(model_sl, df)
+>>> # Compare networks
+>>> scores, adjmat = bn.compare_networks(model_sl, model)
 
 References
 ----------
