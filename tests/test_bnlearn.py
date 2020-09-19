@@ -8,18 +8,18 @@ import numpy as np
 def test_import_DAG():
     DAG = bn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
-    assert [*DAG.keys()]==['model','adjmat','config']
+    assert [*DAG.keys()]==['model','adjmat']
     # TEST 2: Check model output is unchanged
     assert DAG['adjmat'].sum().sum()==4
     # TEST 3:
     assert 'pgmpy.models.BayesianModel.BayesianModel' in str(type(DAG['model']))
     # TEST 4:
     DAG = bn.import_DAG('alarm', verbose=0)
-    assert [*DAG.keys()]==['model','adjmat', 'config']
+    assert [*DAG.keys()]==['model','adjmat']
     DAG = bn.import_DAG('andes', verbose=0)
-    assert [*DAG.keys()]==['model','adjmat', 'config']
+    assert [*DAG.keys()]==['model','adjmat']
     DAG = bn.import_DAG('asia', verbose=0)
-    assert [*DAG.keys()]==['model','adjmat', 'config']
+    assert [*DAG.keys()]==['model','adjmat']
 
 
 def test_make_DAG():

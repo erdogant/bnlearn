@@ -234,7 +234,6 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     # Store
     out['model']=model
     out['adjmat']=adjmat
-    # out['config']={}
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and (verbose>=3) and CPD:
