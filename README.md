@@ -77,15 +77,15 @@ bn.df2onehot()
 
 ## Requirements
 * It is advisable to create a new environment. 
+
 ```python
-conda create -n env_BNLEARN python=3.6
-conda activate env_BNLEARN
+conda create -n env_bnlearn python=3.6
+conda activate env_bnlearn
 conda install -c ankurankan pgmpy
-#conda install pytorch -c pytorch
 
 # You may need to deactivate and then activate your environment otherwise the packages may not been recognized.
 conda deactivate
-conda activate env_BNLEARN
+conda activate env_bnlearn
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
 pip install sklearn pandas tqdm funcsigs statsmodels community packaging
@@ -100,21 +100,21 @@ pip install bnlearn
 ```bash
 git clone https://github.com/erdogant/bnlearn.git
 cd bnlearn
-python setup.py install
+pip install -U .
 ```  
 
 ## Import bnlearn package
 ```python
- import bnlearn
+import bnlearn as bn
 ```
 
 ## Example: Structure Learning
 ```python
 # Example dataframe sprinkler_data.csv can be loaded with: 
-df = bnlearn.import_example()
+df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
-model = bnlearn.structure_learning.fit(df)
-G = bnlearn.plot(model)
+model = bn.structure_learning.fit(df)
+G = bn.plot(model)
 ```
 
 #### df looks like this
@@ -139,37 +139,37 @@ G = bnlearn.plot(model)
 
 * Choosing various methodtypes and scoringtypes:
 ```python
-model_hc_bic  = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-model_hc_k2   = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
-model_hc_bdeu = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
-model_ex_bic  = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
-model_ex_k2   = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
-model_ex_bdeu = bnlearn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_hc_k2   = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 ```
 
 ## Example: Parameter Learning
 ```python
 # Import dataframe
-df = bnlearn.import_example()
+df = bn.import_example()
 # As an example we set the CPD at False which returns an "empty" DAG
-model = bnlearn.import_DAG('sprinkler', CPD=False)
+model = bn.import_DAG('sprinkler', CPD=False)
 # Now we learn the parameters of the DAG using the df
-model_update = bnlearn.parameter_learning.fit(model, df)
+model_update = bn.parameter_learning.fit(model, df)
 # Make plot
-G = bnlearn.plot(model_update)
+G = bn.plot(model_update)
 ```
 
 ## Example: Inference
 ```python
-model = bnlearn.import_DAG('sprinkler')
-q_1 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
-q_2 = bnlearn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
+model = bn.import_DAG('sprinkler')
+q_1 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
+q_2 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
 ```
 
 ## Example: Sampling to create dataframe
 ```python
-model = bnlearn.import_DAG('sprinkler')
-df = bnlearn.sampling(model, n=1000)
+model = bn.import_DAG('sprinkler')
+df = bn.sampling(model, n=1000)
 ```
 
 * Output of the model:
@@ -228,23 +228,23 @@ bif_file= 'miserables'
 bif_file= 'filepath/to/model.bif'
 
 # Loading example dataset
-model = bnlearn.import_DAG(bif_file)
+model = bn.import_DAG(bif_file)
 ```
 
 ## Example: Comparing networks
 ```python
 # Load asia DAG
-model = bnlearn.import_DAG('asia')
+model = bn.import_DAG('asia')
 # plot ground truth
-G = bnlearn.plot(model)
+G = bn.plot(model)
 # Sampling
-df = bnlearn.sampling(model, n=10000)
+df = bn.sampling(model, n=10000)
 # Structure learning of sampled dataset
-model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
-bnlearn.plot(model_sl, pos=G['pos'])
+bn.plot(model_sl, pos=G['pos'])
 # Compare networks and make plot
-bnlearn.compare_networks(model, model_sl, pos=G['pos'])
+bn.compare_networks(model, model_sl, pos=G['pos'])
 ```
 
 #### Graph of ground truth
