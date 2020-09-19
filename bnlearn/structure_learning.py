@@ -159,7 +159,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
-        out = _hillclimbsearch(df, 
+        out = _hillclimbsearch(df,
                                scoretype=config['scoring'],
                                black_list=config['black_list'],
                                white_list=config['white_list'],
@@ -206,14 +206,14 @@ def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verb
             if verbose>=3: print('[bnlearn] >Filter variables on white_list..')
             white_list = [x.lower() for x in white_list]
             Iloc = np.isin(df.columns.str.lower(), white_list)
-            df = df.loc[:,Iloc]
+            df = df.loc[:, Iloc]
 
         # Exclude variables that are in black_list.
         if black_list is not None:
             if verbose>=3: print('[bnlearn] >Filter variables on black_list..')
             black_list = [x.lower() for x in black_list]
             Iloc = ~np.isin(df.columns.str.lower(), black_list)
-            df = df.loc[:,Iloc]
+            df = df.loc[:, Iloc]
 
         if (white_list is not None) or (black_list is not None):
             if verbose>=3: print('[bnlearn]  >Number of features after white/black listing: %d' %(df.shape[1]))

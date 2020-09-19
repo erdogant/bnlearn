@@ -24,12 +24,12 @@ from pgmpy import readwrite
 import bnlearn.helpers.network as network
 
 curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA = os.path.join(curpath,'DATA')
+PATH_TO_DATA = os.path.join(curpath, 'DATA')
 
 
 # %% Convert adjmat to bayesian model
 def to_BayesianModel(model, verbose=3):
-    """ Convert adjacency matrix to BayesianModel.
+    """Convert adjacency matrix to BayesianModel.
 
     Description
     -----------
@@ -54,15 +54,15 @@ def to_BayesianModel(model, verbose=3):
 
     """
     if isinstance(model, dict):
-        adjmat = model.get('adjmat',None)
+        adjmat = model.get('adjmat', None)
     else:
         adjmat = model
     if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_BayesianModel" should be adjmat or a dict containing a key "adjmat".')
 
     if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianModel.')
-    
+
     # Convert to vector
-    vec = adjmat2vec(adjmat)[['source','target']].values.tolist()
+    vec = adjmat2vec(adjmat)[['source', 'target']].values.tolist()
     # Make BayesianModel
     bayesianmodel = BayesianModel(vec)
     # Return
@@ -115,7 +115,7 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
 
         if checkmodel:
             print('[bnlearn] >Model correct: %s' %(DAG.check_model()))
-    
+
     # Create adjacency matrix from DAG
     out = {}
     out['adjmat'] = _dag2adjmat(DAG)
@@ -140,9 +140,10 @@ def print_CPD(DAG, checkmodel=False):
     None.
 
     """
-    config = DAG.get('config', None)
+    config = None
     if isinstance(DAG, dict):
-        DAG = DAG['model']
+        config = DAG.get('config', None)
+        DAG = DAG.get('model', None)
 
     if config is None:
         print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
@@ -155,7 +156,6 @@ def print_CPD(DAG, checkmodel=False):
         for node in DAG.state_names:
             print(DAG.estimate_cpd(node))
     elif 'BayesianModel' in str(type(DAG)):
-    # elif config['method']=='bayes':
         # print CPDs using Bayesian Parameter Estimation
         if len(DAG.get_cpds())==0:
             print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
@@ -195,8 +195,9 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
 
     Examples
     --------
-    >>> model = bnlearn.import_DAG('sprinkler')
-    >>> bnlearn.plot(model)
+    >>> import bnlearn as bn
+    >>> model = bn.import_DAG('sprinkler')
+    >>> bn.plot(model)
 
     """
     out=dict()
@@ -207,17 +208,17 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
     if filepath=='sprinkler':
         model = _DAG_sprinkler(CPD=CPD)
     elif filepath=='asia':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ASIA/asia.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ASIA/asia.bif'), verbose=verbose)
     elif filepath=='alarm':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ALARM/alarm.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ALARM/alarm.bif'), verbose=verbose)
     elif filepath=='andes':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'ANDES/andes.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ANDES/andes.bif'), verbose=verbose)
     elif filepath=='pathfinder':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'PATHFINDER/pathfinder.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'PATHFINDER/pathfinder.bif'), verbose=verbose)
     elif filepath=='sachs':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA,'SACHS/sachs.bif'), verbose=verbose)
+        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'SACHS/sachs.bif'), verbose=verbose)
     elif filepath=='miserables':
-        f = open(os.path.join(PATH_TO_DATA,'miserables.json'))
+        f = open(os.path.join(PATH_TO_DATA, 'miserables.json'))
         data = json.loads(f.read())
         L=len(data['links'])
         edges=[(data['links'][k]['source'], data['links'][k]['target']) for k in range(L)]
@@ -229,29 +230,31 @@ def import_DAG(filepath='sprinkler', CPD=True, verbose=3):
             if verbose>=3: print('[BNLEARN][import_DAG] Filepath does not exist! <%s>' %(filepath))
             return(out)
 
-    # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
-    if not isinstance(model, type(None)) and verbose>=3 and CPD:
-        print_CPD(model)
-
     # Setup adjacency matrix
     adjmat = _dag2adjmat(model)
-    
+
     # Store
     out['model']=model
     out['adjmat']=adjmat
+    out['config']={}
+
+    # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
+    if (model is not None) and (verbose>=3) and CPD:
+        print_CPD(out)
+
     return(out)
 
 
 # %% Convert DAG into adjacency matrix
 def _dag2adjmat(model, verbose=3):
     adjmat = None
-    if hasattr(model,'nodes') and  hasattr(model,'edges'):
+    if hasattr(model, 'nodes') and hasattr(model, 'edges'):
         adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
         # Fill adjmat with edges
         edges = model.edges()
         # Run over the edges
         for edge in edges:
-            adjmat.loc[edge[0],edge[1]]=True
+            adjmat.loc[edge[0], edge[1]]=True
         adjmat.index.name='source'
         adjmat.columns.name='target'
     else:
@@ -276,7 +279,7 @@ def vec2adjmat(source, target, symmetric=True):
     -------
     pd.DataFrame
         adjacency matrix.
-    
+
     Examples
     --------
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
@@ -284,12 +287,12 @@ def vec2adjmat(source, target, symmetric=True):
     >>> vec2adjmat(source, target)
 
     """
-    df = pd.DataFrame(np.c_[source, target], columns=['source','target'])
+    df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     # Make adjacency matrix
     adjmat = pd.crosstab(df['source'], df['target'])
     # Get all unique nodes
     # nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
-    nodes = np.unique(list(adjmat.columns.values)+list(adjmat.index.values))
+    nodes = np.unique(list(adjmat.columns.values) + list(adjmat.index.values))
 
     # Make the adjacency matrix symmetric
     if symmetric:
@@ -307,7 +310,7 @@ def vec2adjmat(source, target, symmetric=True):
 
         # Sort to make ordering of columns and rows similar
         [IA, IB] = ismember(adjmat.columns.values, adjmat.index.values)
-        adjmat = adjmat.iloc[IB,:]
+        adjmat = adjmat.iloc[IB, :]
         adjmat.index.name='source'
         adjmat.columns.name='target'
 
@@ -348,14 +351,14 @@ def adjmat2vec(adjmat, min_weight=1):
     Iloc2 = adjmat['weight']>=min_weight
     Iloc = Iloc1 & Iloc2
     # Take only connected nodes
-    adjmat = adjmat.loc[Iloc,:]
+    adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
     return(adjmat)
 
 
 # %% Sampling from model
 def sampling(model, n=1000, verbose=3):
-    """Generates sample(s) using forward sampling from joint distribution of the bayesian network.
+    """Generate sample(s) using forward sampling from joint distribution of the bayesian network.
 
     Parameters
     ----------
@@ -499,14 +502,14 @@ def to_undirected(adjmat):
 
     for i in range(num_rows):
         for j in range(num_cols):
-            adjmat_directed[i,j] = tmpadjmat.iloc[i,j] + tmpadjmat.iloc[j,i]
+            adjmat_directed[i,j] = tmpadjmat.iloc[i, j] + tmpadjmat.iloc[j, i]
 
     adjmat_directed=pd.DataFrame(index=adjmat.index, data=adjmat_directed, columns=adjmat.columns, dtype=bool)
     return(adjmat_directed)
 
 
 # %% Comparison of two networks
-def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), verbose=3):
+def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), verbose=3):
     """Compare networks of two models.
 
     Parameters
@@ -537,7 +540,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15,8), v
 
 
 # %% PLOT
-def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
+def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     """Plot the learned stucture.
 
     Parameters
@@ -588,16 +591,6 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     else:
         if verbose>=3: print('[BNLEARN][plot] Making plot based on adjacency matrix')
         G = network.adjmat2graph(model)
-        # Convert adjmat to source target
-        # df_edges=model.stack().reset_index()
-        # df_edges.columns=['source', 'target', 'weight']
-        # df_edges['weight']=df_edges['weight'].astype(float)
-
-        # # Add directed edge with weigth
-        # for i in range(df_edges.shape[0]):
-        #     if df_edges['weight'].iloc[i]!=0:
-        #         color='k' if df_edges['weight'].iloc[i]>0 else 'r'
-        #         G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
         # Get positions
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
 
@@ -606,15 +599,15 @@ def plot(model, pos=None, scale=1, figsize=(15,8), verbose=3):
     # nodes
     nx.draw_networkx_nodes(G, pos, node_size=500, alpha=0.85)
     # edges
-    colors = [G[u][v].get('color','k') for u,v in G.edges()]
-    weights = [G[u][v].get('weight',1) for u,v in G.edges()]
+    colors = [G[u][v].get('color', 'k') for u, v in G.edges()]
+    weights = [G[u][v].get('weight', 1) for u, v in G.edges()]
     nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=colors, width=weights)
     # Labels
     nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
     # Get labels of weights
     # labels = nx.get_edge_attributes(G,'weight')
     # Plot weights
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G,'weight'))
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'))
     # Making figure nice
     ax = plt.gca()
     ax.set_axis_off()
@@ -633,7 +626,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     Parameters
     ----------
     data : str, (default: sprinkler)
-        Pre-defined examples. 
+        Pre-defined examples.
         'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'pathfinder', 'sachs'
     n : int, optional
         Number of samples to generate. The default is 1000.
@@ -707,15 +700,15 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     # Convert dataframe to onehot by keeping only categorical variables.
     out = df2onehot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)
     # Numerical
-    df_num = out['numeric'].iloc[:,out['dtypes']=='cat']
+    df_num = out['numeric'].iloc[:, out['dtypes']=='cat']
     df_num = df_num.astype(int)
     # One-hot
     df_hot = out['onehot']
-    df_hot.columns = df_hot.columns.str.replace('_4.0','_4')
-    df_hot.columns = df_hot.columns.str.replace('_3.0','_3')
-    df_hot.columns = df_hot.columns.str.replace('_2.0','_2')
-    df_hot.columns = df_hot.columns.str.replace('_1.0','_1')
-    df_hot.columns = df_hot.columns.str.replace('_0.0','_0')
+    df_hot.columns = df_hot.columns.str.replace('_4.0', '_4')
+    df_hot.columns = df_hot.columns.str.replace('_3.0', '_3')
+    df_hot.columns = df_hot.columns.str.replace('_2.0', '_2')
+    df_hot.columns = df_hot.columns.str.replace('_1.0', '_1')
+    df_hot.columns = df_hot.columns.str.replace('_0.0', '_0')
 
     return df_hot, df_num
 
@@ -727,52 +720,3 @@ def _filter_df(adjmat, df, verbose=3):
         if verbose>=3: print('[bnlearn] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
         df.drop(labels=remcols, axis=1, inplace=True)
     return df
-
-# def _check_adjmat(model, df):
-#     """Adjacency matrix and dataframe columns are checked for consistency."""
-#     adjmat = model['adjmat'].copy()
-#     cols = df.columns[~np.isin(df.columns.values, adjmat.columns.values)].values
-#     rows = df.columns[~np.isin(df.columns.values, adjmat.index.values)].values
-#     # Check the columns of adjmat
-#     if np.any(cols):
-#         for col in cols:
-#             adjmat[col] = False
-#     # Check the rows of adjmat
-#     if np.any(rows):
-#         adjmat = adjmat.T
-#         for row in rows:
-#             adjmat[row] = False
-#         adjmat = adjmat.T
-#     # Sort cols/rows similar
-#     idx = np.argsort(adjmat.columns.values)
-#     adjmat = adjmat.iloc[idx,idx]
-#     # Return
-#     model['adjmat'] = adjmat
-#     return adjmat, model
-
-
-# %% Convert Adjmat to graph (G)
-# def adjmat2graph(adjmat):
-#     G = nx.DiGraph() # Directed graph
-#     # Convert adjmat to source target
-#     df_edges=adjmat.stack().reset_index()
-#     df_edges.columns=['source', 'target', 'weight']
-#     df_edges['weight']=df_edges['weight'].astype(float)
-
-#     # Add directed edge with weigth
-#     for i in range(df_edges.shape[0]):
-#         if df_edges['weight'].iloc[i]!=0:
-#             # Setup color
-#             if df_edges['weight'].iloc[i]==1:
-#                 color='k'
-#             elif df_edges['weight'].iloc[i]>1:
-#                 color='r'
-#             elif df_edges['weight'].iloc[i]<0:
-#                 color='b'
-#             else:
-#                 color='p'
-
-#             # Create edge in graph
-#             G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)
-#     # Return
-#     return(G)
