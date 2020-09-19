@@ -86,23 +86,25 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     Examples
     --------
+    >>> import bnlearn as bn
+    >>>
     >>> # Load asia DAG
-    >>> model = bnlearn.import_DAG('asia')
+    >>> model = bn.import_DAG('asia')
     >>>
     >>> # plot ground truth
-    >>> G = bnlearn.plot(model)
+    >>> G = bn.plot(model)
     >>>
     >>> # Sampling
-    >>> df = bnlearn.sampling(model, n=10000)
+    >>> df = bn.sampling(model, n=10000)
     >>>
     >>> # Structure learning of sampled dataset
-    >>> model_sl = bnlearn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    >>> model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     >>>
     >>> # Plot based on structure learning of sampled data
-    >>> bnlearn.plot(model_sl, pos=G['pos'])
+    >>> bn.plot(model_sl, pos=G['pos'])
     >>>
     >>> # Compare networks and make plot
-    >>> bnlearn.compare_networks(model, model_sl, pos=G['pos'])
+    >>> bn.compare_networks(model, model_sl, pos=G['pos'])
 
     """
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
@@ -285,29 +287,28 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
 
 # %% hillclimbsearch
 def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, epsilon=1e-4, max_iter=1e6, bw_list_method='enforce', verbose=3):
-    """ heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
-    
+    """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
+
     Description
     -----------
     Performs local hill climb search to estimates the `DAG` structure
     that has optimal score, according to the scoring method supplied in the constructor.
     Starts at model `start` and proceeds by step-by-step network modifications
     until a local maximum is reached. Only estimates network structure, no parametrization.
-        
+
     Once more nodes are involved, one needs to switch to heuristic search.
     HillClimbSearch implements a greedy local search that starts from the DAG
     "start" (default: disconnected DAG) and proceeds by iteratively performing
     single-edge manipulations that maximally increase the score.
     The search terminates once a local maximum is found.
-    
+
     For details on scoring see Koller & Friedman, Probabilistic Graphical Models, Section 18.4.3.3 (page 818).
     If a number `max_indegree` is provided, only modifications that keep the number
     of parents for each node below `max_indegree` are considered. A list of
     edges can optionally be passed as `black_list` or `white_list` to exclude those
     edges or to limit the search.
-    
-    """
 
+    """
     out=dict()
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype)

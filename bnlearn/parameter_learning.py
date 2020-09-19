@@ -49,7 +49,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
         be done seperately for `10^3 = 1000` parents configurations.
         This makes MLE very fragile and unstable for learning Bayesian Network parameters.
         A way to mitigate MLE's overfitting is *Bayesian Parameter Estimation*.
-    
+
     Bayesian Parameter Estimation
         The Bayesian Parameter Estimator starts with already existing prior CPDs,
         that express our beliefs about the variables *before* the data was observed.
@@ -59,7 +59,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
         to the actual counts before normalization. Unless one wants to encode specific beliefs
         about the distributions of the variables, one commonly chooses uniform priors,
         i.e. ones that deem all states equiprobable.
-    
+
         A very simple prior is the so-called *K2* prior, which simply adds `1` to the count of every single state.
         A somewhat more sensible choice of prior is *BDeu* (Bayesian Dirichlet equivalent uniform prior).
         For BDeu we need to specify an *equivalent sample size* `N` and then the pseudo-counts are
@@ -76,13 +76,12 @@ def fit(model, df, methodtype='bayes', verbose=3):
         Options are: 'ml' or 'maximumlikelihood' for learning CPDs using Maximum Likelihood Estimators. or 'bayes' for Bayesian Parameter Estimation.
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
-
+            * 0: NONE
+            * 1: ERROR
+            * 2: WARNING
+            * 3: INFO (default)
+            * 4: DEBUG
+            * 5: TRACE
 
     Returns
     -------
@@ -90,16 +89,20 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     Examples
     --------
-    >>> df = bnlearn.import_example()
-    >>> model = bnlearn.import_DAG('sprinkler', CPD=False)
-    >>> model_update = bnlearn.parameter_learning.fit(model, df)
-    >>> bnlearn.plot(model_update)
+    >>> import bnlearn as bn
+    >>>
+    >>> df = bn.import_example()
+    >>> model = bn.import_DAG('sprinkler', CPD=False)
+    >>>
+    >>> # Parameter learning
+    >>> model_update = bn.parameter_learning.fit(model, df)
+    >>> bn.plot(model_update)
     >>>
     >>> # LOAD BIF FILE
-    >>> model = bnlearn.import_DAG('alarm')
-    >>> df = bnlearn.sampling(model, n=1000)
-    >>> model_update = bnlearn.parameter_learning.fit(model, df)
-    >>> G = bnlearn.plot(model_update)
+    >>> model = bn.import_DAG('alarm')
+    >>> df = bn.sampling(model, n=1000)
+    >>> model_update = bn.parameter_learning.fit(model, df)
+    >>> G = bn.plot(model_update)
 
     """
     config = {}

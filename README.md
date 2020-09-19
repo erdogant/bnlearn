@@ -14,31 +14,43 @@
 ### Method overview
 Learning a Bayesian network can be split into two problems which are both implemented in this package:
 * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-* Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, e
-stimate the (conditional) probability distributions of the individual variables.
+* Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
 
-#### The following functions are available after importing bnlearn.
+#### The following functions are available after importing bn.
+
 ```python
+# Import library
+import bnlearn as bn
+
 # Structure learning
-bnlearn.structure_learning.fit()
+bn.structure_learning.fit()
+
 # Parameter learning
-bnlearn.parameter_learning.fit()
+bn.parameter_learning.fit()
+
 # Inference
-bnlearn.inference.fit()
+bn.inference.fit()
+
 # Based on a DAG, you can sample the number of samples you want.
-bnlearn.sampling()
+bn.sampling()
+
 # Load well known examples to play arround with or load your own .bif file.
-bnlearn.import_DAG()
+bn.import_DAG()
+
 # Load simple dataframe of sprinkler dataset.
-bnlearn.import_example()
+bn.import_example()
+
 # Compare 2 graphs
-bnlearn.compare_networks()
+bn.compare_networks()
+
 # Plot graph
-bnlearn.plot()
+bn.plot()
+
 # To make the directed grapyh undirected
-bnlearn.to_undirected()
+bn.to_undirected()
+
 # Convert to one-hot datamatrix
-bnlearn.df2onehot()
+bn.df2onehot()
  
 # See below for the exact working of the functions
 ```

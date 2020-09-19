@@ -19,6 +19,7 @@ from pgmpy.inference import VariableElimination
 from bnlearn.bnlearn import to_BayesianModel
 import numpy as np
 
+
 # %% Exact inference using Variable Elimination
 def fit(model, variables=None, evidence=None, verbose=3):
     """Inference using using Variable Elimination.
@@ -29,20 +30,20 @@ def fit(model, variables=None, evidence=None, verbose=3):
         Contains model.
     variables : List, optional
         For exact inference, P(variables | evidence). The default is None.
-        ['Name_of_node_1']
-        ['Name_of_node_1', 'Name_of_node_2']
+            * ['Name_of_node_1']
+            * ['Name_of_node_1', 'Name_of_node_2']
     evidence : dict, optional
         For exact inference, P(variables | evidence). The default is None.
-        {'Rain':1}
-        {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
+            * {'Rain':1}
+            * {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
+            * 0: NONE
+            * 1: ERROR
+            * 2: WARNING
+            * 3: INFO (default)
+            * 4: DEBUG
+            * 5: TRACE
 
     Returns
     -------
@@ -50,11 +51,15 @@ def fit(model, variables=None, evidence=None, verbose=3):
 
     Examples
     --------
-    >>> import bnlearn
-    >>> model = bnlearn.import_DAG('sprinkler')
-    >>> bnlearn.plot(model)
-    >>> q1 = bnlearn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
-    >>> q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+    >>> import bnlearn as bn
+    >>>
+    >>> # Load example data
+    >>> model = bn.import_DAG('sprinkler')
+    >>> bn.plot(model)
+    >>>
+    >>> # Do the inference
+    >>> q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+    >>> q2 = bn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
     """
     if not isinstance(model, dict): raise Exception('[bnlearn] >Error: Input requires a DAG that contains the key: model.')
