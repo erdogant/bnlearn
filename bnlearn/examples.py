@@ -41,6 +41,7 @@ DAG = bn.import_DAG('sprinkler')
 bn.print_CPD(DAG)
 # plot ground truth
 G = bn.plot(DAG)
+df = bn.sampling(DAG, n=100)
 
 # %% Inference using custom DAG
 import bnlearn as bn
