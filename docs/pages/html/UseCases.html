@@ -1,8 +1,7 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
@@ -12,12 +11,18 @@
   
 
   
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
   
   
   
 
   
-  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -29,10 +34,6 @@
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="bnlearn.structure_learning" href="bnlearn.structure_learning.html" />
@@ -50,7 +51,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home"> bnlearn
+            <a href="index.html" class="icon icon-home" alt="Documentation Home"> bnlearn
           
 
           
@@ -73,6 +74,7 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
@@ -93,11 +95,11 @@
 </ul>
 <p class="caption"><span class="caption-text">Methods</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Structure learning.html">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sampling and datasets.html">Sampling and datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Create DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
@@ -131,6 +133,7 @@
             
           
         </div>
+        
       </div>
     </nav>
 
@@ -169,7 +172,7 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="index.html">Docs</a> &raquo;</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
       <li>Use Case Medical domain</li>
     
@@ -292,7 +295,7 @@
 </div>
 <div class="section" id="make-inferences-when-you-have-data-and-know-how">
 <h2>Make inferences when you have data and know-how<a class="headerlink" href="#make-inferences-when-you-have-data-and-know-how" title="Permalink to this headline">¶</a></h2>
-<p>Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, <a class="reference internal" href="Create DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences <a class="reference internal" href="Inference.html#inference"><span class="std std-ref">Inference</span></a>.</p>
+<p>Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences <a class="reference internal" href="Inference.html#inference"><span class="std std-ref">Inference</span></a>.</p>
 <dl class="simple">
 <dt>Aim: Make inferences about shortness-of-breath (dyspnoea) when:</dt><dd><ol class="arabic simple">
 <li><p>You have measured data and imported: <a class="reference internal" href="#import-data"><span class="std std-ref">Import data</span></a>.</p></li>
@@ -323,7 +326,7 @@
 </div>
 <div class="section" id="compute-conditional-probability-distributions-cpds">
 <h3>Compute Conditional Probability Distributions (CPDs)<a class="headerlink" href="#compute-conditional-probability-distributions-cpds" title="Permalink to this headline">¶</a></h3>
-<p>At this point we have the data set in our dataframe (df), and we have the <strong>DAG</strong> based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.parameter_learning.fit()</span></code> which will compute the CPDs. See section <a class="reference internal" href="Parameter learning.html#parameter-learning"><span class="std std-ref">Parameter learning</span></a> to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!</p>
+<p>At this point we have the data set in our dataframe (df), and we have the <strong>DAG</strong> based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.parameter_learning.fit()</span></code> which will compute the CPDs. See section <a class="reference internal" href="Parameter%20learning.html#parameter-learning"><span class="std std-ref">Parameter learning</span></a> to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!</p>
 <p>Parameter learning on the expert-DAG using the input data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the current CPDs in the DAG.</span>
 <span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
@@ -578,7 +581,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </dl>
 <div class="section" id="compute-directed-acyclic-graph-from-data">
 <h3>Compute Directed Acyclic Graph from data<a class="headerlink" href="#compute-directed-acyclic-graph-from-data" title="Permalink to this headline">¶</a></h3>
-<p>Import and process teh data set (<a class="reference internal" href="#import-data"><span class="std std-ref">Import data</span></a>). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_learning.fit()</span></code>. More about Directed Acyclic Graphs can be found in the section <a class="reference internal" href="Create DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>.</p>
+<p>Import and process teh data set (<a class="reference internal" href="#import-data"><span class="std std-ref">Import data</span></a>). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_learning.fit()</span></code>. More about Directed Acyclic Graphs can be found in the section <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Structure learning on the data set</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
@@ -851,11 +854,19 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 
   <div role="contentinfo">
     <p>
+        
         &copy; Copyright 2020, Erdogan Taskesen
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -866,7 +877,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 
   </div>
   
-
 
   <script type="text/javascript">
       jQuery(function () {
