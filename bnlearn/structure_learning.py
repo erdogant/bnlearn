@@ -11,10 +11,11 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-# import pgmpy
+
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch
-from pgmpy.estimators import PC as ConstraintBasedEstimator
+from pgmpy.estimators import ConstraintBasedEstimator
+# from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 # from packaging import version
 from bnlearn.bnlearn import _dag2adjmat
@@ -326,7 +327,8 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Compute best DAG
     if bw_list_method=='enforce':
         if (black_list is not None) or (white_list is not None):
-            if verbose>=3: print('[bnlearn]  >Enforcing nodes based on black_list and/or white_list.')
+            if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
+        # best_model = model.estimate()
         best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).

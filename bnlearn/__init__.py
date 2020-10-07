@@ -14,9 +14,9 @@ from bnlearn.bnlearn import (
 )
 
 # Import function in new level
-import bnlearn.structure_learning
-import bnlearn.parameter_learning
-import bnlearn.inference
+import bnlearn.structure_learning as structure_learning
+import bnlearn.parameter_learning as parameter_learning
+import bnlearn.inference as inference
 from packaging import version
 
 try:
@@ -25,8 +25,8 @@ except:
     raise ImportError('[bnlearn] >Error: pgmpy v0.1.10 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy>')
 
 # Check version pgmpy
-if version.parse(pgmpy.__version__)<version.parse("0.1.10"): 
-    raise Exception('[bnlearn] >Error: This release requires pgmpy to be v0.1.10. or higher. Try to: <conda install -c ankurankan pgmpy>')
+if version.parse(pgmpy.__version__)!=version.parse("0.1.11"):
+    raise Exception('[bnlearn] >Error: This release requires pgmpy to be v0.1.11. Try to: <conda install -c ankurankan pgmpy> or <pip intall pgmpy==0.1.11>')
 
 # Version check
 import matplotlib
@@ -40,7 +40,7 @@ if not version.parse(nx.__version__) >= version.parse("2.5"):
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.8'
+__version__ = '0.3.9'
 
 # module level doc-string
 __doc__ = """

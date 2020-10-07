@@ -4,7 +4,9 @@ print(bn.__version__)
 print(dir(bn))
 
 # %%
-dir(bn.structure_learning)
+print(dir(bn.structure_learning))
+print(dir(bn.parameter_learning))
+print(dir(bn.inference))
 
 # %%
 # Example dataframe sprinkler_data.csv can be loaded with: 
@@ -146,6 +148,7 @@ bn.compare_networks(model_bl, model_wl, pos=G['pos'])
 
 
 # %% PARAMETER LEARNING
+import bnlearn as bn
 df = bn.import_example()
 DAG = bn.import_DAG('sprinkler', CPD=False)
 model_update = bn.parameter_learning.fit(DAG, df)
@@ -266,6 +269,7 @@ bn.print_CPD(DAG, checkmodel=False)
 
 # %% Create a simple DAG:
 # Building a causal DAG
+import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 
 edges = [('Cloudy', 'Sprinkler'),

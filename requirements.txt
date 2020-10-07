@@ -1,7 +1,8 @@
 #conda create -n env_BNLEARN python=3.6
 #conda activate env_BNLEARN
 
-# conda install -c ankurankan pgmpy
+# conda install -c ankurankan pgmpy=="0.1.11"
+# pgmpy=='0.1.11'
 networkx>='2.5'
 matplotlib>='3.3.2'
 numpy
@@ -13,6 +14,3 @@ funcsigs
 statsmodels
 community
 packaging
-
-# networkx==1.11
-# matplotlib==2.2.3

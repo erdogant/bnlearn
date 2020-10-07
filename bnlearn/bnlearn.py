@@ -24,7 +24,7 @@ from pgmpy import readwrite
 import bnlearn.helpers.network as network
 
 curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA = os.path.join(curpath, 'DATA')
+PATH_TO_DATA = os.path.join(curpath, 'data')
 
 
 # %% Convert adjmat to bayesian model
@@ -573,7 +573,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
 
     # Bayesian model
     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
-        if verbose>=3: print('[BNLEARN][plot] Making plot based on BayesianModel')
+        if verbose>=3: print('[bnlearn] >Plot based on BayesianModel')
         # positions for all nodes
         pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
         # Add directed edge with weigth
@@ -582,11 +582,11 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
         for i in range(len(edges)):
             G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
     elif 'networkx' in str(type(model)):
-        if verbose>=3: print('[BNLEARN][plot] Making plot based on networkx model')
+        if verbose>=3: print('[bnlearn] >Plot based on networkx model')
         G = model
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
     else:
-        if verbose>=3: print('[BNLEARN][plot] Making plot based on adjacency matrix')
+        if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
         G = network.adjmat2graph(model)
         # Get positions
         pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)

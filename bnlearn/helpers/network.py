@@ -56,7 +56,7 @@ def to_graph(adjmat, verbose=3):
     config['verbose'] = verbose
 
     adjmat = is_DataFrame(adjmat)
-    if config['verbose']>=3: print('[NETWORK.to_graph] Making graph')
+    if config['verbose']>=3: print('[bnlearn] >Making graph')
     G=nx.from_pandas_adjacency(adjmat)
 
     return(G)
@@ -89,7 +89,7 @@ def adjmat2graph(adjmat):
     
 #%% Compute similarity matrix
 def compute_centrality(G, centrality='betweenness', verbose=3):
-    if verbose>=3: print('[NETWORK.compute_centrality] Computing centrality %s' %(centrality))
+    if verbose>=3: print('[bnlearn] >Computing centrality %s' %(centrality))
     
     if centrality=='betweenness':
         bb=nx.centrality.betweenness_centrality(G)
@@ -120,7 +120,7 @@ def compute_centrality(G, centrality='betweenness', verbose=3):
     elif centrality=='information':
         bb=nx.centrality.information_centrality(G)
     else:
-        print('[NETWORK] [ERROR] Centrality <%s> does not exist!' %(centrality))
+        print('[bnlearn] >Error: Centrality <%s> does not exist!' %(centrality))
     
     # Set the attributes
     score=np.array([*bb.values()])
@@ -130,7 +130,7 @@ def compute_centrality(G, centrality='betweenness', verbose=3):
 
 #%% compute clusters
 def cluster(G, verbose=3):
-    if verbose>=3: print('[NETWORK.cluster] Clustering using best partition')
+    if verbose>=3: print('[bnlearn] >Clustering using best partition')
     # Partition
     partition=community.best_partition(G)
     # Set property to node
@@ -149,7 +149,7 @@ def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodt
     config['height']=height
     config['verbose']=verbose
 
-    if verbose>=3: print('[NETWORK] Compute a dozen of centralities and clusterlabels')
+    if verbose>=3: print('[bnlearn] >Compute a dozen of centralities and clusterlabels')
     
     # compute labx for each of the centralities
     centralities=['betweenness', 'closeness','eigenvector','degree','edge','harmonic','katz','local','out_degree','percolation','second_order','subgraph','subgraph_exp','information']
@@ -185,14 +185,14 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
     config['verbose']=verbose
     config['node_size_scale']=node_size_scale
     
-    if verbose>=3: print('[NETWORK] Creating network plot')
+    if verbose>=3: print('[bnlearn] >Creating network plot')
     
     if 'pandas' in str(type(node_size)):
         node_size=node_size.values
     
     #scaling node sizes
     if config['node_size_scale']!=None and 'numpy' in str(type(node_size)):
-        if verbose>=3: print('[NETWORK] Scaling node sizes')
+        if verbose>=3: print('[bnlearn] >Scaling node sizes')
         node_size=minmax_scale(node_size, feature_range=(node_size_scale[0], node_size_scale[1]))
 
     # Node positions
@@ -219,7 +219,7 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
     
     # Savefig
     if not isinstance(config['filename'], type(None)):
-        if verbose>=3: print('[NETWORK.plot] Saving figure')
+        if verbose>=3: print('[bnlearn] >Saving figure')
         plt.savefig(config['filename'])
     
     return(fig)
@@ -406,7 +406,7 @@ def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
         else:
             pos = nx.spring_layout(model, scale=scale, iterations=50)
     else:
-        if verbose>=3: print('[NETWORK.graphlayout] Existing coordinates from <pos> are used.')
+        if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
 
     return(pos)
 
@@ -419,7 +419,7 @@ def is_DataFrame(data, verbose=0):
     elif isinstance(data, pd.DataFrame):
         pass
     else:
-        print('Typing should be pd.DataFrame()!')
+        print('[bnlearn] >Typing should be pd.DataFrame()!')
         data=None
     
     return(data)

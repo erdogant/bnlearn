@@ -83,7 +83,7 @@ bn.df2onehot()
 * It is advisable to create a new environment. 
 
 ```python
-conda create -n env_bnlearn python=3.6
+conda create -n env_bnlearn python=3.8
 conda activate env_bnlearn
 conda install -c ankurankan pgmpy
 
@@ -178,7 +178,7 @@ df = bn.sampling(model, n=1000)
 
 * Output of the model:
 ```
-[BNLEARN] Model correct: True
+[bnlearn] Model correct: True
 CPD of Cloudy:
 +-----------+-----+
 | Cloudy(0) | 0.5 |
@@ -211,9 +211,9 @@ CPD of Wet_Grass:
 +--------------+--------------+--------------+--------------+--------------+
 | Wet_Grass(1) | 0.0          | 0.9          | 0.9          | 0.99         |
 +--------------+--------------+--------------+--------------+--------------+
-[BNLEARN] Nodes: ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
-[BNLEARN] Edges: [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
-[BNLEARN] Independencies:
+[bnlearn] Nodes: ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
+[bnlearn] Edges: [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
+[bnlearn] Independencies:
 (Cloudy _|_ Wet_Grass | Rain, Sprinkler)
 (Sprinkler _|_ Rain | Cloudy)
 (Rain _|_ Sprinkler | Cloudy)

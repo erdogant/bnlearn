@@ -75,6 +75,7 @@ def test_vec2adjmat():
 
 
 def test_structure_learning():
+    import bnlearn as bn
     df = bn.import_example()
     model = bn.structure_learning.fit(df)
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']

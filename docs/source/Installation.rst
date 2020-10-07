@@ -7,7 +7,7 @@ It is advisable to create a new environment which is done as following:
 
 .. code-block:: console
 
-   conda create -n BNLEARN python=3.6
+   conda create -n BNLEARN python=3.8
    conda activate BNLEARN
 
 
@@ -29,8 +29,7 @@ bnlearn is build on top of the pgmpy library. Recommended is a conda installatio
 
 .. code-block:: console
    
-   conda install -c ankurankan pgmpy
-
+   conda install -c ankurankan pgmpy=="0.1.11"
 
 .. _installation step 2:
 
@@ -39,7 +38,7 @@ bnlearn is build on top of the pgmpy library. Recommended is a conda installatio
   Install pgmpy.
 
 
-Deactivate and then activate your environment because it can occur that the package is not directly recognized.
+Deactivate and then activate your environment if the packages are not recognized.
 
 .. code-block:: console
 
