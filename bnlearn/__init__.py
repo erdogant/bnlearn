@@ -34,8 +34,8 @@ if not version.parse(matplotlib.__version__) > version.parse("3.1.1"):
     print('[bnlearn] >Error: Matplotlib version should be > v3.1.1.\nTry to: pip install -U matplotlib')
 
 import networkx as nx
-if not version.parse(nx.__version__) > version.parse("2.5"):
-    print('[bnlearn] >Error: networkx version should be > 2.5.\nTry to: pip install -U networkx')
+if not version.parse(nx.__version__) >= version.parse("2.5"):
+    print('[bnlearn] >Error: networkx version should be >= 2.5.\nTry to: pip install -U networkx')
 
 
 __author__ = 'Erdogan Tasksen'

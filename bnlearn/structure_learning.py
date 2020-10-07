@@ -13,7 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 # import pgmpy
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
-from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, ConstraintBasedEstimator
+from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch
+from pgmpy.estimators import PC as ConstraintBasedEstimator
+
 # from packaging import version
 from bnlearn.bnlearn import _dag2adjmat
 
