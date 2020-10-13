@@ -1,5 +1,4 @@
 # pytest tests\test_bn.py
-
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np

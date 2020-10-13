@@ -17,6 +17,22 @@ G = bn.plot(model)
 
 
 # %% Load example dataframe from sprinkler
+DAG = bn.import_DAG('sprinkler', verbose=2)
+df = bn.sampling(DAG, n=1000, verbose=2)
+
+import bnlearn as bn
+model = bn.import_DAG('D://PY/REPOSITORIES/bnlearn/bnlearn/data/hailfinder.bif')
+bn.plot(model)
+
+df = bn.import_example('water', n=1000)
+# Structure learning
+model = bn.structure_learning.fit(df)
+# Plot
+G = bn.plot(model)
+
+model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+
+# %% Load example dataframe from sprinkler
 df = bn.import_example('sprinkler')
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -180,7 +196,7 @@ q2.name_to_no
 q2.no_to_name,
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('alarm', verbose=0)
+DAG = bn.import_DAG('water', verbose=0)
 df = bn.sampling(DAG, n=1000)
 model_update = bn.parameter_learning.fit(DAG, df)
 G = bn.plot(model_update)
