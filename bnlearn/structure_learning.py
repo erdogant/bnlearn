@@ -313,7 +313,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     """
     out=dict()
     # Set scoring type
-    scoring_method = _SetScoringType(df, scoretype)
+    scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Set search algorithm
     model = HillClimbSearch(df, scoring_method=scoring_method)
 
@@ -346,7 +346,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
     out=dict()
 
     # Set scoring type
-    scoring_method = _SetScoringType(df, scoretype)
+    scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Exhaustive search across all dags
     model = ExhaustiveSearch(df, scoring_method=scoring_method)
     # Compute best DAG

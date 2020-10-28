@@ -15,31 +15,25 @@ df = bn.import_example()
 model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
-
 # %% Load example dataframe from sprinkler
-DAG = bn.import_DAG('sprinkler', verbose=2)
-df = bn.sampling(DAG, n=1000, verbose=2)
+DAG = bn.import_DAG('sprinkler', verbose=0)
+df = bn.sampling(DAG, n=1000, verbose=0)
 
-import bnlearn as bn
-model = bn.import_DAG('D://PY/REPOSITORIES/bnlearn/bnlearn/data/hailfinder.bif')
-bn.plot(model)
-
-df = bn.import_example('water', n=1000)
 # Structure learning
-model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, verbose=0)
 # Plot
 G = bn.plot(model)
 
-model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
 
 # %% Load example dataframe from sprinkler
-df = bn.import_example('sprinkler')
+df = bn.import_example('sprinkler', verbose=0)
 # Structure learning
-model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, verbose=0)
 # Plot
-G = bn.plot(model)
+G = bn.plot(model, verbose=0)
 
-model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
 
 # %% Try all methods vs score types
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
@@ -49,17 +43,17 @@ model_ex_bic = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
 model_ex_k2 = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 
-bn.compare_networks(model, model_hc_bic, pos=G['pos'])
+bn.compare_networks(model, model_hc_bic, pos=G['pos'], verbose=0)
 
 
 # %% Example with dataset
 import bnlearn as bn
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_DAG('sprinkler', verbose=3)
 # Print cpds
 bn.print_CPD(DAG)
 # plot ground truth
-G = bn.plot(DAG)
-df = bn.sampling(DAG, n=100)
+G = bn.plot(DAG, verbose=0)
+df = bn.sampling(DAG, n=100, verbose=3)
 
 # %% Inference using custom DAG
 import bnlearn as bn
@@ -78,20 +72,20 @@ edges = [('smoke', 'lung'),
          # ('bronc', 'lung')]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges)
+DAG = bn.make_DAG(edges, verbose=0)
 # Plot the DAG
-bn.plot(DAG)
+bn.plot(DAG, verbose=0)
 # Print the CPDs
 bn.print_CPD(DAG)
 
 # Learn its parameters from data and perform the inference.
-DAG = bn.parameter_learning.fit(DAG, df)
+DAG = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Print the CPDs
 bn.print_CPD(DAG)
 
 # Make inference
-q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1})
-q2 = bn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1})
+q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1}, verbose=3)
+q2 = bn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1}, verbose=0)
 q3 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
 q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
 q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
@@ -112,27 +106,27 @@ q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xra
 # %% compute causalities
 # Load asia DAG
 import bnlearn as bn
-df = bn.import_example('asia')
+df = bn.import_example('asia', verbose=0)
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 # print(df)
 
 # Structure learning
-model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, verbose=0)
 # Plot the DAG
-bn.plot(model)
+bn.plot(model, verbose=0)
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
-bn.compare_networks(DAG, model)
-bn.compare_networks(model, DAG)
+bn.compare_networks(DAG, model, verbose=0);
+bn.compare_networks(model, DAG);
 
 # Learn its parameters from data and perform the inference.
-DAGnew = bn.parameter_learning.fit(model, df, methodtype='bayes')
+DAGnew = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
 # Print the CPDs
 bn.print_CPD(DAGnew)
 
 # Make inference
-q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0}, verbose=0)
 # q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
 
 

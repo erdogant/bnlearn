@@ -374,7 +374,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     #    G_true = adjmat2graph(adjmat_true)
         G_diff = adjmat2graph(adjmat_diff)
         # Graph layout
-        pos = graphlayout(G_diff, pos=pos, scale=1, layout='fruchterman_reingold')
+        pos = graphlayout(G_diff, pos=pos, scale=1, layout='fruchterman_reingold', verbose=verbose)
         # Bootup figure
         plt.figure(figsize=(width,height))
         # nodes

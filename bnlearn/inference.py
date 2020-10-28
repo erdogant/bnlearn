@@ -89,7 +89,7 @@ def fit(model, variables=None, evidence=None, verbose=3):
         raise Exception('[bnlearn] >Error: Input model does not contain learned CPDs. hint: did you run parameter_learning.fit?')
 
     # Computing the probability of Wet Grass given Rain.
-    q = model_infer.query(variables=variables, evidence=evidence)
-    print(q)
+    q = model_infer.query(variables=variables, evidence=evidence, show_progress=(verbose>0))
+    if verbose>=3: print(q)
     # for varname in variables: print(q[varname])
     return(q)

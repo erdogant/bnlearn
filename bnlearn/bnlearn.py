@@ -172,12 +172,14 @@ def print_CPD(DAG, checkmodel=False):
 
 # %%
 def _check_model(DAG, verbose=3):
-    if verbose>=3: print('[bnlearn] >Checking CPDs..')
+    if verbose>=3:
+        print('[bnlearn] >Checking CPDs..')
     for cpd in DAG.get_cpds():
         # print(cpd)
         if not np.all(cpd.values.sum(axis=0)==1):
             print('[bnlearn] >Warning: CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
-    print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
+    if verbose>=3:
+        print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
 
 
 # %% Make DAG
@@ -251,7 +253,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and CPD and checkmodel:
-        _check_model(out['model'], verbose=3)
+        _check_model(out['model'], verbose=verbose)
         if verbose>=4:
             print_CPD(out)
 
@@ -591,7 +593,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
         if verbose>=3: print('[bnlearn] >Plot based on BayesianModel')
         # positions for all nodes
-        pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout)
+        pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout, verbose=verbose)
         # Add directed edge with weigth
         # edges=model.edges()
         edges=[*model.edges()]
@@ -600,12 +602,12 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     elif 'networkx' in str(type(model)):
         if verbose>=3: print('[bnlearn] >Plot based on networkx model')
         G = model
-        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
+        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
     else:
         if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
         G = network.adjmat2graph(model)
         # Get positions
-        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout)
+        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
 
     # Bootup figure
     plt.figure(figsize=figsize)
