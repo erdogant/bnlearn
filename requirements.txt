@@ -2,7 +2,7 @@
 #conda activate env_BNLEARN
 
 # conda install -c ankurankan pgmpy=="0.1.11"
-# pgmpy=='0.1.11'
+pgmpy=='0.1.11'
 networkx>='2.5'
 matplotlib>='3.3.2'
 numpy
