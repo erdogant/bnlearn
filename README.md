@@ -79,7 +79,7 @@ bn.df2onehot()
 * Install bnlearn from PyPI (recommended). bnlearn is compatible with Python 3.6+ and runs on Linux, MacOS X and Windows. 
 * It is distributed under the MIT license.
 
-## Requirements
+## Conda installation
 * It is advisable to create a new environment. 
 
 ```python
@@ -93,6 +93,12 @@ conda activate env_bnlearn
 
 # The packages below are handled by the requirements in the bnlearn pip installer. So you dont need to do them manually.
 pip install sklearn pandas tqdm funcsigs statsmodels community packaging
+```
+
+## Pip installation
+
+```python
+!pip install -U pgmpy==0.1.11
 ```
 
 ## Quick Start
