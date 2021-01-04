@@ -27,6 +27,12 @@ G = bn.plot(model)
 model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
 
 # %% Load example dataframe from sprinkler
+import bnlearn as bn
+DAG = bn.import_DAG('alarm', verbose=0)
+to_vector = bn.adjmat2vec(DAG['adjmat'])
+to_adjmat = bn.vec2adjmat(to_vector['source'], to_vector['target'])
+
+# %% Load example dataframe from sprinkler
 df = bn.import_example('sprinkler', verbose=0)
 # Structure learning
 model = bn.structure_learning.fit(df, verbose=0)
