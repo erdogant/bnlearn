@@ -39,6 +39,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
             a. exhaustivesearch
             b. hillclimbsearch
+            c. chow-liu
         2. Constraint-based structure learning (PC)
             a. chi-square test
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
@@ -60,6 +61,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'hc' or 'hillclimbsearch' (default)
         'ex' or 'exhaustivesearch'
         'cs' or 'constraintsearch'
+        'cl' or 'chow-liu' (requires setting root_node parameter)
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
         'bic', 'k2', 'bdeu'
@@ -78,6 +80,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned. (only in case of methodtype='hc')
     max_iter: int (default: 1e6)
         The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
+    root_node: String
+        The root node for chow-liu method.
     verbose : int, (default : 3)
         Print progress to screen.
         0: NONE
@@ -116,12 +120,12 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     """
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    assert (methodtype=='hc') | (methodtype=='ex')| (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
+    assert (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
     if isinstance(white_list, str): white_list = [white_list]
     if isinstance(black_list, str): black_list = [black_list]
     if (white_list is not None) and len(white_list)==0: white_list = None
     if (black_list is not None) and len(black_list)==0: black_list = None
-    if (bw_list_method is None) : bw_list_method='enforce'
+    if (bw_list_method is None): bw_list_method='enforce'
 
     config = {}
     config['verbose'] = verbose
@@ -133,11 +137,13 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['max_indegree'] = max_indegree
     config['epsilon'] = epsilon
     config['max_iter'] = max_iter
+    config['root_node'] = root_node
 
     # Show warnings
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
     # if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
-        # if config['verbose']>=2: print('[bnlearn] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
+    # if config['verbose']>=2: print('[bnlearn] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
+
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     if (black_list is not None) and methodtype!='hc':
@@ -187,6 +193,11 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Independencies in the data can be identified using chi2 conditional independence tests."""
         out = _constraintsearch(df, verbose=config['verbose'])
 
+    # Constraint-based Structure Learning
+    if config['method']=='cl' or config['method']=='chow-liu':
+        """Chow-liu based Structure Learning."""
+        out = _chowliu(df, config['root_node'], verbose=config['verbose'])
+
     # Setup simmilarity matrix
     adjmat = _dag2adjmat(out['model'])
 
@@ -227,6 +238,27 @@ def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verb
             if verbose>=3: print('[bnlearn]  >Number of features after white/black listing: %d' %(df.shape[1]))
         if df.shape[1]<=1: raise Exception('[bnlearn] >Error: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
+
+
+# %% hillclimbsearch
+def _chowliu(df, root_node, verbose=3):
+    """Chow-liu searches for DAGs with attempts to find a model with optimal score.
+
+    Description
+    -----------
+
+    """
+    from pgmpy.estimators import TreeSearch
+
+    out={}
+    est = TreeSearch(df, root_node=root_node)
+    model = est.estimate(estimator_type="chow-liu")
+
+    # Store
+    out['model']=model
+    out['model_edges']=model.edges()
+    # Return
+    return(out)
 
 
 # %% Constraint-based Structure Learning
