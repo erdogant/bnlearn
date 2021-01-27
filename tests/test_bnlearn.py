@@ -45,7 +45,7 @@ def test_sampling():
     model = bn.import_DAG('Sprinkler')
     n = np.random.randint(10,1000)
     df = bn.sampling(model, n=n)
-    assert df.shape==(n,4)
+    assert df.shape==(n, 4)
 
 
 def test_to_undirected():
@@ -54,8 +54,8 @@ def test_to_undirected():
     n = np.random.randint(0,len(randdata))
     DAG = bn.import_DAG(randdata[n], CPD=False, verbose=0)
     assert (DAG['adjmat'].sum().sum()*2)==bn.to_undirected(DAG['adjmat']).sum().sum()
-    
-    
+
+
 def test_compare_networks():
     DAG = bn.import_DAG('Sprinkler', verbose=0)
     G = bn.compare_networks(DAG, DAG, showfig=False)
@@ -66,7 +66,7 @@ def test_adjmat2vec():
     DAG = bn.import_DAG('Sprinkler', verbose=0)
     out = bn.adjmat2vec(DAG['adjmat'])
     assert np.all(out['source']==['Cloudy','Cloudy','Sprinkler','Rain'])
-    
+
 
 def test_vec2adjmat():
     DAG = bn.import_DAG('Sprinkler', verbose=0)
@@ -80,8 +80,22 @@ def test_structure_learning():
     df = bn.import_example()
     model = bn.structure_learning.fit(df)
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
+    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
+    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
 
-    
+
 def test_parameter_learning():
     df = bn.import_example()
     model = bn.import_DAG('sprinkler', CPD=False)
