@@ -10,9 +10,11 @@ import bnlearn as bn
 
 # %%
 
+import bnlearn as bn
 DAG = bn.import_DAG('sprinkler', verbose=0)
 df = bn.sampling(DAG, n=1000, verbose=0)
-model_cs_k2 = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
+model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
+G = bn.plot(model)
 
 # %%
 # Example dataframe sprinkler_data.csv can be loaded with:
