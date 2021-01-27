@@ -1,15 +1,21 @@
 # %%
 import bnlearn as bn
-print(bn.__version__)
-print(dir(bn))
+# print(bn.__version__)
+# print(dir(bn))
+
+# # %%
+# print(dir(bn.structure_learning))
+# print(dir(bn.parameter_learning))
+# print(dir(bn.inference))
 
 # %%
-print(dir(bn.structure_learning))
-print(dir(bn.parameter_learning))
-print(dir(bn.inference))
+
+DAG = bn.import_DAG('sprinkler', verbose=0)
+df = bn.sampling(DAG, n=1000, verbose=0)
+model_cs_k2 = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
 
 # %%
-# Example dataframe sprinkler_data.csv can be loaded with: 
+# Example dataframe sprinkler_data.csv can be loaded with:
 df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
 model = bn.structure_learning.fit(df)
@@ -24,7 +30,15 @@ model = bn.structure_learning.fit(df, verbose=0)
 # Plot
 G = bn.plot(model)
 
-model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+
+# %% Chow-Liu algorithm
+DAG = bn.import_DAG('sprinkler', verbose=0)
+df = bn.sampling(DAG, n=1000, verbose=0)
+
+# Structure learning
+model_hc_bic = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy', verbose=0)
+G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
 import bnlearn as bn
@@ -48,6 +62,9 @@ model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
 model_ex_bic = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
 model_ex_k2 = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+model_cs_k2 = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
+model_cs_bdeu = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
+model_cl = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 
 bn.compare_networks(model, model_hc_bic, pos=G['pos'], verbose=0)
 
@@ -123,8 +140,8 @@ bn.plot(model, verbose=0)
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
-bn.compare_networks(DAG, model, verbose=0);
-bn.compare_networks(model, DAG);
+bn.compare_networks(DAG, model, verbose=0)
+bn.compare_networks(model, DAG)
 
 # Learn its parameters from data and perform the inference.
 DAGnew = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
@@ -425,3 +442,4 @@ q1 = bn.inference.fit(DAGbay, variables=['Wet_Grass'], evidence={'Rain':1, 'Spri
 
 print(q1.values)
 
+# %%

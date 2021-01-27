@@ -14,15 +14,20 @@ import matplotlib.pyplot as plt
 
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch
-from pgmpy.estimators import ConstraintBasedEstimator
-# from pgmpy.estimators import PC as ConstraintBasedEstimator
+
+import pgmpy
+from packaging import version
+if version.parse(pgmpy.__version__)>=version.parse("0.1.13"):
+    from pgmpy.estimators import PC as ConstraintBasedEstimator
+else:
+    from pgmpy.estimators import ConstraintBasedEstimator
 
 # from packaging import version
 from bnlearn.bnlearn import _dag2adjmat
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method='enforce', max_indegree=None, epsilon=1e-4, max_iter=1e6, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method='enforce', max_indegree=None, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -235,7 +240,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     given the null hypothesis that X and Y are independent given Zs.
     This can be used to make independence judgements, at a given level of significance.
     """
-    out=dict()
+    out = {}
     # Set search algorithm
     model = ConstraintBasedEstimator(df)
 
@@ -254,12 +259,12 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
         Step 1.&2. form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
     """
     # Estimate using chi2
-    [skel, seperating_sets] = model.estimate_skeleton(significance_level=significance_level)
+    [skel, seperating_sets] = model.build_skeleton(significance_level=significance_level)
 
     print("Undirected edges: ", skel.edges())
     pdag = model.skeleton_to_pdag(skel, seperating_sets)
     print("PDAG edges: ", pdag.edges())
-    dag = model.pdag_to_dag(pdag)
+    dag = pdag.to_dag()
     print("DAG edges: ", dag.edges())
 
     out['undirected'] = skel
@@ -311,7 +316,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     edges or to limit the search.
 
     """
-    out=dict()
+    out={}
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Set search algorithm
@@ -329,10 +334,10 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
         if (black_list is not None) or (white_list is not None):
             if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
         # best_model = model.estimate()
-        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list)
+        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
-        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter)
+        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, show_progress=False)
 
     # Store
     out['model']=best_model

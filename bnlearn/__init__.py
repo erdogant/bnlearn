@@ -22,11 +22,11 @@ from packaging import version
 try:
     import pgmpy
 except:
-    raise ImportError('[bnlearn] >Error: pgmpy v0.1.10 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy==0.1.11>')
+    raise ImportError('[bnlearn] >Error: pgmpy v0.1.13 or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy==0.1.13>')
 
 # Check version pgmpy
-if version.parse(pgmpy.__version__)!=version.parse("0.1.11"):
-    raise Exception('[bnlearn] >Error: This release requires pgmpy to be v0.1.11. Try to: <conda install -c ankurankan pgmpy> or <pip intall -U pgmpy==0.1.11>')
+if version.parse(pgmpy.__version__)!=version.parse("0.1.13"):
+    raise Exception('[bnlearn] >Error: This release requires pgmpy to be v0.1.13. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy==0.1.13>')
 
 # Version check
 import matplotlib
@@ -40,7 +40,7 @@ if not version.parse(nx.__version__) >= version.parse("2.5"):
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.11'
+__version__ = '0.3.12'
 
 # module level doc-string
 __doc__ = """
