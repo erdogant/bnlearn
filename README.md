@@ -82,8 +82,8 @@ pip install -U bnlearn # -U is to force download latest version
 
 ## Pip installation
 ```python
-pip install -U pgmpy==0.1.11
-pip install -U bnlearn # -U is to force download latest version
+pip install -U pgmpy==0.1.13
+pip install -U bnlearn # -U is to force to overwrite current version
 ```
 
 * Alternatively, install bnlearn from the GitHub source:
@@ -135,6 +135,7 @@ model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
 model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
 model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+model_cl      = bn.structure_learning.fit(df, methodtype='cl', root_node='Wet_Grass')
 ```
 
 ## Example: Parameter Learning

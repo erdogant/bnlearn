@@ -3,9 +3,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>bnlearn.bnlearn &mdash; bnlearn bnlearn documentation</title>
   
@@ -16,7 +16,10 @@
 
   
   
+
   
+  
+
   
 
   
@@ -29,7 +32,6 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
@@ -50,7 +52,7 @@
           
 
           
-            <a href="index.html" class="icon icon-home" alt="Documentation Home"> bnlearn
+            <a href="index.html" class="icon icon-home"> bnlearn
           
 
           
@@ -152,6 +154,8 @@
 
 
 
+
+
 <div role="navigation" aria-label="breadcrumbs navigation">
 
   <ul class="wy-breadcrumbs">
@@ -163,7 +167,7 @@
     
       <li class="wy-breadcrumbs-aside">
         
-            
+          
             <a href="_sources/bnlearn.bnlearn.rst.txt" rel="nofollow"> View page source</a>
           
         
@@ -209,7 +213,7 @@
 
 <dl class="py function">
 <dt id="bnlearn.bnlearn.compare_networks">
-<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">compare_networks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_1</span></em>, <em class="sig-param"><span class="n">model_2</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">showfig</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">15, 8</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.compare_networks" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">compare_networks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_1</span></em>, <em class="sig-param"><span class="n">model_2</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">showfig</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">(15, 8)</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.compare_networks" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compare networks of two models.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -259,7 +263,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 
 <dl class="py function">
 <dt id="bnlearn.bnlearn.import_DAG">
-<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'sprinkler'</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'sprinkler'</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import Directed Acyclic Graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -267,6 +271,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is ‘sprinkler’.
 ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘pathfinder’, ‘sachs’, ‘miserables’, ‘filepath/to/model.bif’,</p></li>
 <li><p><strong>CPD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Directed Acyclic Graph (DAG). The default is True.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
@@ -295,7 +300,7 @@ adjmat : Adjacency matrix</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples.
-‘titanic’, ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘pathfinder’, ‘sachs’</p></li>
+‘titanic’, ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘pathfinder’, ‘sachs’, ‘water’</p></li>
 <li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default: 3</em><em>)</em>) – Print progress to screen.
 0: None, 1: ERROR, 2: WARN, 3: INFO, 4: DEBUG, 5: TRACE</p></li>
@@ -338,7 +343,7 @@ adjmat : Adjacency matrix</p>
 
 <dl class="py function">
 <dt id="bnlearn.bnlearn.plot">
-<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">15, 8</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">(15, 8)</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -488,35 +493,28 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
            
           </div>
           <footer>
-  
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="bnlearn.inference.html" class="btn btn-neutral float-left" title="bnlearn.inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
+        <a href="bnlearn.inference.html" class="btn btn-neutral float-left" title="bnlearn.inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
-  
 
   <hr/>
 
   <div role="contentinfo">
     <p>
-        
-        &copy; Copyright 2020, Erdogan Taskesen
+        &#169; Copyright 2020, Erdogan Taskesen.
 
     </p>
   </div>
     
     
     
-    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     
-    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     
     provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
-
         </div>
       </div>
 
