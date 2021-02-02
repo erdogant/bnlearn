@@ -74,7 +74,6 @@ model_cl = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 
 bn.compare_networks(model, model_hc_bic, pos=G['pos'], verbose=0)
 
-
 # %% Example with dataset
 import bnlearn as bn
 DAG = bn.import_DAG('sprinkler', verbose=3)
@@ -107,10 +106,16 @@ bn.plot(DAG, verbose=0)
 # Print the CPDs
 bn.print_CPD(DAG)
 
+# Sampling
+df_sampling = bn.sampling(DAG, n=1000)
+
 # Learn its parameters from data and perform the inference.
 DAG = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Print the CPDs
 bn.print_CPD(DAG)
+
+# Sampling
+df_sampling = bn.sampling(DAG, n=1000)
 
 # Make inference
 q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1}, verbose=3)
@@ -255,7 +260,7 @@ df_raw = bn.import_example(data='titanic')
 # Convert to onehot
 dfhot, dfnum = bn.df2onehot(df_raw)
 # Structure learning
-DAG = bn.structure_learning.fit(dfnum, black_list=['Survived','Pclass','Sex','Embarked','Parch'])
+DAG = bn.structure_learning.fit(dfnum, methodtype='bayes', black_list=['Pclass','Sex','Embarked','Parch','Name'], root_node='Survived')
 # Plot
 G = bn.plot(DAG)
 # Parameter learning
@@ -266,9 +271,12 @@ q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 
 bn.print_CPD(model)
 
+df = bn.sampling(DAG, n=1000)
+
 # %%
+import bnlearn as bn
 DAG = bn.import_DAG('sprinkler', CPD=False)
-DAG = bn.import_DAG('asia')
+# DAG = bn.import_DAG('asia')
 bn.plot(DAG)
 bn.print_CPD(DAG)
 
