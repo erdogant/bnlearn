@@ -372,13 +372,13 @@ def adjmat2vec(adjmat, min_weight=1):
 
 
 # %% Sampling from model
-def sampling(model, n=1000, verbose=3):
+def sampling(DAG, n=1000, verbose=3):
     """Generate sample(s) using forward sampling from joint distribution of the bayesian network.
 
     Parameters
     ----------
-    model : dict
-        Contains model and adjmat.
+    DAG : dict
+        Contains model and adjmat of the DAG.
     n : int, optional
         Number of samples to generate. The default is 1000.
     verbose : int, optional
@@ -394,16 +394,20 @@ def sampling(model, n=1000, verbose=3):
     Example
     -------
     >>> import bnlearn
-    >>> model = bnlearn.import_DAG('sprinkler')
-    >>> df = bnlearn.sampling(model, n=1000)
+    >>> DAG = bnlearn.import_DAG('sprinkler')
+    >>> df = bnlearn.sampling(DAG, n=1000)
 
     """
     if n<=0: raise ValueError('n must be 1 or larger')
-    if 'BayesianModel' not in str(type(model['model'])): raise ValueError('Model must contain DAG from BayesianModel. Note that <misarables> example does not include DAG.')
+    if 'BayesianModel' not in str(type(DAG['model'])): raise ValueError('DAG must contain BayesianModel.')
     if verbose>=3: print('[bnlearn] >Forward sampling for %.0d samples..' %(n))
 
+    if len(DAG['model'].get_cpds())==0:
+        print('[bnlearn] >This seems like a DAG containing only edges, and no CPDs. Tip: use bn.parameter_learning.fit(DAG, df) to learn the CPDs first.')
+        return
+
     # http://pgmpy.org/sampling.html
-    infer_model = BayesianModelSampling(model['model'])
+    infer_model = BayesianModelSampling(DAG['model'])
     # inference = GibbsSampling(model['model'])
     # Forward sampling and make dataframe
     df=infer_model.forward_sample(size=n, return_type='dataframe')
