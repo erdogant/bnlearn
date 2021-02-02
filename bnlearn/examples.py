@@ -9,6 +9,10 @@ import bnlearn as bn
 # print(dir(bn.inference))
 
 # %%
+import bnlearn as bn
+df = bn.import_example()
+
+# %%
 
 import bnlearn as bn
 DAG = bn.import_DAG('sprinkler', verbose=0)
