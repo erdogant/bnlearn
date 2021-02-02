@@ -181,8 +181,311 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="bnlearn-bnlearn">
-<h1>bnlearn.bnlearn<a class="headerlink" href="#bnlearn-bnlearn" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-bnlearn.bnlearn">
+<span id="bnlearn-bnlearn"></span><h1>bnlearn.bnlearn<a class="headerlink" href="#module-bnlearn.bnlearn" title="Permalink to this headline">¶</a></h1>
+<p>Bayesian techniques for structure learning, parameter learning, inference and sampling.</p>
+<dl class="py function">
+<dt id="bnlearn.bnlearn.adjmat2vec">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">adjmat2vec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjmat</span></em>, <em class="sig-param"><span class="n">min_weight</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert adjacency matrix into vector with source and target.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p></li>
+<li><p><strong>min_weight</strong> (<em>float</em>) – edges are returned with a minimum weight.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>nodes that are connected based on source and target</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vector</span> <span class="o">=</span> <span class="n">adjmat2vec</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.compare_networks">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">compare_networks</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_1</span></em>, <em class="sig-param"><span class="n">model_2</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">showfig</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">(15, 8)</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.compare_networks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare networks of two models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_1</strong> (<em>dict</em>) – Results of model 1..</p></li>
+<li><p><strong>model_2</strong> (<em>dict</em>) – Results of model 2..</p></li>
+<li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
+<li><p><strong>showfig</strong> (<em>bool</em><em>, </em><em>optional</em>) – plot figure. The default is True.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size.. The default is (15,8).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>scores : Score of differences between the two input models.
+adjmat_diff : Adjacency matrix depicting the differences between the two input models.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple containing (scores, adjmat_diff)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.df2onehot">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">df2onehot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">y_min</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">perc_min_num</span><span class="o">=</span><span class="default_value">0.8</span></em>, <em class="sig-param"><span class="n">dtypes</span><span class="o">=</span><span class="default_value">'pandas'</span></em>, <em class="sig-param"><span class="n">excl_background</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.df2onehot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert dataframe to one-hot matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe for which the rows are the features, and colums are the samples.</p></li>
+<li><p><strong>dtypes</strong> (<em>list of str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
+<li><p><strong>y_min</strong> (<em>int</em><em> [</em><em>0..len</em><em>(</em><em>y</em><em>)</em><em>]</em><em>, </em><em>optional</em>) – Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.</p></li>
+<li><p><strong>perc_min_num</strong> (<em>float</em><em> [</em><em>None</em><em>, </em><em>0..1</em><em>]</em><em>, </em><em>optional</em>) – Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print message to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>One-hot dataframe.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.import_DAG">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'sprinkler'</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import Directed Acyclic Graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is ‘sprinkler’.
+‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘pathfinder’, ‘sachs’, ‘miserables’, ‘filepath/to/model.bif’,</p></li>
+<li><p><strong>CPD</strong> (<em>bool</em><em>, </em><em>optional</em>) – Directed Acyclic Graph (DAG). The default is True.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>model : BayesianModel
+adjmat : Adjacency matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict containing model and adjmat.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.import_example">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_example</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span><span class="o">=</span><span class="default_value">'sprinkler'</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">10000</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_example" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load example dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples.
+‘titanic’, ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘pathfinder’, ‘sachs’, ‘water’</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default: 3</em><em>)</em>) – Print progress to screen.
+0: None, 1: ERROR, 2: WARN, 3: INFO, 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.make_DAG">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">make_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DAG</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.make_DAG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create Directed Acyclic Graph based on list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DAG</strong> (<em>list</em>) – list containing source and target in the form of [(‘A’,’B’), (‘B’,’C’)].</p></li>
+<li><p><strong>CPD</strong> (<em>list</em><em>, </em><em>array-like</em>) – Containing TabularCPD for each node.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – Should be list.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>model of the DAG.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pgmpy.models.BayesianModel.BayesianModel</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.plot">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">(15, 8)</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot the learned stucture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) – Learned model from the .fit() function..</p></li>
+<li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
+<li><p><strong>scale</strong> (<em>int</em><em>, </em><em>optional</em>) – Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.</p></li>
+<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size. The default is (15,8).</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>pos<span class="classifier">list</span></dt><dd><p>Positions of the nodes.</p>
+</dd>
+<dt>G<span class="classifier">Graph</span></dt><dd><p>Graph model</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict containing pos and G</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.print_CPD">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">print_CPD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DAG</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.print_CPD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print DAG-model to screen.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>DAG</strong> (<em>pgmpy.models.BayesianModel.BayesianModel</em>) – model of the DAG.</p></li>
+<li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.sampling">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">sampling</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate sample(s) using forward sampling from joint distribution of the bayesian network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) – Contains model and adjmat.</p></li>
+<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – Dataframe containing sampled data from the input DAG model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.to_BayesianModel">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">to_BayesianModel</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_BayesianModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert adjacency matrix to BayesianModel.</p>
+<p>Convert a adjacency to a BayesianModel. This is required as some of the
+functionalities, such as <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> output a DAGmodel.
+If the output of <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> is provided, the adjmat is extracted and processed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>bayesianmodel</strong> – BayesianModel that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.to_undirected">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">to_undirected</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjmat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_undirected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform directed adjacency matrix to undirected.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>adjmat</strong> (<em>np.array</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Directed adjacency matrix</strong> – Converted adjmat with undirected edges.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.vec2adjmat">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">vec2adjmat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">source</span></em>, <em class="sig-param"><span class="n">target</span></em>, <em class="sig-param"><span class="n">symmetric</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2adjmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert source and target into adjacency matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>list</em>) – The source node.</p></li>
+<li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
+<li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>adjacency matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </div>
 
 

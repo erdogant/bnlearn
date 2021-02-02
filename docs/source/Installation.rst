@@ -29,9 +29,9 @@ bnlearn is build on top of the pgmpy library. Recommended is a conda installatio
 
 .. code-block:: console
    
-   conda install -c ankurankan pgmpy=="0.1.13"
+   conda install -c ankurankan pgmpy>="0.1.13"
    # or
-   pip install -U pgmpy==0.1.13
+   pip install -U pgmpy>=0.1.13
 
 .. _installation step 2:
 
