@@ -6,8 +6,9 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 
 **Score-based structure learning:**
 
-* exhaustivesearch
-* hillclimbsearch
+* Exhaustivesearch
+* Hillclimbsearch
+* Chow-liu
 
 **Constraint-based structure learning:**
 
@@ -19,7 +20,7 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 
 
 Exhaustivesearch
-''''''''''''''''
+''''''''''''''''''
 
 ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one.
 This search approach is only atractable for very small networks, and prohibits efficient local optimization algorithms to always find the optimal structure. Thus, identifiying the ideal structure is often not tractable. Despite these bad news, heuristic search strategies often yields good results. If only few nodes are involved (read: less than 5 or so).
@@ -42,12 +43,27 @@ A different, but quite straightforward approach to build a DAG from data is to i
 
 
 
-Examples Structure learning
-''''''''''''''''''''''''''''
+Chow-liu
+''''''''''''''''''
+
+The Chow-Liu Algorithm is a specific type of score based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].
+
+The algorithm has three steps:
+
+	1. Compute the mutual information for all pairs of variables X,U. This function measures how much information U provides about X
+	2. Find the maximum weight spanning tree: the maximal-weight tree that connects all vertices in a graph. This can be found using Kruskal or Prim Algorithms
+	3. Pick any node to be the root variable, and assign directions radiating outward from this node (arrows go away from it). This step transforms the resulting undirected tree to a directed one.
 
 
-Example Structure learning 1
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Example Structure learning (general)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
+
+Example Structure learning (1)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -122,8 +138,8 @@ We can specificy the method and scoring type. As described previously, some meth
 
 
 
-Example Structure learning 2
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Example Structure learning (2)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Lets learn the structure of a more complex data set and compare it to another one.
 
@@ -171,3 +187,5 @@ Lets learn the structure of a more complex data set and compare it to another on
   Comparison True vs. learned DAG.
 
 
+References
+1. https://ermongroup.github.io/cs228-notes/learning/structure/
