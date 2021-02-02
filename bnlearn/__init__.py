@@ -30,8 +30,8 @@ if version.parse(pgmpy.__version__) < version.parse("0.1.13"):
 
 # Version check
 import matplotlib
-if not version.parse(matplotlib.__version__) > version.parse("3.3.4"):
-    print('[bnlearn] >Error: Matplotlib version should be > v3.3.4.\nTry to: pip install -U matplotlib')
+if not version.parse(matplotlib.__version__) >= version.parse("3.3.4"):
+    print('[bnlearn] >Error: Matplotlib version should be >= v3.3.4.\nTry to: pip install -U matplotlib')
 
 import networkx as nx
 if not version.parse(nx.__version__) >= version.parse("2.5"):
@@ -40,7 +40,7 @@ if not version.parse(nx.__version__) >= version.parse("2.5"):
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.13'
+__version__ = '0.3.14'
 
 # module level doc-string
 __doc__ = """
