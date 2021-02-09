@@ -85,12 +85,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         The root node for chow-liu method.
     verbose : int, (default : 3)
         Print progress to screen.
-        0: NONE
-        1: ERROR
-        2: WARNING
-        3: INFO (default)
-        4: DEBUG
-        5: TRACE
+        0: NONE, 1: ERROR,  2: WARNING, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
