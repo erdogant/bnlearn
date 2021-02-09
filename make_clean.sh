@@ -15,6 +15,7 @@ rm -rf *.html
 rm -rf *.css
 rm -rf *.dot
 rm -rf *.png
+rm -rf .coverage*
 
 
 

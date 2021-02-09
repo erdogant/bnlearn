@@ -27,7 +27,7 @@ from bnlearn.bnlearn import _dag2adjmat
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method='enforce', max_indegree=None, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -66,12 +66,13 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Scoring function for the search spaces.
         'bic', 'k2', 'bdeu'
     black_list : List or None, (default : None)
-        If a list of edges is provided as black_list, they are excluded from the search and the resulting model will not contain any of those edges. The default is None.
-        Works only in case of methodtype='hc'. See also paramter: `bw_list_method`
+        List of edges are black listed by either by filtering or enforcing (see bw_list_method).
+        In case of filtering, the nodes black listed nodes are removed from the dataframe. The resulting model will nog contain any edges that are in black_list.
     white_list : List or None, (default : None)
-        If a list of edges is provided as white_list, the search is limited to those edges. The resulting model will then only contain edges that are in white_list. The default is None.
+        List of edges are white listed by either by filtering or enforcing (see bw_list_method).
+        In case of filtering, the search is limited to those edges. The resulting model will then only contain edges that are in white_list.
         Works only in case of methodtype='hc'/ See also paramter: `bw_list_method`
-    bw_list_method : str, (default : 'enforce')
+    bw_list_method : str, (default : None)
         'enforce' : A list of edges can optionally be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
         'filter' : Filter the dataframe based on `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
     max_indegree : int, (default : None)
@@ -125,7 +126,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if isinstance(black_list, str): black_list = [black_list]
     if (white_list is not None) and len(white_list)==0: white_list = None
     if (black_list is not None) and len(black_list)==0: black_list = None
-    if (bw_list_method is None): bw_list_method='enforce'
+    if (methodtype!='hc') and (bw_list_method=='enforce'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
 
     config = {}
     config['verbose'] = verbose
@@ -143,13 +144,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
     # if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
     # if config['verbose']>=2: print('[bnlearn] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
-
+    if (bw_list_method is None) and ((black_list is not None) or (white_list is not None)):
+        raise Exception('[bnlearn] >Error: The use of black_list or white_list requires setting bw_list_method.')
     if df.shape[1]>10 and df.shape[1]<15:
         if config['verbose']>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
-    if (black_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn] >Warning: blacklist only works in case of methodtype="hc"')
-    if (white_list is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn] >Warning: white_list only works in case of methodtype="hc"')
+    # if (black_list is not None) and methodtype!='hc':
+    #     if config['verbose']>=2: print('[bnlearn] >Warning: blacklist only works in case of methodtype="hc"')
+    # if (white_list is not None) and methodtype!='hc':
+    #     if config['verbose']>=2: print('[bnlearn] >Warning: white_list only works in case of methodtype="hc"')
     if (max_indegree is not None) and methodtype!='hc':
         if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
 
@@ -158,7 +160,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
-    df = _white_black_list(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
+    df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
@@ -178,7 +180,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
                                black_list=config['black_list'],
                                white_list=config['white_list'],
                                max_indegree=config['max_indegree'],
-                               bw_list_method=config['bw_list_method'],
+                               bw_list_method=bw_list_method,
                                epsilon=config['epsilon'],
                                max_iter=config['max_iter'],
                                verbose=config['verbose'],
@@ -201,7 +203,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # Setup simmilarity matrix
     adjmat = _dag2adjmat(out['model'])
 
-    # adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('Bool')
+    # adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('bool')
     # # Fill adjmat with edges
     # edges = out['model'].edges()
     # for edge in edges:
@@ -218,7 +220,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
 
 # %% white_list and black_list
-def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verbose=3):
+def _white_black_list_filter(df, white_list, black_list, bw_list_method='enforce', verbose=3):
     if bw_list_method=='filter':
         # Keep only variables that are in white_list.
         if white_list is not None:
@@ -235,7 +237,7 @@ def _white_black_list(df, white_list, black_list, bw_list_method='enforce', verb
             df = df.loc[:, Iloc]
 
         if (white_list is not None) or (black_list is not None):
-            if verbose>=3: print('[bnlearn]  >Number of features after white/black listing: %d' %(df.shape[1]))
+            if verbose>=3: print('[bnlearn] >Number of features after white/black listing: %d' %(df.shape[1]))
         if df.shape[1]<=1: raise Exception('[bnlearn] >Error: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
 

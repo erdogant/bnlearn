@@ -95,6 +95,39 @@ def test_structure_learning():
     model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
 
+    # Test the filtering
+    DAG = bn.import_DAG('asia')
+    # Sampling
+    df = bn.sampling(DAG, n=1000)
+    # Structure learning of sampled dataset
+    model = bn.structure_learning.fit(df)
+    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
+    
+    # hc Enforce and filtering
+    model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
+    model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='enforce')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
+    model = bn.structure_learning.fit(df, methodtype='hc', black_list=['smoke', 'either'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['bronc', 'lung', 'asia', 'tub', 'dysp', 'xray'])
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', black_list=['smoke', 'either'], bw_list_method='enforce')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
+    # hc filter
+    model = bn.structure_learning.fit(df, methodtype='ex', white_list=['smoke', 'either'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
+    assert bn.structure_learning.fit(df, methodtype='ex', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
+    # cs filter
+    model = bn.structure_learning.fit(df, methodtype='cs', white_list=['smoke', 'either'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
+    assert bn.structure_learning.fit(df, methodtype='cs', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter')
+    assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
+    # cl filter
+    model = bn.structure_learning.fit(df, methodtype='cl', white_list=['smoke', 'either'], bw_list_method='filter', root_node='smoke')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
+    assert bn.structure_learning.fit(df, methodtype='cl', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter', root_node='smoke')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
+
 
 def test_parameter_learning():
     df = bn.import_example()

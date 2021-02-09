@@ -212,7 +212,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     >>> bn.plot(model)
 
     """
-    out=dict()
+    out={}
     model=None
     filepath=filepath.lower()
 
@@ -264,7 +264,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 def _dag2adjmat(model, verbose=3):
     adjmat = None
     if hasattr(model, 'nodes') and hasattr(model, 'edges'):
-        adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('Bool')
+        adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('bool')
         # Fill adjmat with edges
         edges = model.edges()
         # Run over the edges

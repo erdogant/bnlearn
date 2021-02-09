@@ -14,3 +14,4 @@ funcsigs
 statsmodels
 community
 packaging
+wget
