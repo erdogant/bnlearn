@@ -40,7 +40,7 @@ if not version.parse(nx.__version__) >= version.parse("2.5"):
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.14'
+__version__ = '0.3.15'
 
 # module level doc-string
 __doc__ = """
