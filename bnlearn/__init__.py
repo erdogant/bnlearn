@@ -19,6 +19,10 @@ import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
 from packaging import version
 
+__author__ = 'Erdogan Tasksen'
+__email__ = 'erdogant@gmail.com'
+__version__ = '0.3.15'
+
 try:
     import pgmpy
 except:
@@ -37,10 +41,6 @@ import networkx as nx
 if not version.parse(nx.__version__) >= version.parse("2.5"):
     print('[bnlearn] >Error: networkx version should be >= 2.5.\nTry to: pip install -U networkx')
 
-
-__author__ = 'Erdogan Tasksen'
-__email__ = 'erdogant@gmail.com'
-__version__ = '0.3.15'
 
 # module level doc-string
 __doc__ = """

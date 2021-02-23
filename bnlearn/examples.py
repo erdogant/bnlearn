@@ -1,6 +1,6 @@
 # %%
 import bnlearn as bn
-# print(bn.__version__)
+print(bn.__version__)
 # print(dir(bn))
 
 # # %%
