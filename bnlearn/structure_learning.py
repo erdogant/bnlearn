@@ -27,7 +27,7 @@ from bnlearn.bnlearn import _dag2adjmat
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -131,6 +131,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['white_list'] = white_list
     config['bw_list_method'] = bw_list_method
     config['max_indegree'] = max_indegree
+    config['tabu_length'] = tabu_length
     config['epsilon'] = epsilon
     config['max_iter'] = max_iter
     config['root_node'] = root_node
@@ -175,6 +176,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
                                black_list=config['black_list'],
                                white_list=config['white_list'],
                                max_indegree=config['max_indegree'],
+                               tabu_length=config['tabu_length'],
                                bw_list_method=bw_list_method,
                                epsilon=config['epsilon'],
                                max_iter=config['max_iter'],
@@ -322,7 +324,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, epsilon=1e-4, max_iter=1e6, bw_list_method='enforce', verbose=3):
+def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='enforce', verbose=3):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
     Description
@@ -363,10 +365,10 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
         if (black_list is not None) or (white_list is not None):
             if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
         # best_model = model.estimate()
-        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
+        best_model = model.estimate(max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
-        best_model = model.estimate(max_indegree=max_indegree, epsilon=epsilon, max_iter=max_iter, show_progress=False)
+        best_model = model.estimate(max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, show_progress=False)
 
     # Store
     out['model']=best_model
