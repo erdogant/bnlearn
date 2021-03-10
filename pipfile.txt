@@ -6,9 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-pgmpy = ">=0.1.10"
+pgmpy = ">=0.1.13"
 torch ="*"
 bnlearn = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
