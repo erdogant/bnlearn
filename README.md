@@ -82,7 +82,7 @@ pip install -U bnlearn # -U is to force download latest version
 
 ## Pip installation
 ```python
-pip install -U pgmpy=>0.1.13
+pip install -U pgmpy>=0.1.13
 pip install -U bnlearn # -U is to force to overwrite current version
 ```
 
