@@ -1,12 +1,14 @@
 # %%
-import bnlearn as bn
-print(bn.__version__)
+# import bnlearn as bn
+# print(bn.__version__)
 # print(dir(bn))
 
 # # %%
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
+
+
 
 # %%
 import bnlearn as bn
@@ -260,13 +262,13 @@ df_raw = bn.import_example(data='titanic')
 # Convert to onehot
 dfhot, dfnum = bn.df2onehot(df_raw)
 # Structure learning
-DAG = bn.structure_learning.fit(dfnum, methodtype='bayes', black_list=['Pclass','Sex','Embarked','Parch','Name'], root_node='Survived')
+DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
 # Plot
 G = bn.plot(DAG)
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, dfnum)
 # Make inference
-q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':1, 'Pclass':1})
+q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
 q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 
 bn.print_CPD(model)

@@ -255,6 +255,28 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 </p>
 
 
+## Example: Titanic example
+
+```python
+
+    import bnlearn as bn
+    # Load example mixed dataset
+    df_raw = bn.import_example(data='titanic')
+    # Convert to onehot
+    dfhot, dfnum = bn.df2onehot(df_raw)
+    # Structure learning
+    DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
+    # Plot
+    G = bn.plot(DAG)
+    # Parameter learning
+    model = bn.parameter_learning.fit(DAG, dfnum)
+    # Make inference
+    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
+    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
+    # Print model
+    bn.print_CPD(model)
+```
+
 ## Citation
 Please cite bnlearn in your publications if this is useful for your research. Here is an example BibTeX entry:
 ```BibTeX
