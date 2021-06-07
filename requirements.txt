@@ -3,7 +3,7 @@
 
 # conda install -c ankurankan pgmpy>="0.1.13"
 pgmpy>='0.1.13'
-networkx>='2.5'
+networkx>'2.5'
 matplotlib>='3.3.4'
 numpy
 pandas

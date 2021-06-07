@@ -119,9 +119,9 @@ def test_structure_learning():
     assert np.all(model['adjmat'].columns.values==['bronc', 'lung', 'smoke'])
     # cs filter
     model = bn.structure_learning.fit(df, methodtype='cs', white_list=['smoke', 'either'], bw_list_method='filter')
-    assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
+    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
     model= bn.structure_learning.fit(df, methodtype='cs', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter')
-    assert np.all(model['adjmat'].columns.values==['bronc', 'smoke', 'lung'])
+    assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'lung', 'bronc']))
     # cl filter
     model = bn.structure_learning.fit(df, methodtype='cl', white_list=['smoke', 'either'], bw_list_method='filter', root_node='smoke')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])

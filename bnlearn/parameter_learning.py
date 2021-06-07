@@ -113,7 +113,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
     # adjmat, model = _check_adjmat(model, df)
     df = _filter_df(adjmat, df, verbose=config['verbose'])
 
-    if config['verbose']>=3: print('[BNLEARN][PARAMETER LEARNING] Computing parameters using [%s]' %(config['method']))
+    if config['verbose']>=3: print('[bnlearn] >Parameter learning> Computing parameters using [%s]' %(config['method']))
     # Extract model
     if isinstance(model, dict):
         model = model['model']
@@ -128,17 +128,19 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     # Learning CPDs using Maximum Likelihood Estimators
     if config['method']=='ml' or config['method']=='maximumlikelihood':
-        # mle = MaximumLikelihoodEstimator(model, df)
-        model = MaximumLikelihoodEstimator(model, df)
-        for node in model.state_names:
-            print(model.estimate_cpd(node))
+        # model = MaximumLikelihoodEstimator(model, df)
+        # for node in model.state_names:
+        #     print(model.estimate_cpd(node))
+        model.fit(df, estimator=None) # estimator as None makes it maximum likelihood estimator according pgmpy docs. 
+        for cpd in model.get_cpds():
+              if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+              if config['verbose']>=3: print(cpd)
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
         model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000)
-
         for cpd in model.get_cpds():
-            if config['verbose']>=3: print("CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
 
     out = {}

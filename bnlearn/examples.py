@@ -9,7 +9,6 @@
 # print(dir(bn.inference))
 
 
-
 # %%
 import bnlearn as bn
 df = bn.import_example()
