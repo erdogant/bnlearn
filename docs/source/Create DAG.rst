@@ -89,7 +89,7 @@ For each node we can specify the probability distributions as following:
    from pgmpy.factors.discrete import TabularCPD
 
    # Cloudy
-   cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
+   cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
    print(cpt_cloudy)
 
 
