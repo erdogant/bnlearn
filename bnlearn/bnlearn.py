@@ -637,6 +637,64 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     out['G']=G
     return(out)
 
+# %%
+def topological_sort(graph, start=None):
+    """Topological sort.
+    
+    Description
+    -----------
+    Get nodes list in the topological sort order.
+
+    Parameters
+    ----------
+    graph : dict.
+        Graph.
+    start : str, optional
+        Start position. The default is None.
+
+    Returns
+    -------
+    list
+        Topological sort order.
+
+    Example
+    -----------
+    graph = {
+        'a': ['b', 'c'],
+        'b': ['d'],
+        'c': ['d'],
+        'd': ['e'],
+        'e': [],
+        }
+
+    print(iterative_topological_sort(graph, 'b'))
+    print(iterative_topological_sort(graph))
+
+
+    References
+    ----------
+    https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python
+
+    """
+    seen = set()
+    stack = []    # path variable is gone, stack and order are new
+    order = []    # order will be in reverse order at first
+    if start is None:
+        q = list(graph)
+    else:
+        q = [start]
+    while q:
+        v = q.pop()
+        if v not in seen:
+            seen.add(v) # no need to append to path any more
+            q.extend(graph[v])
+
+            while stack and v not in graph[stack[-1]]: # new stuff here!
+                order.append(stack.pop())
+            stack.append(v)
+
+    return stack + order[::-1]
+
 
 # %% Example data
 def import_example(data='sprinkler', n=10000, verbose=3):

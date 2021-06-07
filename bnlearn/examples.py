@@ -10,6 +10,20 @@
 
 
 # %%
+
+graph = {
+   'a': ['b', 'c'],
+   'b': ['d'],
+   'c': ['d'],
+   'd': ['e'],
+   'e': [],
+}
+
+print(iterative_topological_sort(graph, 'b'))
+print(iterative_topological_sort(graph))
+
+
+# %%
 import bnlearn as bn
 df = bn.import_example()
 
