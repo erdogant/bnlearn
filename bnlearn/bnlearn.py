@@ -638,7 +638,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     return(out)
 
 # %%
-def topological_sort(graph, start=None):
+def topological_sort(DAG, start=None):
     """Topological sort.
     
     Description
@@ -659,16 +659,10 @@ def topological_sort(graph, start=None):
 
     Example
     -----------
-    graph = {
-        'a': ['b', 'c'],
-        'b': ['d'],
-        'c': ['d'],
-        'd': ['e'],
-        'e': [],
-        }
-
-    print(iterative_topological_sort(graph, 'b'))
-    print(iterative_topological_sort(graph))
+    import bnlearn as bn
+    DAG = bn.import_DAG('sprinkler', verbose=0)
+    bn.topological_sort(DAG, 'Rain')
+    bn.topological_sort(DAG)
 
 
     References
@@ -676,6 +670,17 @@ def topological_sort(graph, start=None):
     https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python
 
     """
+    # Convert to adjmat
+    if isinstance(DAG, dict):
+        adjmat = DAG.get('adjmat', None)
+    elif np.all(np.isin(DAG.columns, ['source','target','weight'])):
+        adjmat = vec2adjmat(DAG['source'], DAG['target'])
+    else:
+        adjmat = DAG
+
+    # Convert to graph
+    graph = adjmat2dict(adjmat)
+    # Do the topological sort
     seen = set()
     stack = []    # path variable is gone, stack and order are new
     order = []    # order will be in reverse order at first
@@ -694,6 +699,28 @@ def topological_sort(graph, start=None):
             stack.append(v)
 
     return stack + order[::-1]
+
+
+# %%
+def adjmat2dict(adjmat):
+    """Convert adjacency matrix to dict.
+
+    Parameters
+    ----------
+    adjmat : pd.DataFrame
+        Adjacency matrix.
+
+    Returns
+    -------
+    graph : dict
+        Graph.
+
+    """
+    graph={}
+    rows=adjmat.index.values
+    for r in rows:
+        graph.update({r: list(rows[adjmat.loc[r,:]])})
+    return graph
 
 
 # %% Example data

@@ -1,7 +1,7 @@
 # %%
-# import bnlearn as bn
-# print(bn.__version__)
-# print(dir(bn))
+import bnlearn as bn
+print(bn.__version__)
+print(dir(bn))
 
 # # %%
 # print(dir(bn.structure_learning))
@@ -10,22 +10,15 @@
 
 
 # %%
-
-graph = {
-   'a': ['b', 'c'],
-   'b': ['d'],
-   'c': ['d'],
-   'd': ['e'],
-   'e': [],
-}
-
-print(iterative_topological_sort(graph, 'b'))
-print(iterative_topological_sort(graph))
-
-
-# %%
 import bnlearn as bn
-df = bn.import_example()
+DAG = bn.import_DAG('sprinkler', verbose=0)
+
+bn.topological_sort(DAG, 'Rain')
+bn.topological_sort(DAG)
+
+# Different inputs
+bn.topological_sort(DAG['adjmat'], 'Rain')
+bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
 
 # %%
 

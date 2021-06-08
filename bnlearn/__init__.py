@@ -11,6 +11,7 @@ from bnlearn.bnlearn import (
     vec2adjmat,
     df2onehot,
     to_BayesianModel,
+    topological_sort,
 )
 
 # Import function in new level
