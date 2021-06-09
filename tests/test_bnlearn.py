@@ -140,3 +140,17 @@ def test_inference():
     DAG = bn.import_DAG('sprinkler')
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
+
+def test_topological_sort():
+    DAG = bn.import_DAG('sprinkler')
+    # Check DAG input
+    assert bn.topological_sort(DAG, 'Rain')==['Rain', 'Wet_Grass']
+    assert bn.topological_sort(DAG)==['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
+    # Different inputs
+    assert bn.topological_sort(DAG['adjmat'], 'Rain')==['Rain', 'Wet_Grass']
+    assert bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')==['Rain', 'Wet_Grass']
+    # Check model output
+    df = bn.sampling(DAG, n=1000, verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
+    assert bn.topological_sort(model, 'Rain')==['Rain', 'Cloudy', 'Sprinkler']
+    
