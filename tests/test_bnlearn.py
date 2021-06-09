@@ -148,9 +148,9 @@ def test_topological_sort():
     assert bn.topological_sort(DAG)==['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
     # Different inputs
     assert bn.topological_sort(DAG['adjmat'], 'Rain')==['Rain', 'Wet_Grass']
-    assert bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')==['Rain', 'Wet_Grass']
+    assert bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')==['Rain', 'Sprinkler']
     # Check model output
-    df = bn.sampling(DAG, n=1000, verbose=0)
+    df = bn.import_example('sprinkler')
     model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
     assert bn.topological_sort(model, 'Rain')==['Rain', 'Cloudy', 'Sprinkler']
     
