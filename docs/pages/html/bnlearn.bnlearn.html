@@ -185,6 +185,23 @@
 <span id="bnlearn-bnlearn"></span><h1>bnlearn.bnlearn<a class="headerlink" href="#module-bnlearn.bnlearn" title="Permalink to this headline">¶</a></h1>
 <p>Bayesian techniques for structure learning, parameter learning, inference and sampling.</p>
 <dl class="py function">
+<dt id="bnlearn.bnlearn.adjmat2dict">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">adjmat2dict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjmat</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert adjacency matrix to dict.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>adjmat</strong> (<em>pd.DataFrame</em>) – Adjacency matrix.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>graph</strong> – Graph.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="bnlearn.bnlearn.adjmat2vec">
 <code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">adjmat2vec</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjmat</span></em>, <em class="sig-param"><span class="n">min_weight</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2vec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
@@ -457,6 +474,34 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.topological_sort">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">topological_sort</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">adjmat</span></em>, <em class="sig-param"><span class="n">start</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.topological_sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Topological sort.</p>
+<p>Get nodes list in the topological sort order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em> or </em><em>bnlearn object.</em>) – Adjacency matrix.</p></li>
+<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – Start position. The default is None and the whole network is examined.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Topological sort order.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>import bnlearn as bn
+DAG = bn.import_DAG(‘sprinkler’, verbose=0)
+bn.topological_sort(DAG, ‘Rain’)
+bn.topological_sort(DAG)</p>
+<p class="rubric">References</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python">https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python</a></p>
 </dd></dl>
 
 <dl class="py function">

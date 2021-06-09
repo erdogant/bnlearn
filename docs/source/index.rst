@@ -37,6 +37,7 @@ Content
   Sampling and datasets
   Create DAG
   whitelist_blacklist
+  topological_sort
 
 .. toctree::
   :maxdepth: 2

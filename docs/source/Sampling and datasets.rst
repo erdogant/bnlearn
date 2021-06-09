@@ -12,7 +12,7 @@ Various DAGs available that can be easily loaded:
 
 .. code-block:: python
 
-   import bnlearn
+   import bnlearn as bn
 
    # The following models can be loaded:
    loadfile = 'sprinkler'
@@ -23,7 +23,7 @@ Various DAGs available that can be easily loaded:
    loadfile = 'sachs'
    loadfile = 'miserables'
 
-   DAG = bnlearn.import_DAG(loadfile)
+   DAG = bn.import_DAG(loadfile)
 
 
 Models are usually stored in bif files which can also be imported:
@@ -32,7 +32,7 @@ Models are usually stored in bif files which can also be imported:
 
    filepath = 'directory/to/model.bif'
 
-   DAG = bnlearn.import_DAG(filepath)
+   DAG = bn.import_DAG(filepath)
 
 
 
@@ -42,11 +42,11 @@ Example Sampling
 
 .. code-block:: python
  
-   import bnlearn
+   import bnlearn as bn
 
-   DAG = bnlearn.import_DAG('sprinkler', CPD=True)
+   DAG = bn.import_DAG('sprinkler', CPD=True)
 
-   df = bnlearn.sampling(DAG, n=1000)
+   df = bn.sampling(DAG, n=1000)
 
    df.head()
 

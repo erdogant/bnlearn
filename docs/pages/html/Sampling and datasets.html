@@ -194,7 +194,7 @@ It is also possible to create a DAG manually (see create DAG section) or load an
 <div class="section" id="datasets">
 <h2>Datasets<a class="headerlink" href="#datasets" title="Permalink to this headline">¶</a></h2>
 <p>Various DAGs available that can be easily loaded:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
 <span class="c1"># The following models can be loaded:</span>
 <span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
@@ -205,23 +205,23 @@ It is also possible to create a DAG manually (see create DAG section) or load an
 <span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
 <span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
 
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Models are usually stored in bif files which can also be imported:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filepath</span> <span class="o">=</span> <span class="s1">&#39;directory/to/model.bif&#39;</span>
 
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="section" id="example-sampling">
 <h2>Example Sampling<a class="headerlink" href="#example-sampling" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
