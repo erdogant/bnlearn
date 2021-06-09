@@ -8,6 +8,23 @@ print(dir(bn))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% topological sort example
+edges = [('1', '2'),
+         ('1', '3'),
+         ('2', '4'),
+         ('2', '3'),
+         ('3', '4'),
+         ('3', '5'),
+         ]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges, verbose=0)
+# Plot
+bn.plot(DAG)
+# Topological ordering
+bn.topological_sort(DAG)
+
+bn.topological_sort(DAG, '3')
 
 # %%
 import bnlearn as bn
