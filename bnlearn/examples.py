@@ -28,6 +28,8 @@ df = bn.sampling(DAG, n=1000, verbose=0)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
 
+bn.topological_sort(model, 'Rain')
+
 # %%
 # Example dataframe sprinkler_data.csv can be loaded with:
 df = bn.import_example()
@@ -132,6 +134,8 @@ q3 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
 q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
 q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
 
+bn.topological_sort(DAG)
+
 # DAGmle = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 # bn.print_CPD(DAGmle)
 # bn.print_CPD(DAGbay)
@@ -159,18 +163,21 @@ bn.plot(model, verbose=0)
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
-bn.compare_networks(DAG, model, verbose=0)
-bn.compare_networks(model, DAG)
 
 # Learn its parameters from data and perform the inference.
-DAGnew = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+DAG = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
 # Print the CPDs
-bn.print_CPD(DAGnew)
+bn.print_CPD(DAG)
+
+# Nothing is changed for the DAG. Only the CPDs are estimated now.
+bn.compare_networks(DAG, model, verbose=0)
 
 # Make inference
-q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0}, verbose=0)
+q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0}, verbose=3)
+# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1}, verbose=3)
 # q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
 
+# pd.DataFrame(index=q4.variables, data=q4.values, columns=q4.variables)
 
 # %% Example compare networks
 # Load asia DAG
