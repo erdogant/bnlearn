@@ -638,7 +638,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     return(out)
 
 # %%
-def topological_sort(DAG, start=None):
+def topological_sort(adjmat, start=None):
     """Topological sort.
     
     Description
@@ -647,10 +647,10 @@ def topological_sort(DAG, start=None):
 
     Parameters
     ----------
-    graph : dict.
-        Graph.
+    adjmat : pd.DataFrame or bnlearn object.
+        Adjacency matrix.
     start : str, optional
-        Start position. The default is None.
+        Start position. The default is None and the whole network is examined.
 
     Returns
     -------
@@ -671,12 +671,10 @@ def topological_sort(DAG, start=None):
 
     """
     # Convert to adjmat
-    if isinstance(DAG, dict):
-        adjmat = DAG.get('adjmat', None)
-    elif np.all(np.isin(DAG.columns, ['source','target','weight'])):
-        adjmat = vec2adjmat(DAG['source'], DAG['target'])
-    else:
-        adjmat = DAG
+    if isinstance(adjmat, dict):
+        adjmat = adjmat.get('adjmat', None)
+    elif np.all(np.isin(adjmat.columns, ['source','target','weight'])):
+        adjmat = vec2adjmat(adjmat['source'], adjmat['target'])
 
     # Convert to graph
     graph = adjmat2dict(adjmat)
