@@ -2,8 +2,7 @@ Topological sort
 ========================
 
 Topological sort or topological ordering of a directed graph is a linear ordering of its vertices and only possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG).
-Any DAG has at least one topological ordering, and algorithms are known for constructing a topological ordering of any DAG in linear time.
-Topological sorting has many applications especially in ranking problems such as feedback arc set. The vertices of the graph may represent the tasks to be performed, and the edges may represent constraints that one task must be performed before another.
+Any DAG has at least one topological ordering. Topological sorting has many applications especially in ranking problems such as feedback arc set. The vertices of the graph may represent the tasks to be performed, and the edges may represent constraints that one task must be performed before another.
 A topological ordering is, simply said, just a valid sequence for the tasks. In ``bnlearn`` we can also derive the topological ordering of the graph.
 
 
@@ -50,6 +49,8 @@ Lets create the underneath DAG and examine the topological ordering of 1. the en
 It is also possible to examine the topological ordering of your learned DAG using structure learning. 
 
 **Topological ordering example 2**
+
+.. code-block:: python
 
     # Import bnlearn
     import bnlearn as bn
