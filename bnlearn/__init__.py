@@ -22,7 +22,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.18'
+__version__ = '0.3.19'
 
 try:
     import pgmpy
