@@ -18,8 +18,9 @@
 
 ### Method overview
 Learning a Bayesian network can be split into two problems which are both implemented in this package:
-* Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
-* Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.
+* Structure learning: Given the data: Estimate a DAG that captures the dependencies between the variables.
+* Parameter learning: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
+* Inference: Given the learned model: Determine the exact probability values for your queries.
 
 #### The following functions are available after installation:
 
@@ -56,7 +57,10 @@ bn.to_undirected()
 
 # Convert to one-hot datamatrix
 bn.df2onehot()
- 
+
+# Derive the topological ordering of the (entire) graph 
+bn.topological_sort()
+
 # See below for the exact working of the functions
 ```
 
@@ -100,6 +104,7 @@ import bnlearn as bn
 
 ## Example: Structure Learning
 ```python
+import bnlearn as bn
 # Example dataframe sprinkler_data.csv can be loaded with: 
 df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
@@ -140,6 +145,7 @@ model_cl      = bn.structure_learning.fit(df, methodtype='cl', root_node='Wet_Gr
 
 ## Example: Parameter Learning
 ```python
+import bnlearn as bn
 # Import dataframe
 df = bn.import_example()
 # As an example we set the CPD at False which returns an "empty" DAG
@@ -152,6 +158,7 @@ G = bn.plot(model_update)
 
 ## Example: Inference
 ```python
+import bnlearn as bn
 model = bn.import_DAG('sprinkler')
 q_1 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
 q_2 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
@@ -159,6 +166,7 @@ q_2 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
 
 ## Example: Sampling to create dataframe
 ```python
+import bnlearn as bn
 model = bn.import_DAG('sprinkler')
 df = bn.sampling(model, n=1000)
 ```
@@ -209,6 +217,8 @@ CPD of Wet_Grass:
 
 ## Example: Loading DAG from bif files
 ```python
+import bnlearn as bn
+
 bif_file= 'sprinkler'
 bif_file= 'alarm'
 bif_file= 'andes'
