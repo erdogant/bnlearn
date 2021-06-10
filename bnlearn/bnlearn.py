@@ -34,31 +34,38 @@ PATH_TO_DATA = os.path.join(curpath, 'data')
 def predict(model, df, variables, todf=True, verbose=3):
     Pout = []
     if isinstance(variables, str): variables=[variables]
+    # Remove columns that are used as priors
     dfX = df.loc[:, ~np.isin(df.columns.values, variables)]
-    if verbose>=3: print('[bnlearn]> Remaining columns: %d' %(dfX.shape[1]))
+    if verbose>=3: print('[bnlearn]> Remaining columns for inference: %d' %(dfX.shape[1]))
 
+    # Loop the dataframe
     for i in tqdm(range(dfX.shape[0])):
+        # Setup input data
         evidence = dfX.iloc[i,:].to_dict()
+        # Do the inferemce
         query = inference.fit(model, variables=variables, evidence=evidence, verbose=0)
+        # Store in list
         Pout.append(get_best_prob(query))
-    
-        # Convert results to structured dataframe
-        # qdf = query2df(query)
-        # print(query)
     
     if todf: Pout = pd.DataFrame(Pout)
     return Pout
 
 def get_best_prob(query):
+    # Setup all combinations
     allcomb = list(itertools.product([0, 1], repeat=len(query.variables)))
+    # Get highest P-value and gather data
     idx = np.argmax(query.values.flatten())
     comb = allcomb[idx]
     p = query.values.flatten()[idx]
-    # Make dict
+    # Store in dict
     out = dict(zip(query.variables, comb))
     out['p']=p
     return out
 
+def query2df(query):
+    qdf = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
+    qdf['p'] = query.values.flatten()
+    return qdf
 
 # %% Convert adjmat to bayesian model
 def to_BayesianModel(model, verbose=3):

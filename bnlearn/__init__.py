@@ -13,6 +13,7 @@ from bnlearn.bnlearn import (
     to_BayesianModel,
     topological_sort,
     predict,
+    query2df,
 )
 
 # Import function in new level

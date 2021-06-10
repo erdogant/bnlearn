@@ -153,6 +153,8 @@ q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xra
 
 bn.topological_sort(DAG)
 
+query2df(q4)
+
 # DAGmle = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 # bn.print_CPD(DAGmle)
 # bn.print_CPD(DAGbay)
@@ -183,10 +185,7 @@ print(out)
 
 
     
-# def query2df(query):
-#     qdf = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
-#     qdf['p'] = query.values.flatten()
-#     return qdf
+
 
 # def query2df2(query):
 #     colname = query.variables[1]
