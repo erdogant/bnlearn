@@ -12,6 +12,7 @@ from bnlearn.bnlearn import (
     df2onehot,
     to_BayesianModel,
     topological_sort,
+    predict,
 )
 
 # Import function in new level

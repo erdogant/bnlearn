@@ -166,6 +166,46 @@ bn.topological_sort(DAG)
 # bn.compare_networks(DAGbay, DAGnew)
 # bn.compare_networks(DAGnew, DAGbay)
 
+# %% predict
+
+df = bn.sampling(DAG, n=100)
+out = bn.predict(DAG, df, variables='bronc')
+out = bn.predict(DAG, df, variables=['bronc','xray'])
+out = bn.predict(DAG, df, variables=['bronc','xray','smoke'])
+
+print('done\n\n')
+print(out)
+
+# %% predict
+# model=DAG
+# import numpy as np
+# from tqdm import tqdm
+
+
+    
+# def query2df(query):
+#     qdf = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
+#     qdf['p'] = query.values.flatten()
+#     return qdf
+
+# def query2df2(query):
+#     colname = query.variables[1]
+#     idxname = query.variables[0]
+#     qdf = pd.DataFrame(index=query.state_names.get(idxname), data=query.values, columns=query.state_names.get(colname))
+#     qdf.columns.name=colname
+#     qdf.index.name=idxname
+#     return qdf
+
+# def query2df1(query):
+#     state_names = []
+#     for key in query.state_names.keys():
+#         key_values = [key+'_'+str(e) for e in query.state_names.get(key) ]
+#         state_names.append(key_values)
+#     # Make dataframe
+#     qdf = pd.DataFrame(data=query.values, columns=state_names[1], index=state_names[0])
+#     return qdf
+
+
 # %% compute causalities
 # Load asia DAG
 import bnlearn as bn

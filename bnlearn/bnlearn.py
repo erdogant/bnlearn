@@ -9,12 +9,14 @@
 
 # %% Libraries
 import os
+import itertools
 import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
 import json
 from ismember import ismember
+from tqdm import tqdm
 
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
@@ -22,9 +24,40 @@ from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 
 from pgmpy import readwrite
 import bnlearn.helpers.network as network
+import bnlearn.inference as inference
 
 curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath, 'data')
+
+
+# %% MAke prediction in inference model
+def predict(model, df, variables, todf=True, verbose=3):
+    Pout = []
+    if isinstance(variables, str): variables=[variables]
+    dfX = df.loc[:, ~np.isin(df.columns.values, variables)]
+    if verbose>=3: print('[bnlearn]> Remaining columns: %d' %(dfX.shape[1]))
+
+    for i in tqdm(range(dfX.shape[0])):
+        evidence = dfX.iloc[i,:].to_dict()
+        query = inference.fit(model, variables=variables, evidence=evidence, verbose=0)
+        Pout.append(get_best_prob(query))
+    
+        # Convert results to structured dataframe
+        # qdf = query2df(query)
+        # print(query)
+    
+    if todf: Pout = pd.DataFrame(Pout)
+    return Pout
+
+def get_best_prob(query):
+    allcomb = list(itertools.product([0, 1], repeat=len(query.variables)))
+    idx = np.argmax(query.values.flatten())
+    comb = allcomb[idx]
+    p = query.values.flatten()[idx]
+    # Make dict
+    out = dict(zip(query.variables, comb))
+    out['p']=p
+    return out
 
 
 # %% Convert adjmat to bayesian model
@@ -797,10 +830,10 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
         One-hot dataframe.
 
     """
-    from df2onehot import df2onehot
+    from df2onehot import df2onehot as df2hot
 
     # Convert dataframe to onehot by keeping only categorical variables.
-    out = df2onehot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)
+    out = df2hot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)
     # Numerical
     df_num = out['numeric'].iloc[:, out['dtypes']=='cat']
     df_num = df_num.astype(int)
