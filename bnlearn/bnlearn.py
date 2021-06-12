@@ -23,106 +23,17 @@ from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 
 from pgmpy import readwrite
-import bnlearn.helpers.network as network
-import bnlearn.inference as inference
+# import bnlearn.network as network
+# from bnlearn.network import compare_networks, graphlayout, adjmat2graph
+# import bnlearn.inference as inference
+import bnlearn
 
 curpath = os.path.dirname(os.path.abspath(__file__))
 PATH_TO_DATA = os.path.join(curpath, 'data')
 
 
-# %% MAke prediction in inference model
-def predict(model, df, variables, todf=True, verbose=3):
-    """Predict on data from a Bayesian network.
-    
-    Description
-    -----------
-    The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
-    The states with highest probability are returned.
-
-    Parameters
-    ----------
-    model : Object
-        An object of class from bn.fit.
-    df : pd.DataFrame
-        Each row in the DataFrame will be predicted
-    variables : str or list of str
-        The label(s) of node(s) to be predicted.
-    todf : Bool, (default is True)
-        The output is converted to dataframe output. Note that this heavily impacts the speed. 
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
-
-    Returns
-    -------
-    P : dict or DataFrame
-        Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.
-    
-    Examples
-    --------
-    >>> import bnlearn as bn
-    >>> model = bn.import_DAG('sprinkler')
-    >>>
-    >>> # Make single inference
-    >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})
-    >>> print(query)
-    >>> print(query2df(query))
-    >>> 
-    >>> # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
-    >>> df = bn.sampling(model, n=100)
-    >>>
-    >>> # Each sample will be assesed and the states with highest probability are returned.
-    >>> P = bn.predict(model, df, variables=['Rain', 'Cloudy'])
-    >>>
-    >>> print(P)
-    >>> #     Cloudy  Rain         p
-    >>> # 0        0     0  0.647249
-    >>> # 1        0     0  0.604230
-    >>> # ..     ...   ...       ...
-    >>> # 98       0     0  0.604230
-    >>> # 99       1     1  0.878049
-
-
-    """
-    P = []
-    if isinstance(variables, str): variables=[variables]
-    # Remove columns that are used as priors
-    dfX = df.loc[:, ~np.isin(df.columns.values, variables)]
-    if verbose>=3: print('[bnlearn]> Remaining columns for inference: %d' %(dfX.shape[1]))
-    # Get only the unique records to reduce computation time
-    # dfU = dfX.drop_duplicates()
-
-    # Loop the dataframe
-    for i in tqdm(range(dfX.shape[0])):
-        # Setup input data
-        evidence = dfX.iloc[i,:].to_dict()
-        # Do the inferemce
-        query = inference.fit(model, variables=variables, evidence=evidence, verbose=0)
-        # Store in list
-        P.append(get_best_prob(query))
-    
-    if todf: P = pd.DataFrame(P)
-    return P
-
-def get_best_prob(query):
-    # Setup all combinations
-    allcomb = list(itertools.product([0, 1], repeat=len(query.variables)))
-    # Get highest P-value and gather data
-    idx = np.argmax(query.values.flatten())
-    comb = allcomb[idx]
-    p = query.values.flatten()[idx]
-    # Store in dict
-    out = dict(zip(query.variables, comb))
-    out['p']=p
-    return out
-
-def query2df(query):
-    qdf = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
-    qdf['p'] = query.values.flatten()
-    return qdf
-
-# %% Convert adjmat to bayesian model
-def to_BayesianModel(model, verbose=3):
+#%%  Convert adjmat to bayesian model
+def to_bayesianmodel(model, verbose=3):
     """Convert adjacency matrix to BayesianModel.
 
     Description
