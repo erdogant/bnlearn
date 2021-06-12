@@ -62,7 +62,7 @@ def to_bayesianmodel(model, verbose=3):
         adjmat = model.get('adjmat', None)
     else:
         adjmat = model
-    if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_BayesianModel" should be adjmat or a dict containing a key "adjmat".')
+    if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_bayesianmodel" should be adjmat or a dict containing a key "adjmat".')
 
     if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianModel.')
 
@@ -159,7 +159,7 @@ def print_CPD(DAG, checkmodel=False):
         elif 'BayesianModel' in str(type(DAG)):
             # print CPDs using Bayesian Parameter Estimation
             if len(DAG.get_cpds())==0:
-                print('[bnlearn] >This seems like an Bayesian DAG containing only edges, and no CPDs. Tip: use bnlearn.plot(DAG) to make a plot of the edges.')
+                raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
                 return
             for cpd in DAG.get_cpds():
                 print("CPD of {variable}:".format(variable=cpd.variable))
