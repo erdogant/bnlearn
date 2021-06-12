@@ -101,17 +101,17 @@ def test_structure_learning():
     df = bn.sampling(DAG, n=1000)
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
-    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
-    
+    assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray']))
+
     # hc Enforce and filtering
     model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='filter')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
     model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='enforce')
-    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
+    assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray']))
     model = bn.structure_learning.fit(df, methodtype='hc', black_list=['smoke', 'either'], bw_list_method='filter')
-    assert np.all(model['adjmat'].columns.values==['bronc', 'lung', 'asia', 'tub', 'dysp', 'xray'])
+    assert np.all(np.isin(model['adjmat'].columns.values, ['bronc', 'lung', 'asia', 'tub', 'dysp', 'xray']))
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', black_list=['smoke', 'either'], bw_list_method='enforce')
-    assert np.all(model['adjmat'].columns.values==['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray'])
+    assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray']))
     # hc filter
     model = bn.structure_learning.fit(df, methodtype='ex', white_list=['smoke', 'either'], bw_list_method='filter')
     assert np.all(model['adjmat'].columns.values==['either', 'smoke'])
@@ -152,7 +152,7 @@ def test_query2df():
     assert np.all(df.columns==['Wet_Grass', 'p'])
     query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain':1, 'Cloudy':1}, to_df=False, verbose=0)
     df = bn.query2df(query)
-    assert np.all(df.columns==['Sprinkler', 'Wet_Grass', 'p'])
+    assert np.all(np.isin(df.columns, ['Sprinkler', 'Wet_Grass', 'p']))
     assert df.shape==(4,3)
 
 def test_predict():
@@ -168,10 +168,10 @@ def test_predict():
     # Generate some data based on DAG
     Xtest = bn.sampling(model, n=100)
     out = bn.predict(model, Xtest, variables=['bronc','xray'])
-    assert np.all(out.columns==['bronc', 'xray', 'p'])
+    assert np.all(np.isin(out.columns, ['bronc', 'xray', 'p']))
     assert out.shape==(100,3)
     out = bn.predict(model, Xtest, variables=['smoke','bronc','lung','xray'])
-    assert np.all(out.columns==['xray', 'bronc', 'lung', 'smoke', 'p'])
+    assert np.all(np.isin(out.columns, ['xray', 'bronc', 'lung', 'smoke', 'p']))
     assert out.shape==(100,5)
     out = bn.predict(model, Xtest, variables='smoke')
     assert np.all(out.columns==['smoke', 'p'])
