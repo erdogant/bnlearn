@@ -10,13 +10,8 @@ It is advisable to create a new environment.
 
 .. code-block:: console
 
-   conda create -n BNLEARN python=3.6
-   conda activate BNLEARN
-   conda install -c ankurankan pgmpy
-
-   conda deactivate
-   conda activate BNLEARN
-
+   conda create -n env_bnlearn python=3.8
+   conda activate env_bnlearn
    pip install bnlearn
 
 
@@ -28,30 +23,31 @@ Let's start by importing some data. We need a DAG and CPD.
 
 .. code:: python
 
-    import bnlearn
+    import bnlearn as bn
 
-    df = bnlearn.import_example()
+    df = bn.import_example()
 
-    model = bnlearn.structure_learning.fit(df)
+    model = bn.structure_learning.fit(df)
 
-    G = bnlearn.plot(model)
+    G = bn.plot(model)
 
 
 
 .. code:: python
 
-    import bnlearn
+    import bnlearn as bn
 
-    model = bnlearn.import_DAG('sprinkler')
+    model = bn.import_DAG('sprinkler')
 
-    df = bnlearn.import_example()
+    df = bn.import_example()
 
-    df = bnlearn.sampling(model)
+    df = bn.sampling(model)
 
-    q = bnlearn.inference.fit(model)
+    query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1, 'Wet_Grass':1})
+    print(query.df)
 
-    model_sl = bnlearn.structure_learning.fit(df)
+    model_sl = bn.structure_learning.fit(df)
 
-    model_pl = bnlearn.parameter_learning.fit(model_sl, df)
+    model_pl = bn.parameter_learning.fit(model_sl, df)
 
-    [scores, adjmat] = bnlearn.compare_networks(model_sl, model)
+    scores, adjmat = bn.compare_networks(model_sl, model)
