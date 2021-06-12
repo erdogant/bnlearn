@@ -9,6 +9,8 @@ print(dir(bn))
 # print(dir(bn.inference))
 
 # %% Predict
+import bnlearn as bn
+
 df = bn.import_example('asia')
 edges = [('smoke', 'lung'),
          ('smoke', 'bronc'),
@@ -19,9 +21,14 @@ edges = [('smoke', 'lung'),
 DAG = bn.make_DAG(edges, verbose=0)
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Generate some data based on DAG
-Xtest = bn.sampling(model, n=1000)
+df = bn.sampling(model, n=1000)
 # Make predictions
-Pout = bn.predict(model, Xtest, variables=['bronc','xray'])
+Pout = bn.predict(model, df, variables=['bronc','xray'])
+
+# Pout = bn.predict(model, df, variables=['bronc','xray'], method='max')
+# query = bnlearn.inference.fit(model, variables=['bronc','xray'], evidence=evidence, to_df=False, verbose=0)
+# print(query)
+
 
 # %% topological sort example
 edges = [('1', '2'),

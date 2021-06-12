@@ -830,7 +830,7 @@ def _filter_df(adjmat, df, verbose=3):
 
 
 # %% Make prediction in inference model
-def predict(model, df, variables, to_df=True, verbose=3):
+def predict(model, df, variables, to_df=True, method='max', verbose=3):
     """Predict on data from a Bayesian network.
     
     Description
@@ -848,6 +848,10 @@ def predict(model, df, variables, to_df=True, verbose=3):
         The label(s) of node(s) to be predicted.
     to_df : Bool, (default is True)
         The output is converted to dataframe output. Note that this heavily impacts the speed. 
+    method : str
+        The method that is used to select the for the inferences.
+        'max' : Return the variable values based on the maximum probability.
+        None : Returns all Probabilities
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -901,7 +905,7 @@ def predict(model, df, variables, to_df=True, verbose=3):
         # Find original location of the input data.
         loc = np.sum((dfX==dfU.iloc[i,:]).values, axis=1)==dfU.shape[1]
         # Store inference
-        P[loc] = _get_max_prob(query)
+        P[loc] = _get_prob(query, method=method)
     P = list(P)
 
     # Loop the dataframe
@@ -919,16 +923,20 @@ def predict(model, df, variables, to_df=True, verbose=3):
 
 
 # %% 
-def _get_max_prob(query):
+def _get_prob(query, method='max'):
     # Setup all combinations
-    allcomb = list(itertools.product([0, 1], repeat=len(query.variables)))
+    allcomb = np.array(list(itertools.product([0, 1], repeat=len(query.variables))))
     # Get highest P-value and gather data
-    idx = np.argmax(query.values.flatten())
-    comb = allcomb[idx]
-    p = query.values.flatten()[idx]
-    # Store in dict
-    out = dict(zip(query.variables, comb))
-    out['p']=p
+    Pq = query.values.flatten()
+    if method=='max':
+        idx = np.argmax(Pq)
+        comb = allcomb[idx]
+        p = Pq[idx]
+        # Store in dict
+        out = dict(zip(query.variables, comb))
+        out['p']=p
+    else:
+        out = bnlearn.query2df(query).to_dict()
     return out
 
 
