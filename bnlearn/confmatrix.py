@@ -4,7 +4,7 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 import itertools
 
-#%% confmatrix
+# %% confmatrix
 def twoclass(y_true, y_pred_proba, threshold=0.5, classnames=None, normalize=False, title='', cmap=plt.cm.Blues, showfig=True, verbose=3):
     """
     This function prints and plots the confusion matrix.
@@ -31,7 +31,6 @@ def twoclass(y_true, y_pred_proba, threshold=0.5, classnames=None, normalize=Fal
 
 #%%
 def makeplot(cm, classnames=None, title='', normalize=False, cmap=plt.cm.Blues):
-    
     plt.figure()
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title + 'Confusion matrix')

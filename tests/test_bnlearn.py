@@ -138,8 +138,44 @@ def test_parameter_learning():
 
 def test_inference():
     DAG = bn.import_DAG('sprinkler')
-    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1}, to_df=False, verbose=0)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
+    assert q1.df is None
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1}, to_df=True, verbose=0)
+    assert q1.df is not None
+
+def test_query2df():
+    DAG = bn.import_DAG('sprinkler')
+    query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1}, to_df=False, verbose=0)
+    df = bn.query2df(query)
+    assert df.shape==(2,2)
+    assert np.all(df.columns==['Wet_Grass', 'p'])
+    query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain':1, 'Cloudy':1}, to_df=False, verbose=0)
+    df = bn.query2df(query)
+    assert np.all(df.columns==['Sprinkler', 'Wet_Grass', 'p'])
+    assert df.shape==(4,3)
+
+def test_predict():
+    df = bn.import_example('asia')
+    edges = [('smoke', 'lung'),
+             ('smoke', 'bronc'),
+             ('lung', 'xray'),
+             ('bronc', 'xray')]
+    
+    # Make the actual Bayesian DAG
+    DAG = bn.make_DAG(edges, verbose=0)
+    model = bn.parameter_learning.fit(DAG, df, verbose=3)
+    # Generate some data based on DAG
+    Xtest = bn.sampling(model, n=100)
+    out = bn.predict(model, Xtest, variables=['bronc','xray'])
+    assert np.all(out.columns==['bronc', 'xray', 'p'])
+    assert out.shape==(100,3)
+    out = bn.predict(model, Xtest, variables=['smoke','bronc','lung','xray'])
+    assert np.all(out.columns==['xray', 'bronc', 'lung', 'smoke', 'p'])
+    assert out.shape==(100,5)
+    out = bn.predict(model, Xtest, variables='smoke')
+    assert np.all(out.columns==['smoke', 'p'])
+    assert out.shape==(100,2)
 
 def test_topological_sort():
     DAG = bn.import_DAG('sprinkler')

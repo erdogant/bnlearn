@@ -15,3 +15,4 @@ statsmodels
 community
 packaging
 wget
+df2onehot

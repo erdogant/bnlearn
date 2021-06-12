@@ -23,7 +23,8 @@ else:
     from pgmpy.estimators import ConstraintBasedEstimator
 
 # from packaging import version
-from bnlearn.bnlearn import _dag2adjmat
+# from bnlearn.bnlearn import _dag2adjmat
+import bnlearn
 
 
 # %% Structure Learning
@@ -71,7 +72,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     white_list : List or None, (default : None)
         List of edges are white listed by either by filtering or enforcing (see bw_list_method).
         In case of filtering, the search is limited to those edges. The resulting model will then only contain edges that are in white_list.
-        Works only in case of methodtype='hc'/ See also paramter: `bw_list_method`
+        Works only in case of methodtype='hc' See also paramter: `bw_list_method`
     bw_list_method : str, (default : None)
         'enforce' : A list of edges can optionally be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
         'filter' : Filter the dataframe based on `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
@@ -198,7 +199,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         out = _chowliu(df, config['root_node'], verbose=config['verbose'])
 
     # Setup simmilarity matrix
-    adjmat = _dag2adjmat(out['model'])
+    adjmat = bnlearn._dag2adjmat(out['model'])
 
     # adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('bool')
     # # Fill adjmat with edges

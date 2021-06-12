@@ -21,8 +21,9 @@ Currently, the library supports parameter learning for *discrete* nodes:
 
 # %% Libraries
 from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator
-from bnlearn.bnlearn import _filter_df
-from bnlearn.bnlearn import to_BayesianModel
+import bnlearn
+# from bnlearn.bnlearn import _filter_df
+# from bnlearn.bnlearn import to_bayesianmodel
 import warnings
 warnings.filterwarnings("ignore")
 
