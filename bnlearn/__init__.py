@@ -1,4 +1,5 @@
 from bnlearn.bnlearn import (
+    to_bayesianmodel,
     make_DAG,
     print_CPD,
     import_DAG,
@@ -10,21 +11,24 @@ from bnlearn.bnlearn import (
     adjmat2vec,
     vec2adjmat,
     df2onehot,
-    to_BayesianModel,
     topological_sort,
     predict,
     query2df,
+    _dag2adjmat,
+    _filter_df,
 )
 
 # Import function in new level
 import bnlearn.structure_learning as structure_learning
 import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
+import bnlearn.network as network
+import bnlearn.confmatrix as confmatrix
 from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.3.19'
+__version__ = '0.3.20'
 
 try:
     import pgmpy
