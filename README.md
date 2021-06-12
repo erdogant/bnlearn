@@ -160,8 +160,16 @@ G = bn.plot(model_update)
 ```python
 import bnlearn as bn
 model = bn.import_DAG('sprinkler')
-q_1 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
-q_2 = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
+query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
+print(query)
+print(query.df)
+
+# Lets try another inference
+query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
+print(query)
+print(query.df)
+
+
 ```
 
 ## Example: Sampling to create dataframe
@@ -280,11 +288,20 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     G = bn.plot(DAG)
     # Parameter learning
     model = bn.parameter_learning.fit(DAG, dfnum)
+
     # Make inference
-    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
+    query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
+    print(query)
+    print(query.df)
+
+    # Another inference using only sex for evidence
     q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
+    print(query)
+    print(query.df)
+
     # Print model
     bn.print_CPD(model)
+
 ```
 
 ## Citation
