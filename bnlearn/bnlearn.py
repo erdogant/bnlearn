@@ -408,12 +408,12 @@ def sampling(DAG, n=1000, verbose=3):
     if verbose>=3: print('[bnlearn] >Forward sampling for %.0d samples..' %(n))
 
     if len(DAG['model'].get_cpds())==0:
-        print('[bnlearn] >This seems like a DAG containing only edges, and no CPDs. Tip: use bn.parameter_learning.fit(DAG, df) to learn the CPDs first.')
+        raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
         return
 
     # http://pgmpy.org/sampling.html
     infer_model = BayesianModelSampling(DAG['model'])
-    # inference = GibbsSampling(model['model'])
+    # inference1 = GibbsSampling(model['model'])
     # Forward sampling and make dataframe
     df=infer_model.forward_sample(size=n, return_type='dataframe')
     return(df)
@@ -559,7 +559,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
         adjmat_diff : Adjacency matrix depicting the differences between the two input models.
 
     """
-    [scores, adjmat_diff] = network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], verbose=verbose)
+    scores, adjmat_diff = bnlearn.network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], verbose=verbose)
     return(scores, adjmat_diff)
 
 
@@ -602,7 +602,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
         if verbose>=3: print('[bnlearn] >Plot based on BayesianModel')
         # positions for all nodes
-        pos = network.graphlayout(model, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = bnlearn.network.graphlayout(model, pos=pos, scale=scale, layout=layout, verbose=verbose)
         # Add directed edge with weigth
         # edges=model.edges()
         edges=[*model.edges()]
@@ -611,12 +611,12 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     elif 'networkx' in str(type(model)):
         if verbose>=3: print('[bnlearn] >Plot based on networkx model')
         G = model
-        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
     else:
         if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
-        G = network.adjmat2graph(model)
+        G = adjmat2graph(model)
         # Get positions
-        pos = network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
 
     # Bootup figure
     plt.figure(figsize=figsize)
