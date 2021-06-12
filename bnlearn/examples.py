@@ -24,8 +24,6 @@ model = bn.parameter_learning.fit(DAG, df, verbose=3)
 df = bn.sampling(model, n=1000)
 # Make predictions
 Pout = bn.predict(model, df, variables=['bronc','xray'])
-
-# Pout = bn.predict(model, df, variables=['bronc','xray'], method='max')
 # query = bnlearn.inference.fit(model, variables=['bronc','xray'], evidence=evidence, to_df=False, verbose=0)
 # print(query)
 
