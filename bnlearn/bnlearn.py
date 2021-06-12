@@ -869,7 +869,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     >>> # Make single inference
     >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})
     >>> print(query)
-    >>> print(query2df(query))
+    >>> print(bn.query2df(query))
     >>> 
     >>> # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
     >>> df = bn.sampling(model, n=1000)
