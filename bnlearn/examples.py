@@ -8,6 +8,21 @@ print(dir(bn))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% Predict
+df = bn.import_example('asia')
+edges = [('smoke', 'lung'),
+         ('smoke', 'bronc'),
+         ('lung', 'xray'),
+         ('bronc', 'xray')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges, verbose=0)
+model = bn.parameter_learning.fit(DAG, df, verbose=3)
+# Generate some data based on DAG
+Xtest = bn.sampling(model, n=1000)
+# Make predictions
+Pout = bn.predict(model, Xtest, variables=['bronc','xray'])
+
 # %% topological sort example
 edges = [('1', '2'),
          ('1', '3'),
@@ -89,6 +104,8 @@ G = bn.plot(model, verbose=0)
 model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
 
 # %% Try all methods vs score types
+import bnlearn as bn
+
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 model_hc_k2 = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
 model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
@@ -134,7 +151,7 @@ bn.plot(DAG, verbose=0)
 bn.print_CPD(DAG)
 
 # Sampling
-df_sampling = bn.sampling(DAG, n=1000)
+# df_sampling = bn.sampling(DAG, n=1000)
 
 # Learn its parameters from data and perform the inference.
 DAG = bn.parameter_learning.fit(DAG, df, verbose=3)
@@ -153,7 +170,7 @@ q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':0, 'xra
 
 bn.topological_sort(DAG)
 
-query2df(q4)
+bn.query2df(q4)
 
 # DAGmle = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 # bn.print_CPD(DAGmle)
@@ -177,33 +194,6 @@ out = bn.predict(DAG, df, variables=['bronc','xray','smoke'])
 
 print('done\n\n')
 print(out)
-
-# %% predict
-# model=DAG
-# import numpy as np
-# from tqdm import tqdm
-
-
-    
-
-
-# def query2df2(query):
-#     colname = query.variables[1]
-#     idxname = query.variables[0]
-#     qdf = pd.DataFrame(index=query.state_names.get(idxname), data=query.values, columns=query.state_names.get(colname))
-#     qdf.columns.name=colname
-#     qdf.index.name=idxname
-#     return qdf
-
-# def query2df1(query):
-#     state_names = []
-#     for key in query.state_names.keys():
-#         key_values = [key+'_'+str(e) for e in query.state_names.get(key) ]
-#         state_names.append(key_values)
-#     # Make dataframe
-#     qdf = pd.DataFrame(data=query.values, columns=state_names[1], index=state_names[0])
-#     return qdf
-
 
 # %% compute causalities
 # Load asia DAG
@@ -309,7 +299,9 @@ q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkl
 q2 = bn.inference.fit(DAG, variables=['Wet_Grass','Rain'], evidence={'Sprinkler': 1})
 
 print(q1)
+print(q1.df)
 print(q2)
+print(q2.df)
 
 
 # %% INFERENCE 2
@@ -321,7 +313,9 @@ q2 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xra
 q3 = bn.inference.fit(DAG, variables=['lung'], evidence={'bronc':1, 'smoke':1})
 
 print(q1)
+print(q1.df)
 print(q2)
+print(q2.df)
 
 
 # %% Example with mixed dataset: titanic case
@@ -331,18 +325,25 @@ df_raw = bn.import_example(data='titanic')
 # Convert to onehot
 dfhot, dfnum = bn.df2onehot(df_raw)
 # Structure learning
-DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
+# DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
+DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked','Parch','Name'], bw_list_method='filter')
 # Plot
 G = bn.plot(DAG)
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, dfnum)
 # Make inference
-q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
-q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
+q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True}, verbose=0)
+q2 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0}, verbose=0)
 
-bn.print_CPD(model)
+print(q1)
+print(q1.df)
+# bn.print_CPD(model)
 
-df = bn.sampling(DAG, n=1000)
+# Create test dataset
+Xtest = bn.sampling(model, n=100)
+# Predict the whole dataset
+Pout = bn.predict(model, Xtest, variables=['Survived'])
+
 
 # %%
 import bnlearn as bn
