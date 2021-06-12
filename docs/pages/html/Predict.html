@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Predict &mdash; bnlearn bnlearn documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Sampling and datasets" href="Sampling%20and%20datasets.html" />
+    <link rel="prev" title="Inference" href="Inference.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bnlearn
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Methods</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Predict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Predict</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/Predict.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="predict">
+<h1>Predict<a class="headerlink" href="#predict" title="Permalink to this headline">¶</a></h1>
+<p>Predict is a functionality to make inferences on the input data using the Bayesian network.
+The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
+The states with highest probability are then returned.</p>
+<p>Lets create a small example to understand how it exactly works..</p>
+<p><strong>Predict example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import bnlearn</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load example DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+
+<span class="c1"># The dataframe consists four boolean variables</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#       smoke  lung  bronc  xray</span>
+<span class="c1"># 0         0     1      0     1</span>
+<span class="c1"># 1         0     1      1     1</span>
+<span class="c1"># 2         1     1      1     1</span>
+<span class="c1"># 3         1     1      0     1</span>
+<span class="c1"># 4         1     1      1     1</span>
+<span class="c1">#     ...   ...    ...   ...</span>
+<span class="c1"># 9995      1     1      1     1</span>
+<span class="c1"># 9996      1     1      1     1</span>
+<span class="c1"># 9997      0     1      1     1</span>
+<span class="c1"># 9998      0     1      1     1</span>
+<span class="c1"># 9999      0     1      1     0</span>
+
+<span class="c1"># Lets create a DAG by defining some edges between the variables. In this example smoke is related to lung, smoke to bronc, lung to xray and bronc to xray.</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;bronc&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;lung&#39;</span><span class="p">,</span> <span class="s1">&#39;xray&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;bronc&#39;</span><span class="p">,</span> <span class="s1">&#39;xray&#39;</span><span class="p">)]</span>
+
+<span class="c1"># With th edges, we can make a bayesian DAG by simply running the following line.</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="c1"># Plot DAG</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-topological-graph-example">
+<img alt="_images/asia_predict_example.png" src="_images/asia_predict_example.png" />
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># With the bayesian DAG and the dataframe we can start learning the CPDs for each node</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="c1"># bn.print_CPD(model)</span>
+
+<span class="c1"># Lets create some data based on the learned model</span>
+<span class="n">Xtest</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Xtest</span><span class="p">)</span>
+<span class="c1">#      smoke  lung  bronc  xray</span>
+<span class="c1"># 0        1     1      1     1</span>
+<span class="c1"># 1        1     1      1     1</span>
+<span class="c1"># 2        0     1      1     1</span>
+<span class="c1"># 3        1     0      0     1</span>
+<span class="c1"># 4        1     1      1     1</span>
+<span class="c1"># ..     ...   ...    ...   ...</span>
+<span class="c1"># 995      1     1      1     1</span>
+<span class="c1"># 996      1     1      1     1</span>
+<span class="c1"># 997      0     1      0     1</span>
+<span class="c1"># 998      0     1      0     1</span>
+<span class="c1"># 999      0     1      1     1</span>
+
+<span class="c1"># Without the predict function we can only make a single inference at the time (see below).</span>
+<span class="c1"># To asses an entire dataframe, such as *Xtest*, it is a lot of work though.</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bronc&#39;</span><span class="p">,</span><span class="s1">&#39;xray&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;smoke&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">query</span><span class="o">.</span><span class="n">df</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="o">+----------+---------+-------------------+</span>
+<span class="o">|</span> <span class="n">bronc</span>    <span class="o">|</span> <span class="n">xray</span>    <span class="o">|</span>   <span class="n">phi</span><span class="p">(</span><span class="n">bronc</span><span class="p">,</span><span class="n">xray</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+==========+=========+===================+</span>
+<span class="o">|</span> <span class="n">bronc</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">xray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span>            <span class="mf">0.0296</span> <span class="o">|</span>
+<span class="o">+----------+---------+-------------------+</span>
+<span class="o">|</span> <span class="n">bronc</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="n">xray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span>            <span class="mf">0.2986</span> <span class="o">|</span>
+<span class="o">+----------+---------+-------------------+</span>
+<span class="o">|</span> <span class="n">bronc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">xray</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span>            <span class="mf">0.0517</span> <span class="o">|</span>
+<span class="o">+----------+---------+-------------------+</span>
+<span class="o">|</span> <span class="n">bronc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="n">xray</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span>            <span class="mf">0.6201</span> <span class="o">|</span>
+<span class="o">+----------+---------+-------------------+</span>
+
+
+<span class="c1"># With the predict function we can now easily asses the entire dataframe for the specified input variables.</span>
+<span class="c1"># In this case we are going to asses bronc and xray for the entire dataframe.</span>
+<span class="c1"># The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).</span>
+<span class="c1"># The states with highest probability are then returned.</span>
+<span class="n">Pout</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">Xtest</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;bronc&#39;</span><span class="p">,</span><span class="s1">&#39;xray&#39;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Pout</span><span class="p">)</span>
+
+<span class="c1">#      bronc  xray         p</span>
+<span class="c1"># 0        1     1  0.620068</span>
+<span class="c1"># 1        1     1  0.620068</span>
+<span class="c1"># 2        0     1  0.544772</span>
+<span class="c1"># 3        1     0  0.488032</span>
+<span class="c1"># 4        1     1  0.620068</span>
+<span class="c1"># ..     ...   ...       ...</span>
+<span class="c1"># 995      1     1  0.620068</span>
+<span class="c1"># 996      1     1  0.620068</span>
+<span class="c1"># 997      0     1  0.544772</span>
+<span class="c1"># 998      0     1  0.544772</span>
+<span class="c1"># 999      0     1  0.544772</span>
+
+<span class="c1"># The first line shows bronc=1, xray=1 with P=0.62. This is the same Probabilty and results as demonstrated by the single query.</span>
+<span class="c1"># This line is returned as it had the maximum probability as you can see in the query.</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="Sampling%20and%20datasets.html" class="btn btn-neutral float-right" title="Sampling and datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Inference.html" class="btn btn-neutral float-left" title="Inference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Erdogan Taskesen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
