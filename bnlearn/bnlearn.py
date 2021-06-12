@@ -827,3 +827,221 @@ def _filter_df(adjmat, df, verbose=3):
         if verbose>=3: print('[bnlearn] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
         df.drop(labels=remcols, axis=1, inplace=True)
     return df
+
+
+# %% Make prediction in inference model
+def predict(model, df, variables, to_df=True, verbose=3):
+    """Predict on data from a Bayesian network.
+    
+    Description
+    -----------
+    The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
+    The states with highest probability are returned.
+
+    Parameters
+    ----------
+    model : Object
+        An object of class from bn.fit.
+    df : pd.DataFrame
+        Each row in the DataFrame will be predicted
+    variables : str or list of str
+        The label(s) of node(s) to be predicted.
+    to_df : Bool, (default is True)
+        The output is converted to dataframe output. Note that this heavily impacts the speed. 
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    P : dict or DataFrame
+        Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.
+    
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> model = bn.import_DAG('sprinkler')
+    >>>
+    >>> # Make single inference
+    >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})
+    >>> print(query)
+    >>> print(query2df(query))
+    >>> 
+    >>> # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
+    >>> df = bn.sampling(model, n=1000)
+    >>>
+    >>> # Each sample will be assesed and the states with highest probability are returned.
+    >>> Pout = bn.predict(model, df, variables=['Rain', 'Cloudy'])
+    >>>
+    >>> print(Pout)
+    >>> #     Cloudy  Rain         p
+    >>> # 0        0     0  0.647249
+    >>> # 1        0     0  0.604230
+    >>> # ..     ...   ...       ...
+    >>> # 998      0     0  0.604230
+    >>> # 999      1     1  0.878049
+
+    """
+    if not isinstance(df, pd.DataFrame): raise Exception('[bnlearn] >Error: Input requires a pd.DataFrame.')
+    if not isinstance(model, dict): raise Exception('[bnlearn] >Error: Input requires a dict that contains the key: model.')
+    if isinstance(variables, str): variables=[variables]
+    # Remove columns that are used as priors
+    dfX = df.loc[:, ~np.isin(df.columns.values, variables)]
+    if verbose>=3: print('[bnlearn]> Remaining columns for inference: %d' %(dfX.shape[1]))
+
+    # Get only the unique records in the DataFrame to reduce computation time.
+    dfU = dfX.drop_duplicates()
+    # Make empty array
+    P = np.array([None]*dfX.shape[0])
+    for i in tqdm(range(dfU.shape[0])):
+        # Get input data and create a dict.
+        evidence = dfU.iloc[i,:].to_dict()
+        # Do the inference.
+        query = bnlearn.inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
+        # Find original location of the input data.
+        loc = np.sum((dfX==dfU.iloc[i,:]).values, axis=1)==dfU.shape[1]
+        # Store inference
+        P[loc] = _get_max_prob(query)
+    P = list(P)
+
+    # Loop the dataframe
+    # P1 = []
+    # for i in tqdm(range(dfX.shape[0])):
+    #     # Setup input data
+    #     evidence = dfX.iloc[i,:].to_dict()
+    #     # Do the inferemce
+    #     query = inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
+    #     # Store in list
+    #     P1.append(_get_max_prob(query))
+
+    if to_df: P = pd.DataFrame(P)
+    return P
+
+
+# %% 
+def _get_max_prob(query):
+    # Setup all combinations
+    allcomb = list(itertools.product([0, 1], repeat=len(query.variables)))
+    # Get highest P-value and gather data
+    idx = np.argmax(query.values.flatten())
+    comb = allcomb[idx]
+    p = query.values.flatten()[idx]
+    # Store in dict
+    out = dict(zip(query.variables, comb))
+    out['p']=p
+    return out
+
+
+# %%
+def query2df(query):
+    """Convert query from inference model to a dataframe.
+
+    Parameters
+    ----------
+    query : Object from the inference model.
+        Convert query object to a dataframe.
+
+    Returns
+    -------
+    df : pd.DataFrame()
+        Dataframe with inferences.
+
+    """
+    df = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
+    df['p'] = query.values.flatten()
+    return df
+
+# %% Comparison of two networks
+# def _compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
+#     # Make sure columns and indices to match
+#     [IArow,IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
+#     [IAcol,IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
+#     adjmat_true = adjmat_true.loc[IArow,IAcol]
+#     adjmat_pred = adjmat_pred.iloc[IBrow,IBcol]
+    
+#     # Make sure it is boolean adjmat
+#     adjmat_true = adjmat_true>0
+#     adjmat_pred = adjmat_pred>0
+
+#     # Check whether order is correct
+#     assert np.all(adjmat_true.columns.values==adjmat_pred.columns.values), 'Column order of both input values could not be matched'
+#     assert np.all(adjmat_true.index.values==adjmat_pred.index.values), 'Row order of both input values could not be matched'
+    
+#     # Get edges
+#     y_true = adjmat_true.stack().reset_index()[0].values
+#     y_pred = adjmat_pred.stack().reset_index()[0].values
+    
+#     # Confusion matrix
+#     scores=confmatrix.twoclass(y_true, y_pred, threshold=0.5, classnames=['Disconnected','Connected'], title='', cmap=plt.cm.Blues, showfig=1, verbose=0)
+#     #bayes.plot(out_bayes['adjmat'], pos=G['pos'])
+    
+#     # Setup graph
+#     adjmat_diff = adjmat_true.astype(int)
+#     adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))<0]=2
+#     adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))>0]=-1
+    
+#     if showfig:
+#         # Setup graph
+#     #    G_true = adjmat2graph(adjmat_true)
+#         G_diff = adjmat2graph(adjmat_diff)
+#         # Graph layout
+#         pos = graphlayout(G_diff, pos=pos, scale=1, layout='fruchterman_reingold', verbose=verbose)
+#         # Bootup figure
+#         plt.figure(figsize=(width,height))
+#         # nodes
+#         nx.draw_networkx_nodes(G_diff, pos, node_size=700)
+#         # edges
+#         colors  = [G_diff[u][v]['color'] for u,v in G_diff.edges()]
+#         #weights = [G_diff[u][v]['weight'] for u,v in G_diff.edges()]
+#         nx.draw_networkx_edges(G_diff, pos, arrowstyle='->', edge_color=colors, width=1)
+#         # Labels
+#         nx.draw_networkx_labels(G_diff, pos, font_size=20, font_family='sans-serif')
+#         # Get labels of weights
+#         #labels = nx.get_edge_attributes(G,'weight')
+#         # Plot weights
+#         nx.draw_networkx_edge_labels(G_diff, pos, edge_labels=nx.get_edge_attributes(G_diff,'weight'))
+#         # Making figure nice
+#         #plt.legend(['Nodes','TN','FP','test'])
+#         ax = plt.gca()
+#         ax.set_axis_off()
+#         plt.show()
+    
+#     # Return
+#     return(scores, adjmat_diff)
+
+# # Make graph layout
+# def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
+#     if isinstance(pos, type(None)):
+#         if layout=='fruchterman_reingold':
+#             pos = nx.fruchterman_reingold_layout(model, scale=scale, iterations=50)
+#         else:
+#             pos = nx.spring_layout(model, scale=scale, iterations=50)
+#     else:
+#         if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
+
+#     return(pos)
+
+# def adjmat2graph(adjmat):
+#     G = nx.DiGraph() # Directed graph
+#     # Convert adjmat to source target
+#     df_edges=adjmat.stack().reset_index()
+#     df_edges.columns=['source', 'target', 'weight']
+#     df_edges['weight']=df_edges['weight'].astype(float)
+    
+#     # Add directed edge with weigth
+#     for i in range(df_edges.shape[0]):
+#         if df_edges['weight'].iloc[i]!=0:
+#             # Setup color
+#             if df_edges['weight'].iloc[i]==1:
+#                 color='k'
+#             elif df_edges['weight'].iloc[i]>1:
+#                 color='r'
+#             elif df_edges['weight'].iloc[i]<0:
+#                 color='b'
+#             else:
+#                 color='p'
+            
+#             # Create edge in graph
+#             G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)    
+#     # Return
+#     return(G)
