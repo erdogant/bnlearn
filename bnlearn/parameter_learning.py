@@ -111,7 +111,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     # Check whether all labels in the adjacency matrix are included from the dataframe
     # adjmat, model = _check_adjmat(model, df)
-    df = _filter_df(adjmat, df, verbose=config['verbose'])
+    df = bnlearn._filter_df(adjmat, df, verbose=config['verbose'])
 
     if config['verbose']>=3: print('[bnlearn] >Parameter learning> Computing parameters using [%s]' %(config['method']))
     # Extract model
@@ -120,7 +120,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     # Convert to BayesianModel
     if 'BayesianModel' not in str(type(model)):
-        model = to_BayesianModel(adjmat, verbose=config['verbose'])
+        model = bnlearn.to_bayesianmodel(adjmat, verbose=config['verbose'])
 
     # pe = ParameterEstimator(model, df)
     # print("\n", pe.state_counts('Cloudy'))
