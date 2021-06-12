@@ -304,6 +304,123 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
 ```
 
+## Example: Make predictions on a dataframe using inference
+
+```python
+
+    # Import bnlearn
+    import bnlearn as bn
+    
+    # Load example DataFrame
+    df = bn.import_example('asia')
+    print(df)
+    #       smoke  lung  bronc  xray
+    # 0         0     1      0     1
+    # 1         0     1      1     1
+    # 2         1     1      1     1
+    # 3         1     1      0     1
+    # 4         1     1      1     1
+    #     ...   ...    ...   ...
+    # 9995      1     1      1     1
+    # 9996      1     1      1     1
+    # 9997      0     1      1     1
+    # 9998      0     1      1     1
+    # 9999      0     1      1     0
+
+    # Create some edges for the DAG
+    edges = [('smoke', 'lung'),
+             ('smoke', 'bronc'),
+             ('lung', 'xray'),
+             ('bronc', 'xray')]
+    
+    # Construct the Bayesian DAG
+    DAG = bn.make_DAG(edges, verbose=0)
+    # Plot DAG
+    bn.plot(DAG)
+
+    # Learn CPDs using the DAG and dataframe
+    model = bn.parameter_learning.fit(DAG, df, verbose=3)
+    bn.print_CPD(model)
+
+    # CPD of smoke:
+    # +----------+----------+
+    # | smoke(0) | 0.500364 |
+    # +----------+----------+
+    # | smoke(1) | 0.499636 |
+    # +----------+----------+
+    # CPD of lung:
+    # +---------+---------------------+----------------------+
+    # | smoke   | smoke(0)            | smoke(1)             |
+    # +---------+---------------------+----------------------+
+    # | lung(0) | 0.13753633720930233 | 0.055131004366812224 |
+    # +---------+---------------------+----------------------+
+    # | lung(1) | 0.8624636627906976  | 0.9448689956331878   |
+    # +---------+---------------------+----------------------+
+    # CPD of bronc:
+    # +----------+--------------------+--------------------+
+    # | smoke    | smoke(0)           | smoke(1)           |
+    # +----------+--------------------+--------------------+
+    # | bronc(0) | 0.5988372093023255 | 0.3282387190684134 |
+    # +----------+--------------------+--------------------+
+    # | bronc(1) | 0.4011627906976744 | 0.6717612809315866 |
+    # +----------+--------------------+--------------------+
+    # CPD of xray:
+    # +---------+---------------------+---------------------+---------------------+---------------------+
+    # | bronc   | bronc(0)            | bronc(0)            | bronc(1)            | bronc(1)            |
+    # +---------+---------------------+---------------------+---------------------+---------------------+
+    # | lung    | lung(0)             | lung(1)             | lung(0)             | lung(1)             |
+    # +---------+---------------------+---------------------+---------------------+---------------------+
+    # | xray(0) | 0.7787162162162162  | 0.09028393966282165 | 0.7264957264957265  | 0.07695139911634757 |
+    # +---------+---------------------+---------------------+---------------------+---------------------+
+    # | xray(1) | 0.22128378378378377 | 0.9097160603371783  | 0.27350427350427353 | 0.9230486008836525  |
+    # +---------+---------------------+---------------------+---------------------+---------------------+
+    # [bnlearn] >Independencies:
+    # (smoke ⟂ xray | bronc, lung)
+    # (lung ⟂ bronc | smoke)
+    # (bronc ⟂ lung | smoke)
+    # (xray ⟂ smoke | bronc, lung)
+    # [bnlearn] >Nodes: ['smoke', 'lung', 'bronc', 'xray']
+    # [bnlearn] >Edges: [('smoke', 'lung'), ('smoke', 'bronc'), ('lung', 'xray'), ('bronc', 'xray')]
+
+
+    # Generate some example data based on DAG
+    Xtest = bn.sampling(model, n=1000)
+    print(Xtest)
+    #      smoke  lung  bronc  xray
+    # 0        1     1      1     1
+    # 1        1     1      1     1
+    # 2        0     1      1     1
+    # 3        1     0      0     1
+    # 4        1     1      1     1
+    # ..     ...   ...    ...   ...
+    # 995      1     1      1     1
+    # 996      1     1      1     1
+    # 997      0     1      0     1
+    # 998      0     1      0     1
+    # 999      0     1      1     1
+    
+
+    # Make predictions
+    Pout = bn.predict(model, Xtest, variables=['bronc','xray'])
+    print(Pout)
+
+    #         xray  bronc         p
+    # 0       1      0  0.542757
+    # 1       1      1  0.624117
+    # 2       1      0  0.542757
+    # 3       1      1  0.624117
+    # 4       1      0  0.542757
+    # ..    ...    ...       ...
+    # 995     1      0  0.542757
+    # 996     1      0  0.542757
+    # 997     1      1  0.624117
+    # 998     1      1  0.624117
+    # 999     1      0  0.542757
+
+    
+
+```
+
 ## Citation
 Please cite bnlearn in your publications if this is useful for your research. Here is an example BibTeX entry:
 ```BibTeX

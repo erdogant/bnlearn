@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -100,6 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
@@ -201,7 +205,7 @@
 </div>
 <p>bnlearn is build on top of the pgmpy library. Recommended is a conda installation for pgmpy:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda install -c ankurankan pgmpy&gt;=&quot;0.1.13&quot;</span>
-<span class="gp">#</span> or
+<span class="gp"># </span>or
 <span class="go">pip install -U pgmpy&gt;=0.1.13</span>
 </pre></div>
 </div>
@@ -215,10 +219,10 @@
 </pre></div>
 </div>
 <p>After creating the environment and installing pgmpy, you can simply install bnlearn with pip:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span> Install bnlearn and <span class="k">if</span> a version is readily present on your <span class="nb">local</span> machine, this version will be installed.
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Install bnlearn and <span class="k">if</span> a version is readily present on your <span class="nb">local</span> machine, this version will be installed.
 <span class="go">pip install bnlearn</span>
 
-<span class="gp">#</span> Make sure to have the latest version from pypi by using the -U <span class="o">(</span>update<span class="o">)</span> argument.
+<span class="gp"># </span>Make sure to have the latest version from pypi by using the -U <span class="o">(</span>update<span class="o">)</span> argument.
 <span class="go">pip install -U bnlearn</span>
 </pre></div>
 </div>
@@ -248,13 +252,13 @@
 <div class="section" id="uninstalling">
 <h1>Uninstalling<a class="headerlink" href="#uninstalling" title="Permalink to this headline">¶</a></h1>
 <p>If you want to remove your bnlearn installation with your environment, it can be as following:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">#</span> List all the active environments. BNLEARN should be listed.
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>List all the active environments. BNLEARN should be listed.
 <span class="go">conda env list</span>
 
-<span class="gp">#</span> Remove the BNLEARN environment
+<span class="gp"># </span>Remove the BNLEARN environment
 <span class="go">conda env remove --name BNLEARN</span>
 
-<span class="gp">#</span> List all the active environments. BNLEARN should be absent.
+<span class="gp"># </span>List all the active environments. BNLEARN should be absent.
 <span class="go">conda env list</span>
 </pre></div>
 </div>

@@ -34,6 +34,7 @@ Content
   Structure learning
   Parameter learning
   Inference
+  Predict
   Sampling and datasets
   Create DAG
   whitelist_blacklist

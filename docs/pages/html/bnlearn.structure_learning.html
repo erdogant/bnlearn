@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -100,6 +103,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
@@ -187,8 +191,8 @@
 <span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Permalink to this headline">¶</a></h1>
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
 <dl class="py function">
-<dt id="bnlearn.structure_learning.fit">
-<code class="sig-prename descclassname">bnlearn.structure_learning.</code><code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">df</span></em>, <em class="sig-param"><span class="n">methodtype</span><span class="o">=</span><span class="default_value">'hc'</span></em>, <em class="sig-param"><span class="n">scoretype</span><span class="o">=</span><span class="default_value">'bic'</span></em>, <em class="sig-param"><span class="n">black_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">white_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">bw_list_method</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">max_indegree</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tabu_length</span><span class="o">=</span><span class="default_value">100</span></em>, <em class="sig-param"><span class="n">epsilon</span><span class="o">=</span><span class="default_value">0.0001</span></em>, <em class="sig-param"><span class="n">max_iter</span><span class="o">=</span><span class="default_value">1000000.0</span></em>, <em class="sig-param"><span class="n">root_node</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
@@ -236,7 +240,7 @@ As before, BDeu is dependent on an equivalent sample size.</p>
 In case of filtering, the nodes black listed nodes are removed from the dataframe. The resulting model will nog contain any edges that are in black_list.</p></li>
 <li><p><strong>white_list</strong> (<em>List</em><em> or </em><em>None</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – List of edges are white listed by either by filtering or enforcing (see bw_list_method).
 In case of filtering, the search is limited to those edges. The resulting model will then only contain edges that are in white_list.
-Works only in case of methodtype=’hc’/ See also paramter: <cite>bw_list_method</cite></p></li>
+Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_method</cite></p></li>
 <li><p><strong>bw_list_method</strong> (<em>str</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – ‘enforce’ : A list of edges can optionally be passed as <cite>black_list</cite> or <cite>white_list</cite> to exclude those edges or to limit the search. This option is limited to only methodtype=’hc’
 ‘filter’ : Filter the dataframe based on <cite>black_list</cite> or <cite>white_list</cite>. Filtering can be done for every methodtype/scoretype.</p></li>
 <li><p><strong>max_indegree</strong> (<em>int</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype=’hc’)</p></li>
