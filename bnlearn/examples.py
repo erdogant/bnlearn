@@ -1,13 +1,33 @@
 # %%
 import bnlearn as bn
-print(bn.__version__)
+# print(bn.__version__)
 print(dir(bn))
 
-# # %%
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+
+# %%
+import bnlearn as bn
+examples = ['titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'miserables']
+for example in examples:
+    df = bn.import_DAG(example)
+    # assert ~df.empty
+
+# %% Download example
+import bnlearn as bn
+examples = ['titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'miserables']
+for example in examples:
+    df = bn.import_example(data=example)
+    # assert ~df.empty
+
+# %%
+import bnlearn as bn
+df = bn.import_example()
+model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, methodtype='hc')
+ 
 # %% Predict
 import bnlearn as bn
 
@@ -110,6 +130,7 @@ model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', 
 
 # %% Try all methods vs score types
 import bnlearn as bn
+df = bn.import_example()
 
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 model_hc_k2 = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
@@ -121,7 +142,9 @@ model_cs_k2 = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
 model_cs_bdeu = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
 model_cl = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 
-bn.compare_networks(model, model_hc_bic, pos=G['pos'], verbose=0)
+G = bn.plot(model_hc_bic, verbose=0)
+
+bn.compare_networks(model_hc_bic, model_cl, pos=G['pos'], verbose=0)
 
 # %% Example with dataset
 import bnlearn as bn
@@ -247,7 +270,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
 
 # Structure learning with black list
-model_wl = bn.structure_learning.fit(df, methodtype='ex', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='enforce')
+model_wl = bn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='enforce')
 bn.plot(model_wl, pos=G['pos'])
 
 model_bl = bn.structure_learning.fit(df, methodtype='hc', black_list=['asia','tub'], bw_list_method='enforce')
@@ -352,7 +375,7 @@ Pout = bn.predict(model, Xtest, variables=['Survived'])
 
 # %%
 import bnlearn as bn
-DAG = bn.import_DAG('sprinkler', CPD=False)
+DAG = bn.import_DAG('sprinkler', CPD=True)
 # DAG = bn.import_DAG('asia')
 bn.plot(DAG)
 bn.print_CPD(DAG)
