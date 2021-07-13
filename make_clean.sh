@@ -6,6 +6,10 @@ rm -rf __pycache__
 rm -rf .pytest_cache
 rm -rf .pylint.d
 rm -rf bnlearn/data/*.zip
+rm -rf bnlearn/data/*.bif
+rm -rf bnlearn/data/*.png
+rm -rf bnlearn/data/*.txt
+rm -rf bnlearn/data/*.json
 rm -rf bnlearn/data/*.csv
 rm -rf bnlearn/__pycache__
 rm -rf bnlearn/helpers/__pycache__
