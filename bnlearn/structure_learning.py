@@ -352,24 +352,17 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Set search algorithm
-    model = HillClimbSearch(df, scoring_method=scoring_method)
-
-    # Compute best DAG
-    # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")
-    # if PGMPY_VER:
-    #     best_model = model.estimate(max_indegree=max_indegree, black_list=black_list, white_list=white_list)
-    # else:
-    #     best_model = model.estimate(max_indegree=max_indegree)  # Can be be removed if pgmpy >v0.1.9
+    model = HillClimbSearch(df)
 
     # Compute best DAG
     if bw_list_method=='enforce':
         if (black_list is not None) or (white_list is not None):
             if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
         # best_model = model.estimate()
-        best_model = model.estimate(max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
-        best_model = model.estimate(max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, show_progress=False)
 
     # Store
     out['model']=best_model
