@@ -9,12 +9,14 @@
 
 # %% Libraries
 import os
+import wget
+import zipfile
+import json
 import itertools
 import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-import json
 from ismember import ismember
 from tqdm import tqdm
 
@@ -734,7 +736,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     ----------
     data : str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'pathfinder', 'sachs', 'water'
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water'
     n : int, optional
         Number of samples to generate. The default is 1000.
     verbose : int, (default: 3)
@@ -746,21 +748,33 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     df : pd.DataFrame()
 
     """
-    import wget
 
-    url = 'https://erdogant.github.io/datasets/'
-    if data=='sprinkler':
-        url=url + 'sprinkler.zip'
-    elif data=='titanic':
-        url=url + 'titanic_train.zip'
+    # Change name for downloading
+    if data=='titanic': data = 'titanic_train'
+    
+    # Download example dataset from github source
+    PATH_TO_DATA = _download_example(data, verbose=verbose)
+
+    # Import dataset
+    if (data=='sprinkler') or (data=='titanic_train'):
+        if verbose>=3: print('[bnlearn] >Import dataset..')
+        df = pd.read_csv(PATH_TO_DATA)
     else:
         try:
+            getPath = _unzip(PATH_TO_DATA, verbose=verbose)
             DAG = import_DAG(data, verbose=2)
             df = sampling(DAG, n=n, verbose=2)
         except:
             print('[bnlearn] >Error: Loading data not possible!')
             df = None
-        return df
+
+    return df
+
+#%% Download data from github source
+def _download_example(data, verbose=3):
+    # Set url location
+    url = 'https://erdogant.github.io/datasets/'
+    url=url + data+'.zip'
 
     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
@@ -769,13 +783,104 @@ def import_example(data='sprinkler', n=10000, verbose=3):
 
     # Check file exists.
     if not os.path.isfile(PATH_TO_DATA):
-        if verbose>=3: print('[bnlearn] >Downloading example dataset..')
+        if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
         wget.download(url, curpath)
+    
+    return PATH_TO_DATA
 
-    # Import local dataset
-    if verbose>=3: print('[bnlearn] >Import dataset..')
-    df = pd.read_csv(PATH_TO_DATA)
-    return df
+# %% Make DAG
+def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
+    """Import Directed Acyclic Graph.
+
+    Parameters
+    ----------
+    filepath : str, (default: sprinkler)
+        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
+        'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'filepath/to/model.bif',
+    CPD : bool, optional
+        Directed Acyclic Graph (DAG). The default is True.
+    checkmodel : bool
+        Check the validity of the model. The default is True
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    dict containing model and adjmat.
+        model : BayesianModel
+        adjmat : Adjacency matrix
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> model = bn.import_DAG('sprinkler')
+    >>> bn.plot(model)
+
+    """
+    PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    out={}
+    model=None
+    filepath=filepath.lower()
+    if verbose>=3: print('[bnlearn] >Import <%s>' %(filepath))
+
+    # Load data
+    if filepath=='sprinkler':
+        model = _DAG_sprinkler(CPD=CPD)
+    elif (filepath=='asia') or (filepath=='alarm') or (filepath=='andes') or (filepath=='sachs') or (filepath=='water'):
+        getfile = os.path.join(PATH_TO_DATA, filepath+'.bif')
+        if not os.path.isfile(getfile):
+            PATH_TO_DATA = _download_example(filepath, verbose=3)
+            getPath = _unzip(PATH_TO_DATA, verbose=verbose)
+        model = _bif2bayesian(getfile, verbose=verbose)
+    # elif filepath=='miserables':
+    #     getfile = os.path.join(PATH_TO_DATA, filepath+'.json')
+    #     if not os.path.isfile(getfile):
+    #         PATH_TO_DATA = _download_example(filepath, verbose=3)
+    #         getPath = _unzip(PATH_TO_DATA, ext='.json', verbose=verbose)
+
+    #     f = open(os.path.join(PATH_TO_DATA, 'miserables.json'))
+    #     data = json.loads(f.read())
+    #     L=len(data['links'])
+    #     edges=[(data['links'][k]['source'], data['links'][k]['target']) for k in range(L)]
+    #     model=nx.Graph(edges, directed=False)
+    else:
+        if os.path.isfile(filepath):
+            model = _bif2bayesian(filepath, verbose=verbose)
+        else:
+            if verbose>=3: print('[bnlearn] >filepath does not exist! <%s>' %(filepath))
+            return(out)
+
+    # Setup adjacency matrix
+    adjmat = _dag2adjmat(model)
+
+    # Store
+    out['model']=model
+    out['adjmat']=adjmat
+
+    # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
+    if (model is not None) and CPD and checkmodel:
+        _check_model(out['model'], verbose=verbose)
+        if verbose>=4:
+            print_CPD(out)
+
+    return(out)
+
+
+# %% unzip
+def _unzip(getZip, ext='.bif', verbose=3):
+    if not os.path.isdir(getZip):
+        if verbose>=3: print('[bnlearn] >Extracting files..')
+        [pathname, _] = os.path.split(getZip)
+        # Unzip
+        zip_ref = zipfile.ZipFile(getZip, 'r')
+        zip_ref.extractall(pathname)
+        zip_ref.close()
+        getPath = getZip.replace('.zip', ext)
+        if not os.path.isfile(getPath):
+            getPath = None
+
+    return getPath
 
 
 # %% Pre-processing of input raw dataset
