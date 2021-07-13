@@ -417,7 +417,7 @@ def sampling(DAG, n=1000, verbose=3):
     infer_model = BayesianModelSampling(DAG['model'])
     # inference1 = GibbsSampling(model['model'])
     # Forward sampling and make dataframe
-    df=infer_model.forward_sample(size=n, return_type='dataframe')
+    df=infer_model.forward_sample(size=n)
     return(df)
 
 
