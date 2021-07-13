@@ -16,3 +16,4 @@ community
 packaging
 wget
 df2onehot
+fsspec
