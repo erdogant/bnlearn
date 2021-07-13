@@ -30,9 +30,6 @@ from pgmpy import readwrite
 # import bnlearn.inference as inference
 import bnlearn
 
-curpath = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_DATA = os.path.join(curpath, 'data')
-
 
 #%%  Convert adjmat to bayesian model
 def to_bayesianmodel(model, verbose=3):
@@ -179,92 +176,13 @@ def print_CPD(DAG, checkmodel=False):
 
 # %%
 def _check_model(DAG, verbose=3):
-    if verbose>=3:
-        print('[bnlearn] >Checking CPDs..')
+    if verbose>=3: print('[bnlearn] >Checking CPDs..')
     for cpd in DAG.get_cpds():
         # print(cpd)
         if not np.all(cpd.values.sum(axis=0)==1):
             print('[bnlearn] >Warning: CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
     if verbose>=3:
         print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
-
-
-# %% Make DAG
-def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
-    """Import Directed Acyclic Graph.
-
-    Parameters
-    ----------
-    filepath : str, (default: sprinkler)
-        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
-        'sprinkler', 'alarm', 'andes', 'asia', 'pathfinder', 'sachs', 'miserables', 'filepath/to/model.bif',
-    CPD : bool, optional
-        Directed Acyclic Graph (DAG). The default is True.
-    checkmodel : bool
-        Check the validity of the model. The default is True
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
-
-    Returns
-    -------
-    dict containing model and adjmat.
-        model : BayesianModel
-        adjmat : Adjacency matrix
-
-    Examples
-    --------
-    >>> import bnlearn as bn
-    >>> model = bn.import_DAG('sprinkler')
-    >>> bn.plot(model)
-
-    """
-    out={}
-    model=None
-    filepath=filepath.lower()
-
-    # Load data
-    if filepath=='sprinkler':
-        model = _DAG_sprinkler(CPD=CPD)
-    elif filepath=='asia':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ASIA/asia.bif'), verbose=verbose)
-    elif filepath=='alarm':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ALARM/alarm.bif'), verbose=verbose)
-    elif filepath=='andes':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'ANDES/andes.bif'), verbose=verbose)
-    elif filepath=='pathfinder':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'PATHFINDER/pathfinder.bif'), verbose=verbose)
-    elif filepath=='sachs':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'SACHS/sachs.bif'), verbose=verbose)
-    elif filepath=='water':
-        model = _bif2bayesian(os.path.join(PATH_TO_DATA, 'WATER/water.bif'), verbose=verbose)
-    elif filepath=='miserables':
-        f = open(os.path.join(PATH_TO_DATA, 'miserables.json'))
-        data = json.loads(f.read())
-        L=len(data['links'])
-        edges=[(data['links'][k]['source'], data['links'][k]['target']) for k in range(L)]
-        model=nx.Graph(edges, directed=False)
-    else:
-        if os.path.isfile(filepath):
-            model = _bif2bayesian(filepath, verbose=verbose)
-        else:
-            if verbose>=3: print('[bnlearn] >filepath does not exist! <%s>' %(filepath))
-            return(out)
-
-    # Setup adjacency matrix
-    adjmat = _dag2adjmat(model)
-
-    # Store
-    out['model']=model
-    out['adjmat']=adjmat
-
-    # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
-    if (model is not None) and CPD and checkmodel:
-        _check_model(out['model'], verbose=verbose)
-        if verbose>=4:
-            print_CPD(out)
-
-    return(out)
 
 
 # %% Convert DAG into adjacency matrix
