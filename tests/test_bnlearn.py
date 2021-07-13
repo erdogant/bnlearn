@@ -50,7 +50,7 @@ def test_sampling():
 
 def test_to_undirected():
     # TEST 1:
-    randdata=['sprinkler','alarm','andes','asia','pathfinder','sachs']
+    randdata=['sprinkler','alarm','andes','asia','sachs']
     n = np.random.randint(0,len(randdata))
     DAG = bn.import_DAG(randdata[n], CPD=False, verbose=0)
     assert (DAG['adjmat'].sum().sum()*2)==bn.to_undirected(DAG['adjmat']).sum().sum()
@@ -119,7 +119,7 @@ def test_structure_learning():
     assert np.all(model['adjmat'].columns.values==['bronc', 'lung', 'smoke'])
     # cs filter
     model = bn.structure_learning.fit(df, methodtype='cs', white_list=['smoke', 'either'], bw_list_method='filter')
-    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
+    assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'either']))
     model= bn.structure_learning.fit(df, methodtype='cs', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter')
     assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'lung', 'bronc']))
     # cl filter
