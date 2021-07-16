@@ -37,6 +37,9 @@ bn.parameter_learning.fit()
 # Inference
 bn.inference.fit()
 
+# Make predictions
+bn.predict()
+
 # Based on a DAG, you can sample the number of samples you want.
 bn.sampling()
 
