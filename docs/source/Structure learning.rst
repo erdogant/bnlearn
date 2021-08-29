@@ -9,6 +9,7 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 * Exhaustivesearch
 * Hillclimbsearch
 * Chow-liu
+* Tree-augmented Naive Bayes (TAN)
 
 **Constraint-based structure learning:**
 
@@ -46,7 +47,7 @@ A different, but quite straightforward approach to build a DAG from data is to i
 Chow-liu
 ''''''''''''''''''
 
-The Chow-Liu Algorithm is a specific type of score based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].
+The Chow-Liu Algorithm is a Tree search based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].
 
 The algorithm has three steps:
 
@@ -55,10 +56,21 @@ The algorithm has three steps:
 	3. Pick any node to be the root variable, and assign directions radiating outward from this node (arrows go away from it). This step transforms the resulting undirected tree to a directed one.
 
 
+Tree-augmented Naive Bayes (TAN) 
+''''''''''''''''''''''''''''''''''''
+Tree augmented naive Bayes or TAN is a semi-naive Bayesian Learning method. It relaxes the naive Bayes attribute independence assumption by employing a tree structure, in which each attribute only depends on the class and one other attribute. A maximum weighted spanning tree that maximizes the likelihood of the training data is used to perform classification [2].
+
+The algorithm has three steps:
+
+	1. Approximate the dependencies among features with a tree Bayes net.
+	2. Tree induction algorithm
+		* Optimality: Maximum likelihood tree
+		* Efficiency: Polynomial algorithm
+	3. Robust parameter estimation
 
 
 Example Structure learning (general)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+'''''''''''''''''''''''''''''''''''''
 
 A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
 
@@ -189,3 +201,4 @@ Lets learn the structure of a more complex data set and compare it to another on
 
 References
 1. https://ermongroup.github.io/cs228-notes/learning/structure/
+2. https://doi.org/10.1007/978-0-387-30164-8_850
