@@ -11,12 +11,10 @@
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 import bnlearn as bn
 
-DAG = bn.import_DAG('sprinkler', verbose=3)
-df = bn.sampling(DAG, n=1000, verbose=0)
-
+df = bn.import_example()
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy', class_node='Rain', verbose=0)
-G = bn.plot(model)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+bn.plot(model)
 
 # %% Download example
 import bnlearn as bn
