@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
 
   
   
@@ -31,7 +29,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
@@ -104,8 +101,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#exhaustivesearch">Exhaustivesearch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#hillclimbsearch">Hillclimbsearch</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#constraint-based">Constraint-based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#chow-liu">Chow-liu</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#example-structure-learning-general">Example Structure learning (general)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chow-liu">Chow-liu</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-structure-learning-general">Example Structure learning (general)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#example-structure-learning-1">Example Structure learning (1)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-structure-learning-2">Example Structure learning (2)</a></li>
 </ul>
@@ -207,6 +205,7 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 <li><p>Exhaustivesearch</p></li>
 <li><p>Hillclimbsearch</p></li>
 <li><p>Chow-liu</p></li>
+<li><p>Tree-augmented Naive Bayes (TAN)</p></li>
 </ul>
 <p><strong>Constraint-based structure learning:</strong></p>
 <ul class="simple">
@@ -238,7 +237,7 @@ This search approach is only atractable for very small networks, and prohibits e
 </div>
 <div class="section" id="chow-liu">
 <h2>Chow-liu<a class="headerlink" href="#chow-liu" title="Permalink to this headline">¶</a></h2>
-<p>The Chow-Liu Algorithm is a specific type of score based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].</p>
+<p>The Chow-Liu Algorithm is a Tree search based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].</p>
 <p>The algorithm has three steps:</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -247,10 +246,29 @@ This search approach is only atractable for very small networks, and prohibits e
 <li><p>Pick any node to be the root variable, and assign directions radiating outward from this node (arrows go away from it). This step transforms the resulting undirected tree to a directed one.</p></li>
 </ol>
 </div></blockquote>
-<div class="section" id="example-structure-learning-general">
-<h3>Example Structure learning (general)<a class="headerlink" href="#example-structure-learning-general" title="Permalink to this headline">¶</a></h3>
-<p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
 </div>
+<div class="section" id="tree-augmented-naive-bayes-tan">
+<h2>Tree-augmented Naive Bayes (TAN)<a class="headerlink" href="#tree-augmented-naive-bayes-tan" title="Permalink to this headline">¶</a></h2>
+<p>Tree augmented naive Bayes or TAN is a semi-naive Bayesian Learning method. It relaxes the naive Bayes attribute independence assumption by employing a tree structure, in which each attribute only depends on the class and one other attribute. A maximum weighted spanning tree that maximizes the likelihood of the training data is used to perform classification [2].</p>
+<p>The algorithm has three steps:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Approximate the dependencies among features with a tree Bayes net.</p></li>
+<li><dl class="simple">
+<dt>Tree induction algorithm</dt><dd><ul class="simple">
+<li><p>Optimality: Maximum likelihood tree</p></li>
+<li><p>Efficiency: Polynomial algorithm</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Robust parameter estimation</p></li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="example-structure-learning-general">
+<h2>Example Structure learning (general)<a class="headerlink" href="#example-structure-learning-general" title="Permalink to this headline">¶</a></h2>
+<p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
 <div class="section" id="example-structure-learning-1">
 <h3>Example Structure learning (1)<a class="headerlink" href="#example-structure-learning-1" title="Permalink to this headline">¶</a></h3>
 <p>For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.</p>
@@ -381,7 +399,8 @@ This search approach is only atractable for very small networks, and prohibits e
 <p class="caption"><span class="caption-text">Comparison True vs. learned DAG.</span><a class="headerlink" href="#id4" title="Permalink to this image">¶</a></p>
 </div>
 <p>References
-1. <a class="reference external" href="https://ermongroup.github.io/cs228-notes/learning/structure/">https://ermongroup.github.io/cs228-notes/learning/structure/</a></p>
+1. <a class="reference external" href="https://ermongroup.github.io/cs228-notes/learning/structure/">https://ermongroup.github.io/cs228-notes/learning/structure/</a>
+2. <a class="reference external" href="https://doi.org/10.1007/978-0-387-30164-8_850">https://doi.org/10.1007/978-0-387-30164-8_850</a></p>
 </div>
 </div>
 </div>
