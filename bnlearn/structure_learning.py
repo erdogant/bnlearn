@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
-from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch
+from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 
 import pgmpy
 from packaging import version
