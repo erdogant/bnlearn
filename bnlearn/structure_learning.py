@@ -28,7 +28,7 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -63,6 +63,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'ex' or 'exhaustivesearch'
         'cs' or 'constraintsearch'
         'cl' or 'chow-liu' (requires setting root_node parameter)
+        'tan' (Tree-augmented Naive Bayes, requires setting root_node and class_node parameter)
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
         'bic', 'k2', 'bdeu'
@@ -83,10 +84,12 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     max_iter: int (default: 1e6)
         The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
     root_node: String
-        The root node for chow-liu method.
+        The root node for treeSearch based methods (chow-liu, Tree-augmented Naive Bayes (TAN))
+    class_node: String
+        The class node is required for Tree-augmented Naive Bayes (TAN)
     verbose : int, (default : 3)
         Print progress to screen.
-        0: NONE, 1: ERROR,  2: WARNING, 3: INFO (default), 4: DEBUG, 5: TRACE
+        0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
     -------
@@ -117,12 +120,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     """
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    assert (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
+    assert (methodtype=='tan') | (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
     if isinstance(white_list, str): white_list = [white_list]
     if isinstance(black_list, str): black_list = [black_list]
     if (white_list is not None) and len(white_list)==0: white_list = None
     if (black_list is not None) and len(black_list)==0: black_list = None
     if (methodtype!='hc') and (bw_list_method=='enforce'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
+    if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
+    if methodtype=='cl': methodtype = 'chow-liu'
 
     config = {}
     config['verbose'] = verbose
@@ -136,6 +141,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['epsilon'] = epsilon
     config['max_iter'] = max_iter
     config['root_node'] = root_node
+    config['class_node'] = class_node
 
     # Show warnings
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
@@ -193,10 +199,11 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Independencies in the data can be identified using chi2 conditional independence tests."""
         out = _constraintsearch(df, verbose=config['verbose'])
 
-    # Constraint-based Structure Learning
-    if config['method']=='cl' or config['method']=='chow-liu':
-        """Chow-liu based Structure Learning."""
-        out = _chowliu(df, config['root_node'], verbose=config['verbose'])
+    # TreeSearch-based Structure Learning
+    if config['method']=='chow-liu' or config['method']=='tan':
+        """TreeSearch based Structure Learning."""
+        out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], verbose=config['verbose'])
+
 
     # Setup simmilarity matrix
     adjmat = bnlearn._dag2adjmat(out['model'])
@@ -240,19 +247,22 @@ def _white_black_list_filter(df, white_list, black_list, bw_list_method='enforce
     return df
 
 
-# %% hillclimbsearch
-def _chowliu(df, root_node, verbose=3):
-    """Chow-liu searches for DAGs with attempts to find a model with optimal score.
+# %% TreeSearch methods
+def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
+    """Tree search methods.
 
     Description
     -----------
+    The TreeSearch methods Chow-liu and TAN (Tree-augmented Naive Bayes)
+    searches for DAGs with attempts to find a model with optimal score.
 
     """
     from pgmpy.estimators import TreeSearch
+    print(estimator_type)
 
     out={}
     est = TreeSearch(df, root_node=root_node)
-    model = est.estimate(estimator_type="chow-liu")
+    model = est.estimate(estimator_type=estimator_type, class_node=class_node)
 
     # Store
     out['model']=model
