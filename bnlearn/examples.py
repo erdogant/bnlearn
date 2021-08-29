@@ -1,19 +1,22 @@
 # %%
-import bnlearn as bn
+# import bnlearn as bn
 # print(bn.__version__)
-print(dir(bn))
+# print(dir(bn))
 
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
-
-# %%
+# %% TAN : Tree-augmented Naive Bayes (TAN)
+# https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 import bnlearn as bn
-examples = ['titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'miserables']
-for example in examples:
-    df = bn.import_DAG(example)
-    # assert ~df.empty
+
+DAG = bn.import_DAG('sprinkler', verbose=3)
+df = bn.sampling(DAG, n=1000, verbose=0)
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy', class_node='Rain', verbose=0)
+G = bn.plot(model)
 
 # %% Download example
 import bnlearn as bn
@@ -80,7 +83,7 @@ bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
 # %%
 
 import bnlearn as bn
-DAG = bn.import_DAG('sprinkler', verbose=0)
+DAG = bn.import_DAG('sprinkler')
 df = bn.sampling(DAG, n=1000, verbose=0)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
@@ -95,6 +98,7 @@ model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
+import bnlearn as bn
 DAG = bn.import_DAG('sprinkler', verbose=0)
 df = bn.sampling(DAG, n=1000, verbose=0)
 
@@ -120,7 +124,8 @@ to_vector = bn.adjmat2vec(DAG['adjmat'])
 to_adjmat = bn.vec2adjmat(to_vector['source'], to_vector['target'])
 
 # %% Load example dataframe from sprinkler
-df = bn.import_example('sprinkler', verbose=0)
+import bnlearn as bn
+df = bn.import_example('sprinkler')
 # Structure learning
 model = bn.structure_learning.fit(df, verbose=0)
 # Plot
