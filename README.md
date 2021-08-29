@@ -106,6 +106,15 @@ import bnlearn as bn
 ```
 
 ## Example: Structure Learning
+
+There are multiple manners to perform structure learning.
+* Exhaustivesearch
+* Hillclimbsearch
+* TreeSearch
+    * Chow-liu
+    * Tree-augmented Naive Bayes (TAN)
+
+
 ```python
 import bnlearn as bn
 # Example dataframe sprinkler_data.csv can be loaded with: 
@@ -144,6 +153,7 @@ model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
 model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
 model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 model_cl      = bn.structure_learning.fit(df, methodtype='cl', root_node='Wet_Grass')
+model_tan     = bn.structure_learning.fit(df, methodtype='tan', root_node='Wet_Grass', class_node='Rain')
 ```
 
 ## Example: Parameter Learning
