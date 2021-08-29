@@ -257,9 +257,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
     searches for DAGs with attempts to find a model with optimal score.
 
     """
-    from pgmpy.estimators import TreeSearch
-    print(estimator_type)
-
     out={}
     est = TreeSearch(df, root_node=root_node)
     model = est.estimate(estimator_type=estimator_type, class_node=class_node)
