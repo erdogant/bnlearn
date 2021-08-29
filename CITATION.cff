@@ -1,0 +1,20 @@
+# YAML 1.2
+---
+authors: 
+  -
+    family-names: Taskesen
+    given-names: Erdogan
+    orcid: "https://orcid.org/0000-0002-3430-9618"
+cff-version: "1.1.0"
+date-released: 2020-01-02
+keywords: 
+  - "Bayesian-inference"
+  - "Structure learning"
+  - "Parameter learning"
+  - "Causal relationships"
+license: "MIT"
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/erdogant/bnlearn"
+title: "bnlearn - Library for Bayesian network learning and inference"
+version: "0.3.22"
+...
