@@ -94,6 +94,8 @@ def test_structure_learning():
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
     model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
 
     # Test the filtering
     DAG = bn.import_DAG('asia')
@@ -125,8 +127,9 @@ def test_structure_learning():
     # cl filter
     model = bn.structure_learning.fit(df, methodtype='cl', white_list=['smoke', 'either'], bw_list_method='filter', root_node='smoke')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
-    # model = bn.structure_learning.fit(df, methodtype='cl', black_list=['asia', 'tub', 'either', 'dysp', 'xray'], bw_list_method='filter', root_node='smoke')
-    # assert np.any(model['adjmat'].columns.values==['smoke', 'bronc', 'lung'])
+    # tan
+    model = bn.structure_learning.fit(df, methodtype='tan', white_list=['smoke', 'either'], bw_list_method='filter', root_node='smoke', class_node='either')
+    assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
 
 
 def test_parameter_learning():
