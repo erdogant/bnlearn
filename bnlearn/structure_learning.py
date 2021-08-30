@@ -28,7 +28,7 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=set(), verbose=3):
     """Structure learning fit model.
 
     Description
@@ -332,7 +332,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='enforce', verbose=3):
+def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='edges', fixed_edges=set(), verbose=3):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
     Description
@@ -362,14 +362,14 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     model = HillClimbSearch(df)
 
     # Compute best DAG
-    if bw_list_method=='enforce':
+    if bw_list_method=='edges':
         if (black_list is not None) or (white_list is not None):
             if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
         # best_model = model.estimate()
-        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, fixed_edges=fixed_edges, show_progress=False)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
-        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, fixed_edges=fixed_edges, show_progress=False)
 
     # Store
     out['model']=best_model
