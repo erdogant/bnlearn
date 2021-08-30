@@ -296,7 +296,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     # Convert to onehot
     dfhot, dfnum = bn.df2onehot(df_raw)
     # Structure learning
-    DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
+    DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
     # Plot
     G = bn.plot(DAG)
     # Parameter learning

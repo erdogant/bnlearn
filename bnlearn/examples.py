@@ -368,7 +368,7 @@ df_raw = bn.import_example(data='titanic')
 dfhot, dfnum = bn.df2onehot(df_raw)
 # Structure learning
 # DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='filter')
-DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked','Parch','Name'], bw_list_method='filter')
+DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked','Parch','Name'], bw_list_method='edges')
 # Plot
 G = bn.plot(DAG)
 # Parameter learning
