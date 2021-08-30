@@ -108,7 +108,7 @@ def test_structure_learning():
     # hc filter on edges
     model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='nodes')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
-    model = bn.structure_learning.fit(df, methodtype='hc', white_list=['smoke', 'either'], bw_list_method='edges')
+    model = bn.structure_learning.fit(df, methodtype='hc', white_list=[('smoke', 'either')], bw_list_method='edges')
     assert np.all(np.isin(model['adjmat'].columns.values, ['smoke', 'bronc', 'lung', 'asia', 'tub', 'either', 'dysp', 'xray']))
     model = bn.structure_learning.fit(df, methodtype='hc', black_list=['smoke', 'either'], bw_list_method='nodes')
     assert np.all(np.isin(model['adjmat'].columns.values, ['bronc', 'lung', 'asia', 'tub', 'dysp', 'xray']))
