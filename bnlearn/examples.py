@@ -7,6 +7,17 @@
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% White_list edges
+import bnlearn as bn
+DAG = bn.import_DAG('asia')
+# plot ground truth
+df = bn.sampling(DAG, n=1000)
+
+# Structure learning with black list
+model = bn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='edges')
+bn.plot(model, pos=G['pos'])
+
+
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 import bnlearn as bn
@@ -273,10 +284,10 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
 
 # Structure learning with black list
-model_wl = bn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='enforce')
+model_wl = bn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='edges')
 bn.plot(model_wl, pos=G['pos'])
 
-model_bl = bn.structure_learning.fit(df, methodtype='hc', black_list=['asia','tub'], bw_list_method='enforce')
+model_bl = bn.structure_learning.fit(df, methodtype='hc', black_list=['asia','tub'], bw_list_method='edges')
 bn.plot(model_bl, pos=G['pos'])
 
 # Compare models
