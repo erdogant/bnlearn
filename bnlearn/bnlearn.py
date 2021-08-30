@@ -531,12 +531,12 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
     elif 'networkx' in str(type(model)):
         if verbose>=3: print('[bnlearn] >Plot based on networkx model')
         G = model
-        pos = graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
     else:
         if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
-        G = adjmat2graph(model)
+        G = bnlearn.network.adjmat2graph(model)
         # Get positions
-        pos = graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
 
     # Bootup figure
     plt.figure(figsize=figsize)
