@@ -435,15 +435,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 ```
 
 ## Citation
-Please cite bnlearn in your publications if this is useful for your research. Here is an example BibTeX entry:
-```BibTeX
-@misc{erdogant2019bnlearn,
-  title={bnlearn},
-  author={Erdogan Taskesen},
-  year={2019},
-  howpublished={\url{https://github.com/erdogant/bnlearn}},
-}
-```
+Please cite bnlearn in your publications if this is useful for your research. See right panel for more information.
 
 ## References
 * https://erdogant.github.io/bnlearn/
