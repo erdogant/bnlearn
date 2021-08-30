@@ -68,25 +68,27 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Scoring function for the search spaces.
         'bic', 'k2', 'bdeu'
     black_list : List or None, (default : None)
-        List of edges are black listed by either by filtering or enforcing (see bw_list_method).
-        In case of filtering, the nodes black listed nodes are removed from the dataframe. The resulting model will nog contain any edges that are in black_list.
+        List of edges are black listed.
+        In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.
     white_list : List or None, (default : None)
-        List of edges are white listed by either by filtering or enforcing (see bw_list_method).
-        In case of filtering, the search is limited to those edges. The resulting model will then only contain edges that are in white_list.
+        List of edges are white listed.
+        In case of filtering on nodes, the search is limited to those edges. The resulting model will then only contain nodes that are in white_list.
         Works only in case of methodtype='hc' See also paramter: `bw_list_method`
     bw_list_method : str, (default : None)
-        'enforce' : A list of edges can optionally be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
-        'filter' : Filter the dataframe based on `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
+        'edges' : A list of edges can be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
+        'nodes' : Filter the dataframe based on the nodes for `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
     max_indegree : int, (default : None)
         If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype='hc')
     epsilon: float (default: 1e-4)
         Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned. (only in case of methodtype='hc')
     max_iter: int (default: 1e6)
         The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
-    root_node: String
-        The root node for treeSearch based methods (chow-liu, Tree-augmented Naive Bayes (TAN))
+    root_node: String. (only in case of chow-liu, Tree-augmented Naive Bayes (TAN))
+        The root node for treeSearch based methods.
     class_node: String
         The class node is required for Tree-augmented Naive Bayes (TAN)
+    fixed_edges: iterable, Only in case of HillClimbSearch.
+        A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.
     verbose : int, (default : 3)
         Print progress to screen.
         0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
@@ -125,7 +127,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if isinstance(black_list, str): black_list = [black_list]
     if (white_list is not None) and len(white_list)==0: white_list = None
     if (black_list is not None) and len(black_list)==0: black_list = None
-    if (methodtype!='hc') and (bw_list_method=='enforce'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
+    if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
     if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
     if methodtype=='cl': methodtype = 'chow-liu'
 
@@ -142,6 +144,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     config['max_iter'] = max_iter
     config['root_node'] = root_node
     config['class_node'] = class_node
+    config['fixed_edges'] = fixed_edges
 
     # Show warnings
     # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
@@ -187,6 +190,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
                                bw_list_method=bw_list_method,
                                epsilon=config['epsilon'],
                                max_iter=config['max_iter'],
+                               fixed_edges=config['fixed_edges'],
                                verbose=config['verbose'],
                                )
 
@@ -225,18 +229,28 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
 
 # %% white_list and black_list
-def _white_black_list_filter(df, white_list, black_list, bw_list_method='enforce', verbose=3):
-    if bw_list_method=='filter':
+def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges', verbose=3):
+    # if bw_list_method=='edges':
+    #     # Keep only edges that are in white_list.
+    #     if white_list is not None:
+    #         if verbose>=3: print('[bnlearn] >Filter variables on white_list..')
+    #         parent = [ u  for (u, v) in white_list]
+    #         child = [ v  for (u, v) in white_list]
+    #         white_list_node = [x.lower() for x in set(parent+child)]
+    #         Iloc = np.isin(df.columns.str.lower(), white_list_node)
+    #         df = df.loc[:, Iloc]
+
+    if bw_list_method=='nodes':
         # Keep only variables that are in white_list.
         if white_list is not None:
-            if verbose>=3: print('[bnlearn] >Filter variables on white_list..')
+            if verbose>=3: print('[bnlearn] >Filter variables (nodes) on white_list..')
             white_list = [x.lower() for x in white_list]
             Iloc = np.isin(df.columns.str.lower(), white_list)
             df = df.loc[:, Iloc]
 
         # Exclude variables that are in black_list.
         if black_list is not None:
-            if verbose>=3: print('[bnlearn] >Filter variables on black_list..')
+            if verbose>=3: print('[bnlearn] >Filter variables (nodes) on black_list..')
             black_list = [x.lower() for x in black_list]
             Iloc = ~np.isin(df.columns.str.lower(), black_list)
             df = df.loc[:, Iloc]
@@ -300,11 +314,11 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     # Estimate using chi2
     [skel, seperating_sets] = model.build_skeleton(significance_level=significance_level)
 
-    print("Undirected edges: ", skel.edges())
+    if verbose>=4: print("Undirected edges: ", skel.edges())
     pdag = model.skeleton_to_pdag(skel, seperating_sets)
-    print("PDAG edges: ", pdag.edges())
+    if verbose>=4: print("PDAG edges: ", pdag.edges())
     dag = pdag.to_dag()
-    print("DAG edges: ", dag.edges())
+    if verbose>=4: print("DAG edges: ", dag.edges())
 
     out['undirected'] = skel
     out['undirected_edges'] = skel.edges()
@@ -318,7 +332,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     out['model'] = best_model
     out['model_edges'] = best_model.edges()
 
-    print(best_model.edges())
+    if verbose>=4: print(best_model.edges())
 
     """
     PC PDAG construction is only guaranteed to work under the assumption that the
