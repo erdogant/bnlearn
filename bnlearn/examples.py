@@ -1,11 +1,11 @@
 # %%
-# import bnlearn as bn
-# print(bn.__version__)
-# print(dir(bn))
+import bnlearn as bn
+print(bn.__version__)
+print(dir(bn))
 
-# print(dir(bn.structure_learning))
-# print(dir(bn.parameter_learning))
-# print(dir(bn.inference))
+print(dir(bn.structure_learning))
+print(dir(bn.parameter_learning))
+print(dir(bn.inference))
 
 # %% White_list edges
 import bnlearn as bn
@@ -14,8 +14,12 @@ DAG = bn.import_DAG('asia')
 df = bn.sampling(DAG, n=1000)
 
 # Structure learning with black list
-model = bn.structure_learning.fit(df, methodtype='hc', white_list=['asia','tub','bronc','xray','smoke'], bw_list_method='edges')
-bn.plot(model, pos=G['pos'])
+model = bn.structure_learning.fit(df, methodtype='hc', white_list=[('tub','lung'), ('smoke','bronc')], bw_list_method='edges')
+bn.plot(model)
+model = bn.structure_learning.fit(df, methodtype='hc', white_list=['tub','lung', 'smoke','bronc'], bw_list_method='nodes')
+bn.plot(model)
+model = bn.structure_learning.fit(df, methodtype='hc')
+bn.plot(model)
 
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
