@@ -7,6 +7,7 @@ print(dir(bn.structure_learning))
 print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
+
 # %% White_list edges
 import bnlearn as bn
 DAG = bn.import_DAG('asia')
