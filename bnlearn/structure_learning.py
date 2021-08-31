@@ -49,9 +49,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     This approach construes model selection as an optimization task. It has two building blocks:
     A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
     A search strategy to traverse the search space of possible models M and select a model with optimal score.
-    Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2
-    and the Bayesian Information Criterion (BIC, also called MDL).
-    As before, BDeu is dependent on an equivalent sample size.
+    Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
+    BDeu is dependent on an equivalent sample size.
 
     Parameters
     ----------
@@ -130,6 +129,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
     if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
     if methodtype=='cl': methodtype = 'chow-liu'
+    
+    if bw_list_method=='filter':
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes", and will be removed in future versions.')
+        bw_list_method = "nodes"
+    if bw_list_method=='enforce':
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges", and will be removed in future versions.')
+        bw_list_method = "edges"
+
 
     config = {}
     config['verbose'] = verbose
