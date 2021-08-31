@@ -28,7 +28,7 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=set(), verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -73,9 +73,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         List of edges are white listed.
         In case of filtering on nodes, the search is limited to those edges. The resulting model will then only contain nodes that are in white_list.
         Works only in case of methodtype='hc' See also paramter: `bw_list_method`
-    bw_list_method : str, (default : None)
-        'edges' : A list of edges can be passed as `black_list` or `white_list` to exclude those edges or to limit the search. This option is limited to only methodtype='hc'
-        'nodes' : Filter the dataframe based on the nodes for `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
+    bw_list_method : list of str or tuple, (default : None)
+        A list of edges can be passed as `black_list` or `white_list` to exclude or to limit the search. 
+            * 'edges' : [('A', 'B'), ('C','D'), (...)] This option is limited to only methodtype='hc'
+            * 'nodes' : ['A', 'B', ...] Filter the dataframe based on the nodes for `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
     max_indegree : int, (default : None)
         If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype='hc')
     epsilon: float (default: 1e-4)
@@ -129,14 +130,16 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
     if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
     if methodtype=='cl': methodtype = 'chow-liu'
-    
+    if fixed_edges is None: fixed_edges=set()
+
+    # Remove in future version
     if bw_list_method=='filter':
         if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes", and will be removed in future versions.')
         bw_list_method = "nodes"
     if bw_list_method=='enforce':
         if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges", and will be removed in future versions.')
         bw_list_method = "edges"
-
+    ## End removal
 
     config = {}
     config['verbose'] = verbose
@@ -167,6 +170,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     #     if config['verbose']>=2: print('[bnlearn] >Warning: white_list only works in case of methodtype="hc"')
     if (max_indegree is not None) and methodtype!='hc':
         if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
+    if (class_node is not None) and methodtype!='tan':
+        if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="tan"')
 
     if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
 
@@ -385,7 +390,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Compute best DAG
     if bw_list_method=='edges':
         if (black_list is not None) or (white_list is not None):
-            if verbose>=3: print('[bnlearn] >Enforcing nodes based on black_list and/or white_list.')
+            if verbose>=3: print('[bnlearn] >Filter edges based on black_list/white_list')
         # best_model = model.estimate()
         best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, fixed_edges=fixed_edges, show_progress=False)
     else:
