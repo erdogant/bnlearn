@@ -41,6 +41,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
             a. exhaustivesearch
             b. hillclimbsearch
             c. chow-liu
+            d. Tree-augmented Naive Bayes (tan)
         2. Constraint-based structure learning (PC)
             a. chi-square test
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
