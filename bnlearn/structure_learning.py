@@ -299,12 +299,28 @@ def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
 def _constraintsearch(df, significance_level=0.05, verbose=3):
     """Contrain search.
 
+    PC PDAG construction is only guaranteed to work under the assumption that the
+    identified set of independencies is *faithful*, i.e. there exists a DAG that
+    exactly corresponds to it. Spurious dependencies in the data set can cause
+    the reported independencies to violate faithfulness. It can happen that the
+    estimated PDAG does not have any faithful completions (i.e. edge orientations
+    that do not introduce new v-structures). In that case a warning is issued.
+
     test_conditional_independence() returns a tripel (chi2, p_value, sufficient_data),
     consisting in the computed chi2 test statistic, the p_value of the test, and a heuristig
     flag that indicates if the sample size was sufficient.
     The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value),
     given the null hypothesis that X and Y are independent given Zs.
     This can be used to make independence judgements, at a given level of significance.
+
+    DAG (pattern) construction
+    With a method for independence testing at hand, we can construct a DAG from the data set in three steps:
+        1. Construct an undirected skeleton - `estimate_skeleton()`
+        2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
+        3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
+
+        Step 1.&2. form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
+
     """
     out = {}
     # Set search algorithm
@@ -315,15 +331,6 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     #    print(_is_independent(est, 'Cloudy', 'Rain', significance_level=significance_level))
     #    print(_is_independent(est, 'Sprinkler', 'Rain',  ['Wet_Grass'], significance_level=significance_level))
 
-    """
-    DAG (pattern) construction
-    With a method for independence testing at hand, we can construct a DAG from the data set in three steps:
-        1. Construct an undirected skeleton - `estimate_skeleton()`
-        2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
-        3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
-
-        Step 1.&2. form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
-    """
     # Estimate using chi2
     [skel, seperating_sets] = model.build_skeleton(significance_level=significance_level)
 
@@ -346,15 +353,6 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     out['model_edges'] = best_model.edges()
 
     if verbose>=4: print(best_model.edges())
-
-    """
-    PC PDAG construction is only guaranteed to work under the assumption that the
-    identified set of independencies is *faithful*, i.e. there exists a DAG that
-    exactly corresponds to it. Spurious dependencies in the data set can cause
-    the reported independencies to violate faithfulness. It can happen that the
-    estimated PDAG does not have any faithful completions (i.e. edge orientations
-    that do not introduce new v-structures). In that case a warning is issued.
-    """
     return(out)
 
 
