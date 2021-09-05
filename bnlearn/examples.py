@@ -8,6 +8,13 @@ print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
 
+# %% Large dataset
+import pandas as pd
+df=pd.read_csv('c:/temp/features.csv')
+model = bn.structure_learning.fit(df.iloc[:,0:1000], methodtype='cl', root_node='21')
+model = bn.structure_learning.fit(df.iloc[:,0:100], methodtype='cs')
+bn.plot(model)
+
 # %% White_list edges
 import bnlearn as bn
 DAG = bn.import_DAG('asia')
