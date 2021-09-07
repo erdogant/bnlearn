@@ -8,6 +8,8 @@ bnlearn's documentation!
 * Simple and intuitive
 * Focus on structure learning, parameter learning and inference.
 
+`Read my blog about Structure learning if you need a step-by-step guide to detect causal relationships! <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+
 
 Content
 ========
