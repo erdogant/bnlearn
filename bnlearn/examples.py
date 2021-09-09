@@ -10,7 +10,9 @@ print(dir(bn.inference))
 
 ### Example of interactive plotting
 import bnlearn as bn
-df = bn.import_example()
+
+# Load example dataset
+df = bn.import_example(data='asia')
 
 # Structure learning
 model = bn.structure_learning.fit(df)

@@ -41,6 +41,7 @@ Content
   Create DAG
   whitelist_blacklist
   topological_sort
+  interactive plotting
   
 
 .. toctree::
