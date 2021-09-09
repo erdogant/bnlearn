@@ -436,6 +436,20 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
 ```
 
+### Example of interactive plotting
+import bnlearn as bn
+df = bn.import_example()
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+
+# Add some parameters for the interactive plot
+bn.plot(model, interactive=True, params = {'height':'600px'})
+
+# Add more parameters for the interactive plot
+bn.plot(model, interactive=True, params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn title', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
+
+
 ## Citation
 Please cite bnlearn in your publications if this is useful for your research. See right panel for more information.
 
