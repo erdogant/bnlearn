@@ -26,7 +26,7 @@ Each plot can be made interactive by setting the interactive parameter. The plot
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="500px" width="1000px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe>
 
 
 
