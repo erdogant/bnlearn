@@ -8,16 +8,29 @@ print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
 
+### Example of interactive plotting
+import bnlearn as bn
+df = bn.import_example()
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+
+# Add some parameters for the interactive plot
+bn.plot(model, interactive=True, params = {'height':'600px'})
+
+# Add more parameters for the interactive plot
+bn.plot(model, interactive=True, params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn causal diagram', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
+
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 import bnlearn as bn
 
 df = bn.import_example()
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
-bn.plot(model)
+model = bn.structure_learning.fit(df)
+# bn.plot(model)
 bn.plot(model, interactive=True)
-bn.plot(model, interactive=True, params = {'height':'800px'})
+# bn.plot(model, interactive=True, params = {'height':'800px'})
 
 
 # %% Large dataset
