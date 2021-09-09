@@ -8,6 +8,18 @@ print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
 
+# %% TAN : Tree-augmented Naive Bayes (TAN)
+# https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
+import bnlearn as bn
+
+df = bn.import_example()
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+bn.plot(model)
+bn.plot(model, interactive=True)
+bn.plot(model, interactive=True, params = {'height':'800px'})
+
+
 # %% Large dataset
 import pandas as pd
 df=pd.read_csv('c:/temp/features.csv')
@@ -38,6 +50,7 @@ df = bn.import_example()
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
 bn.plot(model)
+bn.plot(model, interactive=True)
 
 # %% Download example
 import bnlearn as bn
@@ -287,10 +300,13 @@ DAG = bn.import_DAG('asia')
 G = bn.plot(DAG)
 # Sampling
 df = bn.sampling(DAG, n=10000)
+
+# Structure learning
+model = bn.structure_learning.fit(df, verbose=0)
 # Structure learning of sampled dataset
 model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
-bn.plot(model_sl, pos=G['pos'])
+bn.plot(model_sl, pos=G['pos'], interactive=True, params = {'height':'800px'})
 # Compare networks and make plot
 bn.compare_networks(model, model_sl, pos=G['pos'])
 

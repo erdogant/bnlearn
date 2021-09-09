@@ -3,8 +3,6 @@
 Description
 -----------
 Inference is same as asking conditional probability questions to the models.
-i.e., What is the probability of a sprinkler is on given that it is raining which is basically equivalent of asking $ P(g^1 | i^1) $.
-Inference algorithms deals with efficiently finding these conditional probability queries.
 """
 # ------------------------------------
 # Name        : inference.py
@@ -17,8 +15,6 @@ Inference algorithms deals with efficiently finding these conditional probabilit
 # %% Libraries
 from pgmpy.inference import VariableElimination
 import bnlearn
-# from bnlearn.bnlearn import to_bayesianmodel
-# from bnlearn.bnlearn import query2df
 import numpy as np
 
 # %% Exact inference using Variable Elimination

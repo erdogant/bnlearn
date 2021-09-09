@@ -25,9 +25,6 @@ from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 
 from pgmpy import readwrite
-# import bnlearn.network as network
-# from bnlearn.network import compare_networks, graphlayout, adjmat2graph
-# import bnlearn.inference as inference
 import bnlearn
 
 
@@ -484,7 +481,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
 
 
 # %% PLOT
-def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
+def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bnlearn causal network', params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'}, verbose=3):
     """Plot the learned stucture.
 
     Parameters
@@ -497,6 +494,11 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
         Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.
     figsize : tuple, optional
         Figure size. The default is (15,8).
+    interactive : Bool, (default: True)
+        True: Static plot
+        False: Interactive web-based graph.
+    params : dict
+        Dictionary containing parameters for the pyvis network. This only works inf interactive=True
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -510,12 +512,16 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
             Graph model
 
     """
+    defaults = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':title, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'}
+    params = {**defaults, **params}
+
     out = {}
     G = nx.DiGraph()  # Directed graph
     layout='fruchterman_reingold'
 
     # Extract model if in dict
     if 'dict' in str(type(model)):
+        adjmat = model.get('adjmat', None)
         model = model.get('model', None)
 
     # Bayesian model
@@ -534,28 +540,49 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), verbose=3):
         pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
     else:
         if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
-        G = bnlearn.network.adjmat2graph(model)
+        G = bnlearn.network.adjmat2graph(adjmat)
         # Get positions
         pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
 
-    # Bootup figure
-    plt.figure(figsize=figsize)
-    # nodes
-    nx.draw_networkx_nodes(G, pos, node_size=500, alpha=0.85)
-    # edges
-    colors = [G[u][v].get('color', 'k') for u, v in G.edges()]
-    weights = [G[u][v].get('weight', 1) for u, v in G.edges()]
-    nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=colors, width=weights)
-    # Labels
-    nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
-    # Get labels of weights
-    # labels = nx.get_edge_attributes(G,'weight')
-    # Plot weights
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'))
-    # Making figure nice
-    ax = plt.gca()
-    ax.set_axis_off()
-    plt.show()
+    # Make interactive or static plot
+    if interactive:
+        try:
+            from pyvis import network as net
+            from IPython.core.display import display, HTML
+            # Convert adjacency matrix into Networkx Graph
+            G = bnlearn.network.adjmat2graph(adjmat)
+            # Setup of the interactive network figure
+            g = net.Network(**params)
+            # g = net.Network(directed=True, height='800px', width='70%', notebook=False, heading=title)
+            g.from_nx(G)
+            # Create advanced buttons
+            g.show_buttons(filter_=['physics'])
+            # Display
+            filename = title.strip().replace(' ','_') + '.html'
+            g.show(filename)
+            display(HTML(filename))
+            # webbrowser.open('bnlearn.html')
+        except ModuleNotFoundError:
+            if verbose>=2: print('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
+    else:
+        # Bootup figure
+        plt.figure(figsize=figsize)
+        # nodes
+        nx.draw_networkx_nodes(G, pos, node_size=500, alpha=0.85)
+        # edges
+        colors = [G[u][v].get('color', 'k') for u, v in G.edges()]
+        weights = [G[u][v].get('weight', 1) for u, v in G.edges()]
+        nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=colors, width=weights)
+        # Labels
+        nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
+        # Get labels of weights
+        # labels = nx.get_edge_attributes(G,'weight')
+        # Plot weights
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'))
+        # Making figure nice
+        ax = plt.gca()
+        ax.set_axis_off()
+        plt.show()
 
     # Store
     out['pos']=pos
@@ -982,65 +1009,8 @@ def query2df(query):
     df['p'] = query.values.flatten()
     return df
 
-# %% Comparison of two networks
-# def _compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
-#     # Make sure columns and indices to match
-#     [IArow,IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
-#     [IAcol,IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
-#     adjmat_true = adjmat_true.loc[IArow,IAcol]
-#     adjmat_pred = adjmat_pred.iloc[IBrow,IBcol]
-    
-#     # Make sure it is boolean adjmat
-#     adjmat_true = adjmat_true>0
-#     adjmat_pred = adjmat_pred>0
 
-#     # Check whether order is correct
-#     assert np.all(adjmat_true.columns.values==adjmat_pred.columns.values), 'Column order of both input values could not be matched'
-#     assert np.all(adjmat_true.index.values==adjmat_pred.index.values), 'Row order of both input values could not be matched'
-    
-#     # Get edges
-#     y_true = adjmat_true.stack().reset_index()[0].values
-#     y_pred = adjmat_pred.stack().reset_index()[0].values
-    
-#     # Confusion matrix
-#     scores=confmatrix.twoclass(y_true, y_pred, threshold=0.5, classnames=['Disconnected','Connected'], title='', cmap=plt.cm.Blues, showfig=1, verbose=0)
-#     #bayes.plot(out_bayes['adjmat'], pos=G['pos'])
-    
-#     # Setup graph
-#     adjmat_diff = adjmat_true.astype(int)
-#     adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))<0]=2
-#     adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))>0]=-1
-    
-#     if showfig:
-#         # Setup graph
-#     #    G_true = adjmat2graph(adjmat_true)
-#         G_diff = adjmat2graph(adjmat_diff)
-#         # Graph layout
-#         pos = graphlayout(G_diff, pos=pos, scale=1, layout='fruchterman_reingold', verbose=verbose)
-#         # Bootup figure
-#         plt.figure(figsize=(width,height))
-#         # nodes
-#         nx.draw_networkx_nodes(G_diff, pos, node_size=700)
-#         # edges
-#         colors  = [G_diff[u][v]['color'] for u,v in G_diff.edges()]
-#         #weights = [G_diff[u][v]['weight'] for u,v in G_diff.edges()]
-#         nx.draw_networkx_edges(G_diff, pos, arrowstyle='->', edge_color=colors, width=1)
-#         # Labels
-#         nx.draw_networkx_labels(G_diff, pos, font_size=20, font_family='sans-serif')
-#         # Get labels of weights
-#         #labels = nx.get_edge_attributes(G,'weight')
-#         # Plot weights
-#         nx.draw_networkx_edge_labels(G_diff, pos, edge_labels=nx.get_edge_attributes(G_diff,'weight'))
-#         # Making figure nice
-#         #plt.legend(['Nodes','TN','FP','test'])
-#         ax = plt.gca()
-#         ax.set_axis_off()
-#         plt.show()
-    
-#     # Return
-#     return(scores, adjmat_diff)
-
-# # Make graph layout
+# %% Make graph layout
 # def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
 #     if isinstance(pos, type(None)):
 #         if layout=='fruchterman_reingold':
@@ -1051,28 +1021,3 @@ def query2df(query):
 #         if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
 
 #     return(pos)
-
-# def adjmat2graph(adjmat):
-#     G = nx.DiGraph() # Directed graph
-#     # Convert adjmat to source target
-#     df_edges=adjmat.stack().reset_index()
-#     df_edges.columns=['source', 'target', 'weight']
-#     df_edges['weight']=df_edges['weight'].astype(float)
-    
-#     # Add directed edge with weigth
-#     for i in range(df_edges.shape[0]):
-#         if df_edges['weight'].iloc[i]!=0:
-#             # Setup color
-#             if df_edges['weight'].iloc[i]==1:
-#                 color='k'
-#             elif df_edges['weight'].iloc[i]>1:
-#                 color='r'
-#             elif df_edges['weight'].iloc[i]<0:
-#                 color='b'
-#             else:
-#                 color='p'
-            
-#             # Create edge in graph
-#             G.add_edge(df_edges['source'].iloc[i], df_edges['target'].iloc[i], weight=np.abs(df_edges['weight'].iloc[i]), color=color)    
-#     # Return
-#     return(G)

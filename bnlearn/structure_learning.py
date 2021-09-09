@@ -135,10 +135,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Remove in future version
     if bw_list_method=='filter':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes", and will be removed in future versions.')
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes", but will be removed in future releases.')
         bw_list_method = "nodes"
     if bw_list_method=='enforce':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges", and will be removed in future versions.')
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges", but will be removed in future releases.')
         bw_list_method = "edges"
     ## End removal
 
