@@ -456,7 +456,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
 <p align="center">
   <a href="https://erdogant.github.io/docs/d3graph/sprinkler_example/sprinkler_bnlearn_causal_network.html">
-     <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/interactive_plot.png" width="900" />
+     <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/interactive_plot.png" width="1200" />
   </a>
 </p>
 
