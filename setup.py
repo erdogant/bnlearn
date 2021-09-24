@@ -13,7 +13,7 @@ else:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     install_requires=["pgmpy>=0.1.13", "networkx>2.5","matplotlib>=3.3.4",'numpy','pandas','tqdm','ismember','sklearn','funcsigs','statsmodels','community','packaging','wget','df2onehot','fsspec'],
+     install_requires=["pgmpy>=0.1.13", "networkx>2.5","matplotlib>=3.3.4",'numpy','pandas','tqdm','ismember','sklearn','funcsigs','statsmodels','community','packaging','wget','df2onehot','fsspec','pypickle'],
      python_requires='>=3',
      name='bnlearn',
      version=new_version,
