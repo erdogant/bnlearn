@@ -294,6 +294,28 @@ def adjmat2vec(adjmat, min_weight=1):
     return(adjmat)
 
 
+# %%
+def adjmat2dict(adjmat):
+    """Convert adjacency matrix to dict.
+
+    Parameters
+    ----------
+    adjmat : pd.DataFrame
+        Adjacency matrix.
+
+    Returns
+    -------
+    graph : dict
+        Graph.
+
+    """
+    graph={}
+    rows=adjmat.index.values
+    for r in rows:
+        graph.update({r: list(rows[adjmat.loc[r,:]])})
+    return graph
+
+
 # %% Sampling from model
 def sampling(DAG, n=1000, verbose=3):
     """Generate sample(s) using forward sampling from joint distribution of the bayesian network.
@@ -335,6 +357,67 @@ def sampling(DAG, n=1000, verbose=3):
     # Forward sampling and make dataframe
     df=infer_model.forward_sample(size=n)
     return(df)
+
+
+# %% Convert BIF model to bayesian model
+def _bif2bayesian(pathname, verbose=3):
+    """Return the fitted bayesian model.
+
+    Example
+    -------
+    >>> from pgmpy.readwrite import BIFReader
+    >>> reader = BIFReader("bif_test.bif")
+    >>> reader.get_model()
+    <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
+    """
+    if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
+
+    bifmodel=readwrite.BIF.BIFReader(path=pathname)
+
+    try:
+        model = BayesianModel(bifmodel.variable_edges)
+        model.name = bifmodel.network_name
+        model.add_nodes_from(bifmodel.variable_names)
+
+        tabular_cpds = []
+        for var in sorted(bifmodel.variable_cpds.keys()):
+            values = bifmodel.variable_cpds[var]
+            cpd = TabularCPD(var, len(bifmodel.variable_states[var]), values,
+                             evidence=bifmodel.variable_parents[var],
+                             evidence_card=[len(bifmodel.variable_states[evidence_var])
+                                            for evidence_var in bifmodel.variable_parents[var]])
+            tabular_cpds.append(cpd)
+
+        model.add_cpds(*tabular_cpds)
+#        for node, properties in bifmodel.variable_properties.items():
+#            for prop in properties:
+#                prop_name, prop_value = map(lambda t: t.strip(), prop.split('='))
+#                model.node[node][prop_name] = prop_value
+
+        return model
+
+    except AttributeError:
+        raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
+
+
+# %%
+def query2df(query):
+    """Convert query from inference model to a dataframe.
+
+    Parameters
+    ----------
+    query : Object from the inference model.
+        Convert query object to a dataframe.
+
+    Returns
+    -------
+    df : pd.DataFrame()
+        Dataframe with inferences.
+
+    """
+    df = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
+    df['p'] = query.values.flatten()
+    return df
 
 
 # %% Model Sprinkler
@@ -379,47 +462,6 @@ def _DAG_sprinkler(CPD=True):
         model.add_cpds(cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass)
 
     return(model)
-
-
-# %% Convert BIF model to bayesian model
-def _bif2bayesian(pathname, verbose=3):
-    """Return the fitted bayesian model.
-
-    Example
-    -------
-    >>> from pgmpy.readwrite import BIFReader
-    >>> reader = BIFReader("bif_test.bif")
-    >>> reader.get_model()
-    <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
-    """
-    if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
-
-    bifmodel=readwrite.BIF.BIFReader(path=pathname)
-
-    try:
-        model = BayesianModel(bifmodel.variable_edges)
-        model.name = bifmodel.network_name
-        model.add_nodes_from(bifmodel.variable_names)
-
-        tabular_cpds = []
-        for var in sorted(bifmodel.variable_cpds.keys()):
-            values = bifmodel.variable_cpds[var]
-            cpd = TabularCPD(var, len(bifmodel.variable_states[var]), values,
-                             evidence=bifmodel.variable_parents[var],
-                             evidence_card=[len(bifmodel.variable_states[evidence_var])
-                                            for evidence_var in bifmodel.variable_parents[var]])
-            tabular_cpds.append(cpd)
-
-        model.add_cpds(*tabular_cpds)
-#        for node, properties in bifmodel.variable_properties.items():
-#            for prop in properties:
-#                prop_name, prop_value = map(lambda t: t.strip(), prop.split('='))
-#                model.node[node][prop_name] = prop_value
-
-        return model
-
-    except AttributeError:
-        raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
 
 
 # %% Make directed graph from adjmatrix
@@ -590,6 +632,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bn
     out['G']=G
     return(out)
 
+
 # %%
 def topological_sort(adjmat, start=None):
     """Topological sort.
@@ -652,28 +695,6 @@ def topological_sort(adjmat, start=None):
     return stack + order[::-1]
 
 
-# %%
-def adjmat2dict(adjmat):
-    """Convert adjacency matrix to dict.
-
-    Parameters
-    ----------
-    adjmat : pd.DataFrame
-        Adjacency matrix.
-
-    Returns
-    -------
-    graph : dict
-        Graph.
-
-    """
-    graph={}
-    rows=adjmat.index.values
-    for r in rows:
-        graph.update({r: list(rows[adjmat.loc[r,:]])})
-    return graph
-
-
 # %% Example data
 def import_example(data='sprinkler', n=10000, verbose=3):
     """Load example dataset.
@@ -716,6 +737,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
 
     return df
 
+
 #%% Download data from github source
 def _download_example(data, verbose=3):
     # Set url location
@@ -733,6 +755,7 @@ def _download_example(data, verbose=3):
         wget.download(url, curpath)
     
     return PATH_TO_DATA
+
 
 # %% Make DAG
 def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
