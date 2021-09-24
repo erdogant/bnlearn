@@ -131,6 +131,62 @@ def test_structure_learning():
     model = bn.structure_learning.fit(df, methodtype='tan', white_list=['smoke', 'either'], bw_list_method='nodes', root_node='smoke', class_node='either')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
 
+    # COMPARE WITH RESULTS PGMPY
+    import pandas as pd
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from pgmpy.estimators import TreeSearch
+    from pgmpy.models import BayesianModel
+    import networkx as nx
+    import bnlearn as bnlearn
+    from pgmpy.inference import VariableElimination
+    from pgmpy.estimators import BDeuScore, K2Score, BicScore
+    import bnlearn as bn
+    
+    
+    df=bnlearn.import_example(data='andes')
+    
+    # PGMPY
+    est = TreeSearch(df)
+    dag = est.estimate(estimator_type="tan",class_node='DISPLACEM0')
+    bnq = BayesianModel(dag.edges())
+    bnq.fit(df, estimator=None) # None means maximum likelihood estimator
+    bn_infer = VariableElimination(bnq)
+    q = bn_infer.query(variables=['DISPLACEM0'], evidence={'RApp1':1})
+    print(q)
+    
+    # BNLEARN
+    model = bnlearn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
+    model_bn = bnlearn.parameter_learning.fit(model, df, methodtype='ml') # maximum likelihood estimator
+    query=bnlearn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1':1})
+    
+    # DAG COMPARISON
+    assert np.all(model_bn['adjmat']==model['adjmat'])
+    assert dag.edges()==model['model'].edges()
+    assert dag.edges()==model['model_edges']
+    
+    # COMPARE THE CPDs names
+    qbn_cpd = []
+    bn_cpd = []
+    for cpd in bnq.get_cpds(): qbn_cpd.append(cpd.variable)
+    for cpd in model_bn['model'].get_cpds(): bn_cpd.append(cpd.variable)
+    
+    assert len(bn_cpd)==len(qbn_cpd)
+    assert np.all(np.isin(bn_cpd, qbn_cpd))
+    
+    # COMPARE THE CPD VALUES
+    nr_diff = 0
+    for cpd_bnlearn in model_bn['model'].get_cpds():
+        for cpd_pgmpy in bnq.get_cpds():
+            if cpd_bnlearn.variable==cpd_pgmpy.variable:
+                assert np.all(cpd_bnlearn.values==cpd_pgmpy.values)
+                # if not np.all(cpd_bnlearn.values==cpd_pgmpy.values):
+                    # print('%s-%s'%(cpd_bnlearn.variable, cpd_pgmpy.variable))
+                    # print(cpd_bnlearn)
+                    # print(cpd_pgmpy)
+                    # nr_diff=nr_diff+1
+                    # input('press enter to see the next difference in CPD.')
+
 
 def test_parameter_learning():
     df = bn.import_example()
@@ -193,3 +249,44 @@ def test_topological_sort():
     model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
     assert bn.topological_sort(model, 'Rain')==['Rain', 'Cloudy', 'Sprinkler']
     
+def test_save():
+    # Load asia DAG
+    df = bn.import_example('asia')
+    model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+    bn.save(model, overwrite=True)
+    # Load the DAG
+    model_load = bn.load()
+    assert model.keys()==model_load.keys()
+    for key in model.keys():
+        if not key=='model':
+            assert np.all(model[key]==model_load[key])
+
+    edges = [('smoke', 'lung'),
+             ('smoke', 'bronc'),
+             ('lung', 'xray'),
+             ('bronc', 'xray')]
+    
+    # Make the actual Bayesian DAG
+    DAG = bn.make_DAG(edges, verbose=0)
+    # Save the DAG
+    bn.save(DAG, overwrite=True)
+    # Load the DAG
+    DAGload = bn.load()
+    # Compare
+    assert DAG.keys()==DAGload.keys()
+    for key in DAG.keys():
+        if not key=='model':
+            assert np.all(DAG[key]==DAGload[key])
+
+    # Learn its parameters from data and perform the inference.
+    model = bn.parameter_learning.fit(DAG, df, verbose=0)
+    # Save the DAG
+    bn.save(model, overwrite=True)
+    # Load the DAG
+    model_load = bn.load()
+    # Compare
+    assert model.keys()==model_load.keys()
+    for key in model.keys():
+        if not key=='model':
+            assert np.all(model[key]==model_load[key])
+
