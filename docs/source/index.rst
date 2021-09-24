@@ -43,7 +43,7 @@ Content
   whitelist_blacklist
   topological_sort
   interactive plotting
-  
+  saving and loading
 
 .. toctree::
   :maxdepth: 2

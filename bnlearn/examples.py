@@ -13,9 +13,10 @@ df = bn.import_example(data='asia')
 # Learn structure
 model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
 # Save model
-bn.save(model, overwrite=False)
+bn.save(model, filepath='bnlearn_model', overwrite=True)
 # Load model
-model = bn.load()
+model = bn.load(filepath='bnlearn_model')
+
 
 # %% CHECK DIFFERENCES PGMPY vs. BNLEARN
 import pandas as pd

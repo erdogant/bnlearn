@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Introduction &mdash; bnlearn bnlearn documentation</title>
+  <title>Saving and Loading &mdash; bnlearn bnlearn documentation</title>
   
 
   
@@ -38,8 +38,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="Installation.html" />
-    <link rel="prev" title="Quickstart" href="Quickstart.html" /> 
+    <link rel="next" title="Examples" href="Examples.html" />
+    <link rel="prev" title="Interactive plotting" href="interactive%20plotting.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -89,14 +89,14 @@
 <li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Introduction</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Methods</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
@@ -106,7 +106,7 @@
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interactive%20plotting.html">Interactive plotting</a></li>
-<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Saving and Loading</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
@@ -167,13 +167,13 @@
     
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Introduction</li>
+      <li>Saving and Loading</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/Introduction.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/saving and loading.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -186,38 +186,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <hr class="docutils" id="code-directive" />
-<div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p>Learning a Bayesian network can be split into two problems which are both implemented in this package:</p>
-<ul class="simple">
-<li><p>Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p></li>
-<li><p>Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.</p></li>
-</ul>
-<dl class="simple">
-<dt>The library supports Parameter learning for <em>discrete</em> nodes:</dt><dd><ul class="simple">
-<li><p>Maximum Likelihood Estimation</p></li>
-<li><p>Bayesian Estimation</p></li>
-</ul>
-</dd>
-<dt>Structure learning for <em>discrete</em>, <em>fully observed</em> networks:</dt><dd><ul class="simple">
-<li><p>Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)</p></li>
-<li><p>Constraint-based structure estimation (PC)</p></li>
-<li><p>Hybrid structure estimation (MMHC)</p></li>
-</ul>
-</dd>
-</dl>
-<p><strong>The following functions are available after importing bnlearn:</strong></p>
-<ul class="simple">
-<li><p>Structure learning</p></li>
-<li><p>Parameter learning</p></li>
-<li><p>Inference</p></li>
-<li><p>Sampling</p></li>
-<li><p>Plot</p></li>
-<li><p>comparing two networks</p></li>
-<li><p>loading bif files</p></li>
-<li><p>conversion of directed to undirected graphs</p></li>
-</ul>
+  <div class="section" id="saving-and-loading">
+<h1>Saving and Loading<a class="headerlink" href="#saving-and-loading" title="Permalink to this headline">¶</a></h1>
+<p>All models can be saved and loading using the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.save" title="bnlearn.bnlearn.save"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.save()</span></code></a> and <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.load" title="bnlearn.bnlearn.load"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.load()</span></code></a> functionality.</p>
+<p><strong>Example of saving and loading models</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+
+<span class="c1"># Learn structure</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;tan&#39;</span><span class="p">,</span> <span class="n">class_node</span><span class="o">=</span><span class="s1">&#39;lung&#39;</span><span class="p">)</span>
+
+<span class="c1"># Save model</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;bnlearn_model&#39;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Load model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filepath</span><span class="o">=</span><span class="s1">&#39;bnlearn_model&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -226,8 +211,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="Installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="Quickstart.html" class="btn btn-neutral float-left" title="Quickstart" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="interactive%20plotting.html" class="btn btn-neutral float-left" title="Interactive plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -105,6 +105,7 @@
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interactive%20plotting.html">Interactive plotting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
@@ -336,6 +337,26 @@ adjmat : Adjacency matrix</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="bnlearn.bnlearn.load">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">load</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'bnlearn_model.pkl'</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load learned model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – Pathname to stored pickle files.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Show message. A higher number gives more information. The default is 3.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="bnlearn.bnlearn.make_DAG">
 <code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">make_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">DAG</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.make_DAG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create Directed Acyclic Graph based on list.</p>
@@ -510,6 +531,27 @@ None : Returns all Probabilities</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt id="bnlearn.bnlearn.save">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">save</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'bnlearn_model.pkl'</span></em>, <em class="sig-param"><span class="n">overwrite</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save learned model in pickle file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'bnlearn_model.pkl'</em><em>)</em>) – Pathname to store pickle files.</p></li>
+<li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default=False</em><em>)</em>) – Overwite file if exists.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Show message. A higher number gives more informatie. The default is 3.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>bool</strong> – Status whether the file is saved.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>[True, False]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
