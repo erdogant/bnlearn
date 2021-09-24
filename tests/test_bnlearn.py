@@ -1,10 +1,17 @@
 # pip install pytest
 # pytest tests\test_bn.py
 
-import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np
-
+import pandas as pd
+import matplotlib.pyplot as plt
+from pgmpy.estimators import TreeSearch
+from pgmpy.models import BayesianModel
+import networkx as nx
+import bnlearn as bnlearn
+from pgmpy.inference import VariableElimination
+from pgmpy.estimators import BDeuScore, K2Score, BicScore
+import bnlearn as bn
 
 def test_import_DAG():
     DAG = bn.import_DAG('Sprinkler')
@@ -131,18 +138,6 @@ def test_structure_learning():
     model = bn.structure_learning.fit(df, methodtype='tan', white_list=['smoke', 'either'], bw_list_method='nodes', root_node='smoke', class_node='either')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
 
-    # COMPARE WITH RESULTS PGMPY
-    import pandas as pd
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from pgmpy.estimators import TreeSearch
-    from pgmpy.models import BayesianModel
-    import networkx as nx
-    import bnlearn as bnlearn
-    from pgmpy.inference import VariableElimination
-    from pgmpy.estimators import BDeuScore, K2Score, BicScore
-    import bnlearn as bn
-    
     
     df=bnlearn.import_example(data='andes')
     
