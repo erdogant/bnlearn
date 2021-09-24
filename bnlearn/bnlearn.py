@@ -11,20 +11,21 @@
 import os
 import wget
 import zipfile
-# import json
 import itertools
 import pandas as pd
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
-from ismember import ismember
+from pathlib import Path
 from tqdm import tqdm
 
 from pgmpy.models import BayesianModel
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
-
 from pgmpy import readwrite
+
+from ismember import ismember
+import pypickle
 import bnlearn
 
 
@@ -990,24 +991,68 @@ def _get_prob(query, method='max'):
     return out
 
 
-# %%
-def query2df(query):
-    """Convert query from inference model to a dataframe.
+# %% Save model
+def save(model, filepath='bnlearn_model.pkl', overwrite=False, verbose=3):
+    """Save learned model in pickle file.
 
     Parameters
     ----------
-    query : Object from the inference model.
-        Convert query object to a dataframe.
+    filepath : str, (default: 'bnlearn_model.pkl')
+        Pathname to store pickle files.
+    overwrite : bool, (default=False)
+        Overwite file if exists.
+    verbose : int, optional
+        Show message. A higher number gives more informatie. The default is 3.
 
     Returns
     -------
-    df : pd.DataFrame()
-        Dataframe with inferences.
+    bool : [True, False]
+        Status whether the file is saved.
 
     """
-    df = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
-    df['p'] = query.values.flatten()
-    return df
+    if (filepath is None) or (filepath==''):
+        filepath = 'bnlearn_model.pkl'
+    if filepath[-4:] != '.pkl':
+        filepath = filepath + '.pkl'
+    filepath = str(Path(filepath).absolute())
+
+    # Store data
+    # storedata = {}
+    # storedata['model'] = model
+    # Save
+    status = pypickle.save(filepath, model, overwrite=overwrite, verbose=verbose)
+    # return
+    return status
+
+
+# %% Load model.
+def load(filepath='bnlearn_model.pkl', verbose=3):
+    """Load learned model.
+
+    Parameters
+    ----------
+    filepath : str
+        Pathname to stored pickle files.
+    verbose : int, optional
+        Show message. A higher number gives more information. The default is 3.
+
+    Returns
+    -------
+    Object.
+
+    """
+    if (filepath is None) or (filepath==''):
+        filepath = 'bnlearn_model.pkl'
+    if filepath[-4:]!='.pkl':
+        filepath = filepath + '.pkl'
+    filepath = str(Path(filepath).absolute())
+    # Load
+    model = pypickle.load(filepath, verbose=verbose)
+    # Store in self.
+    if model is not None:
+        return model
+    else:
+        if verbose>=2: print('[bnlearn] >WARNING: Could not load data from [%s]' %(filepath))
 
 
 # %% Make graph layout

@@ -16,6 +16,8 @@ from bnlearn.bnlearn import (
     query2df,
     _dag2adjmat,
     _filter_df,
+    save,
+    load,
 )
 
 # Import function in new level
