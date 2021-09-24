@@ -7,8 +7,103 @@ print(dir(bn.structure_learning))
 print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
+# %% Save and load trained models
+# Import example
+df = bn.import_example(data='asia')
+# Learn structure
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+# Save model
+bn.save(model, overwrite=False)
+# Load model
+model = bn.load()
 
-### Example of interactive plotting
+# %% CHECK DIFFERENCES PGMPY vs. BNLEARN
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pgmpy.estimators import TreeSearch
+from pgmpy.models import BayesianModel
+import networkx as nx
+import bnlearn as bnlearn
+from pgmpy.inference import VariableElimination
+from pgmpy.estimators import BDeuScore, K2Score, BicScore
+import bnlearn as bn
+
+
+df=bnlearn.import_example(data='andes')
+
+# PGMPY
+est = TreeSearch(df)
+dag = est.estimate(estimator_type="tan",class_node='DISPLACEM0')
+bnq = BayesianModel(dag.edges())
+bnq.fit(df, estimator=None) # None means maximum likelihood estimator
+bn_infer = VariableElimination(bnq)
+q = bn_infer.query(variables=['DISPLACEM0'], evidence={'RApp1':1})
+print(q)
+
+# BNLEARN
+model = bnlearn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
+model_bn = bnlearn.parameter_learning.fit(model, df, methodtype='ml') # maximum likelihood estimator
+query=bnlearn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1':1})
+
+# DAG COMPARISON
+assert np.all(model_bn['adjmat']==model['adjmat'])
+assert dag.edges()==model['model'].edges()
+assert dag.edges()==model['model_edges']
+
+# COMPARE THE CPDs names
+qbn_cpd = []
+bn_cpd = []
+for cpd in bnq.get_cpds(): qbn_cpd.append(cpd.variable)
+for cpd in model_bn['model'].get_cpds(): bn_cpd.append(cpd.variable)
+
+assert len(bn_cpd)==len(qbn_cpd)
+assert np.all(np.isin(bn_cpd, qbn_cpd))
+
+# COMPARE THE CPD VALUES
+nr_diff = 0
+for cpd_bnlearn in model_bn['model'].get_cpds():
+    for cpd_pgmpy in bnq.get_cpds():
+        if cpd_bnlearn.variable==cpd_pgmpy.variable:
+            assert np.all(cpd_bnlearn.values==cpd_pgmpy.values)
+            # if not np.all(cpd_bnlearn.values==cpd_pgmpy.values):
+                # print('%s-%s'%(cpd_bnlearn.variable, cpd_pgmpy.variable))
+                # print(cpd_bnlearn)
+                # print(cpd_pgmpy)
+                # nr_diff=nr_diff+1
+                # input('press enter to see the next difference in CPD.')
+
+
+#%% Example of interactive plotting
+from pgmpy.estimators import TreeSearch
+from pgmpy.models import BayesianModel
+import bnlearn as bn
+
+# Import example
+df = bn.import_example(data='asia')
+
+# Do the tan learning
+est = TreeSearch(df)
+dag = est.estimate(estimator_type="tan",class_node='lung')
+
+# And now with bnlearn
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+
+# Compare results
+assert dag.edges()==model['model'].edges()
+assert dag.edges()==model['model_edges']
+
+
+
+from pgmpy.inference import VariableElimination
+bnp = BayesianModel(dag.edges())
+bn_infer = VariableElimination(bnp)
+bnp.fit(df)
+
+a = bn_infer.query(variables=['Target'], evidence={'X':'c'})
+print(a)
+
+#%% Example of interactive plotting
 import bnlearn as bn
 
 # Load example dataset
@@ -16,6 +111,8 @@ df = bn.import_example(data='asia')
 
 # Structure learning
 model = bn.structure_learning.fit(df)
+
+bn.plot(model, interactive=False)
 
 # Add some parameters for the interactive plot
 bn.plot(model, interactive=True, params = {'height':'600px'})
@@ -227,8 +324,11 @@ edges = [('smoke', 'lung'),
 
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges, verbose=0)
+bn.save(DAG, overwrite=True)
+DAG1 = bn.load()
+
 # Plot the DAG
-bn.plot(DAG, verbose=0)
+bn.plot(DAG1, verbose=0)
 # Print the CPDs
 bn.print_CPD(DAG)
 
