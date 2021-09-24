@@ -461,7 +461,20 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
   </a>
 </p>
 
+### Example of saving and loading models
 
+```python
+# Load data
+# Import example
+df = bn.import_example(data='asia')
+# Learn structure
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+# Save model
+bn.save(model, overwrite=True)
+# Load model
+model = bn.load()
+
+```
 
 ## Citation
 Please cite bnlearn in your publications if this is useful for your research. See right panel for more information.
