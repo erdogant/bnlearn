@@ -26,6 +26,7 @@ setuptools.setup(
 	 download_url = 'https://github.com/erdogant/bnlearn/archive/'+new_version+'.tar.gz',
      packages=setuptools.find_packages(), # Searches throughout all dirs for files to include
      include_package_data=True, # Must be true to include files depicted in MANIFEST.in
+     license_files=["LICENSE"],
      classifiers=[
          "Programming Language :: Python :: 3",
          "License :: OSI Approved :: MIT License",
