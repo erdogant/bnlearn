@@ -3,7 +3,6 @@
 [![Python](https://img.shields.io/pypi/pyversions/bnlearn)](https://img.shields.io/pypi/pyversions/bnlearn)
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/erdogant/bnlearn/blob/master/LICENSE)
-[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-brown.svg)](https://www.buymeacoffee.com/erdogant)
 [![Github Forks](https://img.shields.io/github/forks/erdogant/bnlearn.svg)](https://github.com/erdogant/bnlearn/network)
 [![GitHub Open Issues](https://img.shields.io/github/issues/erdogant/bnlearn.svg)](https://github.com/erdogant/bnlearn/issues)
 [![Project Status](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
@@ -11,6 +10,7 @@
 [![Downloads](https://pepy.tech/badge/bnlearn)](https://pepy.tech/project/bnlearn)
 [![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/bnlearn/)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/bnlearn.ipynb)
+[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-brown.svg)](https://www.buymeacoffee.com/erdogant)
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
 
     Star it if you like it!
@@ -477,18 +477,22 @@ model = bn.load(filepath='bnlearn_model')
 
 ```
 
-## Citation
-Please cite bnlearn in your publications if this is useful for your research. See right panel for more information.
-
-## References
+### References
 * https://erdogant.github.io/bnlearn/
 * http://pgmpy.org
 * https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
 * http://www.bnlearn.com/
 * http://www.bnlearn.com/bnrepository/
 
-
-### Maintainer
+### Citation
+Please cite in your publications if this is useful for your research (see citation).
+   
+### Maintainers
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
-* Contributions are welcome.
-* If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated :)
+
+### Contribute
+* All kinds of contributions are welcome!
+* If you wish to buy me a <a href="https://www.buymeacoffee.com/erdogant">Coffee</a> for this work, it is very appreciated :)
+
+### Licence
+See [LICENSE](LICENSE) for details.
