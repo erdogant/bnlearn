@@ -132,6 +132,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
     if methodtype=='cl': methodtype = 'chow-liu'
     if fixed_edges is None: fixed_edges=set()
+    out=[]
 
     #### Remove this block in future (21-10-2021)
     if bw_list_method=='filter':
@@ -221,26 +222,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         """TreeSearch based Structure Learning."""
         out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], verbose=config['verbose'])
 
-
-    # Setup simmilarity matrix
-    adjmat = bnlearn._dag2adjmat(out['model'])
-
-    # adjmat = pd.DataFrame(data=False, index=out['model'].nodes(), columns=out['model'].nodes()).astype('bool')
-    # # Fill adjmat with edges
-    # edges = out['model'].edges()
-    # for edge in edges:
-    #     adjmat.loc[edge[0],edge[1]]=True
-    # adjmat.index.name = 'source'
-    # adjmat.columns.name = 'target'
-
     # Store
-    out['adjmat'] = adjmat
+    out['adjmat'] = bnlearn._dag2adjmat(out['model'])
     out['config'] = config
 
     # return
     return(out)
 
-
+    
 # %% white_list and black_list
 def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges', verbose=3):
     # if bw_list_method=='edges':
