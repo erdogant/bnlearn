@@ -563,24 +563,35 @@ def plot(model,
         Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
     scale : int, optional
         Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.
-    figsize : tuple, optional
-        Figure size. The default is (15,8).
     interactive : Bool, (default: True)
         True: Interactive web-based graph.
         False: Static plot
-    params : dict: (only applicable in case of interactive=True)
-        Dictionary containing parameters for the pyvis network.
+    title : str, optional
+        Title for the plots.
+    node_color : str, optional
+        Color each node in the network using a hex-color, such as '#8A0707' 
+    node_size : int, optional
+        Set the node size for each node in the network. The default size when using static plolts is 800, and for interactive plots it is 10. 
+    node_properties : dict (default: None).
+        Dictionary containing custom node_color and node_size parameters for the network.
+        The node properties can easily be retrieved using the function: node_properties = bn.get_node_properties(model)
+    params_interactive : dict.
+        Dictionary containing various settings in case of creating interactive plots.
+    params_static : dict.
+        Dictionary containing various settings in case of creating static plots.
     verbose : int, optional
         Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+        0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
     -------
     dict containing pos and G
-        pos : list
+        pos : list.
             Positions of the nodes.
-        G : Graph
+        G : Graph.
             Graph model
+        node_properties: dict.
+            Node properties.
 
     """
     # Plot properties
