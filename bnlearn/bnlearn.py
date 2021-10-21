@@ -606,7 +606,7 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bn
             display(HTML(filename))
             # webbrowser.open('bnlearn.html')
         except ModuleNotFoundError:
-            if verbose>=2: print('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
+            if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
     else:
         # Bootup figure
         plt.figure(figsize=figsize)
