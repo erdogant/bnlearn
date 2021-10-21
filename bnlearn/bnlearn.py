@@ -532,15 +532,9 @@ def set_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
 
     if adjmat is not None:
         if verbose>=3: print('[bnlearn]> Set node properties.')
-    
+        # For each node, use the default node properties.
         for node in adjmat.columns:
-            # Update the node properties when values are added or changed.
-            # if nodes.get(node, None) is None:
-            # Use the default node properties if node does not exist yet
             node_property = defaults.copy()
-            # else:
-            #     # Use the user-custom properties but update with the default values for the missing keys
-            #     node_property = {**defaults.copy(), **nodes[node]}
             nodes.update({node: node_property})
 
     # Return dict with node properties
@@ -589,82 +583,133 @@ def plot(model,
             Graph model
 
     """
-    defaults = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':title, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'}
-    params = {**defaults, **params}
-
+    # Plot properties
+    defaults = {'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff', 'directed':True}
+    params_interactive = {**defaults, **params_interactive}
+    defaults = {'height':8, 'width':15, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'layout':'fruchterman_reingold', 'font_color': 'k', 'facecolor':'#ffffff', 'node_shape':'o'}
+    params_static = {**defaults, **params_static}
     out = {}
     G = nx.DiGraph()  # Directed graph
-    layout='fruchterman_reingold'
+    node_size_default = 10 if interactive else 800
+    if (node_properties is not None) and (node_size is not None):
+        if verbose>=2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will dominate the results.')
+
+    # Get node properties
+    if node_properties is None:
+        node_properties = bnlearn.set_node_properties(model)
+
+    # Set default node size based on interactive True/False
+    for key in node_properties.keys():
+        if node_properties[key]['node_size'] is None:
+            node_properties[key]['node_size']=node_size_default
 
     # Extract model if in dict
     if 'dict' in str(type(model)):
-        adjmat = model.get('adjmat', None)
-        model = model.get('model', None)
+        bnmodel = model.get('model', None)
+    else:
+        bnmodel = model.copy()
 
     # Bayesian model
-    if 'BayesianModel' in str(type(model)) or 'pgmpy' in str(type(model)):
+    if 'BayesianModel' in str(type(bnmodel)) or 'pgmpy' in str(type(bnmodel)):
         if verbose>=3: print('[bnlearn] >Plot based on BayesianModel')
         # positions for all nodes
-        pos = bnlearn.network.graphlayout(model, pos=pos, scale=scale, layout=layout, verbose=verbose)
-        # Add directed edge with weigth
-        # edges=model.edges()
-        edges=[*model.edges()]
-        for i in range(len(edges)):
-            G.add_edge(edges[i][0], edges[i][1], weight=1, color='k')
-    elif 'networkx' in str(type(model)):
+        pos = bnlearn.network.graphlayout(bnmodel, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+    elif 'networkx' in str(type(bnmodel)):
         if verbose>=3: print('[bnlearn] >Plot based on networkx model')
-        G = model
-        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        G = bnmodel
+        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
     else:
         if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
-        G = bnlearn.network.adjmat2graph(adjmat)
+        G = bnlearn.network.adjmat2graph(model['adjmat'])
         # Get positions
-        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=layout, verbose=verbose)
+        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+
+    # get node properties
+    nodelist, node_colors, node_sizes, edge_color, edge_weights = _plot_properties(G, bnmodel, node_properties, node_color, node_size)
 
     # Make interactive or static plot
     if interactive:
-        try:
-            from pyvis import network as net
-            from IPython.core.display import display, HTML
-            # Convert adjacency matrix into Networkx Graph
-            G = bnlearn.network.adjmat2graph(adjmat)
-            # Setup of the interactive network figure
-            g = net.Network(**params)
-            # g = net.Network(directed=True, height='800px', width='70%', notebook=False, heading=title)
-            g.from_nx(G)
-            # Create advanced buttons
-            g.show_buttons(filter_=['physics'])
-            # Display
-            filename = title.strip().replace(' ','_') + '.html'
-            g.show(filename)
-            display(HTML(filename))
-            # webbrowser.open('bnlearn.html')
-        except ModuleNotFoundError:
-            if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
+        _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, title=title, verbose=verbose)
     else:
-        # Bootup figure
-        plt.figure(figsize=figsize)
-        # nodes
-        nx.draw_networkx_nodes(G, pos, node_size=500, alpha=0.85)
-        # edges
-        colors = [G[u][v].get('color', 'k') for u, v in G.edges()]
-        weights = [G[u][v].get('weight', 1) for u, v in G.edges()]
-        nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=colors, width=weights)
-        # Labels
-        nx.draw_networkx_labels(G, pos, font_size=20, font_family='sans-serif')
-        # Get labels of weights
-        # labels = nx.get_edge_attributes(G,'weight')
-        # Plot weights
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'))
-        # Making figure nice
-        ax = plt.gca()
-        ax.set_axis_off()
-        plt.show()
+        _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, edge_color, edge_weights, pos)
 
     # Store
     out['pos']=pos
     out['G']=G
+    out['node_properties']=node_properties
     return(out)
+
+
+# %% Plot interactive
+# def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, edge_color, edge_weights, pos):
+    # Bootup figure
+    plt.figure(figsize=(params_static['width'], params_static['height']), facecolor=params_static['facecolor'])
+    # nodes
+    nx.draw_networkx_nodes(G, pos, nodelist=nodelist , node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
+    # edges
+    nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=edge_color, width=edge_weights)
+    # Labels
+    nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'])
+    # Plot text of the weights
+    # nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'), font_color=params_static['font_color'])
+    # Making figure nice
+    ax = plt.gca()
+    ax.set_axis_off()
+    plt.show()
+
+
+# %% Plot interactive
+def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, title, verbose=3):
+    try:
+        from pyvis import network as net
+        from IPython.core.display import display, HTML
+    except ModuleNotFoundError:
+        if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
+    # Convert adjacency matrix into Networkx Graph
+    G = bnlearn.network.adjmat2graph(model['adjmat'])
+    # Setup of the interactive network figure
+    g = net.Network(**params_interactive)
+    # Convert from graph G
+    g.from_nx(G)
+    # g.edges
+    for i,_ in enumerate(g.nodes):
+        g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+        g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+
+    # Create advanced buttons
+    g.show_buttons(filter_=['physics'])
+    # Display
+    filename = title.strip().replace(' ','_') + '.html'
+    g.show(filename)
+    display(HTML(filename))
+    # webbrowser.open('bnlearn.html')
+
+
+# %% Plot properties
+def _plot_properties(G, bnmodel, node_properties, node_color, node_size):
+    # Set edge properties in Graph G
+    edges=[*bnmodel.edges()]
+    for edge in edges:
+        G.add_edge(edge[0], edge[1], weight=1, color='#000000')
+    edge_color = [G[u][v].get('color') for u, v in G.edges()]
+    edge_weights = [G[u][v].get('weight') for u, v in G.edges()]
+
+    # Node properties
+    nodelist = np.unique(edges)
+    node_colors = []
+    node_sizes = []
+    for node in nodelist:
+        if node_color is not None:
+            node_colors.append(node_color)
+        else:
+            node_colors.append(node_properties[node].get('node_color'))
+        if node_size is not None:
+            node_sizes.append(node_size)
+        else:
+            node_sizes.append(node_properties[node].get('node_size'))
+    # Return
+    return nodelist, node_colors, node_sizes, edge_color, edge_weights
 
 
 # %%
