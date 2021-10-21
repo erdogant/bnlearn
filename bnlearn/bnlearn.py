@@ -523,14 +523,48 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
     return(scores, adjmat_diff)
 
 
+# %% Set node properties
+def set_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
+    # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
+    nodes = {}
+    defaults={'node_color':node_color, 'node_size': node_size}
+    adjmat = model.get('adjmat', None)
+
+    if adjmat is not None:
+        if verbose>=3: print('[bnlearn]> Set node properties.')
+    
+        for node in adjmat.columns:
+            # Update the node properties when values are added or changed.
+            # if nodes.get(node, None) is None:
+            # Use the default node properties if node does not exist yet
+            node_property = defaults.copy()
+            # else:
+            #     # Use the user-custom properties but update with the default values for the missing keys
+            #     node_property = {**defaults.copy(), **nodes[node]}
+            nodes.update({node: node_property})
+
+    # Return dict with node properties
+    return nodes
+
+
 # %% PLOT
-def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bnlearn causal network', params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'}, verbose=3):
+def plot(model,
+         pos=None,
+         scale=1,
+         interactive=False,
+         title='bnlearn causal network',
+         node_color=None,
+         node_size=None,
+         node_properties=None,
+         params_interactive={'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'},
+         params_static={'width':15, 'height':8, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'node_shape':'o', 'layout':'fruchterman_reingold', 'font_color': '#000000', 'facecolor':'white'},
+         verbose=3):
     """Plot the learned stucture.
 
     Parameters
     ----------
     model : dict
-        Learned model from the .fit() function..
+        Learned model from the .fit() function.
     pos : graph, optional
         Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
     scale : int, optional
@@ -538,8 +572,8 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bn
     figsize : tuple, optional
         Figure size. The default is (15,8).
     interactive : Bool, (default: True)
-        True: Static plot
-        False: Interactive web-based graph.
+        True: Interactive web-based graph.
+        False: Static plot
     params : dict: (only applicable in case of interactive=True)
         Dictionary containing parameters for the pyvis network.
     verbose : int, optional
