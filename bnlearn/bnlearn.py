@@ -540,8 +540,8 @@ def plot(model, pos=None, scale=1, figsize=(15, 8), interactive=False, title='bn
     interactive : Bool, (default: True)
         True: Static plot
         False: Interactive web-based graph.
-    params : dict
-        Dictionary containing parameters for the pyvis network. This only works inf interactive=True
+    params : dict: (only applicable in case of interactive=True)
+        Dictionary containing parameters for the pyvis network.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
