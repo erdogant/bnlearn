@@ -448,11 +448,12 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     # Structure learning
     model = bn.structure_learning.fit(df)
 
+
     # Add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params = {'height':'600px'})
+    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
 
     # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn title', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
+    bn.plot(model, interactive=True, params_interactive = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn title', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
 
 ```
 
@@ -461,6 +462,50 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
      <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/interactive_plot.png" width="1200" />
   </a>
 </p>
+
+
+### Example of plotting
+
+```python
+
+    import bnlearn as bn
+    df = bn.import_example()
+
+    # Structure learning
+    model = bn.structure_learning.fit(df)
+
+    # Make simple interactive plot
+    bn.plot(model, interactive=True)
+
+    # Make simple interactive plot, set color to entire network
+    bn.plot(model, node_color='#8A0707', interactive=True)
+
+    # Make simple interactive plot, set color and size to entire network
+    bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
+
+    # Make interactive plot, set specific color and sizes
+    # First retrieve node properties
+    node_properties = bn.get_node_properties(model)
+
+    # Make some changes
+    node_properties['Cloudy']['node_color']='#8A0707'
+    node_properties['Cloudy']['node_size']=50
+    node_properties['Wet_Grass']['node_color']='#000000'
+    node_properties['Wet_Grass']['node_size']=35
+    bn.plot(model, node_properties=node_properties, interactive=True)
+    
+    # You can also add some parameters for the interactive plot
+    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
+
+    # Add more parameters for the interactive plot
+    bn.plot(model, interactive=True, node_color='#8A0707', params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+
+```
+
+<p align="center">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/network_settings.png" width="600" />
+</p>
+
 
 ### Example of saving and loading models
 
