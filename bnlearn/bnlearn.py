@@ -524,7 +524,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
 
 
 # %% Set node properties
-def set_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
+def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     nodes = {}
     defaults={'node_color':node_color, 'node_size': node_size}
@@ -596,7 +596,7 @@ def plot(model,
 
     # Get node properties
     if node_properties is None:
-        node_properties = bnlearn.set_node_properties(model)
+        node_properties = bnlearn.get_node_properties(model)
 
     # Set default node size based on interactive True/False
     for key in node_properties.keys():

@@ -14,7 +14,7 @@ from bnlearn.bnlearn import (
     topological_sort,
     predict,
     query2df,
-    set_node_properties,
+    get_node_properties,
     _dag2adjmat,
     _filter_df,
     save,
