@@ -17,8 +17,8 @@ df = bn.import_example(data='asia')
 # Structure learning
 model = bn.structure_learning.fit(df)
 
-node_properties = bn.set_node_properties(model)
-# model = bn.set_node_properties(model, node_size=100)
+node_properties = bn.get_node_properties(model)
+# model = bn.get_node_properties(model, node_size=100)
 
 # Set color
 node_properties['xray']['node_color']='#8A0707'
@@ -30,7 +30,7 @@ bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font
 bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
 
 # Add some parameters for the interactive plot
-node_properties = bn.set_node_properties(model)
+node_properties = bn.get_node_properties(model)
 node_properties['xray']['node_color']='#8A0707'
 node_properties['xray']['node_size']=50
 bn.plot(model, interactive=True)
@@ -283,7 +283,7 @@ df = bn.sampling(DAG, n=1000, verbose=0)
 # Structure learning
 model = bn.structure_learning.fit(df, verbose=0)
 # Plot
-node_properties = bn.set_node_properties(model)
+node_properties = bn.get_node_properties(model)
 G = bn.plot(model)
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
 
