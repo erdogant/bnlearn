@@ -14,6 +14,7 @@ from bnlearn.bnlearn import (
     topological_sort,
     predict,
     query2df,
+    set_node_properties,
     _dag2adjmat,
     _filter_df,
     save,
@@ -30,7 +31,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.4.3'
+__version__ = '0.4.4'
 
 try:
     import pgmpy
