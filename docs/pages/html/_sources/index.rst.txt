@@ -42,7 +42,6 @@ Content
   Create DAG
   whitelist_blacklist
   topological_sort
-  interactive plotting
   saving and loading
 
 .. toctree::
@@ -52,8 +51,11 @@ Content
   Examples
   UseCases
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Plot
 
-
+  Plot
 
 .. toctree::
   :maxdepth: 1

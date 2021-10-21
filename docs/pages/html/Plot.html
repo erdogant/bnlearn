@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Interactive plot &mdash; bnlearn bnlearn documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="bnlearn.structure_learning" href="bnlearn.structure_learning.html" />
+    <link rel="prev" title="Use Case Medical domain" href="UseCases.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> bnlearn
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Methods</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Plot</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#static-plot">Static plot</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API References</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Interactive plot</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/Plot.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="interactive-plot">
+<h1>Interactive plot<a class="headerlink" href="#interactive-plot" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>interactive</strong> and <strong>static</strong> plotting functionalities with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a> for which many network and figure properties can be adjusted, such as node colors and sizes.
+To make interactive plots, it simply needs to set the <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> parameter in <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a>.
+The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">pyvis</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
+Lets make some interactive and static examples.</p>
+<p><strong>Interactive plot example</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of interactive plotting</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load example dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Add some parameters for the interactive plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;600px&#39;</span><span class="p">})</span>
+
+<span class="c1"># Add more parameters for the interactive plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params_interactive</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;800px&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span> <span class="s1">&#39;notebook&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;heading&#39;</span><span class="p">:</span><span class="s1">&#39;bnlearn causal diagram&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span><span class="s1">&#39;#ffffff&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+<iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe><p>All the parameters to specify the interactive plot can be found here:
+<a class="reference external" href="https://pyvis.readthedocs.io/en/latest/documentation.html">https://pyvis.readthedocs.io/en/latest/documentation.html</a></p>
+<p><strong>Make simple interactive plot</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Make simple interactive plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-plot-interactive-simple">
+<img alt="_images/_fig-plot_interactive_simple.png" src="_images/_fig-plot_interactive_simple.png" />
+</div>
+<p><strong>Make simple interactive plot, color the entire network.</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id1">
+<img alt="_images/_fig-plot_interactive_simple_color.png" src="_images/_fig-plot_interactive_simple_color.png" />
+</div>
+<p><strong>Make simple interactive plot, color the entire network and set the node size.</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id2">
+<img alt="_images/_fig-plot_interactive_simple_color_size.png" src="_images/_fig-plot_interactive_simple_color_size.png" />
+</div>
+<p><strong>Make interactive plot, and set specific colors and sizes to the nodes.</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First retrieve node properties</span>
+<span class="n">node_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_node_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make some changes</span>
+<span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;node_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
+<span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;node_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">50</span>
+<span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;smoke&#39;</span><span class="p">][</span><span class="s1">&#39;node_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span>
+<span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;smoke&#39;</span><span class="p">][</span><span class="s1">&#39;node_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">35</span>
+
+<span class="c1"># Make plot with the specified node properties</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_properties</span><span class="o">=</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="id3">
+<img alt="_images/_fig-plot_interactive_user_colors.png" src="_images/_fig-plot_interactive_user_colors.png" />
+</div>
+<p><strong>The ``params_interactive`` parameter allows you to adjust more figure properties.</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params_interactive</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;800px&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span><span class="s1">&#39;#0f0f0f0f&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="static-plot">
+<h1>Static plot<a class="headerlink" href="#static-plot" title="Permalink to this headline">¶</a></h1>
+<p>To create static plots, simply set <code class="docutils literal notranslate"><span class="pre">interactive=False</span></code> in all the above examples. The only difference is in <code class="docutils literal notranslate"><span class="pre">params_static</span></code> for which the dict contains more variables that adjust the figure properties.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add parameters for the static plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">params_static</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;font_family&#39;</span><span class="p">:</span><span class="s1">&#39;times new roman&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;node_shape&#39;</span><span class="p">:</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="s1">&#39;#000000&#39;</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="bnlearn.structure_learning.html" class="btn btn-neutral float-right" title="bnlearn.structure_learning" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="UseCases.html" class="btn btn-neutral float-left" title="Use Case Medical domain" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Erdogan Taskesen.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -104,13 +104,17 @@
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
-<li class="toctree-l1"><a class="reference internal" href="interactive%20plotting.html">Interactive plotting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Examples</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API References</span></p>
 <ul class="current">
@@ -283,6 +287,11 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 </dd></dl>
 
 <dl class="py function">
+<dt id="bnlearn.bnlearn.get_node_properties">
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">get_node_properties</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">node_color</span><span class="o">=</span><span class="default_value">'#1f456e'</span></em>, <em class="sig-param"><span class="n">node_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_node_properties" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt id="bnlearn.bnlearn.import_DAG">
 <code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">import_DAG</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filepath</span><span class="o">=</span><span class="default_value">'sprinkler'</span></em>, <em class="sig-param"><span class="n">CPD</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">checkmodel</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Import Directed Acyclic Graph.</p>
@@ -384,27 +393,34 @@ adjmat : Adjacency matrix</p>
 
 <dl class="py function">
 <dt id="bnlearn.bnlearn.plot">
-<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">figsize</span><span class="o">=</span><span class="default_value">(15, 8)</span></em>, <em class="sig-param"><span class="n">interactive</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'bnlearn causal network'</span></em>, <em class="sig-param"><span class="n">params</span><span class="o">=</span><span class="default_value">{'bgcolor': '#ffffff', 'directed': True, 'font_color': False, 'height': '800px', 'layout': None, 'notebook': False, 'width': '70%'}</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">bnlearn.bnlearn.</code><code class="sig-name descname">plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model</span></em>, <em class="sig-param"><span class="n">pos</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">interactive</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'bnlearn causal network'</span></em>, <em class="sig-param"><span class="n">node_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">node_size</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">node_properties</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">params_interactive</span><span class="o">=</span><span class="default_value">{'bgcolor': '#ffffff', 'font_color': False, 'height': '800px', 'layout': None, 'notebook': False, 'width': '70%'}</span></em>, <em class="sig-param"><span class="n">params_static</span><span class="o">=</span><span class="default_value">{'alpha': 0.8, 'facecolor': 'white', 'font_color': '#000000', 'font_family': 'sans-serif', 'font_size': 14, 'height': 8, 'layout': 'fruchterman_reingold', 'node_shape': 'o', 'width': 15}</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">3</span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>dict</em>) – Learned model from the .fit() function..</p></li>
+<li><p><strong>model</strong> (<em>dict</em>) – Learned model from the .fit() function.</p></li>
 <li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
 <li><p><strong>scale</strong> (<em>int</em><em>, </em><em>optional</em>) – Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.</p></li>
-<li><p><strong>figsize</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Figure size. The default is (15,8).</p></li>
-<li><p><strong>interactive</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – True: Static plot
-False: Interactive web-based graph.</p></li>
-<li><p><strong>params</strong> (<em>dict</em>) – Dictionary containing parameters for the pyvis network. This only works inf interactive=True</p></li>
+<li><p><strong>interactive</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: True</em><em>)</em>) – True: Interactive web-based graph.
+False: Static plot</p></li>
+<li><p><strong>title</strong> (<em>str</em><em>, </em><em>optional</em>) – Title for the plots.</p></li>
+<li><p><strong>node_color</strong> (<em>str</em><em>, </em><em>optional</em>) – Color each node in the network using a hex-color, such as ‘#8A0707’</p></li>
+<li><p><strong>node_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Set the node size for each node in the network. The default size when using static plolts is 800, and for interactive plots it is 10.</p></li>
+<li><p><strong>node_properties</strong> (<em>dict</em><em> (</em><em>default: None</em><em>)</em><em></em>) – Dictionary containing custom node_color and node_size parameters for the network.
+The node properties can easily be retrieved using the function: node_properties = bn.get_node_properties(model)</p></li>
+<li><p><strong>params_interactive</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating interactive plots.</p></li>
+<li><p><strong>params_static</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating static plots.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
-<dt>pos<span class="classifier">list</span></dt><dd><p>Positions of the nodes.</p>
+<dt>pos<span class="classifier">list.</span></dt><dd><p>Positions of the nodes.</p>
 </dd>
-<dt>G<span class="classifier">Graph</span></dt><dd><p>Graph model</p>
+<dt>G<span class="classifier">Graph.</span></dt><dd><p>Graph model</p>
+</dd>
+<dt>node_properties: dict.</dt><dd><p>Node properties.</p>
 </dd>
 </dl>
 </p>
