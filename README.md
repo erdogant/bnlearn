@@ -464,7 +464,8 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 </p>
 
 
-### Example of plotting
+### Example of interactive and static plotting
+In case of static plotting, simply set the interactive parameter to False.
 
 ```python
 
@@ -499,6 +500,9 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 
     # Add more parameters for the interactive plot
     bn.plot(model, interactive=True, node_color='#8A0707', params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+
+    # Add more parameters for the static plot
+    bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
 
 ```
 
