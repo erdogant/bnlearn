@@ -39,16 +39,16 @@ except:
 
 # Check version pgmpy
 if version.parse(pgmpy.__version__) < version.parse("0.1.13"):
-    raise Exception('[bnlearn] >Error: This release requires pgmpy to be version >= 0.1.13. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy>=0.1.13>')
+    raise ImportError('[bnlearn] >Error: This release requires pgmpy to be version >= 0.1.13. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy>=0.1.13>')
 
 # Version check
 import matplotlib
 if not version.parse(matplotlib.__version__) >= version.parse("3.3.4"):
-    raise Exception('[bnlearn] >Error: Matplotlib version should be >= v3.3.4.\nTry to: pip install -U matplotlib')
+    raise ImportError('[bnlearn] >Error: Matplotlib version should be >= v3.3.4.\nTry to: pip install -U matplotlib')
 
 import networkx as nx
 if not version.parse(nx.__version__) > version.parse("2.5"):
-    raise Exception('[bnlearn] >Error: networkx version should be > 2.5.\nTry to: pip install -U networkx')
+    raise ImportError('[bnlearn] >Error: networkx version should be > 2.5.\nTry to: pip install -U networkx')
 
 
 # module level doc-string
