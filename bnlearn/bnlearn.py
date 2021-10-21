@@ -593,6 +593,34 @@ def plot(model,
         node_properties: dict.
             Node properties.
 
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>>
+    >>> # Load asia DAG
+    >>> df = bn.import_example(data='asia')
+    >>>
+    >>> # Structure learning of sampled dataset
+    >>> model = bn.structure_learning.fit(df)
+    >>>
+    >>> # plot static
+    >>> G = bn.plot(model)
+    >>>
+    >>> # plot interactive
+    >>> G = bn.plot(model, interactive=True)
+    >>>
+    >>> # plot interactive with various settings
+    >>> bn.plot(model, node_color='#8A0707', node_size=35, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+    >>>
+    >>> # plot with node properties
+    >>> node_properties = bn.get_node_properties(model)
+    >>> # Make some changes
+    >>> node_properties['xray']['node_color']='#8A0707'
+    >>> node_properties['xray']['node_size']=50
+    >>> # Plot
+    >>> bn.plot(model, interactive=True, node_properties=node_properties)
+    >>>
+
     """
     # Plot properties
     defaults = {'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff', 'directed':True}
