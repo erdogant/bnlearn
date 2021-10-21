@@ -489,10 +489,10 @@ In case of static plotting, simply set the interactive parameter to False.
     node_properties = bn.get_node_properties(model)
 
     # Make some changes
-    node_properties['Cloudy']['node_color']='#8A0707'
-    node_properties['Cloudy']['node_size']=50
-    node_properties['Wet_Grass']['node_color']='#000000'
-    node_properties['Wet_Grass']['node_size']=35
+    node_properties['xray']['node_color']='#8A0707'
+    node_properties['xray']['node_size']=50
+    node_properties['smoke']['node_color']='#000000'
+    node_properties['smoke']['node_size']=35
     bn.plot(model, node_properties=node_properties, interactive=True)
     
     # You can also add some parameters for the interactive plot
