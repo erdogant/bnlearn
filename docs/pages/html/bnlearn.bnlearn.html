@@ -429,6 +429,34 @@ The node properties can easily be retrieved using the function: node_properties 
 <dd class="field-odd"><p>dict containing pos and G</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load asia DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning of sampled dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot static</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot interactive</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot interactive with various settings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params_interactive</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;800px&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span><span class="s1">&#39;#0f0f0f0f&#39;</span><span class="p">})</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot with node properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_node_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make some changes</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;node_color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node_properties</span><span class="p">[</span><span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;node_size&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">50</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_properties</span><span class="o">=</span><span class="n">node_properties</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
