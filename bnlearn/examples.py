@@ -7,7 +7,42 @@ print(dir(bn.structure_learning))
 print(dir(bn.parameter_learning))
 print(dir(bn.inference))
 
+
+# %% Coloring networks
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example(data='asia')
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+
+node_properties = bn.set_node_properties(model)
+# model = bn.set_node_properties(model, node_size=100)
+
+# Set color
+node_properties['xray']['node_color']='#8A0707'
+node_properties['xray']['node_size']=50
+bn.plot(model, interactive=False)
+bn.plot(model, interactive=False, node_properties=node_properties)
+bn.plot(model, interactive=False, node_properties=node_properties, params_static = {'font_color':'#8A0707'})
+bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'r'})
+bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
+
+# Add some parameters for the interactive plot
+node_properties = bn.set_node_properties(model)
+node_properties['xray']['node_color']='#8A0707'
+node_properties['xray']['node_size']=50
+bn.plot(model, interactive=True)
+bn.plot(model, interactive=True, node_properties=node_properties)
+bn.plot(model, interactive=True, node_color='#8A0707')
+bn.plot(model, interactive=True, node_size=5)
+bn.plot(model, interactive=True, node_properties=node_properties, node_size=20)
+bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+
+
 # %% Save and load trained models
+import bnlearn as bn
 # Import example
 df = bn.import_example(data='asia')
 # Learn structure
@@ -94,15 +129,12 @@ model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
 assert dag.edges()==model['model'].edges()
 assert dag.edges()==model['model_edges']
 
-
-
-from pgmpy.inference import VariableElimination
-bnp = BayesianModel(dag.edges())
-bn_infer = VariableElimination(bnp)
-bnp.fit(df)
-
-a = bn_infer.query(variables=['Target'], evidence={'X':'c'})
-print(a)
+# from pgmpy.inference import VariableElimination
+# bnp = BayesianModel(dag.edges())
+# bn_infer = VariableElimination(bnp)
+# bnp.fit(df)
+# a = bn_infer.query(variables=['Target'], evidence={'X':'c'})
+# print(a)
 
 #%% Example of interactive plotting
 import bnlearn as bn
@@ -113,13 +145,13 @@ df = bn.import_example(data='asia')
 # Structure learning
 model = bn.structure_learning.fit(df)
 
-bn.plot(model, interactive=False)
+bn.plot(model, interactive=False, node_size=800)
 
 # Add some parameters for the interactive plot
-bn.plot(model, interactive=True, params = {'height':'600px'})
+bn.plot(model, interactive=True, node_size=10, params_interactive = {'height':'600px'})
 
 # Add more parameters for the interactive plot
-bn.plot(model, interactive=True, params = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn causal diagram', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
+bn.plot(model, interactive=True, node_size=10, params_interactive = {'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn causal diagram', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
@@ -152,7 +184,7 @@ bn.plot(model)
 model = bn.structure_learning.fit(df, methodtype='hc', white_list=['tub','lung', 'smoke','bronc'], bw_list_method='nodes')
 bn.plot(model)
 model = bn.structure_learning.fit(df, methodtype='hc')
-bn.plot(model)
+bn.plot(model, node_color='#000000')
 
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
@@ -163,7 +195,7 @@ df = bn.import_example()
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
 bn.plot(model)
-bn.plot(model, interactive=True)
+bn.plot(model, interactive=True, node_size=10)
 
 # %% Download example
 import bnlearn as bn
@@ -177,7 +209,7 @@ import bnlearn as bn
 df = bn.import_example()
 model = bn.structure_learning.fit(df)
 model = bn.structure_learning.fit(df, methodtype='hc')
- 
+
 # %% Predict
 import bnlearn as bn
 
@@ -210,7 +242,7 @@ edges = [('1', '2'),
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges, verbose=0)
 # Plot
-bn.plot(DAG)
+bn.plot(DAG, node_size=2000)
 # Topological ordering
 bn.topological_sort(DAG)
 
@@ -234,7 +266,6 @@ DAG = bn.import_DAG('sprinkler')
 df = bn.sampling(DAG, n=1000, verbose=0)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
-
 bn.topological_sort(model, 'Rain')
 
 # %%
@@ -252,9 +283,13 @@ df = bn.sampling(DAG, n=1000, verbose=0)
 # Structure learning
 model = bn.structure_learning.fit(df, verbose=0)
 # Plot
+node_properties = bn.set_node_properties(model)
 G = bn.plot(model)
-
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+
+node_properties['Cloudy']['node_size']=2000
+node_properties['Cloudy']['node_color']='r'
+G = bn.plot(model, node_properties=node_properties)
 
 # %% Chow-Liu algorithm
 DAG = bn.import_DAG('sprinkler', verbose=0)
@@ -388,7 +423,7 @@ df = bn.import_example('asia', verbose=0)
 # Structure learning
 model = bn.structure_learning.fit(df, verbose=0)
 # Plot the DAG
-bn.plot(model, verbose=0)
+bn.plot(model, verbose=0, interactive=True, node_color='#000000')
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
@@ -422,7 +457,7 @@ model = bn.structure_learning.fit(df, verbose=0)
 # Structure learning of sampled dataset
 model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
-bn.plot(model_sl, pos=G['pos'], interactive=True, params = {'height':'800px'})
+bn.plot(model_sl, pos=G['pos'], interactive=True, params_interactive = {'height':'800px'})
 # Compare networks and make plot
 bn.compare_networks(model, model_sl, pos=G['pos'])
 
@@ -475,6 +510,7 @@ DAG = bn.import_DAG('water', verbose=0)
 df = bn.sampling(DAG, n=1000)
 model_update = bn.parameter_learning.fit(DAG, df)
 G = bn.plot(model_update)
+G = bn.plot(model_update, interactive=True)
 bn.print_CPD(model_update)
 
 
