@@ -133,14 +133,14 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if methodtype=='cl': methodtype = 'chow-liu'
     if fixed_edges is None: fixed_edges=set()
 
-    # Remove in future version
+    #### Remove this block in future (21-10-2021)
     if bw_list_method=='filter':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes", but will be removed in future releases.')
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
         bw_list_method = "nodes"
     if bw_list_method=='enforce':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges", but will be removed in future releases.')
+        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
         bw_list_method = "edges"
-    ## End removal
+    #### End remove block
 
     config = {}
     config['verbose'] = verbose
