@@ -209,6 +209,23 @@ def test_query2df():
     assert np.all(np.isin(df.columns, ['Sprinkler', 'Wet_Grass', 'p']))
     assert df.shape==(4,3)
 
+    # Load example mixed dataset
+    df_raw = bn.import_example(data='titanic')
+    # Convert to onehot
+    dfhot, dfnum = bn.df2onehot(df_raw)
+    dfnum.loc[0:50,'Survived'] = 2
+    # Structure learning
+    # DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+    DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked','Parch','Name'], bw_list_method='edges')
+    # Parameter learning
+    model = bn.parameter_learning.fit(DAG, dfnum)
+    # Make inference
+    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True}, verbose=0)
+    df = bn.query2df(q1)
+    assert np.all(df==q1.df)
+    assert df.shape==(3,2)
+
+
 def test_predict():
     df = bn.import_example('asia')
     edges = [('smoke', 'lung'),

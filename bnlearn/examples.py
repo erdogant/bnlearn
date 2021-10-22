@@ -546,6 +546,8 @@ import bnlearn as bn
 df_raw = bn.import_example(data='titanic')
 # Convert to onehot
 dfhot, dfnum = bn.df2onehot(df_raw)
+
+dfnum.loc[0:50,'Survived'] = 2
 # Structure learning
 # DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
 DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked','Parch','Name'], bw_list_method='edges')

@@ -415,7 +415,7 @@ def query2df(query):
         Dataframe with inferences.
 
     """
-    df = pd.DataFrame(data = list(itertools.product([0, 1], repeat=len(query.variables))), columns=query.variables)
+    df = pd.DataFrame(data = list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
     df['p'] = query.values.flatten()
     return df
 
