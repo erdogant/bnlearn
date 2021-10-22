@@ -195,7 +195,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>interactive</strong> and <strong>static</strong> plotting functionalities with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a> for which many network and figure properties can be adjusted, such as node colors and sizes.
 To make interactive plots, it simply needs to set the <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> parameter in <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a>.
 The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">pyvis</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
-Lets make some interactive and static examples.</p>
+Lets make some interactive and static examples. All the parameters to specify the interactive plot can be found <a class="reference external" href="https://pyvis.readthedocs.io/en/latest/documentation.html">here</a>.</p>
 <p><strong>Interactive plot examples</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the pyvis library first if you want interactive plots</span>
 pip install pyvis
@@ -210,41 +210,33 @@ pip install pyvis
 <span class="c1"># Structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
-<span class="c1"># Add some parameters for the interactive plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;600px&#39;</span><span class="p">})</span>
+<span class="c1"># Make interactive plot with default settings</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Add more parameters for the interactive plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params_interactive</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;800px&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span> <span class="s1">&#39;notebook&#39;</span><span class="p">:</span><span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;heading&#39;</span><span class="p">:</span><span class="s1">&#39;bnlearn causal diagram&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span><span class="s1">&#39;#ffffff&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe><p>All the parameters to specify the interactive plot can be found here:
-<a class="reference external" href="https://pyvis.readthedocs.io/en/latest/documentation.html">https://pyvis.readthedocs.io/en/latest/documentation.html</a></p>
-<p><strong>Create interactives plot with default settings.</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
-<span class="c1"># Structure learning</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="c1"># Make simple interactive plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe><p><strong>Create interactive plots with a specific node-color and node-sizes across the entire network.</strong></p>
+<p>Note that all the results below can be interactive as the graph above. But for demonstration purposes I created a screenshot.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the node color</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">)</span>
+<span class="c1"># Set the node color and node size</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="fig-plot-interactive-simple">
-<img alt="_images/_fig-plot_interactive_simple.png" src="_images/_fig-plot_interactive_simple.png" />
-</div>
-<p><strong>Create interactive plots with a specific node-color across the entire network.</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="figure align-default" id="id1">
-<img alt="_images/_fig-plot_interactive_simple_color.png" src="_images/_fig-plot_interactive_simple_color.png" />
-</div>
-<p><strong>Create interactive plots with a specific node-color, and node-size across the entire network.</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="figure align-default" id="id2">
-<img alt="_images/_fig-plot_interactive_simple_color_size.png" src="_images/_fig-plot_interactive_simple_color_size.png" />
-</div>
+<table class="docutils align-center" id="id1">
+<caption><span class="caption-text">Plot with node-colors</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="figIP1" src="_images/_fig-plot_interactive_simple_color.png" /></p></td>
+<td><p><img alt="figIP2" src="_images/_fig-plot_interactive_simple_color_size.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Create interactive plots with user-defined node-colors and node-sizes.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First retrieve node properties</span>
 <span class="n">node_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_node_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -259,9 +251,16 @@ pip install pyvis
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_properties</span><span class="o">=</span><span class="n">node_properties</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id3">
-<img alt="_images/_fig-plot_interactive_user_colors.png" src="_images/_fig-plot_interactive_user_colors.png" />
-</div>
+<table class="docutils align-center" id="id2">
+<caption><span class="caption-text">Plot with user defined node colors and node sizes.</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="figIP3" src="_images/_fig-plot_interactive_user_colors.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <p><strong>The ``params_interactive`` parameter allows you to adjust more figure properties.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">params_interactive</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="s1">&#39;800px&#39;</span><span class="p">,</span> <span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="s1">&#39;70%&#39;</span><span class="p">,</span> <span class="s1">&#39;layout&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span><span class="s1">&#39;#0f0f0f0f&#39;</span><span class="p">})</span>
 </pre></div>

@@ -4,7 +4,7 @@ Interactive plot
 ``bnlearn`` contains **interactive** and **static** plotting functionalities with :func:`bnlearn.bnlearn.plot` for which many network and figure properties can be adjusted, such as node colors and sizes. 
 To make interactive plots, it simply needs to set the ``interactive=True`` parameter in :func:`bnlearn.bnlearn.plot`. 
 The interactive plots are created using the ``pyvis`` library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
-Lets make some interactive and static examples. 
+Lets make some interactive and static examples. All the parameters to specify the interactive plot can be found `here <https://pyvis.readthedocs.io/en/latest/documentation.html>`_.
 
 
 **Interactive plot examples**
@@ -26,8 +26,8 @@ Lets make some interactive and static examples.
 	# Structure learning
 	model = bn.structure_learning.fit(df)
 
-	# Add some parameters for the interactive plot
-	bn.plot(model, interactive=True, params = {'height':'600px'})
+	# Make interactive plot with default settings
+	bn.plot(model, interactive=True)
 
 	# Add more parameters for the interactive plot
 	bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn causal diagram', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
@@ -38,47 +38,27 @@ Lets make some interactive and static examples.
    <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe>
 
 
-All the parameters to specify the interactive plot can be found here:
-https://pyvis.readthedocs.io/en/latest/documentation.html
+**Create interactive plots with a specific node-color and node-sizes across the entire network.**
 
-
-
-**Create interactives plot with default settings.**
+Note that all the results below can be interactive as the graph above. But for demonstration purposes I created a screenshot.
 
 .. code-block:: python
 
-   # Import dataset
-   df = bn.import_example(data='asia')
-   # Structure learning
-   model = bn.structure_learning.fit(df)
-   # Make simple interactive plot
-   bn.plot(model, interactive=True)
-
-.. _fig-plot_interactive_simple:
-
-.. figure:: ../figs/_fig-plot_interactive_simple.png
+   # Set the node color
+   bn.plot(model, interactive=True, node_color='#8A0707')
+   # Set the node color and node size
+   bn.plot(model, interactive=True, node_color='#8A0707', node_size=25)
 
 
-**Create interactive plots with a specific node-color across the entire network.**
+.. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
+.. |figIP2| image:: ../figs/_fig-plot_interactive_simple_color_size.png
 
-.. code-block:: python
+.. table:: Plot with node-colors
+   :align: center
 
-   bn.plot(model, node_color='#8A0707', interactive=True)
-
-.. _fig-plot_interactive_simple:
-
-.. figure:: ../figs/_fig-plot_interactive_simple_color.png
-
-
-**Create interactive plots with a specific node-color, and node-size across the entire network.**
-
-.. code-block:: python
-
-   bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
-
-.. _fig-plot_interactive_simple:
-
-.. figure:: ../figs/_fig-plot_interactive_simple_color_size.png
+   +----------+----------+
+   | |figIP1| | |figIP2| |
+   +----------+----------+
 
 
 
@@ -99,9 +79,15 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
     bn.plot(model, node_properties=node_properties, interactive=True)
 
 
-.. _fig-plot_interactive_simple:
+.. |figIP3| image:: ../figs/_fig-plot_interactive_user_colors.png
 
-.. figure:: ../figs/_fig-plot_interactive_user_colors.png
+.. table:: Plot with user defined node colors and node sizes.
+   :align: center
+
+   +----------+
+   | |figIP3| |
+   +----------+
+
 
 
 **The ``params_interactive`` parameter allows you to adjust more figure properties.**

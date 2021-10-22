@@ -1,0 +1,123 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 70%;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "#8A0707", "id": "asia", "label": "asia", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "tub", "label": "tub", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "either", "label": "either", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "xray", "label": "xray", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "dysp", "label": "dysp", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "smoke", "label": "smoke", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "lung", "label": "lung", "shape": "dot", "size": 10}, {"color": "#8A0707", "id": "bronc", "label": "bronc", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"arrows": "to", "color": "k", "from": "asia", "to": "tub", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "tub", "to": "either", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "either", "to": "xray", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "either", "to": "dysp", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "smoke", "to": "lung", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "smoke", "to": "bronc", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "lung", "to": "either", "weight": 1.0}, {"arrows": "to", "color": "k", "from": "bronc", "to": "dysp", "weight": 1.0}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
