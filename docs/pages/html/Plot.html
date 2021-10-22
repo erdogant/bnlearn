@@ -196,7 +196,11 @@
 To make interactive plots, it simply needs to set the <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> parameter in <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a>.
 The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">pyvis</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
 Lets make some interactive and static examples.</p>
-<p><strong>Interactive plot example</strong></p>
+<p><strong>Interactive plot examples</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the pyvis library first if you want interactive plots</span>
+pip install pyvis
+</pre></div>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of interactive plotting</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
@@ -215,7 +219,7 @@ Lets make some interactive and static examples.</p>
 </div>
 <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe><p>All the parameters to specify the interactive plot can be found here:
 <a class="reference external" href="https://pyvis.readthedocs.io/en/latest/documentation.html">https://pyvis.readthedocs.io/en/latest/documentation.html</a></p>
-<p><strong>Make simple interactive plot</strong></p>
+<p><strong>Create interactives plot with default settings.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
@@ -227,21 +231,21 @@ Lets make some interactive and static examples.</p>
 <div class="figure align-default" id="fig-plot-interactive-simple">
 <img alt="_images/_fig-plot_interactive_simple.png" src="_images/_fig-plot_interactive_simple.png" />
 </div>
-<p><strong>Make simple interactive plot, color the entire network.</strong></p>
+<p><strong>Create interactive plots with a specific node-color across the entire network.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="id1">
 <img alt="_images/_fig-plot_interactive_simple_color.png" src="_images/_fig-plot_interactive_simple_color.png" />
 </div>
-<p><strong>Make simple interactive plot, color the entire network and set the node size.</strong></p>
+<p><strong>Create interactive plots with a specific node-color, and node-size across the entire network.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span><span class="p">,</span> <span class="n">node_size</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="id2">
 <img alt="_images/_fig-plot_interactive_simple_color_size.png" src="_images/_fig-plot_interactive_simple_color_size.png" />
 </div>
-<p><strong>Make interactive plot, and set specific colors and sizes to the nodes.</strong></p>
+<p><strong>Create interactive plots with user-defined node-colors and node-sizes.</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First retrieve node properties</span>
 <span class="n">node_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_node_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
@@ -265,7 +269,7 @@ Lets make some interactive and static examples.</p>
 </div>
 <div class="section" id="static-plot">
 <h1>Static plot<a class="headerlink" href="#static-plot" title="Permalink to this headline">¶</a></h1>
-<p>To create static plots, simply set <code class="docutils literal notranslate"><span class="pre">interactive=False</span></code> in all the above examples. The only difference is in <code class="docutils literal notranslate"><span class="pre">params_static</span></code> for which the dict contains more variables that adjust the figure properties.</p>
+<p>To create static plots simply set the <code class="docutils literal notranslate"><span class="pre">interactive=False</span></code> in all the above examples. The only difference is in <code class="docutils literal notranslate"><span class="pre">params_static</span></code> for which the dict contains more variables that adjust the figure properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add parameters for the static plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">params_static</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;font_family&#39;</span><span class="p">:</span><span class="s1">&#39;times new roman&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;node_shape&#39;</span><span class="p">:</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="s1">&#39;#000000&#39;</span><span class="p">})</span>
 </pre></div>

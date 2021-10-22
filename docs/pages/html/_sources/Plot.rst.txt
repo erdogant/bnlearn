@@ -7,7 +7,13 @@ The interactive plots are created using the ``pyvis`` library for which various 
 Lets make some interactive and static examples. 
 
 
-**Interactive plot example**
+**Interactive plot examples**
+
+.. code-block:: bash
+
+	# Install the pyvis library first if you want interactive plots
+	pip install pyvis
+
 
 .. code-block:: python
     
@@ -37,7 +43,7 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
 
 
 
-**Make simple interactive plot**
+**Create interactives plot with default settings.**
 
 .. code-block:: python
 
@@ -53,7 +59,7 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
 .. figure:: ../figs/_fig-plot_interactive_simple.png
 
 
-**Make simple interactive plot, color the entire network.**
+**Create interactive plots with a specific node-color across the entire network.**
 
 .. code-block:: python
 
@@ -64,7 +70,7 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
 .. figure:: ../figs/_fig-plot_interactive_simple_color.png
 
 
-**Make simple interactive plot, color the entire network and set the node size.**
+**Create interactive plots with a specific node-color, and node-size across the entire network.**
 
 .. code-block:: python
 
@@ -76,7 +82,7 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
 
 
 
-**Make interactive plot, and set specific colors and sizes to the nodes.**
+**Create interactive plots with user-defined node-colors and node-sizes.**
 
 .. code-block:: python
 
@@ -108,7 +114,7 @@ https://pyvis.readthedocs.io/en/latest/documentation.html
 Static plot
 =================
 
-To create static plots, simply set ``interactive=False`` in all the above examples. The only difference is in ``params_static`` for which the dict contains more variables that adjust the figure properties.
+To create static plots simply set the ``interactive=False`` in all the above examples. The only difference is in ``params_static`` for which the dict contains more variables that adjust the figure properties.
 
 .. code-block:: python
 
