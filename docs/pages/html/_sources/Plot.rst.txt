@@ -30,7 +30,8 @@ Lets make some interactive and static examples. All the parameters to specify th
 	bn.plot(model, interactive=True)
 
 	# Add more parameters for the interactive plot
-	bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn causal diagram', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
+	bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+
 
 
 .. raw:: html
