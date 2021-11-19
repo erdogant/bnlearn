@@ -421,6 +421,8 @@ def query2df(query, variables=None):
     df['p'] = query.values.flatten()
     # Order or filter on input variables
     if variables is not None:
+        # Add Pvalue column
+        variables=variables+['p']
         df = df[variables]
     return df
 
