@@ -747,7 +747,7 @@ bn.print_CPD(DAGmle)
 bn.print_CPD(DAGbay)
 
 # Make inference
-q1 = bn.inference.fit(DAGmle, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+q1 = bn.inference.fit(DAGmle, variables=['Wet_Grass','Cloudy','Sprinkler'], evidence={'Rain':1})
 q1 = bn.inference.fit(DAGbay, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
 print(q1.values)

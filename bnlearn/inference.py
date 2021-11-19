@@ -16,6 +16,7 @@ Inference is same as asking conditional probability questions to the models.
 from pgmpy.inference import VariableElimination
 import bnlearn
 import numpy as np
+from tabulate import tabulate
 
 # %% Exact inference using Variable Elimination
 def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
@@ -91,7 +92,8 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     # Computing the probability P(class | evidence)
     query = model_infer.query(variables=variables, evidence=evidence, show_progress=(verbose>0))
     # Store also in dataframe
-    query.df = bnlearn.query2df(query) if to_df else None
-    if verbose>=3: print(query)
+    query.df = bnlearn.query2df(query, variables=variables) if to_df else None
+    # Print table to screen
+    if verbose>=3: print(tabulate(query.df.head(), tablefmt="grid", headers="keys"))
     # Return
     return(query)

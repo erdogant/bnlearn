@@ -401,13 +401,15 @@ def _bif2bayesian(pathname, verbose=3):
 
 
 # %%
-def query2df(query):
+def query2df(query, variables=None):
     """Convert query from inference model to a dataframe.
 
     Parameters
     ----------
     query : Object from the inference model.
         Convert query object to a dataframe.
+    variables : list
+        Order or select variables.
 
     Returns
     -------
@@ -417,6 +419,9 @@ def query2df(query):
     """
     df = pd.DataFrame(data = list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
     df['p'] = query.values.flatten()
+    # Order or filter on input variables
+    if variables is not None:
+        df = df[variables]
     return df
 
 
