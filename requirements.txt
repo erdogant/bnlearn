@@ -18,3 +18,4 @@ wget
 df2onehot
 fsspec
 pypickle
+tabulate
