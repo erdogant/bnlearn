@@ -534,15 +534,9 @@ model = bn.load(filepath='bnlearn_model')
 * http://www.bnlearn.com/
 * http://www.bnlearn.com/bnrepository/
 
-### Citation
-Please cite in your publications if this is useful for your research (see citation).
-   
-### Maintainers
-* Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
-
-### Contribute
-* All kinds of contributions are welcome!
-* If you wish to buy me a <a href="https://www.buymeacoffee.com/erdogant">Coffee</a> for this work, it is very appreciated :)
-
-### Licence
-See [LICENSE](LICENSE) for details.
+### Maintainer
+    Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
+    Please cite in your publications if this is useful for your research (see citation).
+    All kinds of contributions are welcome!
+    If you wish to buy me a <a href="https://www.buymeacoffee.com/erdogant">Coffee</a> for this work, it is very appreciated :)
+    See [LICENSE](LICENSE) for details.
