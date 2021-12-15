@@ -530,7 +530,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
     return(scores, adjmat_diff)
 
 
-# %% Set node properties
+# %% Get node properties
 def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     nodes = {}
@@ -548,6 +548,29 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     return nodes
 
 
+# %% Get node properties
+def get_edge_properties(model, color='#000000', weight=1, arrowstyle='-|>', arrowsize=30, verbose=3):
+    # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
+    edges = {}
+    # defaults = {'color':color, 'weight':weight, 'arrowstyle':arrowstyle, 'arrowsize':arrowsize}
+    defaults = {'color':color, 'weight':weight}
+    adjmat = model.get('adjmat', None)
+
+    if adjmat is not None:
+        if verbose>=3: print('[bnlearn]> Set edge properties.')
+        # For each edge, use the default properties.
+        for u, v in model['model_edges']:
+            edge_property = defaults.copy()
+            # Use the edge weight from the adjmat
+            if not isinstance(adjmat.loc[u,v], np.bool_):
+                edge_property['weight']=adjmat.loc[u,v]
+            # Update edges dict
+            edges.update({(u,v): edge_property})
+
+    # Return dict with node properties
+    return edges
+
+
 # %% PLOT
 def plot(model,
          pos=None,
@@ -557,8 +580,9 @@ def plot(model,
          node_color=None,
          node_size=None,
          node_properties=None,
+         edge_properties=None,
          params_interactive={'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'},
-         params_static={'width':15, 'height':8, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'node_shape':'o', 'layout':'fruchterman_reingold', 'font_color': '#000000', 'facecolor':'white'},
+         params_static={'width':15, 'height':8, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'node_shape':'o', 'layout':'fruchterman_reingold', 'font_color': '#000000', 'facecolor':'white', 'edge_alpha':0.8, 'arrowstyle':'-|>', 'arrowsize':30},
          verbose=3):
     """Plot the learned stucture.
 
@@ -582,6 +606,11 @@ def plot(model,
     node_properties : dict (default: None).
         Dictionary containing custom node_color and node_size parameters for the network.
         The node properties can easily be retrieved using the function: node_properties = bn.get_node_properties(model)
+        node_properties = {'node1':{'node_color':'#8A0707','node_size':10},
+                           'node2':{'node_color':'#000000','node_size':30}}
+    edge_properties : dict (default: None).
+        Dictionary containing custom node_color and node_size parameters for the network.
+        The edge properties can easily be retrieved using the function: edge_properties = bn.get_edge_properties(model)
     params_interactive : dict.
         Dictionary containing various settings in case of creating interactive plots.
     params_static : dict.
@@ -632,7 +661,7 @@ def plot(model,
     # Plot properties
     defaults = {'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff', 'directed':True}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'height':8, 'width':15, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'layout':'fruchterman_reingold', 'font_color': 'k', 'facecolor':'#ffffff', 'node_shape':'o'}
+    defaults = {'height':8, 'width':15, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'layout':'fruchterman_reingold', 'font_color': 'k', 'facecolor':'#ffffff', 'node_shape':'o', 'edge_alpha':0.8, 'arrowstyle':'-|>', 'arrowsize':30}
     params_static = {**defaults, **params_static}
     out = {}
     G = nx.DiGraph()  # Directed graph
@@ -643,6 +672,8 @@ def plot(model,
     # Get node properties
     if node_properties is None:
         node_properties = bnlearn.get_node_properties(model)
+    if edge_properties is None:
+        edge_properties = bnlearn.get_edge_properties(model)
 
     # Set default node size based on interactive True/False
     for key in node_properties.keys():
@@ -671,30 +702,34 @@ def plot(model,
         pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
 
     # get node properties
-    nodelist, node_colors, node_sizes, edge_color, edge_weights = _plot_properties(G, bnmodel, node_properties, node_color, node_size)
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, node_size)
 
-    # Make interactive or static plot
+    # Plot
     if interactive:
-        _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, title=title, verbose=verbose)
+        # Make interactive plot
+        _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
     else:
-        _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, edge_color, edge_weights, pos)
+        # Make static plot
+        _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights)
 
     # Store
     out['pos']=pos
     out['G']=G
     out['node_properties']=node_properties
+    out['edge_properties']=edge_properties
     return(out)
 
 
 # %% Plot interactive
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, edge_color, edge_weights, pos):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_color, edge_weights):
     # Bootup figure
     plt.figure(figsize=(params_static['width'], params_static['height']), facecolor=params_static['facecolor'])
     # nodes
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist , node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
-    nx.draw_networkx_edges(G, pos, arrowstyle='->', edge_color=edge_color, width=edge_weights)
+    # nx.draw_networkx_edges(G, pos, arrowstyle='-|>', arrowsize=30, edge_color=edge_color, width=edge_weights)
+    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_color, width=edge_weights, alpha=params_static['edge_alpha'])
     # Labels
     nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'])
     # Plot text of the weights
@@ -706,7 +741,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, edg
 
 
 # %% Plot interactive
-def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, title, verbose=3):
+def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
     try:
         from pyvis import network as net
         from IPython.core.display import display, HTML
@@ -718,10 +753,17 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     g = net.Network(**params_interactive)
     # Convert from graph G
     g.from_nx(G)
-    # g.edges
+    # Nodes
     for i,_ in enumerate(g.nodes):
         g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
         g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+
+    # Edges
+    g_edges = list(map(lambda x: (x.get('from'), x.get('to')), g.edges))
+    for i,_ in enumerate(g.edges):
+        idx = np.where(list(map(lambda x: g_edges[i]==x, edgelist)))[0][0]
+        g.edges[i]['color']=edge_colors[idx]
+        g.edges[i]['weight']=edge_weights[idx]
 
     # Create advanced buttons
     g.show_buttons(filter_=['physics'])
@@ -733,16 +775,25 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
 
 
 # %% Plot properties
-def _plot_properties(G, bnmodel, node_properties, node_color, node_size):
+def _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, node_size):
     # Set edge properties in Graph G
     edges=[*bnmodel.edges()]
     for edge in edges:
-        G.add_edge(edge[0], edge[1], weight=1, color='#000000')
-    edge_color = [G[u][v].get('color') for u, v in G.edges()]
+        color = edge_properties.get((edge[0], edge[1])).get('color', '#000000')
+        weight = edge_properties.get((edge[0], edge[1])).get('weight', 1)
+        G.add_edge(edge[0], edge[1], weight=weight, color=color)
+        # arrowstyle = edge_properties.get((edge[0], edge[1])).get('arrowstyle', '-|>')
+        # arrowsize = edge_properties.get((edge[0], edge[1])).get('arrowsize', 30)
+        # G.add_edge(edge[0], edge[1], weight=weight, color=color, arrowstyle=arrowstyle, arrowsize=arrowsize)
+    
+    edgelist = list(G.edges())
+    edge_colors = [G[u][v].get('color') for u, v in G.edges()]
     edge_weights = [G[u][v].get('weight') for u, v in G.edges()]
+    # edge_arrowstyles = [G[u][v].get('arrowstyle') for u, v in G.edges()]
+    # edge_arrowsizes = [G[u][v].get('arrowsize') for u, v in G.edges()]
 
     # Node properties
-    nodelist = np.unique(edges)
+    nodelist = np.unique(edgelist)
     node_colors = []
     node_sizes = []
     for node in nodelist:
@@ -755,7 +806,7 @@ def _plot_properties(G, bnmodel, node_properties, node_color, node_size):
         else:
             node_sizes.append(node_properties[node].get('node_size'))
     # Return
-    return nodelist, node_colors, node_sizes, edge_color, edge_weights
+    return nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights
 
 
 # %%

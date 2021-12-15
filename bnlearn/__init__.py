@@ -15,6 +15,7 @@ from bnlearn.bnlearn import (
     predict,
     query2df,
     get_node_properties,
+    get_edge_properties,
     _dag2adjmat,
     _filter_df,
     save,
@@ -31,7 +32,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.4.8'
+__version__ = '0.4.9'
 
 try:
     import pgmpy

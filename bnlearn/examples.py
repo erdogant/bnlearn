@@ -1,11 +1,49 @@
 # %%
 import bnlearn as bn
-print(bn.__version__)
-print(dir(bn))
+# print(bn.__version__)
+# print(dir(bn))
 
-print(dir(bn.structure_learning))
-print(dir(bn.parameter_learning))
-print(dir(bn.inference))
+# print(dir(bn.structure_learning))
+# print(dir(bn.parameter_learning))
+# print(dir(bn.inference))
+
+# %% Adjust some edge properties
+
+import bnlearn as bn
+# Load asia DAG
+df = bn.import_example(data='asia')
+# Structure learning of sampled dataset
+model = bn.structure_learning.fit(df)
+# plot static
+G = bn.plot(model)
+
+# Set some edge properties
+edge_properties = bn.get_edge_properties(model)
+edge_properties['either', 'xray']['color']='#8A0707'
+edge_properties['either', 'xray']['weight']=4
+edge_properties['bronc', 'dysp']['weight']=10
+edge_properties['bronc', 'dysp']['color']='#8A0707'
+
+# Set some node properties
+node_properties = bn.get_node_properties(model)
+node_properties['xray']['node_color']='#8A0707'
+node_properties['xray']['node_size']=20
+
+# Plot
+params_static={'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60}
+bn.plot(model, interactive=False, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
+# bn.plot(model, interactive=True, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static);
+
+# %% TAN : Tree-augmented Naive Bayes (TAN)
+# https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
+# https://pgmpy.org/models/naive.html
+import bnlearn as bn
+
+df = bn.import_example()
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+bn.plot(model)
+bn.plot(model, interactive=True, node_size=10)
 
 
 # %% Coloring networks

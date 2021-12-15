@@ -1,5 +1,6 @@
 sphinx_rtd_theme
 rst2pdf
-spyder-kernels
+spyder-kernels==2.1.*
 sphinx
 pytest
+git+git://github.com/SuperKogito/sphinxcontrib-pdfembed
