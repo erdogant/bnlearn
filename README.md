@@ -469,41 +469,43 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 In case of static plotting, simply set the interactive parameter to False.
 
 ```python
+import bnlearn as bn
+df = bn.import_example()
+df = bn.import_example(data='asia')
 
-    import bnlearn as bn
-    df = bn.import_example()
+# Structure learning
+model = bn.structure_learning.fit(df)
 
-    # Structure learning
-    model = bn.structure_learning.fit(df)
+# Make simple interactive plot
+bn.plot(model, interactive=True)
 
-    # Make simple interactive plot
-    bn.plot(model, interactive=True)
+# Make simple interactive plot, set color to entire network
+bn.plot(model, node_color='#8A0707', interactive=True)
 
-    # Make simple interactive plot, set color to entire network
-    bn.plot(model, node_color='#8A0707', interactive=True)
+# Make simple interactive plot, set color and size to entire network
+bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
 
-    # Make simple interactive plot, set color and size to entire network
-    bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
+# Set some edge properties
+edge_properties = bn.get_edge_properties(model)
+edge_properties['either', 'xray']['color']='#8A0707'
+edge_properties['either', 'xray']['weight']=4
+edge_properties['bronc', 'dysp']['weight']=10
+edge_properties['bronc', 'dysp']['color']='#8A0707'
 
-    # Make interactive plot, set specific color and sizes
-    # First retrieve node properties
-    node_properties = bn.get_node_properties(model)
+# Set some node properties
+node_properties = bn.get_node_properties(model)
+node_properties['xray']['node_color']='#8A0707'
+node_properties['xray']['node_size']=20
 
-    # Make some changes
-    node_properties['xray']['node_color']='#8A0707'
-    node_properties['xray']['node_size']=50
-    node_properties['smoke']['node_color']='#000000'
-    node_properties['smoke']['node_size']=35
-    bn.plot(model, node_properties=node_properties, interactive=True)
-    
-    # You can also add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
+# Add more parameters for the interactive plot
+bn.plot(model, interactive=True, node_color='#8A0707', node_properties=node_properties, edge_properties=edge_properties, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
 
-    # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, node_color='#8A0707', params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+# Add more parameters for the static plot
+bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, node_properties=node_properties, edge_properties=edge_properties, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000', 'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60})
 
-    # Add more parameters for the static plot
-    bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
+# You can also add some parameters for the interactive plot
+bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
+
 
 ```
 
