@@ -122,8 +122,9 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
     out = {}
     out['adjmat'] = _dag2adjmat(DAG)
     out['model'] = DAG
+    out['methodtype'] = methodtype
+    out['model_edges'] = DAG.edges()
     return out
-    # return DAG
 
 
 # %% Print DAG
