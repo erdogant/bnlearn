@@ -549,10 +549,9 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
 
 
 # %% Get node properties
-def get_edge_properties(model, color='#000000', weight=1, arrowstyle='-|>', arrowsize=30, verbose=3):
+def get_edge_properties(model, color='#000000', weight=1, verbose=3):
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     edges = {}
-    # defaults = {'color':color, 'weight':weight, 'arrowstyle':arrowstyle, 'arrowsize':arrowsize}
     defaults = {'color':color, 'weight':weight}
     adjmat = model.get('adjmat', None)
 
