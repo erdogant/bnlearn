@@ -11,18 +11,21 @@ import bnlearn as bn
 # %% Naive Bayesian model
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
-# edges = [('A', 'E'),
-#          ('S', 'E'),
-#          ('E', 'O'),
-#          ('E', 'R'),
-#          ('O', 'T'),
-#          ('R', 'T')]
+df = bn.import_example('random')
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
+# Plot
+bn.plot(model)
+
+
+# %% Naive Bayesian model
+import bnlearn as bn
+from pgmpy.factors.discrete import TabularCPD
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
-# values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 5)), columns=['A', 'B', 'C', 'D', 'E'])
-
 DAG = bn.make_DAG(edges, methodtype='naivebayes')
-bn.plot(DAG)
+bn.plot(DAG);
 
 cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
 print(cpd_A)
