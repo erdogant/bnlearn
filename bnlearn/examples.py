@@ -290,7 +290,7 @@ edges = [('smoke', 'lung'),
 
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0, methodtype='bayes')
+DAG = bn.make_DAG(edges, verbose=0, methodtype='nb')
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Generate some data based on DAG
 df = bn.sampling(model, n=1000)

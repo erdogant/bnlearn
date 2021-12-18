@@ -83,7 +83,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         Containing TabularCPD for each node.
     methodtype : str (default: 'bayes')
         * 'bayes': Bayesian model
-        * 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+        * 'nb' or 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     checkmodel : bool
         Check the validity of the model. The default is True
     verbose : int, optional
@@ -108,6 +108,8 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     """
     if (CPD is not None) and (not isinstance(CPD, list)):
         CPD=[CPD]
+
+    if methodtype=='nb': methodtype='naivebayes'
 
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
