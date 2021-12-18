@@ -28,7 +28,7 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, return_all_dags=False, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -124,77 +124,55 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     >>> bn.compare_networks(model, model_sl, pos=G['pos'])
 
     """
-    assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    assert (methodtype=='tan') | (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch')| (methodtype=='hillclimbsearch')| (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
-    if isinstance(white_list, str): white_list = [white_list]
-    if isinstance(black_list, str): black_list = [black_list]
-    if (white_list is not None) and len(white_list)==0: white_list = None
-    if (black_list is not None) and len(black_list)==0: black_list = None
-    if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
-    if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
-    if methodtype=='cl': methodtype = 'chow-liu'
-    if fixed_edges is None: fixed_edges=set()
-    out=[]
+    # assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
+    # assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
+    # assert (methodtype=='naivebayes') | (methodtype=='nb') | (methodtype=='tan') | (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch') | (methodtype=='hillclimbsearch') | (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
+    # if isinstance(white_list, str): white_list = [white_list]
+    # if isinstance(black_list, str): black_list = [black_list]
+    # if (white_list is not None) and len(white_list)==0: white_list = None
+    # if (black_list is not None) and len(black_list)==0: black_list = None
+    # if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
+    # if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
+    # if ((methodtype=='nb') | (methodtype=='naivebayes')) and (root_node is None): raise Exception('[bnlearn] >The <%s> method requires setting the "root_node" parameter: "%s"' %(methodtype, str(class_node)))
+    # if methodtype=='cl': methodtype = 'chow-liu'
+    # if fixed_edges is None: fixed_edges=set()
 
-    #### Remove this block in future (21-10-2021)
-    if bw_list_method=='filter':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
-        bw_list_method = "nodes"
-    if bw_list_method=='enforce':
-        if verbose>=2: print('[bnlearn]> Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
-        bw_list_method = "edges"
-    #### End remove block
+    # #### Remove this block in future (21-10-2021)
+    # if bw_list_method=='filter':
+    #     if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
+    #     bw_list_method = "nodes"
+    # if bw_list_method=='enforce':
+    #     if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
+    #     bw_list_method = "edges"
+    # #### End remove block
 
-    config = {}
-    config['verbose'] = verbose
-    config['method'] = methodtype
-    config['scoring'] = scoretype
-    config['black_list'] = black_list
-    config['white_list'] = white_list
-    config['bw_list_method'] = bw_list_method
-    config['max_indegree'] = max_indegree
-    config['tabu_length'] = tabu_length
-    config['epsilon'] = epsilon
-    config['max_iter'] = max_iter
-    config['root_node'] = root_node
-    config['class_node'] = class_node
-    config['fixed_edges'] = fixed_edges
-
-    # Show warnings
-    # PGMPY_VER = version.parse(pgmpy.__version__)>version.parse("0.1.9")  # Can be be removed if pgmpy >v0.1.9
-    # if (not PGMPY_VER) and ((black_list is not None) or (white_list is not None)):
-    # if config['verbose']>=2: print('[bnlearn] >Warning: black_list and white_list only works for pgmpy > v0.1.9')  # Can be be removed if pgmpy >v0.1.9
-    if (bw_list_method is None) and ((black_list is not None) or (white_list is not None)):
-        raise Exception('[bnlearn] >Error: The use of black_list or white_list requires setting bw_list_method.')
-    if df.shape[1]>10 and df.shape[1]<15:
-        if config['verbose']>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
-    # if (black_list is not None) and methodtype!='hc':
-    #     if config['verbose']>=2: print('[bnlearn] >Warning: blacklist only works in case of methodtype="hc"')
-    # if (white_list is not None) and methodtype!='hc':
-    #     if config['verbose']>=2: print('[bnlearn] >Warning: white_list only works in case of methodtype="hc"')
-    if (max_indegree is not None) and methodtype!='hc':
-        if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
-    if (class_node is not None) and methodtype!='tan':
-        if config['verbose']>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="tan"')
-
-    if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
-
+    out = []
+    # Set config
+    config = {'method':methodtype, 'scoring':scoretype, 'black_list':black_list, 'white_list':white_list, 'bw_list_method':bw_list_method, 'max_indegree':max_indegree, 'tabu_length':tabu_length, 'epsilon':epsilon, 'max_iter':max_iter, 'root_node':root_node, 'class_node':class_node, 'fixed_edges':fixed_edges, 'return_all_dags':return_all_dags, 'verbose':verbose}
+    # Make some checks
+    config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
     df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
 
+    if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
+
+    # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
+    if config['method']=='nv' or config['method']=='naivebayes':
+        out = _naivebayes(df,
+                          root_node=config['root_node'],
+                          estimator_type=None,
+                          feature_vars=None,
+                          dependent_var=None,
+                          verbose=3)
+
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
-        """The first property makes exhaustive search intractable for all but very small networks,
-        the second prohibits efficient local optimization algorithms to always find the optimal structure.
-        Thus, identifiying the ideal structure is often not tractable.
-        Despite these bad news, heuristic search strategies often yields good results
-        If only few nodes are involved (read: less than 5)."""
-        if (df.shape[1]>15) and (config['verbose']>=3):
-            print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
-        out = _exhaustivesearch(df, scoretype=config['scoring'], verbose=config['verbose'])
+        out = _exhaustivesearch(df,
+                                scoretype=config['scoring'],
+                                return_all_dags=config['return_all_dags'],
+                                verbose=config['verbose'])
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
@@ -232,7 +210,101 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     # return
     return(out)
 
-    
+
+# %% Make Checks
+def _make_checks(df, config, verbose=3):
+    assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
+    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
+    if not np.isin(config['method'], ['naivebayes','nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
+
+    if isinstance(config['white_list'], str):
+        config['white_list'] = [config['white_list']]
+    if isinstance(config['black_list'], str):
+        config['black_list'] = [config['black_list']]
+
+    if (config['white_list'] is not None) and len(config['white_list'])==0:
+        config['white_list'] = None
+    if (config['black_list'] is not None) and len(config['black_list'])==0:
+        config['black_list'] = None
+
+    if (config['method']!='hc') and (config['bw_list_method']=='edges'): raise Exception('[bnlearn] >The "bw_list_method=%s" does not work with "methodtype=%s"' %(config['bw_list_method'], config['method']))
+    if (config['method']=='tan') and (config['class_node'] is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(config['class_node'])))
+    if ((config['method']=='nb') | (config['method']=='naivebayes')) and (config['root_node'] is None): raise Exception('[bnlearn] >The <%s> method requires setting the "root_node" parameter: "%s"' %(config['method'], str(config['class_node'])))
+
+    if config['method']=='cl':
+        config['method'] = 'chow-liu'
+    if config['fixed_edges'] is None:
+        config['fixed_edges']=set()
+
+    #### Remove this block in future (21-10-2021)
+    if config['bw_list_method']=='filter':
+        if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
+        config['bw_list_method'] = "nodes"
+    if config['bw_list_method']=='enforce':
+        if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
+        config['bw_list_method'] = "edges"
+    #### End remove block
+
+    # Show warnings
+    if (config['bw_list_method'] is None) and ((config['black_list'] is not None) or (config['white_list'] is not None)):
+        raise Exception('[bnlearn] >Error: The use of black_list or white_list requires setting bw_list_method.')
+    if df.shape[1]>10 and df.shape[1]<15:
+        if verbose>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+    if (config['max_indegree'] is not None) and config['method']!='hc':
+        if verbose>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
+    if (config['class_node'] is not None) and config['method']!='tan':
+        if verbose>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="tan"')
+
+    return config
+
+
+# %% TreeSearch methods
+def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent_var=None, verbose=3):
+    """Naive Bayesian model.
+
+    Description
+    -----------
+    Naive Bayes is a special case of Bayesian Model where the only edges in the
+    model are from the feature variables to the dependent variable.
+
+    Parameters
+    ----------
+    df : pandas DataFrame object
+        A DataFrame object with column names same as the variable names of network.
+    root_node : str
+        Parent node of the model, if not specified it looks for a previously specified parent node.
+    estimator_type : TYPE, optional
+        Any pgmpy estimator. If nothing is specified, the default ``MaximumLikelihoodEstimator`` would be used.
+        * 'MaximumLikelihoodEstimator' (default)
+        * 'BayesianEstimator'
+    feature_vars: list (array-like)
+        A list of variable predictor variables (i.e. the features) in the model.
+    dependent_var: hashable object
+        The dependent variable (i.e. the variable to be predicted) in the model.
+    verbose : int, (default : 3)
+        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
+
+    Returns
+    -------
+    None.
+
+    References
+    ----------
+    * https://pgmpy.org/models/naive.html
+    * https://pgmpy.org/_modules/pgmpy/models/NaiveBayes.html#NaiveBayes
+
+    """
+    model = NaiveBayes(feature_vars=feature_vars, dependent_var=dependent_var)
+    model.fit(df, parent_node=root_node, estimator=estimator_type)
+
+    # Store
+    out={}
+    out['model']=model
+    out['model_edges']=model.edges()
+    # Return
+    return(out)
+
+
 # %% white_list and black_list
 def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges', verbose=3):
     # if bw_list_method=='edges':
