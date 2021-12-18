@@ -284,12 +284,13 @@ import bnlearn as bn
 
 df = bn.import_example('asia')
 edges = [('smoke', 'lung'),
-         ('smoke', 'bronc'),
-         ('lung', 'xray'),
-         ('bronc', 'xray')]
+          ('smoke', 'bronc'),
+          ('lung', 'xray'),
+          ('bronc', 'xray')]
+
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0)
+DAG = bn.make_DAG(edges, verbose=0, methodtype='bayes')
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Generate some data based on DAG
 df = bn.sampling(model, n=1000)
