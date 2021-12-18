@@ -120,7 +120,11 @@ Example for structure learning with the naivebayes model:
     # Load example
     df = bn.import_example('random')
     # Structure learning
-8    
+    model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
+    # Plot
+    bn.plot(model)
+
+
 .. _fig-naivebayes_2:
 
 .. figure:: ../figs/naivebayes_example2.png

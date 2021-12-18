@@ -334,11 +334,12 @@ This search approach is only atractable for very small networks, and prohibits e
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;naivebayes&#39;</span><span class="p">,</span> <span class="n">root_node</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>8
-.. _fig-naivebayes_2:</p>
-<div class="figure align-default">
+<div class="figure align-default" id="fig-naivebayes-2">
 <img alt="_images/naivebayes_example2.png" src="_images/naivebayes_example2.png" />
 </div>
 </div>
