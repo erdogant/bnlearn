@@ -125,28 +125,6 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     >>> bn.compare_networks(model, model_sl, pos=G['pos'])
 
     """
-    # assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    # assert (scoretype=='bic') | (scoretype=='k2') | (scoretype=='bdeu'), 'scoretype must be string: "bic", "k2" or "bdeu"'
-    # assert (methodtype=='naivebayes') | (methodtype=='nb') | (methodtype=='tan') | (methodtype=='cl') | (methodtype=='chow-liu') | (methodtype=='hc') | (methodtype=='ex') | (methodtype=='cs') | (methodtype=='exhaustivesearch') | (methodtype=='hillclimbsearch') | (methodtype=='constraintsearch'), 'Methodtype string is invalid'  # noqa
-    # if isinstance(white_list, str): white_list = [white_list]
-    # if isinstance(black_list, str): black_list = [black_list]
-    # if (white_list is not None) and len(white_list)==0: white_list = None
-    # if (black_list is not None) and len(black_list)==0: black_list = None
-    # if (methodtype!='hc') and (bw_list_method=='edges'): raise Exception('[bnlearn] >The bw_list_method="%s" does not work with methodtype="%s"' %(bw_list_method, methodtype))
-    # if (methodtype=='tan') and (class_node is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(class_node)))
-    # if ((methodtype=='nb') | (methodtype=='naivebayes')) and (root_node is None): raise Exception('[bnlearn] >The <%s> method requires setting the "root_node" parameter: "%s"' %(methodtype, str(class_node)))
-    # if methodtype=='cl': methodtype = 'chow-liu'
-    # if fixed_edges is None: fixed_edges=set()
-
-    # #### Remove this block in future (21-10-2021)
-    # if bw_list_method=='filter':
-    #     if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
-    #     bw_list_method = "nodes"
-    # if bw_list_method=='enforce':
-    #     if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
-    #     bw_list_method = "edges"
-    # #### End remove block
-
     out = []
     # Set config
     config = {'method':methodtype, 'scoring':scoretype, 'black_list':black_list, 'white_list':white_list, 'bw_list_method':bw_list_method, 'max_indegree':max_indegree, 'tabu_length':tabu_length, 'epsilon':epsilon, 'max_iter':max_iter, 'root_node':root_node, 'class_node':class_node, 'fixed_edges':fixed_edges, 'return_all_dags':return_all_dags, 'verbose':verbose}
@@ -156,7 +134,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
     df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
-
+    # Lets go!
     if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
@@ -273,7 +251,7 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
     df : pandas DataFrame object
         A DataFrame object with column names same as the variable names of network.
     root_node : str
-        Parent node of the model, if not specified it looks for a previously specified parent node.
+        Parent node of the model.
     estimator_type : TYPE, optional
         Any pgmpy estimator. If nothing is specified, the default ``MaximumLikelihoodEstimator`` would be used.
         * 'MaximumLikelihoodEstimator' (default)
