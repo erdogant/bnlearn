@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+from pgmpy.models import NaiveBayes
 
 import pgmpy
 from packaging import version

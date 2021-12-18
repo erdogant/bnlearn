@@ -725,11 +725,11 @@ def plot(model,
     G = nx.DiGraph()  # Directed graph
     node_size_default = 10 if interactive else 800
     if (node_properties is not None) and (node_size is not None):
-        if verbose>=2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will dominate the results.')
+        if verbose>=2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will be used.')
 
     # Get node properties
     if node_properties is None:
-        node_properties = bnlearn.get_node_properties(model)
+        node_properties = bnlearn.get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
         edge_properties = bnlearn.get_edge_properties(model)
 
@@ -745,8 +745,8 @@ def plot(model,
         bnmodel = model.copy()
 
     # Bayesian model
-    if 'BayesianModel' in str(type(bnmodel)) or 'pgmpy' in str(type(bnmodel)):
-        if verbose>=3: print('[bnlearn] >Plot based on BayesianModel')
+    if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
+        if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
         # positions for all nodes
         pos = bnlearn.network.graphlayout(bnmodel, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
     elif 'networkx' in str(type(bnmodel)):
