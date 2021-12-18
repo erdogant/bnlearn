@@ -10,6 +10,7 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 * Hillclimbsearch
 * Chow-liu
 * Tree-augmented Naive Bayes (TAN)
+* NaiveBayes
 
 **Constraint-based structure learning:**
 
