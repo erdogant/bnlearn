@@ -7,6 +7,35 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+
+# %% Naive Bayesian model
+import bnlearn as bn
+from pgmpy.factors.discrete import TabularCPD
+# edges = [('A', 'E'),
+#          ('S', 'E'),
+#          ('E', 'O'),
+#          ('E', 'R'),
+#          ('O', 'T'),
+#          ('R', 'T')]
+
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+# values = pd.DataFrame(np.random.randint(low=0, high=2, size=(1000, 5)), columns=['A', 'B', 'C', 'D', 'E'])
+
+DAG = bn.make_DAG(edges, methodtype='naivebayes')
+bn.plot(DAG)
+
+cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
+print(cpd_A)
+cpd_B = TabularCPD(variable='B', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_B)
+cpd_C = TabularCPD(variable='C', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_C)
+cpd_D = TabularCPD(variable='D', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_D)
+
+DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
+bn.print_CPD(DAG, checkmodel=True)
+
 # %% Adjust some edge properties
 
 import bnlearn as bn
