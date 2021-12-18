@@ -572,15 +572,52 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
 
 # %% Get node properties
 def get_edge_properties(model, color='#000000', weight=1, verbose=3):
+    """Collect edge properties.
+
+    Parameters
+    ----------
+    model : dict
+        dict containing (initialized) model.
+    color : str, (Default: '#000000')
+        The default color of the edges.
+    weight : float, (Default: 1)
+        The default weight of the edges. 
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    edges : dict.
+        Edge properties.
+    
+    Examples
+    --------
+    >>> # Example 1
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> # Create DAG and store in model
+    >>> model = bn.make_DAG(edges)
+    >>> edge_properties = bn.get_edge_properties(model)
+    >>> # Adjust the properties
+    >>> edge_properties[('A', 'B')]['weight']=10
+    >>> edge_properties[('A', 'B')]['color']='#8A0707'
+    >>> # Make plot
+    >>> bn.plot(model, interactive=False, edge_properties=edge_properties)
+
+    """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     edges = {}
     defaults = {'color':color, 'weight':weight}
     adjmat = model.get('adjmat', None)
+    # Get model edges
+    model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
 
+    # Store edge properties
     if adjmat is not None:
         if verbose>=3: print('[bnlearn]> Set edge properties.')
         # For each edge, use the default properties.
-        for u, v in model['model_edges']:
+        for u, v in model_edges:
             edge_property = defaults.copy()
             # Use the edge weight from the adjmat
             if not isinstance(adjmat.loc[u,v], np.bool_):
