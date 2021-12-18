@@ -38,10 +38,11 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     To learn model structure (a DAG) from a data set, there are three broad techniques:
         1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-            a. exhaustivesearch
-            b. hillclimbsearch
-            c. chow-liu
-            d. Tree-augmented Naive Bayes (tan)
+            * exhaustivesearch
+            * hillclimbsearch
+            * chow-liu
+            * Tree-augmented Naive Bayes (tan)
+            * NaiveBayesian
         2. Constraint-based structure learning (PC)
             a. chi-square test
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
@@ -63,7 +64,8 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'ex' or 'exhaustivesearch'
         'cs' or 'constraintsearch'
         'cl' or 'chow-liu' (requires setting root_node parameter)
-        'tan' (Tree-augmented Naive Bayes, requires setting root_node and class_node parameter)
+        'nb' or 'naivebayes' (requires <root_node>)
+        'tan' (requires <root_node> and <class_node> parameter)
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
         'bic', 'k2', 'bdeu'
@@ -90,8 +92,9 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         The class node is required for Tree-augmented Naive Bayes (TAN)
     fixed_edges: iterable, Only in case of HillClimbSearch.
         A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.
+    return_all_dags : Bool, (default: False)
+        Return all possible DAGs. Only in case methodtype='exhaustivesearch'
     verbose : int, (default : 3)
-        Print progress to screen.
         0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
@@ -394,8 +397,38 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
 
 # %% ExhaustiveSearch
 def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
-    out=dict()
+    """Exhaustivesearch.
+    
+    Description
+    ------------
+    The first property makes exhaustive search intractable for all but very
+    small networks, the second prohibits efficient local optimization
+    algorithms to always find the optimal structure. Thus, identifiying the
+    ideal structure is often not tractable. Despite these bad news, heuristic
+    search strategies often yields good results if only few nodes are involved
+    (read: less than 5).
 
+    Parameters
+    ----------
+    df : pandas DataFrame object
+        A DataFrame object with column names same as the variable names of network.
+    scoretype : str, (default : 'bic')
+        Scoring function for the search spaces.
+        'bic', 'k2', 'bdeu'
+    return_all_dags : Bool, (default: False)
+        Return all possible DAGs.
+    verbose : int, (default : 3)
+        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
+
+    Returns
+    -------
+    None.
+
+    """
+    if df.shape[1]>15 and verbose>=3:
+        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
+
+    out={}
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Exhaustive search across all dags
