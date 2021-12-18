@@ -115,6 +115,7 @@ import bnlearn as bn
 There are multiple manners to perform structure learning.
 * Exhaustivesearch
 * Hillclimbsearch
+* NaiveBayes
 * TreeSearch
     * Chow-liu
     * Tree-augmented Naive Bayes (TAN)
