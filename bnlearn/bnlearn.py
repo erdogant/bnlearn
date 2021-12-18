@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
 
-from pgmpy.models import BayesianModel
+from pgmpy.models import BayesianModel, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 from pgmpy import readwrite
@@ -72,7 +72,7 @@ def to_bayesianmodel(model, verbose=3):
 
 
 # %% Make DAG
-def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
+def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     """Create Directed Acyclic Graph based on list.
 
     Parameters
@@ -81,33 +81,54 @@ def make_DAG(DAG, CPD=None, checkmodel=True, verbose=3):
         list containing source and target in the form of [('A','B'), ('B','C')].
     CPD : list, array-like
         Containing TabularCPD for each node.
+    methodtype : str (default: 'bayes')
+        * 'bayes': Bayesian model
+        * 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     checkmodel : bool
         Check the validity of the model. The default is True
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
-    Raises
-    ------
-    Exception
-        Should be list.
-
     Returns
     -------
-    pgmpy.models.BayesianModel.BayesianModel
-        model of the DAG.
+    dict keys:
+        * 'adjmat': Adjacency matrix
+        * 'model': pgmpy.models
+        * 'methodtype': methodtype
+        * 'model_edges': Edges
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> DAG = bn.make_DAG(edges, methodtype='naivebayes')
+    >>> bn.plot(DAG)
 
     """
     if (CPD is not None) and (not isinstance(CPD, list)):
         CPD=[CPD]
+
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
+
     if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
         raise Exception("[bnlearn] >Error: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
     elif ('pgmpy' in str(type(DAG))):
-        if verbose>=3: print('[bnlearn] >No changes made to existing Bayesian DAG.')
-    elif isinstance(DAG, list):
-        if verbose>=3: print('[bnlearn] >Bayesian DAG created.')
+        # Extract methodtype from existing model.
+        if ('bayesianmodel' in str(type(DAG)).lower()):
+            methodtype='bayes'
+        elif('naivebayes' in str(type(DAG)).lower()):
+            methodtype='naivebayes'
+        if verbose>=3: print('[bnlearn] >No changes made to existing %s DAG.' %(methodtype))
+    elif isinstance(DAG, list) and methodtype=='naivebayes':
+        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
+        edges=DAG
+        DAG = NaiveBayes()
+        DAG.add_edges_from(edges)
+        # modeel.add_nodes_from(DAG)
+    elif isinstance(DAG, list) and methodtype=='bayes':
+        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
         DAG = BayesianModel(DAG)
 
     if CPD is not None:
@@ -154,7 +175,7 @@ def print_CPD(DAG, checkmodel=False):
             # print CPDs using Maximum Likelihood Estimators
             for node in DAG.state_names:
                 print(DAG.estimate_cpd(node))
-        elif 'BayesianModel' in str(type(DAG)):
+        elif ('bayesianmodel' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
             # print CPDs using Bayesian Parameter Estimation
             if len(DAG.get_cpds())==0:
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
@@ -162,15 +183,15 @@ def print_CPD(DAG, checkmodel=False):
             for cpd in DAG.get_cpds():
                 print("CPD of {variable}:".format(variable=cpd.variable))
                 print(cpd)
-
-            print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
+            if ('bayesianmodel' in str(type(DAG)).lower()):
+                print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
             print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
             print('[bnlearn] >Edges: %s' %(DAG.edges()))
 
         if checkmodel:
             _check_model(DAG, verbose=3)
     except:
-        print('[bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.')
+        print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
 
 
 # %%

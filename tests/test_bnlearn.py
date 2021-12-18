@@ -32,13 +32,20 @@ def test_import_DAG():
 
 def test_make_DAG():
     edges = [('Cloudy', 'Sprinkler')]
-    DAG = bn.make_DAG(edges)
-    # TEST 1
-    assert 'pgmpy.models.BayesianModel.BayesianModel' in str(type(DAG['model']))
+    methodtypes = ['bayes', 'naivebayes']
+    for methodtype in methodtypes:
+        DAG = bn.make_DAG(edges, methodtype=methodtype)
+        # TEST 1
+        if methodtype=='bayes':
+            assert 'pgmpy.models.BayesianModel.BayesianModel' in str(type(DAG['model']))
+        else:
+            assert 'pgmpy.models.NaiveBayes.NaiveBayes' in str(type(DAG['model']))
     # TEST 2
     cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
     cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['Cloudy'], evidence_card=[2])
     assert bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler], checkmodel=True)
+    # TEST 3
+    assert np.all(np.isin([*DAG.keys()], ['adjmat', 'model', 'methodtype', 'model_edges']))
 
 
 def test_make_DAG():
@@ -301,4 +308,32 @@ def test_save():
     for key in model.keys():
         if not key=='model':
             assert np.all(model[key]==model_load[key])
+
+def test_edge_properties():
+    # Example 1
+    edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    # Create DAG and store in model
+    model = bn.make_DAG(edges)
+    edge_properties = bn.get_edge_properties(model)
+    # Check availability of properties
+    assert edge_properties[('A', 'B')].get('color')
+    assert edge_properties[('A', 'B')].get('weight')
+    assert edge_properties[('A', 'C')].get('color')
+    assert edge_properties[('A', 'C')].get('weight')
+    assert edge_properties[('A', 'D')].get('color')
+    assert edge_properties[('A', 'D')].get('weight')
+    # Make plot
+    assert bn.plot(model, edge_properties=edge_properties, interactive=False)
+    assert bn.plot(model, interactive=False)
+
+    edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    # Create DAG and store in model
+    methodtypes=['bayes', 'naivebayes']
+    for methodtype in methodtypes:
+        model = bn.make_DAG(edges, methodtype=methodtype)
+        # Remove methodtype
+        model['methodtype']=''
+        # Check if it is restored to the correct methodtype
+        model = bn.make_DAG(model['model'])
+        assert model['methodtype']==methodtype
 
