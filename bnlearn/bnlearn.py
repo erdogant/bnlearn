@@ -528,9 +528,9 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
     Parameters
     ----------
     model_1 : dict
-        Results of model 1..
+        Results of model 1.
     model_2 : dict
-        Results of model 2..
+        Results of model 2.
     pos : graph, optional
         Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
     showfig : bool, optional

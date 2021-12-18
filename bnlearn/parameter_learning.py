@@ -72,8 +72,9 @@ def fit(model, df, methodtype='bayes', verbose=3):
     df : pd.DataFrame()
         Pandas DataFrame containing the data.
     methodtype : str, (default: 'bayes')
-        strategy for parameter learning.
-        Options are: 'ml' or 'maximumlikelihood' for learning CPDs using Maximum Likelihood Estimators. or 'bayes' for Bayesian Parameter Estimation.
+        Strategy for parameter learning.
+            * 'ml', 'maximumlikelihood': Learning CPDs using Maximum Likelihood Estimators.
+            * 'bayes': Bayesian Parameter Estimation.
     verbose : int, optional
         Print progress to screen. The default is 3.
             * 0: NONE
