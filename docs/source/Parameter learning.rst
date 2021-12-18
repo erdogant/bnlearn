@@ -13,7 +13,7 @@ Currently, the library supports Parameter learning for *discrete* nodes:
 
 
 Maximum Likelihood Estimation
-'''''''''''''''''''''''''''''
+======================================
 
 A natural estimate for the CPDs is to simply use the *relative frequencies*, with which the variable states have occured. 
 
@@ -28,7 +28,7 @@ A way to mitigate MLE's overfitting is *Bayesian Parameter Estimation*.
 
 
 Bayesian Parameter Estimation
-'''''''''''''''''''''''''''''
+======================================
 
 The Bayesian Parameter Estimator starts with already existing prior CPDs, that express our beliefs about the variables *before* the data was observed.
 Those "priors" are then updated, using the state counts from the observed data.
@@ -42,9 +42,9 @@ For BDeu we need to specify an *equivalent sample size* "N" and then the pseudo-
 
 
 Examples Parameter learning
-''''''''''''''''''''''''''''
+======================================
 
-Example Parameter learning 1
+Example (1)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0].
@@ -221,7 +221,7 @@ Lets generate more samples and learn again the parameters. You will see that the
 
 
 
-Example Parameter learning 2
+Example (2)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Lets try out a more complexer model. We need both a directed acycle graph (DAG) and dataset with the same variables. 

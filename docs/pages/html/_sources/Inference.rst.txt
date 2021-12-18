@@ -9,7 +9,7 @@ thus allowing us to work on much smaller factors.
 
 
 Inference Algorithms
-''''''''''''''''''''
+======================================
 
 The main categories for inference algorithms:
   1. Exact Inference: These algorithms find the exact probability values for our queries.
@@ -21,9 +21,10 @@ The main categories for inference algorithms:
 
 
 Examples Inference
-''''''''''''''''''
+======================================
 
-Example Inference 1
+
+Example (1)
 ^^^^^^^^^^^^^^^^^^^
 
 Lets load the Sprinkler data set and make some inferences.
@@ -49,7 +50,7 @@ The probability having wet grass is 0.9 and not-wet-gras is 0.1.
   +--------------+------------------+
 
 
-Example Inference 2
+Example (2)
 ^^^^^^^^^^^^^^^^^^^
 
 What is the probability of wet grass given and Rain given that the *Sprinkler* is on?
@@ -74,7 +75,7 @@ The highest probability is that in these condition, there is wet grass and no ra
   +--------------+---------+-----------------------+
 
 
-Example Inference 3
+Example (3)
 ^^^^^^^^^^^^^^^^^^^
 
 Given our model, what is the probability on lung cancer given that the person is a smoker and xray is negative?

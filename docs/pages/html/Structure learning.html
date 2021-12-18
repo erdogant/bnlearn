@@ -95,26 +95,42 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Methods</span></p>
+<p class="caption"><span class="caption-text">Structure learning</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#exhaustivesearch">Exhaustivesearch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#hillclimbsearch">Hillclimbsearch</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#constraint-based">Constraint-based</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#chow-liu">Chow-liu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-structure-learning-general">Example Structure learning (general)</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#example-structure-learning-1">Example Structure learning (1)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-structure-learning-2">Example Structure learning (2)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#examples-structure-learning">Examples Structure learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-1">Example (1)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2">Example (2)</a></li>
 </ul>
 </li>
 </ul>
-</li>
+<p class="caption"><span class="caption-text">Parameter learning</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#examples-parameter-learning">Examples Parameter learning</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Inference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Predict</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Other functionalities</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
@@ -128,6 +144,8 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption"><span class="caption-text">API References</span></p>
 <ul>
@@ -221,17 +239,18 @@ However, realize that the search space of DAGs is super-exponential in the numbe
 <ul class="simple">
 <li><p>The combination of both techniques (MMHC)</p></li>
 </ul>
+</div>
 <div class="section" id="exhaustivesearch">
-<h2>Exhaustivesearch<a class="headerlink" href="#exhaustivesearch" title="Permalink to this headline">¶</a></h2>
+<h1>Exhaustivesearch<a class="headerlink" href="#exhaustivesearch" title="Permalink to this headline">¶</a></h1>
 <p>ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one.
 This search approach is only atractable for very small networks, and prohibits efficient local optimization algorithms to always find the optimal structure. Thus, identifiying the ideal structure is often not tractable. Despite these bad news, heuristic search strategies often yields good results. If only few nodes are involved (read: less than 5 or so).</p>
 </div>
 <div class="section" id="hillclimbsearch">
-<h2>Hillclimbsearch<a class="headerlink" href="#hillclimbsearch" title="Permalink to this headline">¶</a></h2>
+<h1>Hillclimbsearch<a class="headerlink" href="#hillclimbsearch" title="Permalink to this headline">¶</a></h1>
 <p>Once more nodes are involved, one needs to switch to heuristic search. HillClimbSearch implements a greedy local search that starts from the DAG “start” (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.</p>
 </div>
 <div class="section" id="constraint-based">
-<h2>Constraint-based<a class="headerlink" href="#constraint-based" title="Permalink to this headline">¶</a></h2>
+<h1>Constraint-based<a class="headerlink" href="#constraint-based" title="Permalink to this headline">¶</a></h1>
 <p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristig flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -242,7 +261,7 @@ This search approach is only atractable for very small networks, and prohibits e
 </div></blockquote>
 </div>
 <div class="section" id="chow-liu">
-<h2>Chow-liu<a class="headerlink" href="#chow-liu" title="Permalink to this headline">¶</a></h2>
+<h1>Chow-liu<a class="headerlink" href="#chow-liu" title="Permalink to this headline">¶</a></h1>
 <p>The Chow-Liu Algorithm is a Tree search based approach. The Chow-Liu algorithm finds the maximum-likelihood tree structure where each node has at most one parent. Note that here our score is simply the maximum likelihood, we do not need to penalize the complexity since we are already limiting complexity by restricting ourselves to tree structures[1].</p>
 <p>The algorithm has three steps:</p>
 <blockquote>
@@ -254,7 +273,7 @@ This search approach is only atractable for very small networks, and prohibits e
 </div></blockquote>
 </div>
 <div class="section" id="tree-augmented-naive-bayes-tan">
-<h2>Tree-augmented Naive Bayes (TAN)<a class="headerlink" href="#tree-augmented-naive-bayes-tan" title="Permalink to this headline">¶</a></h2>
+<h1>Tree-augmented Naive Bayes (TAN)<a class="headerlink" href="#tree-augmented-naive-bayes-tan" title="Permalink to this headline">¶</a></h1>
 <p>Tree augmented naive Bayes or TAN is a semi-naive Bayesian Learning method. It relaxes the naive Bayes attribute independence assumption by employing a tree structure, in which each attribute only depends on the class and one other attribute. A maximum weighted spanning tree that maximizes the likelihood of the training data is used to perform classification [2].</p>
 <p>The algorithm has three steps:</p>
 <blockquote>
@@ -272,15 +291,66 @@ This search approach is only atractable for very small networks, and prohibits e
 </ol>
 </div></blockquote>
 </div>
-<div class="section" id="example-structure-learning-general">
-<h2>Example Structure learning (general)<a class="headerlink" href="#example-structure-learning-general" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="naivebayes">
+<h1>NaiveBayes<a class="headerlink" href="#naivebayes" title="Permalink to this headline">¶</a></h1>
+<p>Naive Bayes is a special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable.</p>
+<p>The method requires specifying:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>The root node.</p></li>
+<li><p>Edges should start from the root node.</p></li>
+<li><p>MaximumLikelihood estimator is the default.</p></li>
+</ol>
+</div></blockquote>
+<p>Example to design a DAG with the naivebayes model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
+<span class="kn">from</span> <span class="nn">pgmpy.factors.discrete</span> <span class="kn">import</span> <span class="n">TabularCPD</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Create some edges, all starting from the same root node: A</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)]</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;naivebayes&#39;</span><span class="p">)</span>
+
+<span class="c1"># Set CPDs</span>
+<span class="n">cpd_A</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">]])</span>
+<span class="n">cpd_B</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">cpd_C</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">cpd_D</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># Make the DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpd_A</span><span class="p">,</span> <span class="n">cpd_B</span><span class="p">,</span> <span class="n">cpd_C</span><span class="p">,</span> <span class="n">cpd_D</span><span class="p">],</span> <span class="n">checkmodel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Plot the CPDs as a sanity check</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">checkmodel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Plot the DAG</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="figure align-default" id="fig-naivebayes-1">
+<img alt="_images/naivebayes_example1.png" src="_images/naivebayes_example1.png" />
+</div>
+<p>Example for structure learning with the naivebayes model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="c1"># Load example</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+<span class="c1"># Structure learning</span>
+</pre></div>
+</div>
+<p>8
+.. _fig-naivebayes_2:</p>
+<div class="figure align-default">
+<img alt="_images/naivebayes_example2.png" src="_images/naivebayes_example2.png" />
+</div>
+</div>
+<div class="section" id="examples-structure-learning">
+<h1>Examples Structure learning<a class="headerlink" href="#examples-structure-learning" title="Permalink to this headline">¶</a></h1>
 <p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
-<div class="section" id="example-structure-learning-1">
-<h3>Example Structure learning (1)<a class="headerlink" href="#example-structure-learning-1" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-1">
+<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this headline">¶</a></h2>
 <p>For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.</p>
 <p>Let’s bring in our dataset.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -337,8 +407,8 @@ This search approach is only atractable for very small networks, and prohibits e
 </tbody>
 </table>
 <p>From the <em>bnlearn</em> library, we’ll need the <a class="reference internal" href="bnlearn.structure_learning.html#bnlearn.structure_learning.fit" title="bnlearn.structure_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> for this exercise:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="id1">
@@ -358,23 +428,23 @@ This search approach is only atractable for very small networks, and prohibits e
 <li><p>k2</p></li>
 <li><p>bdeu</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_hc_bic</span>  <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
-<span class="n">model_hc_k2</span>   <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
-<span class="n">model_hc_bdeu</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
-<span class="n">model_ex_bic</span>  <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
-<span class="n">model_ex_k2</span>   <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
-<span class="n">model_ex_bdeu</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_hc_bic</span>  <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+<span class="n">model_hc_k2</span>   <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
+<span class="n">model_hc_bdeu</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
+<span class="n">model_ex_bic</span>  <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+<span class="n">model_ex_k2</span>   <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
+<span class="n">model_ex_bdeu</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="section" id="example-structure-learning-2">
-<h3>Example Structure learning (2)<a class="headerlink" href="#example-structure-learning-2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="example-2">
+<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this headline">¶</a></h2>
 <p>Lets learn the structure of a more complex data set and compare it to another one.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load asia DAG</span>
-<span class="n">model_true</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<span class="n">model_true</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 <span class="c1"># plot ground truth</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_true</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_true</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="id2">
@@ -382,9 +452,9 @@ This search approach is only atractable for very small networks, and prohibits e
 <p class="caption"><span class="caption-text">True DAG of the Asia data set.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sampling</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="c1"># Structure learning of sampled dataset</span>
-<span class="n">model_learned</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+<span class="n">model_learned</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="id3">
@@ -392,9 +462,9 @@ This search approach is only atractable for very small networks, and prohibits e
 <p class="caption"><span class="caption-text">Learned DAG based on data set.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot based on structure learning of sampled data</span>
-<span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 <span class="c1"># Compare networks and make plot</span>
-<span class="n">bnlearn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <div class="figure align-default" id="fig2c-asia-comparion">
@@ -407,7 +477,6 @@ This search approach is only atractable for very small networks, and prohibits e
 <p>References
 1. <a class="reference external" href="https://ermongroup.github.io/cs228-notes/learning/structure/">https://ermongroup.github.io/cs228-notes/learning/structure/</a>
 2. <a class="reference external" href="https://doi.org/10.1007/978-0-387-30164-8_850">https://doi.org/10.1007/978-0-387-30164-8_850</a></p>
-</div>
 </div>
 </div>
 

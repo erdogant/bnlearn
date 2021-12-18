@@ -107,3 +107,83 @@ To create static plots simply set the ``interactive=False`` in all the above exa
 
     # Add parameters for the static plot
     bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
+
+
+Node properties
+=================
+
+Edge properties can easily be changed using the :func:`bnlearn.bnlearn.get_node_properties` function.
+Note that these functionalities can be combined with the edge properties.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    # Load asia DAG
+    df = bn.import_example(data='asia')
+    # Structure learning of sampled dataset
+    model = bn.structure_learning.fit(df)
+    # plot static
+    G = bn.plot(model)
+    
+    # Set some node properties
+    node_properties = bn.get_node_properties(model)
+
+    # Make some changes
+    node_properties['xray']['node_color']='#8A0707'
+    node_properties['xray']['node_size']=2000
+    node_properties['smoke']['node_color']='#000000'
+    node_properties['smoke']['node_size']=2000
+
+    # Make plot with the specified node properties
+    bn.plot(model, node_properties=node_properties, interactive=False)
+
+
+.. |figIP4| image:: ../figs/node_properties_1.png
+
+.. table:: Plot with user defined node properties.
+   :align: center
+
+   +----------+
+   | |figIP4| |
+   +----------+
+
+
+Edge properties
+=================
+
+Edge properties can easily be changed using the :func:`bnlearn.bnlearn.get_edge_properties` function.
+Note that these functionalities can be combined with the node properties.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    # Load asia DAG
+    df = bn.import_example(data='asia')
+    # Structure learning of sampled dataset
+    model = bn.structure_learning.fit(df)
+    # plot static
+    G = bn.plot(model)
+    
+    # Set some edge properties
+    edge_properties = bn.get_edge_properties(model)
+
+    # Make some changes
+    edge_properties['either', 'xray']['color']='#8A0707'
+    edge_properties['either', 'xray']['weight']=4
+    edge_properties['dysp', 'lung']['weight']=10
+    edge_properties['dysp', 'lung']['color']='#8A0707'
+    
+    # Plot
+    params_static={'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60}
+    bn.plot(model, interactive=False, edge_properties=edge_properties, params_static=params_static)
+
+
+
+.. |figIP5| image:: ../figs/edge_properties_1.png
+
+.. table:: Plot with user defined edge properties.
+   :align: center
+
+   +----------+
+   | |figIP5| |
+   +----------+

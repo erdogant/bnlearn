@@ -32,14 +32,38 @@ Content
 
 .. toctree::
   :maxdepth: 2
-  :caption: Methods
+  :caption: Structure learning
 
   Structure learning
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Parameter learning
+
   Parameter learning
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Inference
+
   Inference
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption:   Predict
+
   Predict
-  Sampling and datasets
+
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Other functionalities
+
   Create DAG
+  Sampling and datasets
   whitelist_blacklist
   topological_sort
   saving and loading
