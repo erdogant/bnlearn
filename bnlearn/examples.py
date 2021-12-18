@@ -10,7 +10,6 @@ import bnlearn as bn
 
 # %% Naive Bayesian model
 import bnlearn as bn
-from pgmpy.factors.discrete import TabularCPD
 df = bn.import_example('random')
 
 # Structure learning

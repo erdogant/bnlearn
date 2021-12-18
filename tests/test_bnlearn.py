@@ -144,10 +144,12 @@ def test_structure_learning():
     # tan
     model = bn.structure_learning.fit(df, methodtype='tan', white_list=['smoke', 'either'], bw_list_method='nodes', root_node='smoke', class_node='either')
     assert np.all(model['adjmat'].columns.values==['smoke', 'either'])
+    # naivebayes
+    model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="smoke")
+    assert np.all(model['adjmat'].columns.values==['smoke', 'asia', 'tub', 'lung', 'bronc', 'either', 'xray', 'dysp'])
 
-    
     df=bnlearn.import_example(data='andes')
-    
+
     # PGMPY
     est = TreeSearch(df)
     dag = est.estimate(estimator_type="tan",class_node='DISPLACEM0')
