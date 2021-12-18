@@ -937,12 +937,12 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     ----------
     data : str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water'
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random'
     n : int, optional
         Number of samples to generate. The default is 1000.
     verbose : int, (default: 3)
         Print progress to screen.
-        0: None, 1: ERROR, 2: WARN, 3: INFO, 4: DEBUG, 5: TRACE
+        0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace
 
     Returns
     -------
@@ -950,9 +950,12 @@ def import_example(data='sprinkler', n=10000, verbose=3):
 
     """
 
+    if data=='random':
+        return pd.DataFrame(np.random.randint(low=0, high=2, size=(n, 5)), columns=['A', 'B', 'C', 'D', 'E'])
+
     # Change name for downloading
     if data=='titanic': data = 'titanic_train'
-    
+
     # Download example dataset from github source
     PATH_TO_DATA = _download_example(data, verbose=verbose)
 
