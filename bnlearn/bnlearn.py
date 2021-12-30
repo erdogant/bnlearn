@@ -660,10 +660,10 @@ def plot(model,
     title : str, optional
         Title for the plots.
     node_color : str, optional
-        Color each node in the network using a hex-color, such as '#8A0707' 
+        Color each node in the network using a hex-color, such as '#8A0707'
     node_size : int, optional
-        Set the node size for each node in the network. The default size when using static plolts is 800, and for interactive plots it is 10. 
-    node_properties : dict (default: None).
+        Set the node size for each node in the network. The default size when using static plolts is 800, and for interactive plots it is 10.
+    node_properties : dict (default: None)
         Dictionary containing custom node_color and node_size parameters for the network.
         The node properties can easily be retrieved using the function: node_properties = bn.get_node_properties(model)
         node_properties = {'node1':{'node_color':'#8A0707','node_size':10},
@@ -719,9 +719,9 @@ def plot(model,
 
     """
     # Plot properties
-    defaults = {'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff', 'directed':True}
+    defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'height':8, 'width':15, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'layout':'fruchterman_reingold', 'font_color': 'k', 'facecolor':'#ffffff', 'node_shape':'o', 'edge_alpha':0.8, 'arrowstyle':'-|>', 'arrowsize':30}
+    defaults = {'height': 8, 'width': 15, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'fruchterman_reingold', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
     params_static = {**defaults, **params_static}
     out = {}
     G = nx.DiGraph()  # Directed graph
@@ -786,7 +786,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # Bootup figure
     plt.figure(figsize=(params_static['width'], params_static['height']), facecolor=params_static['facecolor'])
     # nodes
-    nx.draw_networkx_nodes(G, pos, nodelist=nodelist , node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
+    nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
     # nx.draw_networkx_edges(G, pos, arrowstyle='-|>', arrowsize=30, edge_color=edge_color, width=edge_weights)
     nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_color, width=edge_weights, alpha=params_static['edge_alpha'])
@@ -814,13 +814,13 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     # Convert from graph G
     g.from_nx(G)
     # Nodes
-    for i,_ in enumerate(g.nodes):
+    for i, _ in enumerate(g.nodes):
         g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
         g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
 
     # Edges
     g_edges = list(map(lambda x: (x.get('from'), x.get('to')), g.edges))
-    for i,_ in enumerate(g.edges):
+    for i, _ in enumerate(g.edges):
         idx = np.where(list(map(lambda x: g_edges[i]==x, edgelist)))[0][0]
         g.edges[i]['color']=edge_colors[idx]
         g.edges[i]['weight']=edge_weights[idx]
@@ -828,7 +828,7 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     # Create advanced buttons
     g.show_buttons(filter_=['physics'])
     # Display
-    filename = title.strip().replace(' ','_') + '.html'
+    filename = title.strip().replace(' ', '_') + '.html'
     g.show(filename)
     display(HTML(filename))
     # webbrowser.open('bnlearn.html')
@@ -845,7 +845,7 @@ def _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, n
         # arrowstyle = edge_properties.get((edge[0], edge[1])).get('arrowstyle', '-|>')
         # arrowsize = edge_properties.get((edge[0], edge[1])).get('arrowsize', 30)
         # G.add_edge(edge[0], edge[1], weight=weight, color=color, arrowstyle=arrowstyle, arrowsize=arrowsize)
-    
+
     edgelist = list(G.edges())
     edge_colors = [G[u][v].get('color') for u, v in G.edges()]
     edge_weights = [G[u][v].get('weight') for u, v in G.edges()]
@@ -872,16 +872,16 @@ def _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, n
 # %%
 def topological_sort(adjmat, start=None):
     """Topological sort.
-    
+
     Description
     -----------
     Get nodes list in the topological sort order.
 
     Parameters
     ----------
-    adjmat : pd.DataFrame or bnlearn object.
+    adjmat: pd.DataFrame or bnlearn object.
         Adjacency matrix.
-    start : str, optional
+    start: str, optional
         Start position. The default is None and the whole network is examined.
 
     Returns
@@ -905,7 +905,7 @@ def topological_sort(adjmat, start=None):
     # Convert to adjmat
     if isinstance(adjmat, dict):
         adjmat = adjmat.get('adjmat', None)
-    elif np.all(np.isin(adjmat.columns, ['source','target','weight'])):
+    elif np.all(np.isin(adjmat.columns, ['source', 'target', 'weight'])):
         adjmat = vec2adjmat(adjmat['source'], adjmat['target'])
 
     # Convert to graph
@@ -921,10 +921,10 @@ def topological_sort(adjmat, start=None):
     while q:
         v = q.pop()
         if v not in seen:
-            seen.add(v) # no need to append to path any more
+            seen.add(v)  # no need to append to path any more
             q.extend(graph[v])
 
-            while stack and v not in graph[stack[-1]]: # new stuff here!
+            while stack and v not in graph[stack[-1]]:  # new stuff here!
                 order.append(stack.pop())
             stack.append(v)
 
@@ -937,21 +937,20 @@ def import_example(data='sprinkler', n=10000, verbose=3):
 
     Parameters
     ----------
-    data : str, (default: sprinkler)
+    data: str, (default: sprinkler)
         Pre-defined examples.
         'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random'
-    n : int, optional
+    n: int, optional
         Number of samples to generate. The default is 1000.
-    verbose : int, (default: 3)
+    verbose: int, (default: 3)
         Print progress to screen.
         0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace
 
     Returns
     -------
-    df : pd.DataFrame()
+    df: pd.DataFrame()
 
     """
-
     if data=='random':
         return pd.DataFrame(np.random.randint(low=0, high=2, size=(n, 5)), columns=['A', 'B', 'C', 'D', 'E'])
 
@@ -967,7 +966,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
         df = pd.read_csv(PATH_TO_DATA)
     else:
         try:
-            getPath = _unzip(PATH_TO_DATA, verbose=verbose)
+            _ = _unzip(PATH_TO_DATA, verbose=verbose)
             DAG = import_DAG(data, verbose=2)
             df = sampling(DAG, n=n, verbose=2)
         except:
@@ -977,11 +976,11 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     return df
 
 
-#%% Download data from github source
+# %% Download data from github source
 def _download_example(data, verbose=3):
     # Set url location
     url = 'https://erdogant.github.io/datasets/'
-    url=url + data+'.zip'
+    url=url + data + '.zip'
 
     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
@@ -992,7 +991,7 @@ def _download_example(data, verbose=3):
     if not os.path.isfile(PATH_TO_DATA):
         if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
         wget.download(url, curpath)
-    
+
     return PATH_TO_DATA
 
 
@@ -1002,7 +1001,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     Parameters
     ----------
-    filepath : str, (default: sprinkler)
+    filepath: str, (default: sprinkler)
         Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
         'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'filepath/to/model.bif',
     CPD : bool, optional
@@ -1316,6 +1315,33 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
     else:
         if verbose>=2: print('[bnlearn] >WARNING: Could not load data from [%s]' %(filepath))
 
+
+# %% Download files from github source
+# def wget(url, writepath):
+    # """ Retrieve file from url.
+
+    # Parameters
+    # ----------
+    # url : str.
+    #     Internet source.
+    # writepath : str.
+    #     Directory to write the file.
+
+    # Returns
+    # -------
+    # None.
+
+    # Example
+    # -------
+    # >>> import clustimage as cl
+    # >>> images = cl.wget('https://erdogant.github.io/datasets/flower_images.zip', 'c://temp//flower_images.zip')
+
+    # """
+    # import requests
+    # r = requests.get(url, stream=True)
+    # with open(writepath, "wb") as fd:
+    #     for chunk in r.iter_content(chunk_size=1024):
+    #         fd.write(chunk)
 
 # %% Make graph layout
 # def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
