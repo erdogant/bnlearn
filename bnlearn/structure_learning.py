@@ -78,7 +78,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         In case of filtering on nodes, the search is limited to those edges. The resulting model will then only contain nodes that are in white_list.
         Works only in case of methodtype='hc' See also paramter: `bw_list_method`
     bw_list_method : list of str or tuple, (default : None)
-        A list of edges can be passed as `black_list` or `white_list` to exclude or to limit the search. 
+        A list of edges can be passed as `black_list` or `white_list` to exclude or to limit the search.
             * 'edges' : [('A', 'B'), ('C','D'), (...)] This option is limited to only methodtype='hc'
             * 'nodes' : ['A', 'B', ...] Filter the dataframe based on the nodes for `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
     max_indegree : int, (default : None)
