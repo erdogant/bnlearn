@@ -19,3 +19,4 @@ df2onehot
 fsspec
 pypickle
 tabulate
+ipywidgets
