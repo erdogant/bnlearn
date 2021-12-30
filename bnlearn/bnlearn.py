@@ -669,8 +669,8 @@ def plot(model,
         node_properties = {'node1':{'node_color':'#8A0707','node_size':10},
                            'node2':{'node_color':'#000000','node_size':30}}
     edge_properties : dict (default: None).
-        Dictionary containing custom node_color and node_size parameters for the network.
-        The edge properties can easily be retrieved using the function: edge_properties = bn.get_edge_properties(model)
+        Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
+        edge_properties = bn.get_edge_properties(model)
     params_interactive : dict.
         Dictionary containing various settings in case of creating interactive plots.
     params_static : dict.
