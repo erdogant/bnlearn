@@ -7,6 +7,75 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %%
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+import bnlearn as bn
+import pandas
+
+model_cols = ['thing1', 'thing2', 'thing3', 'thing4']
+model_obs = np.transpose(np.array([
+    [0.01, 0.1, 0.2, 0.3, 0.4, 0.5],  # thing1 metrics (6 samples over time)
+    [0.5, 0.7, 0.6, 0.3, 0.2, 0.8],  # thing2 metrics
+    [0.3, 0.3, 0.2, 0.7, 0.1, 0.4],  # thing3 metrics
+    [0.9, 0.8, 0.2, 0.6, 0.7, 0.1]  # thing4 metrics
+]))
+print(model_obs)
+
+C = len(model_cols)
+assert(np.shape(model_obs)[1] == C)  # square!
+# brute-force C^2 joint covaried amplitude probabilities
+# of 0..1 range-normal metrics pairs
+jcvp = np.zeros((C, C))
+for cX in range(C):
+    for cY in range(C):
+        jcvp[cX, cY] = np.sqrt(np.mean(model_obs[cX] * model_obs[cY]))
+df = pandas.DataFrame(jcvp, columns=model_cols)
+df.head()
+print(df)
+print("")
+
+# df = bn.import_example('sprinkler')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+
+edge_properties = bn.get_edge_properties(model, color='#FF0000')
+node_properties = bn.get_node_properties(model, node_color='#FFFFFF')
+params_static={'layout': 'circular_layout', 'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65, 'font_size': 14, 'font_family': 'sans-serif', 'font_color': 'b'}
+bn.plot(model, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
+
+
+# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+
+
+# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bic')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
+# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+
+
+G = nx.DiGraph()
+G.add_edges_from(list(model['model_edges']))
+pos = nx.circular_layout(G)  # great
+# pos = nx.spectral_layout(G,scale=25) # overlapping labels, boo
+# pos = nx.planar_layout(G)  # pretty good
+nx.draw_networkx_labels(G, pos, font_size=14, font_family='sans-serif', font_color='b')
+
+nx.draw_networkx_edges(G, pos, width=2, arrowstyle='->', arrowsize=20, edge_color='r', alpha=0.65)
+# nx.draw_networkx_nodes(G,pos,node_size=7,node_color='r',alpha=0.75) # clutter
+plt.title("Inferred covaried amplitude dependencies")
+plt.show()
 
 # %% Naive Bayesian model
 import bnlearn as bn
@@ -24,7 +93,7 @@ from pgmpy.factors.discrete import TabularCPD
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
 DAG = bn.make_DAG(edges, methodtype='naivebayes')
-bn.plot(DAG);
+bn.plot(DAG)
 
 cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
 print(cpd_A)
