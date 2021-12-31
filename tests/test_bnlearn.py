@@ -148,7 +148,7 @@ def test_structure_learning():
     model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="smoke")
     assert np.all(model['adjmat'].columns.values==['smoke', 'asia', 'tub', 'lung', 'bronc', 'either', 'xray', 'dysp'])
 
-    df=bnlearn.import_example(data='andes')
+    df=bn.import_example(data='andes')
 
     # PGMPY
     est = TreeSearch(df)
@@ -160,9 +160,9 @@ def test_structure_learning():
     print(q)
 
     # BNLEARN
-    model = bnlearn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
-    model_bn = bnlearn.parameter_learning.fit(model, df, methodtype='ml')  # maximum likelihood estimator
-    query=bnlearn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1': 1})
+    model = bn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
+    model_bn = bn.parameter_learning.fit(model, df, methodtype='ml')  # maximum likelihood estimator
+    query=bn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1': 1})
 
     # DAG COMPARISON
     assert np.all(model_bn['adjmat']==model['adjmat'])
