@@ -10,6 +10,7 @@ from pgmpy.models import BayesianModel
 import networkx as nx
 from pgmpy.inference import VariableElimination
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
+import bnlearn as bn
 
 
 def test_import_DAG():
