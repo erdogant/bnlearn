@@ -1,4 +1,4 @@
-"""Techniques for inference.
+"""Inferences.
 
 Description
 -----------
@@ -18,7 +18,10 @@ import bnlearn
 import numpy as np
 from tabulate import tabulate
 
+
 # %% Exact inference using Variable Elimination
+
+
 def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     """Inference using using Variable Elimination.
 
@@ -35,7 +38,7 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
             * {'Rain':1}
             * {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
     to_df : Bool, (default is True)
-        The output is converted to dataframe output. Note that this heavily impacts the speed. 
+        The output is converted to dataframe output. Note that this heavily impacts the speed.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE

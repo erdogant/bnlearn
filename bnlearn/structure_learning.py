@@ -127,7 +127,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     """
     out = []
     # Set config
-    config = {'method':methodtype, 'scoring':scoretype, 'black_list':black_list, 'white_list':white_list, 'bw_list_method':bw_list_method, 'max_indegree':max_indegree, 'tabu_length':tabu_length, 'epsilon':epsilon, 'max_iter':max_iter, 'root_node':root_node, 'class_node':class_node, 'fixed_edges':fixed_edges, 'return_all_dags':return_all_dags, 'verbose':verbose}
+    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'verbose': verbose}
     # Make some checks
     config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
@@ -194,7 +194,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
-    if not np.isin(config['method'], ['naivebayes','nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
+    if not np.isin(config['method'], ['naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
         config['white_list'] = [config['white_list']]
@@ -215,14 +215,14 @@ def _make_checks(df, config, verbose=3):
     if config['fixed_edges'] is None:
         config['fixed_edges']=set()
 
-    #### Remove this block in future (21-10-2021)
+    # Remove this block in future (21-10-2021)
     if config['bw_list_method']=='filter':
         if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
         config['bw_list_method'] = "nodes"
     if config['bw_list_method']=='enforce':
         if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
         config['bw_list_method'] = "edges"
-    #### End remove block
+    # End remove block
 
     # Show warnings
     if (config['bw_list_method'] is None) and ((config['black_list'] is not None) or (config['white_list'] is not None)):
@@ -449,7 +449,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
 # %% ExhaustiveSearch
 def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
     """Exhaustivesearch.
-    
+
     Description
     ------------
     The first property makes exhaustive search intractable for all but very

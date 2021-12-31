@@ -29,7 +29,7 @@ import pypickle
 import bnlearn
 
 
-#%%  Convert adjmat to bayesian model
+# %%  Convert adjmat to bayesian model
 def to_bayesianmodel(model, verbose=3):
     """Convert adjacency matrix to BayesianModel.
 
@@ -336,7 +336,7 @@ def adjmat2dict(adjmat):
     graph={}
     rows=adjmat.index.values
     for r in rows:
-        graph.update({r: list(rows[adjmat.loc[r,:]])})
+        graph.update({r: list(rows[adjmat.loc[r, :]])})
     return graph
 
 
@@ -441,12 +441,12 @@ def query2df(query, variables=None):
         Dataframe with inferences.
 
     """
-    df = pd.DataFrame(data = list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
+    df = pd.DataFrame(data=list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
     df['p'] = query.values.flatten()
     # Order or filter on input variables
     if variables is not None:
         # Add Pvalue column
-        variables=variables+['p']
+        variables=variables +['p']
         df = df[variables]
     return df
 
@@ -556,9 +556,45 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
 
 # %% Get node properties
 def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
+    """Collect node properties.
+
+    Parameters
+    ----------
+    model : dict
+        dict containing (initialized) model.
+    node_color : str, (Default: '#000000')
+        The default color of the edges.
+    node_size : float, (Default: 1)
+        The default weight of the edges.
+    Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    dict.
+        Node properties.
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> # Create DAG and store in model
+    >>> model = bn.make_DAG(edges)
+    >>> node_properties = bn.get_node_properties(model)
+    >>> # Adjust the properties
+    >>> node_properties['A']['node_size']=2000
+    >>> node_properties['A']['node_color']='#000000'
+    >>> # Make plot
+    >>> bn.plot(model, interactive=False, node_properties=node_properties)
+    >>>
+    >>> # Example: Specify all nodes
+    >>> node_properties = bn.get_node_properties(model, node_size=1000, node_color='#000000')
+    >>> bn.plot(model, interactive=False, node_properties=node_properties)
+
+    """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     nodes = {}
-    defaults={'node_color':node_color, 'node_size': node_size}
+    defaults={'node_color': node_color, 'node_size': node_size}
     adjmat = model.get('adjmat', None)
 
     if adjmat is not None:
@@ -583,19 +619,18 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
     color : str, (Default: '#000000')
         The default color of the edges.
     weight : float, (Default: 1)
-        The default weight of the edges. 
+        The default weight of the edges.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
-    edges : dict.
+    dict.
         Edge properties.
-    
+
     Examples
     --------
-    >>> # Example 1
     >>> import bnlearn as bn
     >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     >>> # Create DAG and store in model
@@ -610,7 +645,7 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
     """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     edges = {}
-    defaults = {'color':color, 'weight':weight}
+    defaults = {'color': color, 'weight': weight}
     adjmat = model.get('adjmat', None)
     # Get model edges
     model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
@@ -622,10 +657,10 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
         for u, v in model_edges:
             edge_property = defaults.copy()
             # Use the edge weight from the adjmat
-            if not isinstance(adjmat.loc[u,v], np.bool_):
-                edge_property['weight']=adjmat.loc[u,v]
+            if not isinstance(adjmat.loc[u, v], np.bool_):
+                edge_property['weight']=adjmat.loc[u, v]
             # Update edges dict
-            edges.update({(u,v): edge_property})
+            edges.update({(u, v): edge_property})
 
     # Return dict with node properties
     return edges
@@ -641,8 +676,8 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         params_interactive={'height':'800px', 'width':'70%', 'notebook':False, 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'},
-         params_static={'width':15, 'height':8, 'font_size':14, 'font_family':'sans-serif', 'alpha':0.8, 'node_shape':'o', 'layout':'fruchterman_reingold', 'font_color': '#000000', 'facecolor':'white', 'edge_alpha':0.8, 'arrowstyle':'-|>', 'arrowsize':30},
+         params_interactive={'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'},
+         params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'fruchterman_reingold', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
          verbose=3):
     """Plot the learned stucture.
 
@@ -1035,22 +1070,11 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     if filepath=='sprinkler':
         model = _DAG_sprinkler(CPD=CPD)
     elif (filepath=='asia') or (filepath=='alarm') or (filepath=='andes') or (filepath=='sachs') or (filepath=='water'):
-        getfile = os.path.join(PATH_TO_DATA, filepath+'.bif')
+        getfile = os.path.join(PATH_TO_DATA, filepath +'.bif')
         if not os.path.isfile(getfile):
             PATH_TO_DATA = _download_example(filepath, verbose=3)
-            getPath = _unzip(PATH_TO_DATA, verbose=verbose)
+            _ = _unzip(PATH_TO_DATA, verbose=verbose)
         model = _bif2bayesian(getfile, verbose=verbose)
-    # elif filepath=='miserables':
-    #     getfile = os.path.join(PATH_TO_DATA, filepath+'.json')
-    #     if not os.path.isfile(getfile):
-    #         PATH_TO_DATA = _download_example(filepath, verbose=3)
-    #         getPath = _unzip(PATH_TO_DATA, ext='.json', verbose=verbose)
-
-    #     f = open(os.path.join(PATH_TO_DATA, 'miserables.json'))
-    #     data = json.loads(f.read())
-    #     L=len(data['links'])
-    #     edges=[(data['links'][k]['source'], data['links'][k]['target']) for k in range(L)]
-    #     model=nx.Graph(edges, directed=False)
     else:
         if os.path.isfile(filepath):
             model = _bif2bayesian(filepath, verbose=verbose)
@@ -1144,7 +1168,7 @@ def _filter_df(adjmat, df, verbose=3):
 # %% Make prediction in inference model
 def predict(model, df, variables, to_df=True, method='max', verbose=3):
     """Predict on data from a Bayesian network.
-    
+
     Description
     -----------
     The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
@@ -1159,7 +1183,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     variables : str or list of str
         The label(s) of node(s) to be predicted.
     to_df : Bool, (default is True)
-        The output is converted to dataframe output. Note that this heavily impacts the speed. 
+        The output is converted to dataframe output. Note that this heavily impacts the speed.
     method : str
         The method that is used to select the for the inferences.
         'max' : Return the variable values based on the maximum probability.
@@ -1172,7 +1196,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     -------
     P : dict or DataFrame
         Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.
-    
+
     Examples
     --------
     >>> import bnlearn as bn
@@ -1182,7 +1206,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})
     >>> print(query)
     >>> print(bn.query2df(query))
-    >>> 
+    >>>
     >>> # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
     >>> df = bn.sampling(model, n=1000)
     >>>
@@ -1208,14 +1232,14 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     # Get only the unique records in the DataFrame to reduce computation time.
     dfU = dfX.drop_duplicates()
     # Make empty array
-    P = np.array([None]*dfX.shape[0])
+    P = np.array([None] *dfX.shape[0])
     for i in tqdm(range(dfU.shape[0])):
         # Get input data and create a dict.
-        evidence = dfU.iloc[i,:].to_dict()
+        evidence = dfU.iloc[i, :].to_dict()
         # Do the inference.
         query = bnlearn.inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
         # Find original location of the input data.
-        loc = np.sum((dfX==dfU.iloc[i,:]).values, axis=1)==dfU.shape[1]
+        loc = np.sum((dfX==dfU.iloc[i, :]).values, axis=1)==dfU.shape[1]
         # Store inference
         P[loc] = _get_prob(query, method=method)
     P = list(P)
@@ -1234,7 +1258,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     return P
 
 
-# %% 
+# %%
 def _get_prob(query, method='max'):
     # Setup all combinations
     allcomb = np.array(list(itertools.product([0, 1], repeat=len(query.variables))))

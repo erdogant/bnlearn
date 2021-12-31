@@ -1,4 +1,4 @@
-"""Techniques for parameter learning.
+"""Parameter learning.
 
 Description
 -----------
@@ -20,12 +20,12 @@ Currently, the library supports parameter learning for *discrete* nodes:
 
 
 # %% Libraries
-from pgmpy.estimators import MaximumLikelihoodEstimator, BayesianEstimator
+from pgmpy.estimators import BayesianEstimator
+# from pgmpy.estimators import MaximumLikelihoodEstimator
 import bnlearn
-# from bnlearn.bnlearn import _filter_df
-# from bnlearn.bnlearn import to_bayesianmodel
 import warnings
 warnings.filterwarnings("ignore")
+
 
 # %% Sampling from model
 def fit(model, df, methodtype='bayes', verbose=3):
@@ -37,8 +37,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
         A natural estimate for the CPDs is to simply use the *relative frequencies*,
         with which the variable states have occured. We observed x cloudy` among a total of `all clouds`,
         so we might guess that about `50%` of `cloudy` are `sprinkler or so.
-        According to MLE, we should fill the CPDs in such a way, that $P(\text{data}|\text{model})$ is maximal.
-        This is achieved when using the *relative frequencies*.
+        According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal.
+        This is achieved when using the relative frequencies.
 
         While very straightforward, the ML estimator has the problem of *overfitting* to the data.
         If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
@@ -75,14 +75,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
         Strategy for parameter learning.
             * 'ml', 'maximumlikelihood': Learning CPDs using Maximum Likelihood Estimators.
             * 'bayes': Bayesian Parameter Estimation.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-            * 0: NONE
-            * 1: ERROR
-            * 2: WARNING
-            * 3: INFO (default)
-            * 4: DEBUG
-            * 5: TRACE
+    Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -133,10 +127,10 @@ def fit(model, df, methodtype='bayes', verbose=3):
         # model = MaximumLikelihoodEstimator(model, df)
         # for node in model.state_names:
         #     print(model.estimate_cpd(node))
-        model.fit(df, estimator=None) # estimator as None makes it maximum likelihood estimator according pgmpy docs. 
+        model.fit(df, estimator=None)  # estimator as None makes it maximum likelihood estimator according pgmpy docs.
         for cpd in model.get_cpds():
-              if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-              if config['verbose']>=3: print(cpd)
+            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=3: print(cpd)
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
