@@ -1183,11 +1183,11 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     df_num = df_num.astype(int)
     # One-hot
     df_hot = out['onehot']
-    df_hot.columns = df_hot.columns.str.replace('_4.0', '_4')
-    df_hot.columns = df_hot.columns.str.replace('_3.0', '_3')
-    df_hot.columns = df_hot.columns.str.replace('_2.0', '_2')
-    df_hot.columns = df_hot.columns.str.replace('_1.0', '_1')
-    df_hot.columns = df_hot.columns.str.replace('_0.0', '_0')
+    df_hot.columns = df_hot.columns.str.replace('_4.0', '_4', regex=True)
+    df_hot.columns = df_hot.columns.str.replace('_3.0', '_3', regex=True)
+    df_hot.columns = df_hot.columns.str.replace('_2.0', '_2', regex=True)
+    df_hot.columns = df_hot.columns.str.replace('_1.0', '_1', regex=True)
+    df_hot.columns = df_hot.columns.str.replace('_0.0', '_0', regex=True)
 
     return df_hot, df_num
 
