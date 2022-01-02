@@ -23,8 +23,6 @@ if version.parse(pgmpy.__version__)>=version.parse("0.1.13"):
 else:
     from pgmpy.estimators import ConstraintBasedEstimator
 
-# from packaging import version
-# from bnlearn.bnlearn import _dag2adjmat
 import bnlearn
 
 
