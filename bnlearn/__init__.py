@@ -18,6 +18,7 @@ from bnlearn.bnlearn import (
     get_edge_properties,
     _dag2adjmat,
     _filter_df,
+    independence_test,
     save,
     load,
 )

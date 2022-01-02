@@ -1340,6 +1340,115 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
         if verbose>=2: print('[bnlearn] >WARNING: Could not load data from [%s]' %(filepath))
 
 
+# %% Compute Pvalues using independence test.
+def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, verbose=3):
+    """Compute edge strength using test statistic.
+
+    Description
+    -----------
+    Compute the edge strength using a statistical test of independence based using the model structure (DAG) and the data.
+    For the pairs in the DAG (either by structure learning or user-defined), an statistical test is performed.
+    Any two variables are associated if the test's p-value < significance_level.
+
+    Parameters
+    ----------
+    model: Instance of bnlearn.structure_learning.
+        The (learned) model which needs to be tested.
+    df: pandas.DataFrame instance
+        The dataset against which to test the model structure.
+    test: str or function
+        The statistical test to compute associations.
+        * chi_square
+        * g_sq
+        * log_likelihood
+        * freeman_tuckey
+        * modified_log_likelihood
+        * neyman
+        * cressie_read
+    alpha: float
+        A value between 0 and 1. If p_value < significance_level, the variables are
+        considered uncorrelated.
+    prune: bool (default: False)
+        True: Keep only edges that are significant (<=alpha) based on the independence test.
+
+    Returns
+    -------
+    df: pandas.DataFrame instance
+        The dataset against which to test the model structure.
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> df = bn.import_example(data='asia')
+    >>> # Structure learning of sampled dataset
+    >>> model = bn.structure_learning.fit(df)
+    >>> # Compute arc strength
+    >>> bn.independence_test(model, df, test='chi_square')
+    """
+    from pgmpy.estimators.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read  # noqa
+    from pgmpy.models import BayesianNetwork
+    from pgmpy.base import DAG
+    if model.get('model', None) is None: raise ValueError('[bnlearn]> No model detected.')
+    if not isinstance(model['model'], (DAG, BayesianNetwork)): raise ValueError("[bnlearn]> model must be an instance of pgmpy.base.DAG or pgmpy.models.BayesianNetwork. Got {type(model)}")
+    if not isinstance(df, pd.DataFrame): raise ValueError("[bnlearn]> data must be a pandas.DataFrame instance. Got {type(data)}")
+    if set(model['model'].nodes()) != set(df.columns): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
+
+    # Get the statistical test
+    statistical_test=eval(test)
+    # Get the edges to be tested
+    edges=list(model['model_edges'])
+    # edges = combinations(model['model'].nodes(), 2)
+
+    # Compute significance
+    results=[]
+    for i, j in edges:
+        # test_result = power_divergence(i, j, [], df, boolean=False, lambda_="cressie-read", significance_level=0.05)
+        # chi, p_value, dof, expected = stats.chi2_contingency( df.groupby([i, j]).size().unstack(j, fill_value=0), lambda_="cressie-read" )
+        test_result = statistical_test(X=i, Y=j, Z=[], data=df, boolean=False, significance_level=alpha)
+        results.append({"source": i, "target": j, "stat_test": test_result[1]<=alpha, 'p_value': test_result[1], test: test_result[0], 'dof': test_result[2]})
+
+    model['independence_test'] = pd.DataFrame(results)
+
+    # Remove not significant edges
+    if prune:
+        model = _prune(model, test, alpha, verbose=verbose)
+
+    # Return
+    return model
+
+
+# %% Remove not significant edges.
+def _prune(model, test, alpha, verbose=3):
+    independence_test = model.get('independence_test', None)
+
+    # Prune based on significance alpha
+    if independence_test is not None:
+        # Find the none significant associations.
+        Irem = ~independence_test['stat_test']
+        idxrem = np.where(Irem)[0]
+        # Set not-significant edges to False
+        for idx in idxrem:
+            edge = list(model['independence_test'].iloc[idx][['source', 'target']])
+            model['adjmat'].loc[edge[0], edge[1]]=False
+            model['adjmat'].loc[edge[1], edge[0]]=False
+            if verbose>=3: print('[bnlearn] >Edge [%s <-> %s] [P=%g] is excluded because it was not significant (P<%.2f) using the [%s] statistical test.' %(edge[0], edge[1], model['independence_test'].iloc[idx]['p_value'], alpha, test))
+        # Also remove not-significant edges from the test statistics.
+        model['independence_test'] = model['independence_test'].loc[~Irem, :]
+
+    # Return
+    return model
+
+
+# %% Normalize weights in range
+def _normalize_weights(weights, minscale=1, maxscale=10):
+    if len(weights.shape)==1:
+        weights=weights.reshape(-1, 1)
+
+    from sklearn.preprocessing import MinMaxScaler
+    weights = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(weights).flatten()
+    return(weights)
+
+
 # %% Download files from github source
 # def wget(url, writepath):
     # """ Retrieve file from url.
@@ -1366,6 +1475,7 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
     # with open(writepath, "wb") as fd:
     #     for chunk in r.iter_content(chunk_size=1024):
     #         fd.write(chunk)
+
 
 # %% Make graph layout
 # def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
