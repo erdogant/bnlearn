@@ -616,7 +616,7 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
 
 
 # %% Get node properties
-def get_edge_properties(model, color='#000000', weight=1, verbose=3):
+def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=10, verbose=3):
     """Collect edge properties.
 
     Parameters
@@ -627,6 +627,10 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
         The default color of the edges.
     weight : float, (Default: 1)
         The default weight of the edges.
+    minscale : float, (Default: 1)
+        The minimum weight of the edge in case of test statisics are used.
+    maxscale : float, (Default: 10)
+        The maximum weight of the edge in case of test statisics are used.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -638,6 +642,7 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
 
     Examples
     --------
+    >>> # Example 1:
     >>> import bnlearn as bn
     >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     >>> # Create DAG and store in model
@@ -648,12 +653,36 @@ def get_edge_properties(model, color='#000000', weight=1, verbose=3):
     >>> edge_properties[('A', 'B')]['color']='#8A0707'
     >>> # Make plot
     >>> bn.plot(model, interactive=False, edge_properties=edge_properties)
+    >>>
+    >>> # Example 2:
+    >>>  # Load asia DAG
+    >>> df = bn.import_example(data='asia')
+    >>> # Structure learning of sampled dataset
+    >>> model = bn.structure_learning.fit(df)
+    >>> # Compute edge weights based on chi_square test statistic
+    >>> model = bn.independence_test(model, df, test='chi_square')
+    >>> # Get the edge properties
+    >>> edge_properties = bn.get_edge_properties(model)
+    >>> # Make adjustments
+    >>> edge_properties[('tub', 'either')]['color']='#8A0707'
+    >>> # Make plot
+    >>> bn.plot(model, interactive=True, edge_properties=edge_properties)
 
     """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     edges = {}
     defaults = {'color': color, 'weight': weight}
-    adjmat = model.get('adjmat', None)
+    adjmat = model.get('independence_test', None)
+    # Use edge weights from test statistic
+    if adjmat is not None:
+        if verbose>=3: print('[bnlearn]> Set edge weights based on the [%s] test statistic.' %(model['independence_test'].columns[-2]))
+        logp = -np.log10(model['independence_test']['p_value'])
+        logp[np.isinf(logp)] = logp[np.isfinite(logp)].max()
+        weights = _normalize_weights(logp.values, minscale=1, maxscale=10)
+        adjmat = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=weights)
+    else:
+        adjmat = model.get('adjmat', None)
+
     # Get model edges
     model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
 
@@ -771,7 +800,7 @@ def plot(model,
     if (node_properties is not None) and (node_size is not None):
         if verbose>=2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will be used.')
 
-    # Get node properties
+    # Get node and edge properties if not user-defined
     if node_properties is None:
         node_properties = bnlearn.get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
