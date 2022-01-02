@@ -329,6 +329,22 @@ def test_save():
             assert np.all(model[key]==model_load[key])
 
 
+def test_independence_test():
+    import bnlearn as bn
+    df = bn.import_example(data='asia')
+    # Structure learning of sampled dataset
+    model = bn.structure_learning.fit(df)
+    # Compute edge weights based on chi_square test statistic
+    tests = ['chi_square', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read']
+    for test in tests:
+        model = bn.independence_test(model, df, test=test)
+        assert model.get('independence_test', None) is not None
+        assert set(model['independence_test'].columns)==set({test, 'dof', 'p_value', 'source', 'stat_test', 'target'})
+        assert model['independence_test'].columns[-2]==test
+        assert np.any(model['independence_test']['stat_test'])
+        assert model['independence_test'].shape[0]>1
+
+
 def test_edge_properties():
     import bnlearn as bn
     # Example 1
@@ -357,3 +373,15 @@ def test_edge_properties():
         # Check if it is restored to the correct methodtype
         model = bn.make_DAG(model['model'])
         assert model['methodtype']==methodtype
+
+    # Load asia DAG
+    df = bn.import_example(data='asia')
+    # Structure learning of sampled dataset
+    model = bn.structure_learning.fit(df)
+    edge_properties1 = bn.get_edge_properties(model)
+    assert np.all(pd.DataFrame(edge_properties1).iloc[1, :]==1)
+    # Compute edge weights based on chi_square test statistic
+    model = bn.independence_test(model, df, test='chi_square')
+    # Get the edge properties
+    edge_properties2 = bn.get_edge_properties(model)
+    assert np.sum(pd.DataFrame(edge_properties2).iloc[1, :]>1)>len(edge_properties2) -2
