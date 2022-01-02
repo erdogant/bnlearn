@@ -1,102 +1,131 @@
-# %%
-from pgmpy.estimators import BDeuScore, K2Score, BicScore
-from pgmpy.inference import VariableElimination
-import bnlearn as bnlearn
-from pgmpy.models import BayesianModel
-from pgmpy.estimators import TreeSearch
-import pandas as pd
-from pgmpy.factors.discrete import TabularCPD
-import pandas
-import networkx as nx
-import matplotlib.pyplot as plt
-import numpy as np
 import bnlearn as bn
-# print(bn.__version__)
-# print(dir(bn))
+print(bn.__version__)
 
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
 # %% Adjust some edge properties
-
-import bnlearn as bn
 # Load asia DAG
-df = bn.import_example(data='asia')
+df = bn.import_example(data='sprinkler')
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
-# plot static
-G = bn.plot(model)
+# Compute associations with the chi_square test statistic
+model = bn.independence_test(model, df, test='chi_square', prune=False)
+# Make plot
+bn.plot(model)
+
+# %% Adjust some edge properties
+# Load asia DAG
+df = bn.import_example(data='alarm')
+# Structure learning of sampled dataset
+model = bn.structure_learning.fit(df)
+# Make plot
+bn_plot = bn.plot(model)
+
+# Compute associations with the chi_square test statistic
+model = bn.independence_test(model, df, test='chi_square', prune=False)
+# Make plot
+bn.plot(model, pos=bn_plot['pos'])
+
+# Compute associations with the chi_square test statistic
+model = bn.independence_test(model, df, test='chi_square', prune=True)
+# Make plot
+bn.plot(model, pos=bn_plot['pos'])
 
 
 # %%
+# edges=list(model['model_edges'])
 
-model_cols = ['thing1', 'thing2', 'thing3', 'thing4']
-model_obs = np.transpose(np.array([
-    [0.01, 0.1, 0.2, 0.3, 0.4, 0.5],  # thing1 metrics (6 samples over time)
-    [0.5, 0.7, 0.6, 0.3, 0.2, 0.8],  # thing2 metrics
-    [0.3, 0.3, 0.2, 0.7, 0.1, 0.4],  # thing3 metrics
-    [0.9, 0.8, 0.2, 0.6, 0.7, 0.1]  # thing4 metrics
-]))
-print(model_obs)
+# hn = hnet(multtest='holm', white_list=np.unique(edges))
+# hn.association_learning(df)
 
-C = len(model_cols)
-assert(np.shape(model_obs)[1] == C)  # square!
-# brute-force C^2 joint covaried amplitude probabilities
-# of 0..1 range-normal metrics pairs
-jcvp = np.zeros((C, C))
-for cX in range(C):
-    for cY in range(C):
-        jcvp[cX, cY] = np.sqrt(np.mean(model_obs[cX] * model_obs[cY]))
-df = pandas.DataFrame(jcvp, columns=model_cols)
-df.head()
-print(df)
-print("")
+# adjmat = hn.results['simmatP_cat'].copy()
+# adjmat = hn.results['simmatLogP_cat'].copy()
+# adjmat = adjmat.iloc[:, ismember(model['adjmat'].columns.values, adjmat.columns.values)[1]]
+# adjmat = adjmat.iloc[ismember(model['adjmat'].index.values, adjmat.index.values)[1], :]
+# adjmat = adjmat *model['adjmat']
 
-# df = bn.import_example('sprinkler')
-# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
-# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# assert np.all(model['adjmat'].index.values==adjmat.index.values)
+# assert np.all(model['adjmat'].columns.values==adjmat.columns.values)
 
-edge_properties = bn.get_edge_properties(model, color='#FF0000')
-node_properties = bn.get_node_properties(model, node_color='#FFFFFF')
-params_static={'layout': 'circular_layout', 'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65, 'font_size': 14, 'font_family': 'sans-serif', 'font_color': 'b'}
-bn.plot(model, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
+# model['adjmat'] = adjmat
+# # edge_properties = bn.get_edge_properties(model)
+# G = bn.plot(model)
 
 
-# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
-# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
-# model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# scores = correlation_score(model['model'], df, test="chi_square", significance_level=0.05, return_summary=True)
+# f1score = correlation_score(model['model'], df, test="log_likelihood", significance_level=0.05, return_summary=False)
+# structure_score(model['model'], df, scoring_method='bic')
 
 
-# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bic')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
-# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
-# model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
-# bn.plot(model, params_static={'arrowstyle': '->', 'arrowsize': 20, 'edge_alpha': 0.65})
+# edges=list(model['model_edges'])
 
 
-G = nx.DiGraph()
-G.add_edges_from(list(model['model_edges']))
-pos = nx.circular_layout(G)  # great
-# pos = nx.spectral_layout(G,scale=25) # overlapping labels, boo
-# pos = nx.planar_layout(G)  # pretty good
-nx.draw_networkx_labels(G, pos, font_size=14, font_family='sans-serif', font_color='b')
+# for edge in edges:
+#     P=[]
+#     print(edge)
+#     uiyc = df[edge[1]].unique()
+#     uiyc = uiyc[uiyc>0]
 
-nx.draw_networkx_edges(G, pos, width=2, arrowstyle='->', arrowsize=20, edge_color='r', alpha=0.65)
-# nx.draw_networkx_nodes(G,pos,node_size=7,node_color='r',alpha=0.75) # clutter
-plt.title("Inferred covaried amplitude dependencies")
-plt.show()
+#     uicats = df[edge[0]].unique()
+#     uicats = uicats[uicats>0]
+#     for uicat in uicats:
+#         for y in uiyc:
+#             outtest = _prob_hypergeo(df[edge[0]]==uicat, df[edge[1]]==y)
+#             print(outtest)
+#             P.append(outtest['P'])
+
+
+# y = df['Survived'].values
+# out = hn.enrichment(df, y)
+
+
+# # plot static
+# G = bn.plot(model)
+
+
+# %%
+# %% Hypergeometric test
+
+
+# def _prob_hypergeo(datac, yc):
+#     """Compute hypergeometric Pvalue.
+
+#     Description
+#     -----------
+#     Suppose you have a lot of 100 floppy disks (M), and you know that 20 of them are defective (n).
+#     What is the prbability of drawing zero to 2 floppy disks (N=2), if you select 10 at random (N).
+#     P=hypergeom.sf(2,100,20,10)
+
+#     """
+#     P = np.nan
+#     logP = np.nan
+#     M = len(yc)  # Population size: Total number of samples, eg total number of genes; 10000
+#     n = np.sum(datac)  # Number of successes in population, known in pathway, eg 2000
+#     N = np.sum(yc)  # sample size: Random variate, eg clustersize or groupsize, over expressed genes, eg 300
+#     X = np.sum(np.logical_and(yc, datac.values)) - 1  # Let op, de -1 is belangrijk omdatje P<X wilt weten ipv P<=X. Als je P<=X doet dan kan je vele false positives krijgen als bijvoorbeeld X=1 en n=1 oid
+
+#     # Do the hypergeo-test
+#     if np.any(yc) and (X>0):
+#         P = hypergeom.sf(X, M, n, N)
+#         logP = hypergeom.logsf(X, M, n, N)
+
+#     # Store
+#     out = {}
+#     out['category_label']=datac.name
+#     out['P']=P
+#     out['logP']=logP
+#     out['overlap_X']=X
+#     out['popsize_M']=M
+#     out['nr_succes_pop_n']=n
+#     out['samplesize_N']=N
+#     out['dtype']='categorical'
+#     return(out)
+
 
 # %% Naive Bayesian model
 df = bn.import_example('random')
-
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
 # Plot
@@ -129,6 +158,8 @@ df = bn.import_example(data='asia')
 model = bn.structure_learning.fit(df)
 # plot static
 G = bn.plot(model)
+# Compute associations with the chi_square test statistic
+model = bn.independence_test(model, df)
 
 # Set some edge properties
 edge_properties = bn.get_edge_properties(model)
