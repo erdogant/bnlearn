@@ -678,7 +678,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
         if verbose>=3: print('[bnlearn]> Set edge weights based on the [%s] test statistic.' %(model['independence_test'].columns[-2]))
         logp = -np.log10(model['independence_test']['p_value'])
         logp[np.isinf(logp)] = logp[np.isfinite(logp)].max()
-        weights = _normalize_weights(logp.values, minscale=1, maxscale=10)
+        weights = _normalize_weights(logp.values, minscale=minscale, maxscale=maxscale)
         adjmat = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=weights)
     else:
         adjmat = model.get('adjmat', None)
@@ -713,7 +713,7 @@ def plot(model,
          node_properties=None,
          edge_properties=None,
          params_interactive={'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'},
-         params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'fruchterman_reingold', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
+         params_static={'minscale': 1, 'maxscale': 10, 'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'fruchterman_reingold', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
          verbose=3):
     """Plot the learned stucture.
 
@@ -792,7 +792,7 @@ def plot(model,
     # Plot properties
     defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'height': 8, 'width': 15, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'fruchterman_reingold', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
+    defaults = {'minscale': 1, 'maxscale': 10, 'height': 8, 'width': 15, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'fruchterman_reingold', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
     params_static = {**defaults, **params_static}
     out = {}
     G = nx.DiGraph()  # Directed graph
@@ -804,7 +804,7 @@ def plot(model,
     if node_properties is None:
         node_properties = bnlearn.get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
-        edge_properties = bnlearn.get_edge_properties(model)
+        edge_properties = bnlearn.get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
 
     # Set default node size based on interactive True/False
     for key in node_properties.keys():
@@ -1428,6 +1428,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     if not isinstance(model['model'], (DAG, BayesianNetwork)): raise ValueError("[bnlearn]> model must be an instance of pgmpy.base.DAG or pgmpy.models.BayesianNetwork. Got {type(model)}")
     if not isinstance(df, pd.DataFrame): raise ValueError("[bnlearn]> data must be a pandas.DataFrame instance. Got {type(data)}")
     if set(model['model'].nodes()) != set(df.columns): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
+    if verbose>=3: print('[bnlearn] >Compute edge strength with [%s]' %(test))
 
     # Get the statistical test
     statistical_test=eval(test)
@@ -1467,7 +1468,7 @@ def _prune(model, test, alpha, verbose=3):
             edge = list(model['independence_test'].iloc[idx][['source', 'target']])
             model['adjmat'].loc[edge[0], edge[1]]=False
             model['adjmat'].loc[edge[1], edge[0]]=False
-            if verbose>=3: print('[bnlearn] >Edge [%s <-> %s] [P=%g] is excluded because it was not significant (P<%.2f) using the [%s] statistical test.' %(edge[0], edge[1], model['independence_test'].iloc[idx]['p_value'], alpha, test))
+            if verbose>=3: print('[bnlearn] >Edge [%s <-> %s] [P=%g] is excluded because it was not significant (P<%.2f) with [%s]' %(edge[0], edge[1], model['independence_test'].iloc[idx]['p_value'], alpha, test))
         # Also remove not-significant edges from the test statistics.
         model['independence_test'] = model['independence_test'].loc[~Irem, :]
 
