@@ -174,8 +174,8 @@ def test_structure_learning():
 
     # DAG COMPARISON
     assert np.all(model_bn['adjmat']==model['adjmat'])
-    assert dag.edges()==model['model'].edges()
-    assert dag.edges()==model['model_edges']
+    assert list(dag.edges())==list(model['model'].edges())
+    assert list(dag.edges())==model['model_edges']
 
     # COMPARE THE CPDs names
     qbn_cpd = []
@@ -205,7 +205,7 @@ def test_parameter_learning():
     df = bn.import_example()
     model = bn.import_DAG('sprinkler', CPD=False)
     model_update = bn.parameter_learning.fit(model, df)
-    assert [*model_update.keys()]==['model', 'adjmat', 'config']
+    assert [*model_update.keys()]==['model', 'adjmat', 'config', 'model_edges']
 
 
 def test_inference():
@@ -279,6 +279,7 @@ def test_topological_sort():
     assert bn.topological_sort(DAG)==['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
     # Different inputs
     assert bn.topological_sort(DAG['adjmat'], 'Rain')==['Rain', 'Wet_Grass']
+    assert bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
     # Check model output
     df = bn.import_example('sprinkler')
     model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
@@ -342,6 +343,21 @@ def test_independence_test():
         assert model['independence_test'].columns[-2]==test
         assert np.any(model['independence_test']['stat_test'])
         assert model['independence_test'].shape[0]>1
+
+    DAG = bn.import_DAG('water', verbose=0)
+    # Sampling
+    df = bn.sampling(DAG, n=1000)
+    # Parameter learning
+    model = bn.parameter_learning.fit(DAG, df)
+    # Test for independence
+    model1 = bn.independence_test(model, df, prune=False)
+    # Test for independence
+    model2 = bn.independence_test(model, df, prune=True)
+    assert model['model_edges']==model1['model_edges']
+    assert len(model1['model_edges'])==model1['independence_test'].shape[0]
+    assert len(model2['model_edges'])==model2['independence_test'].shape[0]
+    assert len(model2['model_edges'])<len(model1['model_edges'])
+    assert len(model2['model_edges'])<len(model['model_edges'])
 
 
 def test_edge_properties():
