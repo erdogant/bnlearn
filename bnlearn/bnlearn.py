@@ -1427,7 +1427,8 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     if model.get('model', None) is None: raise ValueError('[bnlearn]> No model detected.')
     if not isinstance(model['model'], (DAG, BayesianNetwork)): raise ValueError("[bnlearn]> model must be an instance of pgmpy.base.DAG or pgmpy.models.BayesianNetwork. Got {type(model)}")
     if not isinstance(df, pd.DataFrame): raise ValueError("[bnlearn]> data must be a pandas.DataFrame instance. Got {type(data)}")
-    if set(model['model'].nodes()) != set(df.columns): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
+    # if set(model['model'].nodes()) != set(df.columns): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
+    if not np.all(np.isin(model['model'].nodes(), df.columns)): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
     if verbose>=3: print('[bnlearn] >Compute edge strength with [%s]' %(test))
 
     # Get the statistical test
