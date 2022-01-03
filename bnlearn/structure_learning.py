@@ -46,7 +46,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
             a. chi-square test
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
-    Score-based Structure Learning
+    Score-based Structure Learning.
     This approach construes model selection as an optimization task. It has two building blocks:
     A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
     A search strategy to traverse the search space of possible models M and select a model with optimal score.
@@ -102,9 +102,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     Examples
     --------
+    >>> # Import bnlearn
     >>> import bnlearn as bn
     >>>
-    >>> # Load asia DAG
+    >>> # Load DAG
     >>> model = bn.import_DAG('asia')
     >>>
     >>> # plot ground truth
@@ -115,6 +116,9 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     >>>
     >>> # Structure learning of sampled dataset
     >>> model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    >>>
+    >>> # Compute edge strength using chi-square independence test
+    >>> model_sl = bn.independence_test(model_sl, df)
     >>>
     >>> # Plot based on structure learning of sampled data
     >>> bn.plot(model_sl, pos=G['pos'])
@@ -359,7 +363,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
         2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
         3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
 
-        Step 1.&2. form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
+        The first two steps form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
 
     """
     out = {}
