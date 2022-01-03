@@ -37,7 +37,7 @@ import bnlearn as bn
 bn.structure_learning.fit()
 
 # Compute edge strength with the test statistic
-bn.independence_test(model, df, test='chi_square', prune=False)
+bn.independence_test(model, df, test='chi_square', prune=True)
 
 # Parameter learning
 bn.parameter_learning.fit()
@@ -118,14 +118,15 @@ There are multiple manners to perform structure learning.
 
 
 ```python
-import bnlearn as bn
-# Example dataframe sprinkler_data.csv can be loaded with: 
-df = bn.import_example()
-# df = pd.read_csv('sprinkler_data.csv')
-model = bn.structure_learning.fit(df)
-# Compute edge strength with the chi_square test statistic
-model = bn.independence_test(model, df)
-G = bn.plot(model)
+
+    import bnlearn as bn
+    # Example dataframe sprinkler_data.csv can be loaded with: 
+    df = bn.import_example()
+    # df = pd.read_csv('sprinkler_data.csv')
+    model = bn.structure_learning.fit(df)
+    # Compute edge strength with the chi_square test statistic
+    model = bn.independence_test(model, df)
+    G = bn.plot(model)
 ```
 
 #### df looks like this
@@ -150,50 +151,49 @@ G = bn.plot(model)
 
 * Choosing various methodtypes and scoringtypes:
 ```python
-model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-model_hc_k2   = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
-model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
-model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
-model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
-model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
-model_cl      = bn.structure_learning.fit(df, methodtype='cl', root_node='Wet_Grass')
-model_tan     = bn.structure_learning.fit(df, methodtype='tan', root_node='Wet_Grass', class_node='Rain')
+    model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    model_hc_k2   = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+    model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+    model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+    model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+    model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+    model_cl      = bn.structure_learning.fit(df, methodtype='cl', root_node='Wet_Grass')
+    model_tan     = bn.structure_learning.fit(df, methodtype='tan', root_node='Wet_Grass', class_node='Rain')
 ```
 
 ## Example: Parameter Learning
 ```python
-import bnlearn as bn
-# Import dataframe
-df = bn.import_example()
-# As an example we set the CPD at False which returns an "empty" DAG
-model = bn.import_DAG('sprinkler', CPD=False)
-# Now we learn the parameters of the DAG using the df
-model_update = bn.parameter_learning.fit(model, df)
-# Make plot
-G = bn.plot(model_update)
+    import bnlearn as bn
+    # Import dataframe
+    df = bn.import_example()
+    # As an example we set the CPD at False which returns an "empty" DAG
+    model = bn.import_DAG('sprinkler', CPD=False)
+    # Now we learn the parameters of the DAG using the df
+    model_update = bn.parameter_learning.fit(model, df)
+    # Make plot
+    G = bn.plot(model_update)
 ```
 
 ## Example: Inference
 ```python
-import bnlearn as bn
-model = bn.import_DAG('sprinkler')
-query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
-print(query)
-print(query.df)
-
-# Lets try another inference
-query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
-print(query)
-print(query.df)
-
+    import bnlearn as bn
+    model = bn.import_DAG('sprinkler')
+    query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
+    print(query)
+    print(query.df)
+    
+    # Lets try another inference
+    query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
+    print(query)
+    print(query.df)
 
 ```
 
 ## Example: Sampling to create dataframe
 ```python
-import bnlearn as bn
-model = bn.import_DAG('sprinkler')
-df = bn.sampling(model, n=1000)
+    import bnlearn as bn
+    model = bn.import_DAG('sprinkler')
+    df = bn.sampling(model, n=1000)
 ```
 
 * Output of the model:
@@ -242,37 +242,39 @@ CPD of Wet_Grass:
 
 ## Example: Loading DAG from bif files
 ```python
-import bnlearn as bn
 
-bif_file= 'sprinkler'
-bif_file= 'alarm'
-bif_file= 'andes'
-bif_file= 'asia'
-bif_file= 'pathfinder'
-bif_file= 'sachs'
-bif_file= 'miserables'
-bif_file= 'filepath/to/model.bif'
-
-# Loading example dataset
-model = bn.import_DAG(bif_file)
+    import bnlearn as bn
+    
+    bif_file= 'sprinkler'
+    bif_file= 'alarm'
+    bif_file= 'andes'
+    bif_file= 'asia'
+    bif_file= 'pathfinder'
+    bif_file= 'sachs'
+    bif_file= 'miserables'
+    bif_file= 'filepath/to/model.bif'
+    
+    # Loading example dataset
+    model = bn.import_DAG(bif_file)
 ```
 
 ## Example: Comparing networks
 ```python
-# Load asia DAG
-model = bn.import_DAG('asia')
-# plot ground truth
-G = bn.plot(model)
-# Sampling
-df = bn.sampling(model, n=10000)
-# Structure learning of sampled dataset
-model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-# Compute edge strength with the chi_square test statistic
-model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=False)
-# Plot based on structure learning of sampled data
-bn.plot(model_sl, pos=G['pos'])
-# Compare networks and make plot
-bn.compare_networks(model, model_sl, pos=G['pos'])
+
+    # Load asia DAG
+    model = bn.import_DAG('asia')
+    # plot ground truth
+    G = bn.plot(model)
+    # Sampling
+    df = bn.sampling(model, n=10000)
+    # Structure learning of sampled dataset
+    model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    # Compute edge strength with the chi_square test statistic
+    model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
+    # Plot based on structure learning of sampled data
+    bn.plot(model_sl, pos=G['pos'])
+    # Compare networks and make plot
+    bn.compare_networks(model, model_sl, pos=G['pos'])
 ```
 
 #### Graph of ground truth
@@ -309,7 +311,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     model = bn.structure_learning.fit(dfnum)
 
     # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, dfnum, test='chi_square', prune=False)
+    model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 
     # Plot
     G = bn.plot(model, interactive=False)
@@ -530,15 +532,16 @@ In case of static plotting, simply set the interactive parameter to False.
 ### Example of saving and loading models
 
 ```python
-# Load data
-# Import example
-df = bn.import_example(data='asia')
-# Learn structure
-model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
-# Save model
-bn.save(model, filepath='bnlearn_model', overwrite=True)
-# Load model
-model = bn.load(filepath='bnlearn_model')
+
+    # Load data
+    # Import example
+    df = bn.import_example(data='asia')
+    # Learn structure
+    model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+    # Save model
+    bn.save(model, filepath='bnlearn_model', overwrite=True)
+    # Load model
+    model = bn.load(filepath='bnlearn_model')
 
 ```
 
