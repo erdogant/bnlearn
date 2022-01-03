@@ -1,3 +1,11 @@
+import pandas as pd
+import numpy as np
+from pgmpy.inference import VariableElimination
+from pgmpy.models import BayesianModel, NaiveBayes
+from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+from pgmpy.factors.discrete import TabularCPD
+
+# %%
 import bnlearn as bn
 print(bn.__version__)
 
@@ -5,33 +13,66 @@ print(bn.__version__)
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% LOAD BIF FILE
+DAG = bn.import_DAG('water', verbose=0)
+# Sampling
+df = bn.sampling(DAG, n=1000)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df)
+print(len(model['model_edges']))
+# G = bn.plot(model)
+
+# Test for independence
+model1 = bn.independence_test(model, df, prune=False)
+# bn.plot(model1, pos=G['pos']);
+print(len(model1['model_edges']))
+print(model1['independence_test'].shape)
+
+# Test for independence
+model2 = bn.independence_test(model, df, prune=True)
+# bn.plot(model2, pos=G['pos']);
+print(len(model2['model_edges']))
+print(model2['independence_test'].shape)
+
+
+assert model['model_edges']==model1['model_edges']
+assert len(model1['model_edges'])==model1['independence_test'].shape[0]
+assert len(model2['model_edges'])==model2['independence_test'].shape[0]
+assert len(model2['model_edges'])<len(model1['model_edges'])
+assert len(model2['model_edges'])<len(model['model_edges'])
+
+# Plot
+# G = bn.plot(model1, interactive=True)
+# G = bn.plot(model2, interactive=True)
+
+
 # %% Adjust some edge properties
 # Load asia DAG
 df = bn.import_example(data='sprinkler')
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
-# Compute associations with the chi_square test statistic
-model = bn.independence_test(model, df, test='chi_square', prune=False)
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df, test='chi_square', prune=True)
 # Make plot
 bn.plot(model)
 
 # %% Adjust some edge properties
 # Load asia DAG
-df = bn.import_example(data='alarm')
+df = bn.import_example(data='asia')
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
 # Make plot
-bn_plot = bn.plot(model)
+G = bn.plot(model)
 
 # Compute associations with the chi_square test statistic
-model = bn.independence_test(model, df, test='chi_square', prune=False)
+model1 = bn.independence_test(model, df, test='chi_square', prune=False)
 # Make plot
-bn.plot(model, pos=bn_plot['pos'])
+bn.plot(model1, pos=G['pos'])
 
 # Compute associations with the chi_square test statistic
-model = bn.independence_test(model, df, test='chi_square', prune=True)
+model2 = bn.independence_test(model, df, test='chi_square', prune=True)
 # Make plot
-bn.plot(model, pos=bn_plot['pos'])
+bn.plot(model2, pos=G['pos'])
 
 
 # %%
@@ -235,7 +276,7 @@ model = bn.load(filepath='bnlearn_model')
 # %% CHECK DIFFERENCES PGMPY vs. BNLEARN
 
 
-df=bnlearn.import_example(data='andes')
+df=bn.import_example(data='andes')
 
 # PGMPY
 est = TreeSearch(df)
@@ -247,9 +288,9 @@ q = bn_infer.query(variables=['DISPLACEM0'], evidence={'RApp1': 1})
 print(q)
 
 # BNLEARN
-model = bnlearn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
-model_bn = bnlearn.parameter_learning.fit(model, df, methodtype='ml')  # maximum likelihood estimator
-query=bnlearn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1': 1})
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='DISPLACEM0', scoretype='bic')
+model_bn = bn.parameter_learning.fit(model, df, methodtype='ml')  # maximum likelihood estimator
+query=bn.inference.fit(model_bn, variables=['DISPLACEM0'], evidence={'RApp1': 1})
 
 # DAG COMPARISON
 assert np.all(model_bn['adjmat']==model['adjmat'])
@@ -309,6 +350,8 @@ df = bn.import_example(data='asia')
 
 # Structure learning
 model = bn.structure_learning.fit(df)
+
+model = bn.independence_test(model, df)
 
 bn.plot(model, interactive=False, node_size=800)
 
@@ -655,10 +698,25 @@ q2.no_to_name,
 
 # %% LOAD BIF FILE
 DAG = bn.import_DAG('water', verbose=0)
+# Sampling
 df = bn.sampling(DAG, n=1000)
-model_update = bn.parameter_learning.fit(DAG, df)
-G = bn.plot(model_update)
-G = bn.plot(model_update, interactive=True)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df)
+G = bn.plot(model)
+
+# Test for independence
+model1 = bn.independence_test(model, df, prune=False)
+len(model1['model_edges'])
+G = bn.plot(model1)
+
+# Test for independence
+model2 = bn.independence_test(model, df, prune=True)
+len(model2['model_edges'])
+G = bn.plot(model2)
+
+# Plot
+G = bn.plot(model)
+G = bn.plot(model, interactive=True)
 bn.print_CPD(model_update)
 
 
