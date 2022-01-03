@@ -36,6 +36,9 @@ import bnlearn as bn
 # Structure learning
 bn.structure_learning.fit()
 
+# Compute edge strength with the test statistic
+bn.independence_test(model, df, test='chi_square', prune=False)
+
 # Parameter learning
 bn.parameter_learning.fit()
 
@@ -127,6 +130,8 @@ import bnlearn as bn
 df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
 model = bn.structure_learning.fit(df)
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df)
 G = bn.plot(model)
 ```
 
@@ -269,6 +274,8 @@ G = bn.plot(model)
 df = bn.sampling(model, n=10000)
 # Structure learning of sampled dataset
 model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+# Compute edge strength with the chi_square test statistic
+model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=False)
 # Plot based on structure learning of sampled data
 bn.plot(model_sl, pos=G['pos'])
 # Compare networks and make plot
@@ -302,11 +309,13 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     # Convert to onehot
     dfhot, dfnum = bn.df2onehot(df_raw)
     # Structure learning
-    DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+    model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+    # Compute edge strength with the chi_square test statistic
+    model = bn.independence_test(model, df, test='chi_square', prune=False)
     # Plot
-    G = bn.plot(DAG)
+    G = bn.plot(model)
     # Parameter learning
-    model = bn.parameter_learning.fit(DAG, dfnum)
+    model = bn.parameter_learning.fit(model, dfnum)
 
     # Make inference
     query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
@@ -477,6 +486,9 @@ df = bn.import_example(data='asia')
 # Structure learning
 model = bn.structure_learning.fit(df)
 
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df, test='chi_square', prune=True)
+
 # Make simple interactive plot
 bn.plot(model, interactive=True)
 
@@ -490,7 +502,7 @@ bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
 edge_properties = bn.get_edge_properties(model)
 edge_properties['either', 'xray']['color']='#8A0707'
 edge_properties['either', 'xray']['weight']=4
-edge_properties['bronc', 'dysp']['weight']=10
+edge_properties['bronc', 'dysp']['weight']=15
 edge_properties['bronc', 'dysp']['color']='#8A0707'
 
 # Set some node properties
