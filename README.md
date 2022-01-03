@@ -301,20 +301,22 @@ CPD of Wet_Grass:
     import bnlearn as bn
     
     # Load example mixed dataset
-    df_raw = bn.import_example(data='titanic')
+    df = bn.import_example(data='titanic')
 
     # Convert to onehot
-    dfhot, dfnum = bn.df2onehot(df_raw)
+    dfhot, dfnum = bn.df2onehot(df)
 
     # Structure learning
     # model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
     model = bn.structure_learning.fit(dfnum)
+    # Plot
+    G = bn.plot(model, interactive=False)
 
     # Compute edge strength with the chi_square test statistic
     model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
-
     # Plot
-    G = bn.plot(model, interactive=False)
+    bn.plot(model, interactive=False, pos=G['pos'])
+
     # Parameter learning
     model = bn.parameter_learning.fit(model, dfnum)
     
@@ -324,7 +326,7 @@ CPD of Wet_Grass:
     print(query.df)
     
     # Another inference using only sex for evidence
-    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
+    query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
     print(query)
     print(query.df)
     
@@ -332,6 +334,12 @@ CPD of Wet_Grass:
     bn.print_CPD(model)
 
 ```
+#### Plot DAG
+<p align="center">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/titanic_dag.png" width="400" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/titanic_dag_chi2.png" width="400" />
+</p>
+
 
 ## Example: Make predictions on a dataframe using inference
 
