@@ -143,5 +143,6 @@ def fit(model, df, methodtype='bayes', verbose=3):
     out['model'] = model
     out['adjmat'] = adjmat
     out['config'] = config
+    out['model_edges'] = list(model.edges())
 
     return(out)

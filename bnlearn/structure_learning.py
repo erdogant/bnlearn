@@ -181,6 +181,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], verbose=config['verbose'])
 
     # Store
+    out['model_edges'] = list(out['model'].edges())
     out['adjmat'] = bnlearn._dag2adjmat(out['model'])
     out['config'] = config
 
@@ -277,7 +278,6 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
     # Store
     out={}
     out['model']=model
-    out['model_edges']=model.edges()
     # Return
     return(out)
 
@@ -331,7 +331,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
 
     # Store
     out['model']=model
-    out['model_edges']=model.edges()
     # Return
     return(out)
 
@@ -391,7 +390,6 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     # Search using "estimate()" method provides a shorthand for the three steps above and directly returns a "BayesianModel"
     best_model = model.estimate(significance_level=significance_level)
     out['model'] = best_model
-    out['model_edges'] = best_model.edges()
 
     if verbose>=4: print(best_model.edges())
     return(out)
@@ -439,7 +437,6 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
 
     # Store
     out['model']=best_model
-    out['model_edges']=best_model.edges()
     # Return
     return(out)
 
@@ -486,7 +483,6 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
     best_model = model.estimate()
     # Store
     out['model']=best_model
-    out['model_edges']=best_model.edges()
 
     # Compute all possible DAGs
     if return_all_dags:
