@@ -80,10 +80,12 @@ Example
 >>> # Import library
 >>> import bnlearn as bn
 >>> model = bn.import_DAG('sprinkler')
+>>> # Print CPDs
+>>> bn.print_CPD(model)
+>>> # Plot DAG
 >>> bn.plot(model)
 >>>
->>> # Import example
->>> df = bn.import_example('sprinkler')
+>>> # Sampling using DAG and CPDs
 >>> df = bn.sampling(model)
 >>>
 >>> # Do the inference
@@ -92,8 +94,18 @@ Example
 >>>
 >>> # Structure learning
 >>> model_sl = bn.structure_learning.fit(df)
+>>> # Compute edge strength using chi-square independence test
+>>> model_sl = bn.independence_test(model_sl, df)
+>>> # Plot DAG
+>>> bn.plot(model_sl)
+>>>
 >>> # Parameter learning
 >>> model_pl = bn.parameter_learning.fit(model_sl, df)
+>>> # Compute edge strength using chi-square independence test
+>>> model_pl = bn.independence_test(model_pl, df)
+>>> # Plot DAG
+>>> bn.plot(model_pl)
+>>>
 >>> # Compare networks
 >>> scores, adjmat = bn.compare_networks(model_sl, model)
 
