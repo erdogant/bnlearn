@@ -89,16 +89,9 @@ conda create -n env_bnlearn python=3.8
 conda activate env_bnlearn
 ```
 
-## Conda installation
-```python
-conda install -c ankurankan pgmpy
-pip install -U bnlearn # -U is to force download latest version
-```
-
 ## Pip installation
 ```python
-pip install -U pgmpy>=0.1.13
-pip install -U bnlearn # -U is to force to overwrite current version
+pip install bnlearn
 ```
 
 * Alternatively, install bnlearn from the GitHub source:
@@ -304,29 +297,35 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 ```python
 
     import bnlearn as bn
+    
     # Load example mixed dataset
     df_raw = bn.import_example(data='titanic')
+
     # Convert to onehot
     dfhot, dfnum = bn.df2onehot(df_raw)
+
     # Structure learning
-    model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+    # model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+    model = bn.structure_learning.fit(dfnum)
+
     # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, df, test='chi_square', prune=False)
+    model = bn.independence_test(model, dfnum, test='chi_square', prune=False)
+
     # Plot
-    G = bn.plot(model)
+    G = bn.plot(model, interactive=False)
     # Parameter learning
     model = bn.parameter_learning.fit(model, dfnum)
-
+    
     # Make inference
     query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
     print(query)
     print(query.df)
-
+    
     # Another inference using only sex for evidence
     q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
     print(query)
     print(query.df)
-
+    
     # Print model
     bn.print_CPD(model)
 
@@ -341,6 +340,7 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
     
     # Load example DataFrame
     df = bn.import_example('asia')
+
     print(df)
     #       smoke  lung  bronc  xray
     # 0         0     1      0     1
@@ -479,45 +479,45 @@ bn.compare_networks(model, model_sl, pos=G['pos'])
 In case of static plotting, simply set the interactive parameter to False.
 
 ```python
-import bnlearn as bn
-df = bn.import_example()
-df = bn.import_example(data='asia')
 
-# Structure learning
-model = bn.structure_learning.fit(df)
-
-# Compute edge strength with the chi_square test statistic
-model = bn.independence_test(model, df, test='chi_square', prune=True)
-
-# Make simple interactive plot
-bn.plot(model, interactive=True)
-
-# Make simple interactive plot, set color to entire network
-bn.plot(model, node_color='#8A0707', interactive=True)
-
-# Make simple interactive plot, set color and size to entire network
-bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
-
-# Set some edge properties
-edge_properties = bn.get_edge_properties(model)
-edge_properties['either', 'xray']['color']='#8A0707'
-edge_properties['either', 'xray']['weight']=4
-edge_properties['bronc', 'dysp']['weight']=15
-edge_properties['bronc', 'dysp']['color']='#8A0707'
-
-# Set some node properties
-node_properties = bn.get_node_properties(model)
-node_properties['xray']['node_color']='#8A0707'
-node_properties['xray']['node_size']=20
-
-# Add more parameters for the interactive plot
-bn.plot(model, interactive=True, node_color='#8A0707', node_properties=node_properties, edge_properties=edge_properties, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
-
-# Add more parameters for the static plot
-bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, node_properties=node_properties, edge_properties=edge_properties, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000', 'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60})
-
-# You can also add some parameters for the interactive plot
-bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
+    import bnlearn as bn
+    df = bn.import_example(data='asia')
+    
+    # Structure learning
+    model = bn.structure_learning.fit(df)
+    
+    # Compute edge strength with the chi_square test statistic
+    model = bn.independence_test(model, df, test='chi_square', prune=True)
+    
+    # Make simple interactive plot
+    bn.plot(model, interactive=False)
+    
+    # Make simple interactive plot, set color to entire network
+    bn.plot(model, node_color='#8A0707', interactive=True)
+    
+    # Make simple interactive plot, set color and size to entire network
+    bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
+    
+    # Set some edge properties
+    edge_properties = bn.get_edge_properties(model)
+    edge_properties['either', 'xray']['color']='#8A0707'
+    edge_properties['either', 'xray']['weight']=4
+    edge_properties['bronc', 'dysp']['weight']=15
+    edge_properties['bronc', 'dysp']['color']='#8A0707'
+    
+    # Set some node properties
+    node_properties = bn.get_node_properties(model)
+    node_properties['xray']['node_color']='#8A0707'
+    node_properties['xray']['node_size']=20
+    
+    # Add more parameters for the interactive plot
+    bn.plot(model, interactive=True, node_color='#8A0707', node_properties=node_properties, edge_properties=edge_properties, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+    
+    # Add more parameters for the static plot
+    bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, node_properties=node_properties, edge_properties=edge_properties, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000', 'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60})
+    
+    # You can also add some parameters for the interactive plot
+    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
 
 
 ```
