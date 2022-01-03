@@ -9,6 +9,7 @@
 
 # %% Libraries
 import os
+import copy
 import wget
 import zipfile
 import itertools
@@ -340,6 +341,7 @@ def adjmat2dict(adjmat):
         Graph.
 
     """
+    adjmat=adjmat.astype(bool)
     graph={}
     rows=adjmat.index.values
     for r in rows:
@@ -684,7 +686,8 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
         adjmat = model.get('adjmat', None)
 
     # Get model edges
-    model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
+    model_edges = adjmat2vec(adjmat)[['source', 'target']].values
+    # model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
 
     # Store edge properties
     if adjmat is not None:
@@ -833,7 +836,7 @@ def plot(model,
         pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
 
     # get node properties
-    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, node_size)
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
 
     # Plot
     if interactive:
@@ -906,9 +909,10 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
 
 
 # %% Plot properties
-def _plot_properties(G, bnmodel, node_properties, edge_properties, node_color, node_size):
+def _plot_properties(G, node_properties, edge_properties, node_color, node_size):
     # Set edge properties in Graph G
-    edges=[*bnmodel.edges()]
+    # edges=[*bnmodel.edges()]
+    edges = list(edge_properties.keys())
     for edge in edges:
         color = edge_properties.get((edge[0], edge[1])).get('color', '#000000')
         weight = edge_properties.get((edge[0], edge[1])).get('weight', 1)
@@ -1430,29 +1434,27 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     # if set(model['model'].nodes()) != set(df.columns): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
     if not np.all(np.isin(model['model'].nodes(), df.columns)): raise ValueError("[bnlearn]> Missing columns in data. Can't find values for the following variables: { set(model.nodes()) - set(data.columns) }")
     if verbose>=3: print('[bnlearn] >Compute edge strength with [%s]' %(test))
+    model_update = copy.deepcopy(model)
 
     # Get the statistical test
     statistical_test=eval(test)
-    # Get the edges to be tested
-    edges=list(model['model_edges'])
-    # edges = combinations(model['model'].nodes(), 2)
 
     # Compute significance
     results=[]
-    for i, j in edges:
+    for i, j in model_update['model_edges']:
         # test_result = power_divergence(i, j, [], df, boolean=False, lambda_="cressie-read", significance_level=0.05)
         # chi, p_value, dof, expected = stats.chi2_contingency( df.groupby([i, j]).size().unstack(j, fill_value=0), lambda_="cressie-read" )
         test_result = statistical_test(X=i, Y=j, Z=[], data=df, boolean=False, significance_level=alpha)
         results.append({"source": i, "target": j, "stat_test": test_result[1]<=alpha, 'p_value': test_result[1], test: test_result[0], 'dof': test_result[2]})
 
-    model['independence_test'] = pd.DataFrame(results)
+    model_update['independence_test'] = pd.DataFrame(results)
 
     # Remove not significant edges
     if prune:
-        model = _prune(model, test, alpha, verbose=verbose)
+        model_update = _prune(model_update, test, alpha, verbose=verbose)
 
     # Return
-    return model
+    return model_update
 
 
 # %% Remove not significant edges.
@@ -1464,14 +1466,21 @@ def _prune(model, test, alpha, verbose=3):
         # Find the none significant associations.
         Irem = ~independence_test['stat_test']
         idxrem = np.where(Irem)[0]
+
         # Set not-significant edges to False
         for idx in idxrem:
             edge = list(model['independence_test'].iloc[idx][['source', 'target']])
             model['adjmat'].loc[edge[0], edge[1]]=False
             model['adjmat'].loc[edge[1], edge[0]]=False
+            # Remove edges
+            if np.any(np.isin(model['model_edges'], edge).sum(axis=1)==2):
+                model['model_edges'].remove((edge[0], edge[1]))
+            # Remove from list
             if verbose>=3: print('[bnlearn] >Edge [%s <-> %s] [P=%g] is excluded because it was not significant (P<%.2f) with [%s]' %(edge[0], edge[1], model['independence_test'].iloc[idx]['p_value'], alpha, test))
-        # Also remove not-significant edges from the test statistics.
+
+        # Remove not-significant edges from the test statistics
         model['independence_test'] = model['independence_test'].loc[~Irem, :]
+        model['independence_test'].reset_index(inplace=True, drop=True)
 
     # Return
     return model
