@@ -1,6 +1,7 @@
 # pip install pytest
 # pytest tests\test_bn.py
 
+import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np
 import pandas as pd
@@ -10,11 +11,10 @@ from pgmpy.models import BayesianModel
 import networkx as nx
 from pgmpy.inference import VariableElimination
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
-import bnlearn as bn
 
 
 def test_import_DAG():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
     assert [*DAG.keys()]==['model', 'adjmat']
@@ -32,7 +32,7 @@ def test_import_DAG():
 
 
 def test_make_DAG():
-    import bnlearn as bn
+    
     edges = [('Cloudy', 'Sprinkler')]
     methodtypes = ['bayes', 'naivebayes']
     for methodtype in methodtypes:
@@ -51,14 +51,14 @@ def test_make_DAG():
 
 
 def test_make_DAG():
-    import bnlearn as bn
+    
     # TEST 1:
     df = bn.import_example()
     assert df.shape==(1000, 4)
 
 
 def test_sampling():
-    import bnlearn as bn
+    
     # TEST 1:
     model = bn.import_DAG('Sprinkler')
     n = np.random.randint(10, 1000)
@@ -67,7 +67,7 @@ def test_sampling():
 
 
 def test_to_undirected():
-    import bnlearn as bn
+    
     # TEST 1:
     randdata=['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
     n = np.random.randint(0, len(randdata))
@@ -76,21 +76,21 @@ def test_to_undirected():
 
 
 def test_compare_networks():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('Sprinkler', verbose=0)
     G = bn.compare_networks(DAG, DAG, showfig=False)
     assert np.all(G[0]==[[12, 0], [0, 4]])
 
 
 def test_adjmat2vec():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('Sprinkler', verbose=0)
     out = bn.adjmat2vec(DAG['adjmat'])
     assert np.all(out['source']==['Cloudy', 'Cloudy', 'Sprinkler', 'Rain'])
 
 
 def test_vec2adjmat():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('Sprinkler', verbose=0)
     out = bn.adjmat2vec(DAG['adjmat'])
     # TEST: conversion
@@ -98,7 +98,7 @@ def test_vec2adjmat():
 
 
 def test_structure_learning():
-    import bnlearn as bn
+    
     df = bn.import_example()
     model = bn.structure_learning.fit(df)
     assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
@@ -201,7 +201,7 @@ def test_structure_learning():
 
 
 def test_parameter_learning():
-    import bnlearn as bn
+    
     df = bn.import_example()
     model = bn.import_DAG('sprinkler', CPD=False)
     model_update = bn.parameter_learning.fit(model, df)
@@ -209,7 +209,7 @@ def test_parameter_learning():
 
 
 def test_inference():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('sprinkler')
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
@@ -219,7 +219,7 @@ def test_inference():
 
 
 def test_query2df():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('sprinkler')
     query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
     df = bn.query2df(query)
@@ -248,7 +248,7 @@ def test_query2df():
 
 
 def test_predict():
-    import bnlearn as bn
+    
     df = bn.import_example('asia')
     edges = [('smoke', 'lung'),
              ('smoke', 'bronc'),
@@ -272,7 +272,7 @@ def test_predict():
 
 
 def test_topological_sort():
-    import bnlearn as bn
+    
     DAG = bn.import_DAG('sprinkler')
     # Check DAG input
     assert bn.topological_sort(DAG, 'Rain')==['Rain', 'Wet_Grass']
@@ -287,7 +287,7 @@ def test_topological_sort():
 
 
 def test_save():
-    import bnlearn as bn
+    
     # Load asia DAG
     df = bn.import_example('asia')
     model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
@@ -330,7 +330,7 @@ def test_save():
 
 
 def test_independence_test():
-    import bnlearn as bn
+    
     df = bn.import_example(data='asia')
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
@@ -361,7 +361,7 @@ def test_independence_test():
 
 
 def test_edge_properties():
-    import bnlearn as bn
+    
     # Example 1
     edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     # Create DAG and store in model
