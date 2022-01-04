@@ -226,7 +226,7 @@ Note that these functionalities can be combined with the edge properties.</p>
 <span class="c1"># plot static</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
-<span class="c1"># Set some node properties</span>
+<span class="c1"># Set node properties</span>
 <span class="n">node_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_node_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Make some changes</span>
@@ -259,17 +259,20 @@ Note that these functionalities can be combined with the node properties.</p>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning of sampled dataset</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Test for significance</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="c1"># plot static</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Set some edge properties</span>
+<span class="c1"># Because the independence_test is used, the -log10(pvalues) from model[&#39;independence_test&#39;][&#39;p_value&#39;] are scaled between minscale=1 and maxscale=10</span>
 <span class="n">edge_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_edge_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Make some changes</span>
 <span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;either&#39;</span><span class="p">,</span> <span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
 <span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;either&#39;</span><span class="p">,</span> <span class="s1">&#39;xray&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">4</span>
-<span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;dysp&#39;</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
-<span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;dysp&#39;</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
+<span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;bronc&#39;</span><span class="p">,</span> <span class="s1">&#39;smoke&#39;</span><span class="p">][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">15</span>
+<span class="n">edge_properties</span><span class="p">[</span><span class="s1">&#39;bronc&#39;</span><span class="p">,</span> <span class="s1">&#39;smoke&#39;</span><span class="p">][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
 
 <span class="c1"># Plot</span>
 <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;edge_alpha&#39;</span><span class="p">:</span><span class="mf">0.6</span><span class="p">,</span> <span class="s1">&#39;arrowstyle&#39;</span><span class="p">:</span><span class="s1">&#39;-&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;arrowsize&#39;</span><span class="p">:</span><span class="mi">60</span><span class="p">}</span>

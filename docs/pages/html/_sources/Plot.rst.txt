@@ -125,7 +125,7 @@ Note that these functionalities can be combined with the edge properties.
     # plot static
     G = bn.plot(model)
     
-    # Set some node properties
+    # Set node properties
     node_properties = bn.get_node_properties(model)
 
     # Make some changes
@@ -161,17 +161,20 @@ Note that these functionalities can be combined with the node properties.
     df = bn.import_example(data='asia')
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
+    # Test for significance
+    model = bn.independence_test(model, df)
     # plot static
     G = bn.plot(model)
-    
+
     # Set some edge properties
+    # Because the independence_test is used, the -log10(pvalues) from model['independence_test']['p_value'] are scaled between minscale=1 and maxscale=10
     edge_properties = bn.get_edge_properties(model)
 
     # Make some changes
     edge_properties['either', 'xray']['color']='#8A0707'
     edge_properties['either', 'xray']['weight']=4
-    edge_properties['dysp', 'lung']['weight']=10
-    edge_properties['dysp', 'lung']['color']='#8A0707'
+    edge_properties['bronc', 'smoke']['weight']=15
+    edge_properties['bronc', 'smoke']['color']='#8A0707'
     
     # Plot
     params_static={'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60}
