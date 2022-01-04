@@ -21,8 +21,9 @@ The first step is to import the data set. If you have **unstructured** data, use
 
 .. code-block:: python
 
+    import bnlearn as bn
     # Load dataset with 10.000 samples
-    df = bnlearn.import_example('asia', n=10000)
+    df = bn.import_example('asia', n=10000)
     # Print to screen
     print(df)
 
@@ -71,10 +72,10 @@ Plot the Bayesian DAG.
 .. code-block:: python
     
     # Create the DAG from the edges
-    DAG = bnlearn.make_DAG(edges)
+    DAG = bn.make_DAG(edges)
 
     # Plot and make sure the arrows are correct.
-    bnlearn.plot(DAG)
+    bn.plot(DAG)
 
 .. _fig_lung_simple_dag:
 
@@ -92,16 +93,16 @@ Parameter learning on the expert-DAG using the input data set.
 .. code-block:: python
 
     # Check the current CPDs in the DAG.
-    bnlearn.print_CPD(DAG)
-    # [bnlearn] >No CPDs to print. Tip: use bnlearn.plot(DAG) to make a plot.
+    bn.print_CPD(DAG)
+    # [bnlearn] >No CPDs to print. Tip: use bn.plot(DAG) to make a plot.
     # This is correct, we dit not yet specify any CPD.
 
     # Learn the parameters from data set. 
     # As input we have the DAG without CPDs.
-    DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='bayes')
+    DAG = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
     # Print the CPDs
-    bnlearn.print_CPD(DAG)
+    bn.print_CPD(DAG)
     # At this point we have a DAG with the learned CPDs
 
 
@@ -163,7 +164,8 @@ The model returns that the probability of lung-cancer or lung(1) is 0.94 when th
 
 .. code-block:: python
     
-    q1 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1})
+    q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1})
+    print(q1.df)
 
     # Finding Elimination Order: : 100% 2/2 [00:00<00:00, 401.14it/s]
     # Eliminating: bronc: 100%| 2/2 [00:00<00:00, 200.50it/s]
@@ -186,7 +188,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 
 .. code-block:: python
     
-    q2 = bnlearn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1})
+    q2 = bn.inference.fit(DAG, variables=['bronc'], evidence={'smoke':1})
 
     # Finding Elimination Order: : 100% 2/2 [00:00<00:00, 286.31it/s]
     # Eliminating: lung: 100% 2/2 [00:00<00:00, 143.26it/s]
@@ -207,7 +209,7 @@ Lets add more information to our inference. What is the probability of lung-canc
 
 .. code-block:: python
     
-    q3 = bnlearn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
+    q3 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke':1, 'bronc':1})
 
     # Finding Elimination Order: : 100%  1/1 [00:00<00:00, 334.31it/s]
     # Eliminating: xray: 100%  1/1 [00:00<00:00, 338.47it/s]
@@ -229,7 +231,7 @@ Lets specify the question even more. What is the probability of lung-cancer or b
 
 .. code-block:: python
     
-    q4 = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+    q4 = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
 
 +---------+----------+-------------------+
 | lung    | bronc    |   phi(lung,bronc) |
@@ -265,10 +267,14 @@ Import and process teh data set (:ref:`Import data`). For this use-case we will 
 .. code-block:: python
     
     # Structure learning on the data set
-    model = bnlearn.structure_learning.fit(df)
-    
+    model = bn.structure_learning.fit(df)
     # [bnlearn] >Computing best DAG using [hc]
     # [bnlearn] >Set scoring type at [bic]
+
+    # Compute significance
+    model = bn.independence_test(model, df, prune=True)
+    # [bnlearn] >Edge [lung <-> tub] [P=0.540506] is excluded because it was not significant (P<0.05) with [chi_square]
+    
 
 The computations can take seconds to days or even never-ending, depending on the complexity of your data set and the method in ``bnlearn`` you choose. This use-case contains only 8 variables, each with two states and will be computed within seconds. If your data set is huge, and readily have suspicion you can use the black_list or white_list parameters (:ref:`Black and white lists`).
 
@@ -277,10 +283,11 @@ Lets plot the learned DAG and examine the structure!
 .. code-block:: python
     
     # Plot the DAG
-    bnlearn.plot(model)
+    bn.plot(model, interactive=False)
+    bn.plot(model, interactive=True)
 
     # Plot differences between expert-DAG and the computed-DAG
-    bnlearn.compare_networks(model, DAG)
+    bn.compare_networks(model, DAG)
 
 
 .. _fig_asia_structurelearning:
@@ -310,9 +317,9 @@ The first step is to import and pre-process the data set as depicted in :ref:`Im
 .. code-block:: python
     
     # Learning the CPDs using parameter learning
-    model = bnlearn.parameter_learning.fit(model, df, methodtype='bayes')
+    model = bn.parameter_learning.fit(model, df, methodtype='bayes')
     # Print the CPDs
-    bnlearn.print_CPD(model)
+    bn.print_CPD(model)
 
 
 CPD of smoke:
@@ -394,7 +401,7 @@ What is the probability of lung-cancer or bronchitis, given that we know that pa
 
 .. code-block:: python
     
-    q = bnlearn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
+    q = bn.inference.fit(DAG, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
 
 +---------+----------+-------------------+
 | lung    | bronc    |   phi(lung,bronc) |

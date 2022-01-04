@@ -1,14 +1,14 @@
 Installation
 ============
 
-Installation of bnlearn is straightforward. 
+Installation of ``bnlearn`` is straightforward. 
 
 It is advisable to create a new environment which is done as following:
 
 .. code-block:: console
 
-   conda create -n BNLEARN python=3.8
-   conda activate BNLEARN
+   conda create -n env_bnlearn python=3.8
+   conda activate env_bnlearn
 
 
 .. _installation step 1:
@@ -18,26 +18,11 @@ It is advisable to create a new environment which is done as following:
   Create environment.
 
 
-Notice the last line. You need to see that your environment is now set as BNLEARN. In my case it is as following:
+Notice the last line. You need to see that your environment is now set as ``bnlearn``. In my case it is as following:
 
 .. code-block:: console
 
-   (BNLEARN) D:\>
-
-
-bnlearn is build on top of the pgmpy library. Recommended is a conda installation for pgmpy:
-
-.. code-block:: console
-   
-   conda install -c ankurankan pgmpy>="0.1.13"
-   # or
-   pip install -U pgmpy>=0.1.13
-
-.. _installation step 2:
-
-.. figure:: ../figs/02_installation.png
-
-  Install pgmpy.
+   (env_bnlearn) D:\>
 
 
 Deactivate and then activate your environment if the packages are not recognized.
@@ -45,12 +30,12 @@ Deactivate and then activate your environment if the packages are not recognized
 .. code-block:: console
 
    conda deactivate
-   conda activate BNLEARN
+   conda activate env_bnlearn
 
 
-After creating the environment and installing pgmpy, you can simply install bnlearn with pip:
+After creating the environment, install ``bnlearn`` with pip:
 
-.. code-block:: console
+.. code-block:: python
 
    # Install bnlearn and if a version is readily present on your local machine, this version will be installed.
    pip install bnlearn
@@ -79,32 +64,30 @@ Run the following lines which should result in a figure:
 
 .. code-block:: python
 
-   import bnlearn
-   df = bnlearn.import_example()
-   model = bnlearn.structure_learning.fit(df)
-   G = bnlearn.plot(model)
+   import bnlearn as bn
+   df = bn.import_example()
+   model = bn.structure_learning.fit(df)
+   G = bn.plot(model)
 
 
 .. _installation step 4:
 
 .. figure:: ../figs/04_installation.png
 
-  import bnlearn.
-
 
 
 Uninstalling
 ============
 
-If you want to remove your bnlearn installation with your environment, it can be as following:
+If you want to remove your ``bnlearn`` installation with your environment, it can be as following:
 
-.. code-block:: console
+.. code-block:: python
 
    # List all the active environments. BNLEARN should be listed.
    conda env list
 
-   # Remove the BNLEARN environment
-   conda env remove --name BNLEARN
+   # Remove the env_bnlearn environment
+   conda env remove --name env_bnlearn
 
-   # List all the active environments. BNLEARN should be absent.
+   # List all the active environments. env_bnlearn should be absent.
    conda env list

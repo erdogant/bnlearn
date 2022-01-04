@@ -29,6 +29,8 @@ Let's start by importing some data. We need a DAG and CPD.
 
     model = bn.structure_learning.fit(df)
 
+    model = bn.independence_test(model, df)
+
     G = bn.plot(model)
 
 

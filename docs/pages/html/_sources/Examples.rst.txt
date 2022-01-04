@@ -1,27 +1,28 @@
-Examples
+Various 
 =================
 
 ``bnlearn`` contains several examples within the library that can be used to practice with the functionalities of :func:`bnlearn.structure_learning`, :func:`bnlearn.parameter_learning` and :func:`bnlearn.inference`.
 
 
-Example with DataFrames
-'''''''''''''''''''''''
+DataFrames
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In ``bnlearn``, there is one example dataset that can be imported; the **sprinkler** dataset. Note this dataset is readily one-hot, without missing values, and as such does not require any further pre-processing steps. The DAG example models (see Example DAG section) can however be converted from the model to a dataframe.
 
 
 .. code-block:: python
 
+   import bnlearn as bn
    # Import dataset
-   df = bnlearn.import_example()
+   df = bn.import_example()
    # Structure learning
-   model = bnlearn.structure_learning.fit(df)
+   model = bn.structure_learning.fit(df)
    # Plot
-   G = bnlearn.plot(model)
+   G = bn.plot(model)
 
 
-Example with DAG
-'''''''''''''''''
+DAG
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``bnlearn`` contains several example Directed Acyclic Graphs:
 	* 'sprinkler' (default)
@@ -38,8 +39,9 @@ The sprinkler DAG is a special case because it is not loaded from a *bif* file b
 
 .. code-block:: python
    
+   import bnlearn as bn
    # Import dataset
-   DAG = bnlearn.import_DAG('sachs', CPD=True)
+   DAG = bn.import_DAG('sachs', CPD=True)
    # plot the keys of the DAG
    DAG.keys()
    # dict_keys(['model', 'adjmat'])
@@ -48,28 +50,31 @@ The sprinkler DAG is a special case because it is not loaded from a *bif* file b
    # The adjmat contains the adjacency matrix with the relationships between the nodes.
 
    # plot ground truth
-   G = bnlearn.plot(DAG)
+   G = bn.plot(DAG)
 
    # Sampling
-   df = bnlearn.sampling(DAG, n=1000)
+   df = bn.sampling(DAG, n=1000)
 
 
 
 
 Import from BIF
-'''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
 
 .. code-block:: python
    
+   import bnlearn as bn
    # Import dataset
-   DAG = bnlearn.import_DAG('filepath/to/model.bif')
+   DAG = bn.import_DAG('filepath/to/model.bif')
 
 
 
 Start with RAW data
-'''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 
 Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using :func:`bnlearn.bnlearn.import_example`.
 With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.
@@ -77,14 +82,15 @@ With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the m
 
 .. code-block:: python
 
+   import bnlearn as bn
    # Load titanic dataset containing mixed variables
-   df_raw = bnlearn.import_example(data='titanic')
+   df_raw = bn.import_example(data='titanic')
    # Pre-processing of the input dataset
-   dfhot, dfnum = bnlearn.df2onehot(df_raw)
+   dfhot, dfnum = bn.df2onehot(df_raw)
    # Structure learning
-   DAG = bnlearn.structure_learning.fit(dfnum)
+   DAG = bn.structure_learning.fit(dfnum)
    # Plot
-   G = bnlearn.plot(DAG)
+   G = bn.plot(DAG)
 
 .. _fig-titanic:
 
@@ -96,19 +102,18 @@ From this point we can learn the parameters using the DAG and input dataframe.
 .. code-block:: python
 
    # Parameter learning
-   model = bnlearn.parameter_learning.fit(DAG, df)
+   model = bn.parameter_learning.fit(DAG, dfnum)
 
 Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive).
 
 .. code-block:: python
 
    # Print CPDs
-   bnlearn.print_CPD(model)
+   bn.print_CPD(model)
    # Make inference
-   q = bnlearn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+   q = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
    
-   print(q.values)
-   print(q.variables)
+   print(q.df)
    print(q._str())
    
 
@@ -124,7 +129,7 @@ Finally, we can start making inferences. Note that the variable and evidence nam
 
 
 Adjacency matrix
-'''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The adjacency matrix is a important way to store relationships across variables or nodes.
 In graph theory, it is a square matrix used to represent a finite graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph. 
@@ -137,9 +142,9 @@ Extracting adjacency matrix from imported DAG:
 
 .. code-block:: python
    
-   import bnlearn
+   import bnlearn as bn
    # Import DAG
-   model = bnlearn.import_DAG('sachs', verbose=0)
+   model = bn.import_DAG('sachs', verbose=0)
    # adjacency matrix:
    model['adjmat']
 
@@ -178,16 +183,62 @@ This indicates that Erk influences gene Ark but not the otherway arround because
   +------+-----+------+------+------+------+-----+-----+------+------+------+------+
 
 
-**Structure learning**
+Converting adjacency matrix into vector
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Extracting adjacency matrix after structure learning:
 
 .. code-block:: python
    
+   import bnlearn as bn
+   # Load DAG
+   DAG = bn.import_DAG('Sprinkler')
+   # Convert adjmat to vector:
+   vector = bn.adjmat2vec(DAG['adjmat'])
+
+.. table::
+
+   +------------+------------+---------+
+   |  source    |  target    | weight  |
+   +------------+------------+---------+
+   |  Cloudy    | Sprinkler  | True    |
+   +------------+------------+---------+
+   |  Cloudy    | Rain       | True    |
+   +------------+------------+---------+
+   |  Sprinkler | Wet_Grass  | True    |
+   +------------+------------+---------+
+   |  Rain      | Wet_Grass  | True    |
+   +------------+------------+---------+
+
+
+
+Converting vector into adjacency matrix
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. code-block:: python
+   
+   import bnlearn as bn
+   # Load DAG
+   adjmat = bn.vec2adjmat(vector['source'], vector['target'])
+
+
+
+Structure learning
+=========================
+
+A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
+
+
+Example (1)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+   
+   import bnlearn as bn
    # Load dataframe
-   df = bnlearn.import_example()
+   df = bn.import_example()
    # Learn structure
-   model = bnlearn.structure_learning.fit(df)
+   model = bn.structure_learning.fit(df)
    # adjacency matrix:
    model['adjmat']
 
@@ -217,23 +268,157 @@ Wet_grass is connected to nothing.
 
 
 
-**Parameter learning**
+Example (2)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
+
+
+Let's bring in our dataset.
+
+.. code-block:: python
+
+  import bnlearn as bn
+  df = bn.import_example()
+  df.head()
+
+
+.. table::
+
+  +--------+-----------+------+-------------+
+  |Cloudy  | Sprinkler | Rain |  Wet_Grass  |
+  +========+===========+======+=============+
+  |    0   |      1    |  0   |      1      |
+  +--------+-----------+------+-------------+
+  |    1   |      1    |  1   |      1      |
+  +--------+-----------+------+-------------+
+  |    1   |      0    |  1   |      1      |
+  +--------+-----------+------+-------------+
+  |    ... |      ...  | ...  |     ...     |
+  +--------+-----------+------+-------------+
+  |    0   |      0    |  0   |      0      |
+  +--------+-----------+------+-------------+
+  |    1   |      0    |  0   |      0      |
+  +--------+-----------+------+-------------+
+  |    1   |      0    |  1   |      1      |
+  +--------+-----------+------+-------------+
+
+From the ``bnlearn`` library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise:
+
+.. code-block:: python
+
+   import bnlearn as bn
+    model = bn.structure_learning.fit(df)
+    G = bn.plot(model)
+
+
+.. |logo3| image:: ../figs/fig_sprinkler_sl.png
+    :scale: 60%
+
+.. table:: Learned structure on the Sprinkler data set.
+   :align: center
+
+   +---------+
+   | |logo3| |
+   +---------+
+   
+      
+
+We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
+
+**Method types:**
+
+* hillclimbsearch or hc (greedy local search if many more nodes are involved)
+* exhaustivesearch or ex (exhaustive search for very small networks)
+* constraintsearch or cs (Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test, chi2)
+
+**Scoring types:**
+
+* bic
+* k2
+* bdeu
+
+
+.. code-block:: python
+
+    import bnlearn as bn
+    model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    model_hc_k2   = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
+    model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
+    model_ex_bic  = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
+    model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
+    model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
+
+
+
+Example (3)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Lets learn the structure of a more complex data set and compare it to another one.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    # Load asia DAG
+    model_true = bn.import_DAG('asia')
+    # plot ground truth
+    G = bn.plot(model_true)
+
+.. _fig2a_asia_groundtruth:
+
+.. figure:: ../figs/fig2a_asia_groundtruth.png
+
+  True DAG of the Asia data set.
+
+  
+.. code-block:: python
+
+    # Sampling
+    df = bn.sampling(model_true, n=10000)
+    # Structure learning of sampled dataset
+    model_learned = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+
+.. _fig2b_asia_structurelearning:
+
+.. figure:: ../figs/fig2b_asia_structurelearning.png
+
+  Learned DAG based on data set.
+
+
+.. code-block:: python
+
+    # Plot based on structure learning of sampled data
+    bn.plot(model_learned, pos=G['pos'])
+    # Compare networks and make plot
+    bn.compare_networks(model_true, model_learned, pos=G['pos'])
+
+.. _fig2c_asia_comparion:
+
+.. figure:: ../figs/fig2c_asia_comparion.png
+.. figure:: ../figs/fig2d_confmatrix.png
+
+  Comparison True vs. learned DAG.
+
+
+Parameter learning
+=========================
 
 Extracting adjacency matrix after Parameter learning:
 
 .. code-block:: python
    
-   # Load dataframe
-   df = bnlearn.import_example()
-   # Import DAG
-   DAG = bnlearn.import_DAG('sprinkler', CPD=False)
-   # Learn parameters
-   model = bnlearn.parameter_learning.fit(DAG, df)
-   # adjacency matrix:
-   model['adjmat']
+    import bnlearn as bn
+    # Load dataframe
+    df = bnlearn.import_example()
+    # Import DAG
+    DAG = bnlearn.import_DAG('sprinkler', CPD=False)
+    # Learn parameters
+    model = bnlearn.parameter_learning.fit(DAG, df)
+    # adjacency matrix:
+    model['adjmat']
 
-   # print
-   print(model['adjmat'])
+    # print
+    print(model['adjmat'])
 
 .. table::
   
@@ -250,43 +435,10 @@ Extracting adjacency matrix after Parameter learning:
   +-----------+--------+-----------+-------+-----------+
 
 
-**Converting adjacency matrix into vector**
-
-.. code-block:: python
-   
-   # Load DAG
-   DAG = bnlearn.import_DAG('Sprinkler')
-   # Convert adjmat to vector:
-   vector = bnlearn.adjmat2vec(DAG['adjmat'])
-
-.. table::
-
-   +------------+------------+---------+
-   |  source    |  target    | weight  |
-   +------------+------------+---------+
-   |  Cloudy    | Sprinkler  | True    |
-   +------------+------------+---------+
-   |  Cloudy    | Rain       | True    |
-   +------------+------------+---------+
-   |  Sprinkler | Wet_Grass  | True    |
-   +------------+------------+---------+
-   |  Rain      | Wet_Grass  | True    |
-   +------------+------------+---------+
-
-
-
-**Converting vector into adjacency matrix**
-
-.. code-block:: python
-   
-   # Load DAG
-   adjmat = bnlearn.vec2adjmat(vector['source'], vector['target'])
-
-
 
 
 Create a Bayesian Network, learn its parameters from data and perform the inference
-'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+====================================================================================================
 
 Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes. 
 Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcase this, I will use the sprinkler example.
@@ -295,7 +447,8 @@ Import example dataset of the sprinkler dataset.
 
 .. code-block:: python
 
-    df = bnlearn.import_example('sprinkler')
+    import bnlearn as bn
+    df = bn.import_example('sprinkler')
     print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 
 .. table::
@@ -330,11 +483,12 @@ Make the actual Bayesian DAG
 
 .. code-block:: python
     
-    DAG = bnlearn.make_DAG(edges)
+    import bnlearn as bn
+    DAG = bn.make_DAG(edges)
     # [BNLEARN] Bayesian DAG created.
 
     # Print the CPDs
-    bnlearn.print_CPD(DAG)
+    bn.print_CPD(DAG)
     # [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
 
 Plot the DAG
@@ -352,14 +506,14 @@ Parameter learning on the user-defined DAG and input data using maximumlikelihoo
 
 .. code-block:: python
     
-    DAG = bnlearn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+    DAG = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 
 
 Lets print the learned CPDs:
 
 .. code-block:: python
 
-    bnlearn.print_CPD(DAG)
+    bn.print_CPD(DAG)
     
     # [BNLEARN.print_CPD] Independencies:
     # (Cloudy _|_ Wet_Grass | Rain, Sprinkler)
@@ -409,7 +563,7 @@ Lets make an inference:
 
 .. code-block:: python
     
-    q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
     +--------------+------------------+
     | Wet_Grass    |   phi(Wet_Grass) |
@@ -423,5 +577,7 @@ Print the values:
 
 .. code-block:: python
     
-    print(q1.values)
+    print(q1.df)
     # array([0.25588235, 0.74411765])
+
+

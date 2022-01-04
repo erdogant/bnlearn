@@ -1,70 +1,34 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>Directed Acyclic Graphs &mdash; bnlearn bnlearn documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="_static/js/theme.js"></script>
-
-    
+    <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Sampling and datasets" href="Sampling%20and%20datasets.html" />
     <link rel="prev" title="Predict" href="Predict.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="index.html" class="icon icon-home"> bnlearn
-          
-
-          
           </a>
-
-          
-            
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -72,58 +36,46 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption"><span class="caption-text">Quickstart</span></p>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Introduction</span></p>
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Structure learning</span></p>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#examples-structure-learning">Examples Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Parameter learning</span></p>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#examples-parameter-learning">Examples Parameter learning</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Inference</span></p>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Predict</span></p>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Other functionalities</span></p>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Directed Acyclic Graphs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
@@ -138,19 +90,22 @@
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
-</ul>
-<p class="caption"><span class="caption-text">Plot</span></p>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
 </ul>
-<p class="caption"><span class="caption-text">API References</span></p>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Various</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API References</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
@@ -158,76 +113,35 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="index.html">bnlearn</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>Directed Acyclic Graphs</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="_sources/Create DAG.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="directed-acyclic-graphs">
-<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="directed-acyclic-graphs">
+<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Permalink to this headline"></a></h1>
 <p>This example is to better understand the importance and working of a Directed Acyclic Graph. The underneath topics are going to be explained:</p>
-<div class="section" id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Building a DAG</p></li>
 <li><p>plotting a DAG</p></li>
@@ -235,9 +149,9 @@
 <li><p>Estimating parameters of CPDs</p></li>
 <li><p>Inference on the causal generative model</p></li>
 </ul>
-</div>
-<div class="section" id="building-a-causal-dag">
-<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="building-a-causal-dag">
+<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Permalink to this headline"></a></h2>
 <p>If you readily know (or you have domain knowledge) of the relationships between variables, we can setup the (causal) relationships between the variables with a directed graph (DAG).
 Each node corresponds to a variable and each edge represents conditional dependencies between pairs of variables.
 In bnlearn, we can graphically represent the relationships between variables. To demonstrate this I will create the simple Sprinkler example by hand.</p>
@@ -265,14 +179,16 @@ In bnlearn, we can graphically represent the relationships between variables. To
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="figure align-default" id="id1">
+<figure class="align-default" id="id1">
 <span id="fig-sprinkler"></span><img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
-<p class="caption"><span class="caption-text">Causal DAG.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">Causal DAG.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
 <p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.</p>
-</div>
-<div class="section" id="the-causal-dag-as-a-generative-representation-of-joint-probability">
-<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="the-causal-dag-as-a-generative-representation-of-joint-probability">
+<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this headline"></a></h2>
 <p>Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 
@@ -280,9 +196,9 @@ In bnlearn, we can graphically represent the relationships between variables. To
 </pre></div>
 </div>
 <p>There are no CPDs attached to the DAG yet. Therefore there is nothing to show.</p>
-</div>
-<div class="section" id="specifying-the-probability-distributions-on-your-own">
-<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="specifying-the-probability-distributions-on-your-own">
+<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Permalink to this headline"></a></h2>
 <p>Each factor is a conditional probability distribution (CPD). In the discrete case the CPD is sometimes called a conditional probability table (CPT).
 Though we can factorize over any DAG and get a set of CPDs, when we factorize along a DAG we consider to be a representation of causality, we call each CPD a causal Markov kernel (CMK).
 The factorization that provides a set of CMKs is the most useful factorization because CMKs correspond to independent causal mechanisms we assume to be invariant across data sets.
@@ -342,62 +258,45 @@ To further examine the CPDs, print the DAG as following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="inference-on-the-causal-generative-model">
-<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="inference-on-the-causal-generative-model">
+<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Permalink to this headline"></a></h2>
 <p>This is an great basis to make inferences or update your this model with new data (parameter learning).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="Sampling%20and%20datasets.html" class="btn btn-neutral float-right" title="Sampling and datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Predict.html" class="btn btn-neutral float-left" title="Predict" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Sampling%20and%20datasets.html" class="btn btn-neutral float-right" title="Sampling and datasets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Erdogan Taskesen.
-
-    </p>
+    <p>&#169; Copyright 2020, Erdogan Taskesen.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-   
+  </script> 
 
 </body>
 </html>

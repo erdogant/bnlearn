@@ -68,6 +68,13 @@ Content
   topological_sort
   saving and loading
 
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Plot
+
+  Plot
+
 .. toctree::
   :maxdepth: 2
   :caption: Examples
@@ -75,11 +82,6 @@ Content
   Examples
   UseCases
 
-.. toctree::
-  :maxdepth: 2
-  :caption: Plot
-
-  Plot
 
 .. toctree::
   :maxdepth: 1
