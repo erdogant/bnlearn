@@ -1398,13 +1398,13 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
         The dataset against which to test the model structure.
     test: str or function
         The statistical test to compute associations.
-        * chi_square
-        * g_sq
-        * log_likelihood
-        * freeman_tuckey
-        * modified_log_likelihood
-        * neyman
-        * cressie_read
+            * chi_square
+            * g_sq
+            * log_likelihood
+            * freeman_tuckey
+            * modified_log_likelihood
+            * neyman
+            * cressie_read
     alpha: float
         A value between 0 and 1. If p_value < significance_level, the variables are
         considered uncorrelated.
@@ -1423,7 +1423,8 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)
     >>> # Compute arc strength
-    >>> bn.independence_test(model, df, test='chi_square')
+    >>> model = bn.independence_test(model, df, test='chi_square')
+    >>> print(model['independence_test'])
     """
     from pgmpy.estimators.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read  # noqa
     from pgmpy.models import BayesianNetwork
