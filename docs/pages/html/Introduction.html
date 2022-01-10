@@ -43,7 +43,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-learning-algorithms">Structure Learning algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#score-based-algorithms">Score-based algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-discovery-algorithms">Local discovery algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bayesian-network-classifiers">Bayesian network classifiers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constraint-based-structure-learning-algorithms">Constraint-based structure learning algorithms</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
@@ -133,10 +140,10 @@
   <hr class="docutils" id="code-directive" />
 <section id="introduction">
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
-<p>Learning a Bayesian network can be split into two problems which are both implemented in this package:</p>
+<p>Learning a Bayesian network can be split into <strong>structure learning</strong> and <strong>parameter learning</strong> which are both implemented in <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
 <ul class="simple">
-<li><p>Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p></li>
-<li><p>Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.</p></li>
+<li><p><strong>Structure learning</strong>: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p></li>
+<li><p><strong>Parameter learning</strong>: Given a set of data samples and a DAG that captures the dependencies between the variables, estimate the (conditional) probability distributions of the individual variables.</p></li>
 </ul>
 <dl class="simple">
 <dt>The library supports Parameter learning for <em>discrete</em> nodes:</dt><dd><ul class="simple">
@@ -144,14 +151,8 @@
 <li><p>Bayesian Estimation</p></li>
 </ul>
 </dd>
-<dt>Structure learning for <em>discrete</em>, <em>fully observed</em> networks:</dt><dd><ul class="simple">
-<li><p>Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)</p></li>
-<li><p>Constraint-based structure estimation (PC)</p></li>
-<li><p>Hybrid structure estimation (MMHC)</p></li>
-</ul>
-</dd>
 </dl>
-<p><strong>The following functions are available after importing bnlearn:</strong></p>
+<p><strong>The following functions are available</strong></p>
 <ul class="simple">
 <li><p>Structure learning</p></li>
 <li><p>Parameter learning</p></li>
@@ -162,6 +163,56 @@
 <li><p>loading bif files</p></li>
 <li><p>conversion of directed to undirected graphs</p></li>
 </ul>
+<section id="structure-learning-algorithms">
+<h2>Structure Learning algorithms<a class="headerlink" href="#structure-learning-algorithms" title="Permalink to this headline"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>score-based</strong>, <strong>local discovery</strong>, <strong>Bayesian network</strong>, and <strong>constraint-based</strong> structure learning algorithms for <em>discrete</em>, <em>fully observed</em> networks.</p>
+<p><strong>Score-based approaches have two main components</strong>:
+* The search algorithm to optimize throughout the search space of all possible DAGs.
+* The scoring function indicates how well the Bayesian network fits the data.</p>
+<p>Score-based algorithm can be used with the following score functions:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>categorical data (multinomial distribution):</dt><dd><ul>
+<li><p>the Bayesian Information Criterion (bic)</p></li>
+<li><p>the K2 score (k2)</p></li>
+<li><p>a score equivalent Dirichlet posterior density (bdeu);</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="score-based-algorithms">
+<h2>Score-based algorithms<a class="headerlink" href="#score-based-algorithms" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>ExhaustiveSearch (ex)</p></li>
+<li><p>Hill Climbing (hc)</p></li>
+</ul>
+</section>
+<section id="local-discovery-algorithms">
+<h2>Local discovery algorithms<a class="headerlink" href="#local-discovery-algorithms" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>Chow-liu (cl)</p></li>
+</ul>
+</section>
+<section id="bayesian-network-classifiers">
+<h2>Bayesian network classifiers<a class="headerlink" href="#bayesian-network-classifiers" title="Permalink to this headline"></a></h2>
+<ul class="simple">
+<li><p>NaiveBayesian (nb)</p></li>
+<li><p>Tree-augmented Naive Bayes (tan)</p></li>
+</ul>
+</section>
+<section id="constraint-based-structure-learning-algorithms">
+<h2>Constraint-based structure learning algorithms<a class="headerlink" href="#constraint-based-structure-learning-algorithms" title="Permalink to this headline"></a></h2>
+<p>With constraint-based structure learning, a DAG can be constructed by identifying independencies in the data set using hypothesis tests, such as chi2 test statistic.
+This approach does rely on statistical tests and conditional hypotheses to learn independence among the variables in the model.
+The P-value of the chi2 test is the probability of observing the computed chi2 statistic, given the null hypothesis that X and Y are independent given Z.
+This can be used to make independent judgments, at a given level of significance.
+An example of a constraint-based approach is the PC algorithm which starts with a complete fully connected graph and removes edges based on the results of the tests if the nodes are independent until a stopping criterion is achieved.</p>
+<ul class="simple">
+<li><p>constraintsearch (cs)</p></li>
+</ul>
+</section>
 </section>
 
 

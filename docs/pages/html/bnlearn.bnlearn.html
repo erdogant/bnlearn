@@ -384,14 +384,19 @@ Any two variables are associated if the test’s p-value &lt; significance_level
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>Instance of bnlearn.structure_learning.</em>) – The (learned) model which needs to be tested.</p></li>
 <li><p><strong>df</strong> (<em>pandas.DataFrame instance</em>) – The dataset against which to test the model structure.</p></li>
-<li><p><strong>test</strong> (<em>str</em><em> or </em><em>function</em>) – The statistical test to compute associations.
-* chi_square
-* g_sq
-* log_likelihood
-* freeman_tuckey
-* modified_log_likelihood
-* neyman
-* cressie_read</p></li>
+<li><p><strong>test</strong> (<em>str</em><em> or </em><em>function</em>) – <dl class="simple">
+<dt>The statistical test to compute associations.</dt><dd><ul>
+<li><p>chi_square</p></li>
+<li><p>g_sq</p></li>
+<li><p>log_likelihood</p></li>
+<li><p>freeman_tuckey</p></li>
+<li><p>modified_log_likelihood</p></li>
+<li><p>neyman</p></li>
+<li><p>cressie_read</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
 <li><p><strong>alpha</strong> (<em>float</em>) – A value between 0 and 1. If p_value &lt; significance_level, the variables are
 considered uncorrelated.</p></li>
 <li><p><strong>prune</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em>) – True: Keep only edges that are significant (&lt;=alpha) based on the independence test.</p></li>
@@ -410,7 +415,8 @@ considered uncorrelated.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning of sampled dataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute arc strength</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>

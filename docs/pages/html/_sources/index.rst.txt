@@ -12,6 +12,7 @@ bnlearn's documentation!
 `Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 
+
 Content
 ========
 
