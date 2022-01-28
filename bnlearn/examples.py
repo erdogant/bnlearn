@@ -13,10 +13,8 @@ import bnlearn as bn
 # print(dir(bn.inference))
 
 # %%
-raw = pd.read_csv('./bnlearn/data/stormofswords.csv')
 
 raw = bn.import_example('stormofswords')
-
 # Convert raw data into sparse datamatrix
 df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
 # Make the actual Bayesian DAG
