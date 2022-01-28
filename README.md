@@ -553,6 +553,35 @@ In case of static plotting, simply set the interactive parameter to False.
 
 ```
 
+
+### Example of creating sparse datamatrix from source-target and weights
+
+```python
+
+    import bnlearn as bn
+
+    source=['Cloudy','Cloudy','Sprinkler','Rain']
+    target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+    weights=[1,2,1,3]
+
+    # Convert into sparse datamatrix
+    df = bn.vec2df(source, target, weights=weights)
+
+    # The sparse datamatrix should now contain 1 row cloudy-Sprinkler, 2 rows with Cloudy-Rain, 1 row with Sprinkler-Wet_Grass and 3 rows with Rain-Wet_Grass
+
+
+    #    Cloudy   Rain  Sprinkler  Wet_Grass
+    # 0    True  False       True      False
+    # 1    True   True      False      False
+    # 2    True   True      False      False
+    # 3   False  False       True       True
+    # 4   False   True      False       True
+    # 5   False   True      False       True
+    # 6   False   True      False       True
+
+```
+
+
 ### References
 * https://erdogant.github.io/bnlearn/
 * http://pgmpy.org
