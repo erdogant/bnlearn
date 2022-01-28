@@ -7,11 +7,58 @@ from pgmpy.factors.discrete import TabularCPD
 
 # %%
 import bnlearn as bn
-print(bn.__version__)
+# print(bn.__version__)
 
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
+
+
+# %%
+import bnlearn as bn
+df = bn.import_example()
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+bn.plot(model)
+bn.plot(model, interactive=False, node_size=10)
+
+
+# %% Check the stochastic component of bnlearn
+DAG = bn.import_DAG('sprinkler', verbose=0)
+df = bn.import_example('sprinkler')
+adjmats = []
+
+for i in range(0, 10):
+    # print(i)
+    df = bn.sampling(DAG, n=10000)
+    model = bn.structure_learning.fit(df)
+    # df = bn.import_example()
+    # model = bn.structure_learning.fit(df)
+    adjmats.append(model['adjmat'].values.ravel())
+
+adjmats = np.array(adjmats)
+adjmat = (adjmats[:, None, :] != adjmats).sum(2)
+
+print(adjmat.sum(axis=0))
+# print(adjmat.sum(axis=1))
+
+
+# %% LOAD BIF FILE
+
+# Example 1: Plot the TRUE DAG
+DAG_1 = bn.import_DAG('sprinkler', verbose=0)
+graph = bn.plot(DAG_1)
+
+# Example 2: Download small spinkler example with 1000 samples
+df = bn.import_example('sprinkler')
+DAG_2 = bn.structure_learning.fit(df)
+bn.plot(DAG_2, pos=graph['pos'])
+
+# Example 3: Generate Download small spinkler example with 5000 samples
+df = bn.sampling(DAG_1, n=5000)
+DAG_3 = bn.structure_learning.fit(df)
+bn.plot(DAG_3, pos=graph['pos'])
+
 
 # %% LOAD BIF FILE
 DAG = bn.import_DAG('water', verbose=0)
