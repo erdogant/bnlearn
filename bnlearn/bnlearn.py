@@ -249,10 +249,11 @@ def vec2df(source, target, weights=None):
 
     Examples
     --------
+    >>> import bnlearn as bn
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
     >>> weights=[1,2,1,3]
-    >>> df = vec2df(source, target, weights=weights)
+    >>> df = bn.vec2df(source, target, weights=weights)
 
     """
     if (isinstance(source, pd.DataFrame)) or (isinstance(source, pd.Series)):
@@ -297,11 +298,12 @@ def vec2adjmat(source, target, weights=None, symmetric=True):
 
     Examples
     --------
+    >>> import bnlearn as bn
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
     >>> vec2adjmat(source, target)
     >>> weights=[1,2,1,3]
-    >>> vec2adjmat(source, target, weights=weights)
+    >>> adjmat = bn.vec2adjmat(source, target, weights=weights)
 
     """
     if len(source)!=len(target): raise ValueError('[hnet] >Source and Target should have equal elements.')
@@ -356,10 +358,11 @@ def adjmat2vec(adjmat, min_weight=1):
 
     Examples
     --------
+    >>> import bnlearn as bn
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
     >>> adjmat = vec2adjmat(source, target)
-    >>> vector = adjmat2vec(adjmat)
+    >>> vector = bn.adjmat2vec(adjmat)
 
     """
     # Convert adjacency matrix into vector
@@ -421,9 +424,9 @@ def sampling(DAG, n=1000, verbose=3):
 
     Example
     -------
-    >>> import bnlearn
-    >>> DAG = bnlearn.import_DAG('sprinkler')
-    >>> df = bnlearn.sampling(DAG, n=1000)
+    >>> import bnlearn as bn
+    >>> DAG = bn.import_DAG('sprinkler')
+    >>> df = bn.sampling(DAG, n=1000)
 
     """
     if n<=0: raise ValueError('n must be 1 or larger')
