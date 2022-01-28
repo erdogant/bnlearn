@@ -13,6 +13,23 @@ import bnlearn as bn
 # print(dir(bn.inference))
 
 # %%
+import bnlearn as bn
+
+# Example dataset
+source=['Cloudy','Cloudy','Sprinkler','Rain']
+target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+weights=[1,2,1,3]
+
+# Convert into sparse datamatrix
+df = bn.vec2df(source, target, weights=weights)
+# Make DAG
+DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
+# Make plot
+bn.plot(DAG, interactive=True)
+
+
+# %%
+import bnlearn as bn
 
 raw = bn.import_example('stormofswords')
 # Convert raw data into sparse datamatrix
