@@ -14,17 +14,22 @@ import bnlearn as bn
 
 # %%
 raw = pd.read_csv('./bnlearn/data/stormofswords.csv')
+
+raw = bn.import_example('stormofswords')
+
 # Convert raw data into sparse datamatrix
-df = bn.vec2df(raw['Source'], raw['Target'], raw['Weight'])
+df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(list(zip(raw['Source'], raw['Target'])), verbose=0)
+DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])), verbose=0)
 # Make plot
 bn.plot(DAG, interactive=True)
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
-
 # Structure learning
 DAG_learned = bn.structure_learning.fit(df.iloc[:, 0:50])
+# Keep only significant edges
+DAG_learned = bn.independence_test(DAG_learned, df, prune=True)
+# Plot
 bn.plot(DAG_learned, interactive=True)
 
 # Generate some data based on DAG

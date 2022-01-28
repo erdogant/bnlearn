@@ -1064,7 +1064,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     ----------
     data: str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random'
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords'
     n: int, optional
         Number of samples to generate. The default is 1000.
     verbose: int, (default: 3)
@@ -1086,9 +1086,9 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     PATH_TO_DATA = _download_example(data, verbose=verbose)
 
     # Import dataset
-    if (data=='sprinkler') or (data=='titanic_train'):
+    if (data=='sprinkler') or (data=='titanic_train') or (data=='stormofswords'):
         if verbose>=3: print('[bnlearn] >Import dataset..')
-        df = pd.read_csv(PATH_TO_DATA)
+        df = pd.read_csv(PATH_TO_DATA, delimiter=',')
     else:
         try:
             _ = _unzip(PATH_TO_DATA, verbose=verbose)
