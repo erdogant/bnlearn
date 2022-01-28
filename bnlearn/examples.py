@@ -8,11 +8,32 @@ from pgmpy.factors.discrete import TabularCPD
 # %%
 import bnlearn as bn
 # print(bn.__version__)
-
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %%
+raw = pd.read_csv('./bnlearn/data/stormofswords.csv')
+# Convert raw data into sparse datamatrix
+df = bn.vec2df(raw['Source'], raw['Target'], raw['Weight'])
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(list(zip(raw['Source'], raw['Target'])), verbose=0)
+# Make plot
+bn.plot(DAG, interactive=True)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df, verbose=3)
+
+# Structure learning
+DAG_learned = bn.structure_learning.fit(df.iloc[:, 0:50])
+bn.plot(DAG_learned, interactive=True)
+
+# Generate some data based on DAG
+# df1 = bn.sampling(model, n=1000)
+# Make predictions
+# print(query)
+query = bn.inference.fit(DAG, variables=['Grenn'], evidence={'Aemon': 1, 'Samwell': 1})
+print(query)
+query.df
 
 # %%
 import bnlearn as bn
