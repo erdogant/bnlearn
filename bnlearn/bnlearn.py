@@ -225,6 +225,56 @@ def _dag2adjmat(model, verbose=3):
     return(adjmat)
 
 
+# %%  Convert vector into sparse dataframe
+def vec2df(source, target, weights=None):
+    """Convert source and target into sparse dataframe.
+
+    Description
+    -----------
+    Convert edges between source and taget into a dataframe based on the weight.
+    A weight of 2 will result that a row with the edge is created 2x.
+
+    Parameters
+    ----------
+    source : array-like
+        The source node.
+    target : array-like
+        The target node.
+    weights : array-like of int
+        The Weights between the source-target values
+
+    Returns
+    -------
+    pd.DataFrame
+
+    Examples
+    --------
+    >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
+    >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+    >>> weights=[1,2,1,3]
+    >>> df = vec2df(source, target, weights=weights)
+
+    """
+    if (isinstance(source, pd.DataFrame)) or (isinstance(source, pd.Series)):
+        source=source.values
+    if (isinstance(target, pd.DataFrame)) or (isinstance(target, pd.Series)):
+        target=target.values
+    if (isinstance(weights, pd.DataFrame)) or (isinstance(weights, pd.Series)):
+        weights=weights.values
+
+    rows = []
+    edges = list(zip(source, target))
+    if weights is None:
+        weights = np.ones_like(source).astype(int)
+
+    columns=np.unique(np.c_[source, target].ravel())
+    for i, edge in enumerate(edges):
+        row = [np.logical_or(columns==edge[0], columns==edge[1])] * int(weights[i])
+        rows = rows + row
+
+    return pd.DataFrame(np.array(rows), columns=columns)
+
+
 # %%  Convert adjacency matrix to vector
 def vec2adjmat(source, target, weights=None, symmetric=True):
     """Convert source and target into adjacency matrix.
