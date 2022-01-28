@@ -930,14 +930,14 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 # %% Plot interactive
 def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
     try:
-        from pyvis import network as net
+        from pyvis.network import Network
         from IPython.core.display import display, HTML
     except ModuleNotFoundError:
         if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
     # Convert adjacency matrix into Networkx Graph
     G = bnlearn.network.adjmat2graph(model['adjmat'])
     # Setup of the interactive network figure
-    g = net.Network(**params_interactive)
+    g = Network(**params_interactive)
     # Convert from graph G
     g.from_nx(G)
     # Nodes
