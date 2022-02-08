@@ -186,7 +186,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     # Store
     out['model_edges'] = list(out['model'].edges())
-    out['adjmat'] = bnlearn._dag2adjmat(out['model'])
+    out['adjmat'] = bnlearn.dag2adjmat(out['model'])
     out['config'] = config
 
     # return

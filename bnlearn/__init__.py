@@ -9,7 +9,9 @@ from bnlearn.bnlearn import (
     compare_networks,
     plot,
     adjmat2vec,
+    adjmat2dict,
     vec2adjmat,
+    dag2adjmat,
     df2onehot,
     topological_sort,
     predict,
@@ -17,7 +19,6 @@ from bnlearn.bnlearn import (
     vec2df,
     get_node_properties,
     get_edge_properties,
-    _dag2adjmat,
     _filter_df,
     independence_test,
     save,
@@ -34,7 +35,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.5.2'
+__version__ = '0.6.0'
 
 try:
     import pgmpy

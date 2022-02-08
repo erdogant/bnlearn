@@ -144,7 +144,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
     # Create adjacency matrix from DAG
     out = {}
-    out['adjmat'] = _dag2adjmat(DAG)
+    out['adjmat'] = dag2adjmat(DAG)
     out['model'] = DAG
     out['methodtype'] = methodtype
     out['model_edges'] = DAG.edges()
@@ -209,7 +209,31 @@ def _check_model(DAG, verbose=3):
 
 
 # %% Convert DAG into adjacency matrix
-def _dag2adjmat(model, verbose=3):
+def dag2adjmat(model, verbose=3):
+    """Convert model into adjacency matrix.
+
+    Parameters
+    ----------
+    model : object
+        Model object.
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    pd.DataFrame
+        adjacency matrix.
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> # Load DAG
+    >>> DAG = bn.import_DAG('Sprinkler')
+    >>> # Extract edges from model and store in adjacency matrix
+    >>> adjmat=bn.dag2adjmat(DAG['model'])
+
+    """
     adjmat = None
     if hasattr(model, 'nodes') and hasattr(model, 'edges'):
         adjmat = pd.DataFrame(data=False, index=model.nodes(), columns=model.nodes()).astype('bool')
@@ -227,7 +251,7 @@ def _dag2adjmat(model, verbose=3):
 
 # %%  Convert vector into sparse dataframe
 def vec2df(source, target, weights=None):
-    """Convert source and target into sparse dataframe.
+    """Convert source-target edges into sparse dataframe.
 
     Description
     -----------
@@ -249,11 +273,17 @@ def vec2df(source, target, weights=None):
 
     Examples
     --------
+    >>> Example 1
     >>> import bnlearn as bn
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
     >>> weights=[1,2,1,3]
     >>> df = bn.vec2df(source, target, weights=weights)
+
+    >>> Example 2
+    >>> import bnlearn as bn
+    >>> vec = bn.import_example("stormofswords")
+    >>> df = bn.vec2df(vec['source'], vec['target'], weights=vec['weight'])
 
     """
     if (isinstance(source, pd.DataFrame)) or (isinstance(source, pd.Series)):
@@ -1176,7 +1206,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
             return(out)
 
     # Setup adjacency matrix
-    adjmat = _dag2adjmat(model)
+    adjmat = dag2adjmat(model)
 
     # Store
     out['model']=model
