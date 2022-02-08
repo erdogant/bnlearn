@@ -67,6 +67,7 @@ Content
   Sampling and datasets
   whitelist_blacklist
   topological_sort
+  dataframe conversions
   saving and loading
 
 

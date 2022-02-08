@@ -80,6 +80,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Sampling%20and%20datasets.html">Sampling and datasets</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
@@ -168,10 +169,11 @@
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span> <span class="o">=</span> <span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vector</span> <span class="o">=</span> <span class="n">adjmat2vec</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vector</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">adjmat2vec</span><span class="p">(</span><span class="n">adjmat</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -200,6 +202,35 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <dd class="field-odd"><p>tuple containing (scores, adjmat_diff)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.dag2adjmat">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">dag2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.dag2adjmat" title="Permalink to this definition"></a></dt>
+<dd><p>Convert model into adjacency matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>object</em>) – Model object.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>adjacency matrix.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract edges from model and store in adjacency matrix</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span><span class="o">=</span><span class="n">bn</span><span class="o">.</span><span class="n">dag2adjmat</span><span class="p">(</span><span class="n">DAG</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -357,7 +388,7 @@ adjmat : Adjacency matrix</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples.
-‘titanic’, ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘sachs’, ‘water’, ‘random’</p></li>
+‘titanic’, ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘sachs’, ‘water’, ‘random’, ‘stormofswords’</p></li>
 <li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default: 3</em><em>)</em>) – Print progress to screen.
 0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace</p></li>
@@ -484,7 +515,7 @@ considered uncorrelated.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.plot">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn</span> <span class="pre">causal</span> <span class="pre">network'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'font_color':</span> <span class="pre">False,</span> <span class="pre">'height':</span> <span class="pre">'800px',</span> <span class="pre">'layout':</span> <span class="pre">None,</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'width':</span> <span class="pre">'70%'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">30,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">14,</span> <span class="pre">'height':</span> <span class="pre">8,</span> <span class="pre">'layout':</span> <span class="pre">'fruchterman_reingold',</span> <span class="pre">'maxscale':</span> <span class="pre">10,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'width':</span> <span class="pre">15}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn_causal_network'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'font_color':</span> <span class="pre">False,</span> <span class="pre">'height':</span> <span class="pre">'800px',</span> <span class="pre">'layout':</span> <span class="pre">None,</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'width':</span> <span class="pre">'70%'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">30,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">14,</span> <span class="pre">'height':</span> <span class="pre">8,</span> <span class="pre">'layout':</span> <span class="pre">'fruchterman_reingold',</span> <span class="pre">'maxscale':</span> <span class="pre">10,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'width':</span> <span class="pre">15}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -671,9 +702,9 @@ None : Returns all Probabilities</p></li>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -788,11 +819,50 @@ bn.topological_sort(DAG)</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.vec2df">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">vec2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2df" title="Permalink to this definition"></a></dt>
+<dd><p>Convert source-target edges into sparse dataframe.</p>
+<p>Convert edges between source and taget into a dataframe based on the weight.
+A weight of 2 will result that a row with the edge is created 2x.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>array-like</em>) – The source node.</p></li>
+<li><p><strong>target</strong> (<em>array-like</em>) – The target node.</p></li>
+<li><p><strong>weights</strong> (<em>array-like of int</em>) – The Weights between the source-target values</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Example</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">Example</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vec</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s2">&quot;stormofswords&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 </dd></dl>
