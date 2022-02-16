@@ -134,23 +134,43 @@
   <section id="topological-sort">
 <h1>Topological sort<a class="headerlink" href="#topological-sort" title="Permalink to this headline"></a></h1>
 <p>Topological sort or topological ordering of a directed graph is a linear ordering of its vertices and only possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG).
-Any DAG has at least one topological ordering. Topological sorting has many applications especially in ranking problems such as feedback arc set. The vertices of the graph may represent the tasks to be performed, and the edges may represent constraints that one task must be performed before another.
+Any DAG has at least one topological ordering. Topological sorting has many applications especially in ranking problems such as feedback arc set. The vertices of the graph may represent the tasks to be performed, and the edges may represent constraints that one task must be performed before another.</p>
+<p>This algorithm is thus responsible for taking a directed graph and returning an array of the nodes in the order of their reference. This algorithm gives the linear order of vertices in a directed graph. The sorted graph is as following:
 A topological ordering is, simply said, just a valid sequence for the tasks. In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> we can also derive the topological ordering of the graph.</p>
+<p>Real-time Applications</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Manufacturing workflows, data serialization, Critical path analysis, Sentence ordering, and context-free grammar.</p></li>
+<li><p>Scheduling jobs that are interdependent on each other.</p></li>
+<li><p>Operation system deadlock detection (As the algorithm decides on what task should be done before a particular task can be started.)</p></li>
+</ul>
+</div></blockquote>
 <p>Lets create the underneath DAG and examine the topological ordering of 1. the entire graph, and 2. using a starting point in the graph.</p>
-<figure class="align-default" id="fig-topological-graph-example">
-<img alt="_images/topological_graph_example.png" src="_images/topological_graph_example.png" />
-</figure>
+<table class="docutils align-center" id="id1">
+<caption><span class="caption-text">Unsorted graph</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="S1" src="_images/graph_unsorted.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <p><strong>Topological ordering example 1</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import bnlearn</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
 <span class="c1"># Set Edges in graph</span>
-<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
-     <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">),</span>
-     <span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">),</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+     <span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">),</span>
      <span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">),</span>
-     <span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">),</span>
-     <span class="p">(</span><span class="s1">&#39;3&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;3&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;5&#39;</span><span class="p">,</span> <span class="s1">&#39;4&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;1&#39;</span><span class="p">),</span>
+     <span class="p">(</span><span class="s1">&#39;6&#39;</span><span class="p">,</span> <span class="s1">&#39;5&#39;</span><span class="p">),</span>
      <span class="p">]</span>
 
 <span class="c1"># Make the actual Bayesian DAG</span>
@@ -162,14 +182,24 @@ A topological ordering is, simply said, just a valid sequence for the tasks. In 
 <span class="c1"># Topological ordering of the entire graph</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">topological_sort</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 
-<span class="c1">#&gt;[&#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;4&#39;, &#39;5&#39;]</span>
+<span class="c1"># [&#39;0&#39;, &#39;6&#39;, &#39;1&#39;, &#39;2&#39;, &#39;5&#39;, &#39;3&#39;, &#39;4&#39;]</span>
 
 <span class="c1"># Topological ordering using starting point in graph</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">topological_sort</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="s1">&#39;2&#39;</span><span class="p">)</span>
 
-<span class="c1">#&gt;[&#39;2&#39;, &#39;3&#39;, &#39;5&#39;, &#39;4&#39;]</span>
+<span class="c1"># [&#39;2&#39;, &#39;3&#39;]</span>
 </pre></div>
 </div>
+<table class="docutils align-center" id="id2">
+<caption><span class="caption-text">Sorted graph</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 100%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><img alt="S2" src="_images/graph_sorted.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <p>It is also possible to examine the topological ordering of your learned DAG using structure learning.</p>
 <p><strong>Topological ordering example 2</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import bnlearn</span>
