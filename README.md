@@ -22,11 +22,11 @@
 ## 
 
 
-### Blogs
+### Blog/Documentation
 
 * [**Step-by-step guide for structure learning!**](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
 * [**Step-by-step guide for knowledge-driven models!**](https://link.medium.com/LBp2eW8qNjb)
-* [**Sphinx**](https://img.shields.io/badge/Sphinx-Docs-blue)](https://erdogant.github.io/bnlearn/)
+* [**Sphinx**](https://erdogant.github.io/bnlearn/)
 
 
 ### Method overview
