@@ -15,10 +15,12 @@
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
 
 
+### 
+
 ``bnlearn`` is Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods. This work is inspired by the R package (bnlearn.com) that has been very usefull to me for many years. Although there are very good Python packages for probabilistic graphical models, it still can remain difficult (and somethimes unnecessarily) to (re)build certain pipelines. Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information.
 
-### 
 **Star this repo if you like it! ⭐️**
+
 ## 
 
 
@@ -26,7 +28,7 @@
 
 * [**Step-by-step guide for structure learning!**](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
 * [**Step-by-step guide for knowledge-driven models!**](https://link.medium.com/LBp2eW8qNjb)
-* [**Sphinx**](https://erdogant.github.io/bnlearn/)
+* [**bnlearn documentation pages (Sphinx)**](https://erdogant.github.io/bnlearn/)
 
 
 ### Method overview
