@@ -46,7 +46,7 @@ The sprinkler DAG is a special case because it is not loaded from a *bif* file b
    DAG.keys()
    # dict_keys(['model', 'adjmat'])
 
-   # The model contains the BayesianModel with the CPDs.
+   # The model contains the BayesianNetwork with the CPDs.
    # The adjmat contains the adjacency matrix with the relationships between the nodes.
 
    # plot ground truth

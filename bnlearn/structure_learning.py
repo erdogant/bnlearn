@@ -391,7 +391,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
     out['dag'] = dag
     out['dag_edges'] = dag.edges()
 
-    # Search using "estimate()" method provides a shorthand for the three steps above and directly returns a "BayesianModel"
+    # Search using "estimate()" method provides a shorthand for the three steps above and directly returns a "BayesianNetwork"
     best_model = model.estimate(significance_level=significance_level)
     out['model'] = best_model
 

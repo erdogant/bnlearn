@@ -78,13 +78,13 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     if isinstance(model, dict):
         model = model['model']
 
-    # Check BayesianModel
-    if 'BayesianModel' not in str(type(model)):
-        if verbose>=1: print('[bnlearn] >Warning: Inference requires BayesianModel. hint: try: parameter_learning.fit(DAG, df, methodtype="bayes") <return>')
+    # Check BayesianNetwork
+    if 'BayesianNetwork' not in str(type(model)):
+        if verbose>=1: print('[bnlearn] >Warning: Inference requires BayesianNetwork. hint: try: parameter_learning.fit(DAG, df, methodtype="bayes") <return>')
         return None
 
-    # Convert to BayesianModel
-    if 'BayesianModel' not in str(type(model)):
+    # Convert to BayesianNetwork
+    if 'BayesianNetwork' not in str(type(model)):
         model = bnlearn.to_bayesianmodel(adjmat, verbose=verbose)
 
     try:

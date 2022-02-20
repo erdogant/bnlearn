@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
 
-from pgmpy.models import BayesianModel, NaiveBayes
+from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling  # GibbsSampling
 from pgmpy import readwrite
@@ -32,11 +32,11 @@ import bnlearn
 
 # %%  Convert adjmat to bayesian model
 def to_bayesianmodel(model, verbose=3):
-    """Convert adjacency matrix to BayesianModel.
+    """Convert adjacency matrix to BayesianNetwork.
 
     Description
     -----------
-    Convert a adjacency to a BayesianModel. This is required as some of the
+    Convert a adjacency to a Bayesian model. This is required as some of the
     functionalities, such as ``structure_learning`` output a DAGmodel.
     If the output of ``structure_learning`` is provided, the adjmat is extracted and processed.
 
@@ -53,7 +53,7 @@ def to_bayesianmodel(model, verbose=3):
     Returns
     -------
     bayesianmodel : Object
-        BayesianModel that can be used in ``parameter_learning.fit``.
+        BayesianNetwork that can be used in ``parameter_learning.fit``.
 
     """
     if isinstance(model, dict):
@@ -62,12 +62,12 @@ def to_bayesianmodel(model, verbose=3):
         adjmat = model
     if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_bayesianmodel" should be adjmat or a dict containing a key "adjmat".')
 
-    if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianModel.')
+    if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianNetwork.')
 
     # Convert to vector
     vec = adjmat2vec(adjmat)[['source', 'target']].values.tolist()
-    # Make BayesianModel
-    bayesianmodel = BayesianModel(vec)
+    # Make BayesianNetwork
+    bayesianmodel = BayesianNetwork(vec)
     # Return
     return bayesianmodel
 
@@ -116,7 +116,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         DAG = DAG.get('model', None)
 
     if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
-        raise Exception("[bnlearn] >Error: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianModel.BayesianModel>")
+        raise Exception("[bnlearn] >Error: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianNetwork>")
     elif ('pgmpy' in str(type(DAG))):
         # Extract methodtype from existing model.
         if ('bayesianmodel' in str(type(DAG)).lower()):
@@ -132,7 +132,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         # modeel.add_nodes_from(DAG)
     elif isinstance(DAG, list) and methodtype=='bayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
-        DAG = BayesianModel(DAG)
+        DAG = BayesianNetwork(DAG)
 
     if CPD is not None:
         for cpd in CPD:
@@ -157,7 +157,7 @@ def print_CPD(DAG, checkmodel=False):
 
     Parameters
     ----------
-    DAG : pgmpy.models.BayesianModel.BayesianModel
+    DAG : pgmpy.models.BayesianNetwork
         model of the DAG.
     checkmodel : bool
         Check the validity of the model. The default is True
@@ -460,7 +460,7 @@ def sampling(DAG, n=1000, verbose=3):
 
     """
     if n<=0: raise ValueError('n must be 1 or larger')
-    if 'BayesianModel' not in str(type(DAG['model'])): raise ValueError('DAG must contain BayesianModel.')
+    if 'BayesianNetwork' not in str(type(DAG['model'])): raise ValueError('DAG must contain BayesianNetwork.')
     if verbose>=3: print('[bnlearn] >Forward sampling for %.0d samples..' %(n))
 
     if len(DAG['model'].get_cpds())==0:
@@ -484,14 +484,14 @@ def _bif2bayesian(pathname, verbose=3):
     >>> from pgmpy.readwrite import BIFReader
     >>> reader = BIFReader("bif_test.bif")
     >>> reader.get_model()
-    <pgmpy.models.BayesianModel.BayesianModel object at 0x7f20af154320>
+    <pgmpy.models.BayesianNetwork object at 0x7f20af154320>
     """
     if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
 
     bifmodel=readwrite.BIF.BIFReader(path=pathname)
 
     try:
-        model = BayesianModel(bifmodel.variable_edges)
+        model = BayesianNetwork(bifmodel.variable_edges)
         model.name = bifmodel.network_name
         model.add_nodes_from(bifmodel.variable_names)
 
@@ -558,7 +558,7 @@ def _DAG_sprinkler(CPD=True):
 
     """
     # Define the network structure
-    model = BayesianModel([('Cloudy', 'Sprinkler'),
+    model = BayesianNetwork([('Cloudy', 'Sprinkler'),
                            ('Cloudy', 'Rain'),
                            ('Sprinkler', 'Wet_Grass'),
                            ('Rain', 'Wet_Grass')])
@@ -875,6 +875,11 @@ def plot(model,
     >>>
 
     """
+    # Check whether edges are available
+    if model['adjmat'].sum().sum()==0:
+        if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
+        return None
+
     # Plot properties
     defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True}
     params_interactive = {**defaults, **params_interactive}
@@ -1173,7 +1178,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     Returns
     -------
     dict containing model and adjmat.
-        model : BayesianModel
+        model : BayesianNetwork
         adjmat : Adjacency matrix
 
     Examples

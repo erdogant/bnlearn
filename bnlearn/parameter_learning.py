@@ -114,8 +114,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
     if isinstance(model, dict):
         model = model['model']
 
-    # Convert to BayesianModel
-    if 'BayesianModel' not in str(type(model)):
+    # Convert to BayesianNetwork
+    if 'BayesianNetwork' not in str(type(model)):
         model = bnlearn.to_bayesianmodel(adjmat, verbose=config['verbose'])
 
     # pe = ParameterEstimator(model, df)

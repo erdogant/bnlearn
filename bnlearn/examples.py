@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from pgmpy.inference import VariableElimination
-from pgmpy.models import BayesianModel, NaiveBayes
+from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
@@ -277,9 +277,9 @@ bn.plot(model2, pos=G['pos'])
 df = bn.import_example('random')
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
+model = bn.independence_test(model, df, prune=True)
 # Plot
 bn.plot(model)
-
 
 # %% Naive Bayesian model
 
@@ -389,7 +389,7 @@ df=bn.import_example(data='andes')
 # PGMPY
 est = TreeSearch(df)
 dag = est.estimate(estimator_type="tan", class_node='DISPLACEM0')
-bnq = BayesianModel(dag.edges())
+bnq = BayesianNetwork(dag.edges())
 bnq.fit(df, estimator=None)  # None means maximum likelihood estimator
 bn_infer = VariableElimination(bnq)
 q = bn_infer.query(variables=['DISPLACEM0'], evidence={'RApp1': 1})
@@ -442,10 +442,10 @@ model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
 
 # Compare results
 assert dag.edges()==model['model'].edges()
-assert dag.edges()==model['model_edges']
+assert list(dag.edges())==model['model_edges']
 
 # from pgmpy.inference import VariableElimination
-# bnp = BayesianModel(dag.edges())
+# bnp = BayesianNetwork(dag.edges())
 # bn_infer = VariableElimination(bnp)
 # bnp.fit(df)
 # a = bn_infer.query(variables=['Target'], evidence={'X':'c'})
