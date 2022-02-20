@@ -13,6 +13,26 @@ import bnlearn as bn
 # print(dir(bn.inference))
 
 # %%
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges, verbose=0, methodtype='bayes')
+model = bn.parameter_learning.fit(DAG, df, verbose=3)
+bn.print_CPD(DAG)
+
+model = bn.parameter_learning.fit(DAG, df, verbose=3)
+bn.print_CPD(model)
+
+
+
+# %%
 import bnlearn as bn
 
 # Example dataset
