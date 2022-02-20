@@ -365,7 +365,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>model : BayesianModel
+<dd class="field-even"><p>model : BayesianNetwork
 adjmat : Adjacency matrix</p>
 </dd>
 <dt class="field-odd">Return type</dt>
@@ -648,7 +648,7 @@ None : Returns all Probabilities</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>DAG</strong> (<em>pgmpy.models.BayesianModel.BayesianModel</em>) – model of the DAG.</p></li>
+<li><p><strong>DAG</strong> (<em>pgmpy.models.BayesianNetwork</em>) – model of the DAG.</p></li>
 <li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
 </ul>
 </dd>
@@ -733,8 +733,8 @@ None : Returns all Probabilities</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.to_bayesianmodel">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_bayesianmodel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_bayesianmodel" title="Permalink to this definition"></a></dt>
-<dd><p>Convert adjacency matrix to BayesianModel.</p>
-<p>Convert a adjacency to a BayesianModel. This is required as some of the
+<dd><p>Convert adjacency matrix to BayesianNetwork.</p>
+<p>Convert a adjacency to a Bayesian model. This is required as some of the
 functionalities, such as <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> output a DAGmodel.
 If the output of <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> is provided, the adjmat is extracted and processed.</p>
 <dl class="field-list simple">
@@ -745,7 +745,7 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <dd class="field-even"><p><strong>Exception</strong> – The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>bayesianmodel</strong> – BayesianModel that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
+<dd class="field-odd"><p><strong>bayesianmodel</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Object</p>
