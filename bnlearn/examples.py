@@ -31,7 +31,6 @@ model = bn.parameter_learning.fit(DAG, df, verbose=3)
 bn.print_CPD(model)
 
 
-
 # %%
 import bnlearn as bn
 

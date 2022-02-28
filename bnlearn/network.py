@@ -19,8 +19,6 @@ from ismember import ismember
 import bnlearn
 
 # %% Make graph from adjacency matrix
-
-
 def to_graph(adjmat, verbose=3):
     assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
     config = dict()
@@ -60,8 +58,6 @@ def adjmat2graph(adjmat):
     return(G)
 
 # %% Compute similarity matrix
-
-
 def compute_centrality(G, centrality='betweenness', verbose=3):
     if verbose>=3: print('[bnlearn] >Computing centrality %s' %(centrality))
 
@@ -103,8 +99,6 @@ def compute_centrality(G, centrality='betweenness', verbose=3):
     return(G, score)
 
 # %% compute clusters
-
-
 def cluster(G, verbose=3):
     if verbose>=3: print('[bnlearn] >Clustering using best partition')
     # Partition
@@ -118,8 +112,6 @@ def cluster(G, verbose=3):
     return(G, labx)
 
 # %% Compute cluster comparison
-
-
 def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', verbose=3):
     config=dict()
     config['showfig']=showfig
@@ -154,8 +146,6 @@ def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodt
     return(G, df)
 
 # %% Make plot
-
-
 def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default', verbose=3):
     # https://networkx.github.io/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html
     config=dict()
@@ -205,15 +195,11 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
     return(fig)
 
 # %% Normalize in good d3 range
-
-
 def normalize_size(getsizes, minscale=0.1, maxscale=4):
     getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
     return(getsizes)
 
 # %% Convert dataframe to Graph
-
-
 def df2G(df_nodes, df_edges, verbose=3):
     # Put edge information in G
     #    G = nx.from_pandas_edgelist(df_edges, 'source', 'target', ['weight', 'edge_weight','edge_width','source_label','target_label'])
@@ -231,8 +217,6 @@ def df2G(df_nodes, df_edges, verbose=3):
     return(G)
 
 # %% Convert Graph to dataframe
-
-
 def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minmax=[1, 100], verbose=3):
     # Nodes
     df_node_names=pd.DataFrame([*G.nodes], columns=['node_name'])
@@ -293,8 +277,6 @@ def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minma
     return(df_nodes, df_edges)
 
 # %% Make plot
-
-
 def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default', verbose=3):
     import networkx as nx
     from bokeh.io import show, output_file
@@ -329,8 +311,6 @@ def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[2
     show(plot)
 
 # %% Comparison of two networks
-
-
 def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
     # Make sure columns and indices to match
     [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
@@ -389,8 +369,6 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     return(scores, adjmat_diff)
 
 # %% Make graph layout
-
-
 def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
     if isinstance(pos, type(None)):
         if layout=='fruchterman_reingold':
@@ -403,8 +381,6 @@ def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
     return(pos)
 
 # %% Convert to pandas dataframe
-
-
 def is_DataFrame(data, verbose=0):
     if isinstance(data, list):
         data=pd.DataFrame(data)
