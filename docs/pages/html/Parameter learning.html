@@ -293,7 +293,7 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </figure>
 <p>Suppose we observed <strong>N</strong> “cloudy” occurences among a total of “all clouds”, so we might guess that about “50%” of “cloudy” are “sprinkler” or so.
 According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal. This is achieved when using the <em>relative frequencies</em>.
-From the <em>bnlearn</em> library, we’ll need the <a class="reference internal" href="bnlearn.parameter_learning.html#bnlearn.parameter_learning.fit" title="bnlearn.parameter_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> for this exercise:</p>
+From the <em>bnlearn</em> library, we’ll need the <code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code> for this exercise:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG_update</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>

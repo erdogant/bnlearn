@@ -102,10 +102,7 @@
 <p class="caption" role="heading"><span class="caption-text">API References</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.parameter_learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
@@ -134,98 +131,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-bnlearn.parameter_learning">
-<span id="bnlearn-parameter-learning"></span><h1>bnlearn.parameter_learning<a class="headerlink" href="#module-bnlearn.parameter_learning" title="Permalink to this headline"></a></h1>
-<p>Parameter learning.</p>
-<section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
-<p>Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
-To make sense of the given data, we can start by counting how often each state of the variable occurs.
-If the variable is dependent on the parents, the counts are done conditionally on the parents states,
-i.e. for seperately for each parent configuration</p>
-<dl class="simple">
-<dt>Currently, the library supports parameter learning for <em>discrete</em> nodes:</dt><dd><ul class="simple">
-<li><p>Maximum Likelihood Estimation</p></li>
-<li><p>Bayesian Estimation</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="bnlearn.parameter_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Learn the parameters given the DAG and data.</p>
-<dl>
-<dt>Maximum Likelihood Estimation</dt><dd><p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>,
-with which the variable states have occured. We observed x cloudy` among a total of <cite>all clouds</cite>,
-so we might guess that about <cite>50%</cite> of <cite>cloudy</cite> are <a href="#id1"><span class="problematic" id="id2">`</span></a>sprinkler or so.
-According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal.
-This is achieved when using the relative frequencies.</p>
-<p>While very straightforward, the ML estimator has the problem of <em>overfitting</em> to the data.
-If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
-When estimating parameters for Bayesian networks, lack of data is a frequent problem.
-Even if the total sample size is very large, the fact that state counts are done conditionally
-for each parents configuration causes immense fragmentation.
-If a variable has 3 parents that can each take 10 states, then state counts will
-be done seperately for <cite>10^3 = 1000</cite> parents configurations.
-This makes MLE very fragile and unstable for learning Bayesian Network parameters.
-A way to mitigate MLE’s overfitting is <em>Bayesian Parameter Estimation</em>.</p>
-</dd>
-<dt>Bayesian Parameter Estimation</dt><dd><p>The Bayesian Parameter Estimator starts with already existing prior CPDs,
-that express our beliefs about the variables <em>before</em> the data was observed.
-Those “priors” are then updated, using the state counts from the observed data.</p>
-<p>One can think of the priors as consisting in <em>pseudo state counts</em>, that are added
-to the actual counts before normalization. Unless one wants to encode specific beliefs
-about the distributions of the variables, one commonly chooses uniform priors,
-i.e. ones that deem all states equiprobable.</p>
-<p>A very simple prior is the so-called <em>K2</em> prior, which simply adds <cite>1</cite> to the count of every single state.
-A somewhat more sensible choice of prior is <em>BDeu</em> (Bayesian Dirichlet equivalent uniform prior).
-For BDeu we need to specify an <em>equivalent sample size</em> <cite>N</cite> and then the pseudo-counts are
-the equivalent of having observed <cite>N</cite> uniform samples of each variable (and each parent configuration).</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>dict</em>) – Contains a model object with a key ‘adjmat’ (adjacency matrix).</p></li>
-<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Pandas DataFrame containing the data.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'bayes'</em><em>)</em>) – <dl class="simple">
-<dt>Strategy for parameter learning.</dt><dd><ul>
-<li><p>’ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators.</p></li>
-<li><p>’bayes’: Bayesian Parameter Estimation.</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>3.</strong> (<em>Print progress to screen. The default is</em>) – 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict with model.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Parameter learning</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_update</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># LOAD BIF FILE</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;alarm&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_update</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-</section>
+  <section id="bnlearn-parameter-learning">
+<h1>bnlearn.parameter_learning<a class="headerlink" href="#bnlearn-parameter-learning" title="Permalink to this headline"></a></h1>
 </section>
 
 
