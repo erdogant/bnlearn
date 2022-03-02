@@ -54,6 +54,7 @@ Let's start by importing some data. We need a DAG and CPD.
 
     scores, adjmat = bn.compare_networks(model_sl, model)
 
+
 .. raw:: html
 
 	<hr>

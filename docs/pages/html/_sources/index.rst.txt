@@ -129,7 +129,13 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+
+
 .. raw:: html
+
+	<hr>
+
+	<iframe src="https://github.com/sponsors/erdogant/button" title="Sponsor erdogant" height="35" width="116" style="border: 0;"></iframe>
 
 	<hr>
 	<center>

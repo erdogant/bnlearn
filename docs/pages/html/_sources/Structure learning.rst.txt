@@ -472,3 +472,12 @@ Lets determine the best possible structure for the *water* dataset.
 
     1. https://ermongroup.github.io/cs228-notes/learning/structure/
     2. https://doi.org/10.1007/978-0-387-30164-8_850
+
+.. raw:: html
+
+	<hr>
+	<center>
+		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+	</center>
+	<hr>
+
