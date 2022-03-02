@@ -90,13 +90,15 @@ Content
 
 .. toctree::
   :maxdepth: 1
-  :caption: API References
+  :caption: Documentation
 
-
+  Blog
   bnlearn.structure_learning
   bnlearn.parameter_learning
   bnlearn.inference
   bnlearn.bnlearn
+
+* :ref:`genindex`
 
 
 References
@@ -122,6 +124,17 @@ Available on Github, `erdogant/bnlearn <https://github.com/erdogant/bnlearn/>`_.
 Please report bugs, issues and feature extensions there.
 
 
+Sponsor this project
+------------------------------
+
+If you like this project, **star** this repo and become a **sponsor**!
+Read more why this is important on my sponsor page!
+
+.. raw:: html
+
+	<iframe src="https://github.com/sponsors/erdogant/button" title="Sponsor erdogant" height="35" width="116" style="border: 0;"></iframe>
+
+
 Indices and tables
 ==================
 
@@ -132,10 +145,6 @@ Indices and tables
 
 
 .. raw:: html
-
-	<hr>
-
-	<iframe src="https://github.com/sponsors/erdogant/button" title="Sponsor erdogant" height="35" width="116" style="border: 0;"></iframe>
 
 	<hr>
 	<center>
