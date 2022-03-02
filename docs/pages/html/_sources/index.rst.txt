@@ -125,7 +125,7 @@ Please report bugs, issues and feature extensions there.
 
 
 Citing *bnlearn*
-----------------
+-----------------
 
 The bibtex can be found in the right side menu at the `github page <https://github.com/erdogant/bnlearn/>`_.
 
@@ -133,8 +133,8 @@ The bibtex can be found in the right side menu at the `github page <https://gith
 Sponsor this project
 ------------------------------
 
-If you like this project, **star** this repo and become a **sponsor**!
-Read more why this is important on my sponsor page!
+If you like this project, Star this repo at the github page and become a sponsor!
+Read more why this is important on my sponsor page. The sponsor button will direct you to the sponsor github page.
 
 .. raw:: html
 
