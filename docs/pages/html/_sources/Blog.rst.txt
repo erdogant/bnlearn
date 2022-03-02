@@ -19,6 +19,15 @@ Github
 	`Source code of bnlearn can be found at Github <https://github.com/erdogant/bnlearn/>`_
 
 
+Colab Notebook
+''''''''''''''''''''''''''''''''''''''''''
+
+.. note::
+	Experiment with bnlearn using the `Colab notebook`_.
+
+.. _Colab notebook: https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/bnlearn.ipynb
+
+
 
 Sponsor this project
 '''''''''''''''''''''
