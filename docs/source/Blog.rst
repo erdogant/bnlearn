@@ -5,10 +5,10 @@
 Blog
 '''''''''''''''''''''
 
-.. tip::
+.. note::
 	`Medium blog: Step-by-step guide for structure learning <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
-.. tip::
+.. note::
 	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 
@@ -32,7 +32,7 @@ Colab Notebook
 Sponsor this project
 '''''''''''''''''''''
 
-.. note::
+.. tip::
 	If you like this project, Star this repo at the github page and become a sponsor!
 	Read more why this is important on my sponsor page. The sponsor button will direct you to the sponsor github page.
 
