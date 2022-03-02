@@ -487,3 +487,11 @@ Print the values:
     # array([0.25588235, 0.74411765])
 
 
+.. raw:: html
+
+	<hr>
+	<center>
+		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+	</center>
+	<hr>
+

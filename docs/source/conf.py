@@ -88,3 +88,5 @@ html_css_files = ['css/custom.css',]
 
 # A list of files that should not be packed into the epub file
 epub_exclude_files = ['search.html']
+
+# html_sidebars = { '**': ['globaltoc.html', 'relations.html', 'carbon_ads.html', 'sourcelink.html', 'searchbox.html'] }

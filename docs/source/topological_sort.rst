@@ -93,3 +93,13 @@ It is also possible to examine the topological ordering of your learned DAG usin
     G = bn.plot(model)
     # Topological ordering of the entire graph
     bn.topological_sort(model)
+
+
+.. raw:: html
+
+	<hr>
+	<center>
+		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+	</center>
+	<hr>
+

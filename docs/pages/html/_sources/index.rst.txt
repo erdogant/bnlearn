@@ -131,4 +131,9 @@ Indices and tables
 
 .. raw:: html
 
-	<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+	<hr>
+	<center>
+		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+	</center>
+	<hr>
+
