@@ -124,6 +124,12 @@ Available on Github, `erdogant/bnlearn <https://github.com/erdogant/bnlearn/>`_.
 Please report bugs, issues and feature extensions there.
 
 
+Citing *bnlearn*
+----------------
+
+The bibtex can be found in the right side menu at the `github page <https://github.com/erdogant/bnlearn/>`_.
+
+
 Sponsor this project
 ------------------------------
 
