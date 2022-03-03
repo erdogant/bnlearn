@@ -164,9 +164,11 @@ A structured overview of all examples are now available on the [documentation pa
 
 ##### Various
 
-* [Example: Saving and loading](https://erdogant.github.io/bnlearn/pages/html/saving%20and%20loading.html)
+* [Example: Saving and loading of bnlearn models](https://erdogant.github.io/bnlearn/pages/html/saving%20and%20loading.html)
 
 * [Example: Data conversions such as creating sparse datamatrix from source-target and weights](https://erdogant.github.io/bnlearn/pages/html/dataframe%20conversions.html?highlight=target#)
+
+* [Example: Load DAG from BIF files](https://erdogant.github.io/bnlearn/pages/html/Examples.html?highlight=comparison#import-from-bif)
 
 
 
@@ -297,59 +299,6 @@ CPD of Wet_Grass:
 (Rain _|_ Sprinkler | Cloudy)
 (Wet_Grass _|_ Cloudy | Rain, Sprinkler)
 ```
-
-## Example: Loading DAG from bif files
-```python
-
-    import bnlearn as bn
-    
-    bif_file= 'sprinkler'
-    bif_file= 'alarm'
-    bif_file= 'andes'
-    bif_file= 'asia'
-    bif_file= 'pathfinder'
-    bif_file= 'sachs'
-    bif_file= 'miserables'
-    bif_file= 'filepath/to/model.bif'
-    
-    # Loading example dataset
-    model = bn.import_DAG(bif_file)
-```
-
-## Example: Comparing networks
-```python
-
-    # Load asia DAG
-    model = bn.import_DAG('asia')
-    # plot ground truth
-    G = bn.plot(model)
-    # Sampling
-    df = bn.sampling(model, n=10000)
-    # Structure learning of sampled dataset
-    model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    # Compute edge strength with the chi_square test statistic
-    model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
-    # Plot based on structure learning of sampled data
-    bn.plot(model_sl, pos=G['pos'])
-    # Compare networks and make plot
-    bn.compare_networks(model, model_sl, pos=G['pos'])
-```
-
-#### Graph of ground truth
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
-</p>
-
-#### Graph based on Structure learning
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2b_asia_structurelearning.png" width="600" />
-</p>
-
-#### Graph comparison ground truth vs. structure learning
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2c_asia_comparion.png" width="600" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2d_confmatrix.png" width="400" />
-</p>
 
 
 ## Example: Titanic example
