@@ -149,6 +149,10 @@ import bnlearn as bn
 
 * [Example: Use case in the medical domain](https://erdogant.github.io/bnlearn/pages/html/UseCases.html)
 
+* [Example: Saving and loading](https://erdogant.github.io/bnlearn/pages/html/saving%20and%20loading.html)
+
+* [Example: Data conversions such as creating sparse datamatrix from source-target and weights](https://erdogant.github.io/bnlearn/pages/html/dataframe%20conversions.html?highlight=target#)
+
 # 
 
 ### Unstructured Examples
@@ -574,49 +578,7 @@ In case of static plotting, simply set the interactive parameter to False.
 </p>
 
 
-### Example of saving and loading models
 
-```python
-
-    # Load data
-    # Import example
-    df = bn.import_example(data='asia')
-    # Learn structure
-    model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
-    # Save model
-    bn.save(model, filepath='bnlearn_model', overwrite=True)
-    # Load model
-    model = bn.load(filepath='bnlearn_model')
-
-```
-
-
-### Example of creating sparse datamatrix from source-target and weights
-
-```python
-
-    import bnlearn as bn
-
-    source=['Cloudy','Cloudy','Sprinkler','Rain']
-    target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
-    weights=[1,2,1,3]
-
-    # Convert into sparse datamatrix
-    df = bn.vec2df(source, target, weights=weights)
-
-    # The sparse datamatrix should now contain 1 row cloudy-Sprinkler, 2 rows with Cloudy-Rain, 1 row with Sprinkler-Wet_Grass and 3 rows with Rain-Wet_Grass
-
-
-    #    Cloudy   Rain  Sprinkler  Wet_Grass
-    # 0    True  False       True      False
-    # 1    True   True      False      False
-    # 2    True   True      False      False
-    # 3   False  False       True       True
-    # 4   False   True      False       True
-    # 5   False   True      False       True
-    # 6   False   True      False       True
-
-```
 
 
 ### References
