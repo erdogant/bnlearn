@@ -39,15 +39,16 @@ On the [documentation pages](https://erdogant.github.io/bnlearn/) you can find d
 
 # 
 
-### Conda installation
+### Installation
+
+##### Conda
 It is advisable to create a new environment. 
 ```bash
 conda create -n env_bnlearn python=3.8
 conda activate env_bnlearn
 ```
 
-### Install bnlearn from PyPI
-
+##### Install bnlearn from PyPI
 ```bash
 pip install bnlearn
 ```
