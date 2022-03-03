@@ -132,10 +132,7 @@ Learning a Bayesian network can be split into the underneath problems which are 
 
 A structured overview of all examples are now available on the [documentation pages](https://erdogant.github.io/bnlearn/).
 
-```python
-import bnlearn as bn
-```
-
+##### Structure learning
 
 * [Example: Learn structure on the Sprinkler dataset based on a simple dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-1)
 
@@ -143,17 +140,37 @@ import bnlearn as bn
 
 * [Example: Learn structure on  more complex dataset (Asia)](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-3)
 
+##### Parameter learning
+
 * [Example: Parameter learning using a DAG and dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#parameter-learning)
+
+
+##### Inferences
+
+* [Example: Make predictions on a dataframe using inference](https://erdogant.github.io/bnlearn/pages/html/Predict.html)
+
+
+##### Complete examples
 
 * [Example: Create a Bayesian Network, learn its parameters from data and perform the inference](https://erdogant.github.io/bnlearn/pages/html/Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference)
 
 * [Example: Use case in the medical domain](https://erdogant.github.io/bnlearn/pages/html/UseCases.html)
 
+
+##### Plotting  
+* [Example: Interactive plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#)
+
+* [Example: Static plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#static-plot)
+
+##### Various
+
 * [Example: Saving and loading](https://erdogant.github.io/bnlearn/pages/html/saving%20and%20loading.html)
 
 * [Example: Data conversions such as creating sparse datamatrix from source-target and weights](https://erdogant.github.io/bnlearn/pages/html/dataframe%20conversions.html?highlight=target#)
 
-# 
+
+
+ 
 
 ### Unstructured Examples
 
@@ -382,142 +399,8 @@ CPD of Wet_Grass:
 </p>
 
 
-## Example: Make predictions on a dataframe using inference
-
-```python
-
-    # Import bnlearn
-    import bnlearn as bn
-    
-    # Load example DataFrame
-    df = bn.import_example('asia')
-
-    print(df)
-    #       smoke  lung  bronc  xray
-    # 0         0     1      0     1
-    # 1         0     1      1     1
-    # 2         1     1      1     1
-    # 3         1     1      0     1
-    # 4         1     1      1     1
-    #     ...   ...    ...   ...
-    # 9995      1     1      1     1
-    # 9996      1     1      1     1
-    # 9997      0     1      1     1
-    # 9998      0     1      1     1
-    # 9999      0     1      1     0
-
-    # Create some edges for the DAG
-    edges = [('smoke', 'lung'),
-             ('smoke', 'bronc'),
-             ('lung', 'xray'),
-             ('bronc', 'xray')]
-    
-    # Construct the Bayesian DAG
-    DAG = bn.make_DAG(edges, verbose=0)
-    # Plot DAG
-    bn.plot(DAG)
-
-    # Learn CPDs using the DAG and dataframe
-    model = bn.parameter_learning.fit(DAG, df, verbose=3)
-    bn.print_CPD(model)
-
-    # CPD of smoke:
-    # +----------+----------+
-    # | smoke(0) | 0.500364 |
-    # +----------+----------+
-    # | smoke(1) | 0.499636 |
-    # +----------+----------+
-    # CPD of lung:
-    # +---------+---------------------+----------------------+
-    # | smoke   | smoke(0)            | smoke(1)             |
-    # +---------+---------------------+----------------------+
-    # | lung(0) | 0.13753633720930233 | 0.055131004366812224 |
-    # +---------+---------------------+----------------------+
-    # | lung(1) | 0.8624636627906976  | 0.9448689956331878   |
-    # +---------+---------------------+----------------------+
-    # CPD of bronc:
-    # +----------+--------------------+--------------------+
-    # | smoke    | smoke(0)           | smoke(1)           |
-    # +----------+--------------------+--------------------+
-    # | bronc(0) | 0.5988372093023255 | 0.3282387190684134 |
-    # +----------+--------------------+--------------------+
-    # | bronc(1) | 0.4011627906976744 | 0.6717612809315866 |
-    # +----------+--------------------+--------------------+
-    # CPD of xray:
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | bronc   | bronc(0)            | bronc(0)            | bronc(1)            | bronc(1)            |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | lung    | lung(0)             | lung(1)             | lung(0)             | lung(1)             |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | xray(0) | 0.7787162162162162  | 0.09028393966282165 | 0.7264957264957265  | 0.07695139911634757 |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | xray(1) | 0.22128378378378377 | 0.9097160603371783  | 0.27350427350427353 | 0.9230486008836525  |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # [bnlearn] >Independencies:
-    # (smoke ⟂ xray | bronc, lung)
-    # (lung ⟂ bronc | smoke)
-    # (bronc ⟂ lung | smoke)
-    # (xray ⟂ smoke | bronc, lung)
-    # [bnlearn] >Nodes: ['smoke', 'lung', 'bronc', 'xray']
-    # [bnlearn] >Edges: [('smoke', 'lung'), ('smoke', 'bronc'), ('lung', 'xray'), ('bronc', 'xray')]
-
-
-    # Generate some example data based on DAG
-    Xtest = bn.sampling(model, n=1000)
-    print(Xtest)
-    #      smoke  lung  bronc  xray
-    # 0        1     1      1     1
-    # 1        1     1      1     1
-    # 2        0     1      1     1
-    # 3        1     0      0     1
-    # 4        1     1      1     1
-    # ..     ...   ...    ...   ...
-    # 995      1     1      1     1
-    # 996      1     1      1     1
-    # 997      0     1      0     1
-    # 998      0     1      0     1
-    # 999      0     1      1     1
-    
-
-    # Make predictions
-    Pout = bn.predict(model, Xtest, variables=['bronc','xray'])
-    print(Pout)
-
-    #         xray  bronc         p
-    # 0       1      0  0.542757
-    # 1       1      1  0.624117
-    # 2       1      0  0.542757
-    # 3       1      1  0.624117
-    # 4       1      0  0.542757
-    # ..    ...    ...       ...
-    # 995     1      0  0.542757
-    # 996     1      0  0.542757
-    # 997     1      1  0.624117
-    # 998     1      1  0.624117
-    # 999     1      0  0.542757
-
-    
-
-```
 
 ### Example of interactive plotting
-
-```python
-
-    import bnlearn as bn
-    df = bn.import_example()
-
-    # Structure learning
-    model = bn.structure_learning.fit(df)
-
-
-    # Add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
-
-    # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn title', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
-
-```
 
 <p align="center">
   <a href="https://erdogant.github.io/docs/d3graph/sprinkler_example/sprinkler_bnlearn_causal_network.html">
@@ -527,51 +410,6 @@ CPD of Wet_Grass:
 
 
 ### Example of interactive and static plotting
-In case of static plotting, simply set the interactive parameter to False.
-
-```python
-
-    import bnlearn as bn
-    df = bn.import_example(data='asia')
-    
-    # Structure learning
-    model = bn.structure_learning.fit(df)
-    
-    # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, df, test='chi_square', prune=True)
-    
-    # Make simple interactive plot
-    bn.plot(model, interactive=False)
-    
-    # Make simple interactive plot, set color to entire network
-    bn.plot(model, node_color='#8A0707', interactive=True)
-    
-    # Make simple interactive plot, set color and size to entire network
-    bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
-    
-    # Set some edge properties
-    edge_properties = bn.get_edge_properties(model)
-    edge_properties['either', 'xray']['color']='#8A0707'
-    edge_properties['either', 'xray']['weight']=4
-    edge_properties['bronc', 'dysp']['weight']=15
-    edge_properties['bronc', 'dysp']['color']='#8A0707'
-    
-    # Set some node properties
-    node_properties = bn.get_node_properties(model)
-    node_properties['xray']['node_color']='#8A0707'
-    node_properties['xray']['node_size']=20
-    
-    # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, node_color='#8A0707', node_properties=node_properties, edge_properties=edge_properties, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
-    
-    # Add more parameters for the static plot
-    bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, node_properties=node_properties, edge_properties=edge_properties, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000', 'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60})
-    
-    # You can also add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
-
-
-```
 
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/network_settings.png" width="600" />
