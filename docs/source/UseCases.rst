@@ -1,3 +1,64 @@
+Use Case Titanic
+=======================
+
+In the following example we will learn the structure on the Titanic dataset.
+
+.. code-block:: python
+
+	import bnlearn as bn
+
+	# Load example mixed dataset
+	df = bn.import_example(data='titanic')
+
+	# Convert to onehot
+	dfhot, dfnum = bn.df2onehot(df)
+
+	# Structure learning
+	# model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
+	model = bn.structure_learning.fit(dfnum)
+	# Plot
+	G = bn.plot(model, interactive=False)
+
+	# Compute edge strength with the chi_square test statistic
+	model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
+	# Plot
+	bn.plot(model, interactive=False, pos=G['pos'])
+
+	# Parameter learning
+	model = bn.parameter_learning.fit(model, dfnum)
+
+
+.. |fig_t1| image:: ../figs/titanic_dag.png
+.. |fig_t2| image:: ../figs/titanic_dag_chi2.png
+
+.. table:: Learned structure on the Titanic dataset.
+   :align: center
+
+   +----------+----------+
+   | |fig_t1| | |fig_t2| |
+   +----------+----------+
+
+At this point we can also start making inferences:
+
+.. code-block:: python
+
+	# Make inference
+	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
+	print(query)
+	print(query.df)
+
+	# Another inference using only sex for evidence
+	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
+	print(query)
+	print(query.df)
+
+	# Print model
+	bn.print_CPD(model)
+
+
+
+
+
 Use Case Medical domain
 =======================
 

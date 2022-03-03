@@ -99,7 +99,8 @@
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Medical domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="current">
@@ -734,8 +735,8 @@ None : Returns all Probabilities</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="bnlearn.bnlearn.to_bayesianmodel">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_bayesianmodel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_bayesianmodel" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="bnlearn.bnlearn.to_bayesiannetwork">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_bayesiannetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_bayesiannetwork" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix to BayesianNetwork.</p>
 <p>Convert a adjacency to a Bayesian model. This is required as some of the
 functionalities, such as <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> output a DAGmodel.
@@ -748,7 +749,7 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <dd class="field-even"><p><strong>Exception</strong> – The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>bayesianmodel</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
+<dd class="field-odd"><p><strong>BayesianNetwork</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>Object</p>
