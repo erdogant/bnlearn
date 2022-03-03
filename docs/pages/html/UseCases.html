@@ -198,11 +198,41 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make inference</span>
 <span class="n">query</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="c1"># +----+------------+----------+</span>
+<span class="c1"># |    |   Survived |        p |</span>
+<span class="c1"># +====+============+==========+</span>
+<span class="c1"># |  0 |          0 | 0.555427 |</span>
+<span class="c1"># +----+------------+----------+</span>
+<span class="c1"># |  1 |          1 | 0.444573 |</span>
+<span class="c1"># +----+------------+----------+</span>
+<span class="c1">#</span>
+<span class="c1"># +-------------+-----------------+</span>
+<span class="c1"># | Survived    |   phi(Survived) |</span>
+<span class="c1"># +=============+=================+</span>
+<span class="c1"># | Survived(0) |          0.5554 |</span>
+<span class="c1"># +-------------+-----------------+</span>
+<span class="c1"># | Survived(1) |          0.4446 |</span>
+<span class="c1"># +-------------+-----------------+</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1">#  Survived         p</span>
+<span class="c1">#  0            0.555427</span>
+<span class="c1">#  1            0.444573</span>
+
 
 <span class="c1"># Another inference using only sex for evidence</span>
 <span class="n">query</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+<span class="c1"># +----+------------+----------+</span>
+<span class="c1"># |    |   Survived |        p |</span>
+<span class="c1"># +====+============+==========+</span>
+<span class="c1"># |  0 |          0 | 0.406634 |</span>
+<span class="c1"># +----+------------+----------+</span>
+<span class="c1"># |  1 |          1 | 0.593366 |</span>
+<span class="c1"># +----+------------+----------+</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
 
 <span class="c1"># Print model</span>

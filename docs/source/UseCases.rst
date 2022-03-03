@@ -45,11 +45,41 @@ At this point we can also start making inferences:
 	# Make inference
 	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
 	print(query)
+
+	# +----+------------+----------+
+	# |    |   Survived |        p |
+	# +====+============+==========+
+	# |  0 |          0 | 0.555427 |
+	# +----+------------+----------+
+	# |  1 |          1 | 0.444573 |
+	# +----+------------+----------+
+	# 
+	# +-------------+-----------------+
+	# | Survived    |   phi(Survived) |
+	# +=============+=================+
+	# | Survived(0) |          0.5554 |
+	# +-------------+-----------------+
+	# | Survived(1) |          0.4446 |
+	# +-------------+-----------------+
+
 	print(query.df)
+
+	#  Survived         p
+	#  0		0.555427
+	#  1		0.444573
+
 
 	# Another inference using only sex for evidence
 	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 	print(query)
+	# +----+------------+----------+
+	# |    |   Survived |        p |
+	# +====+============+==========+
+	# |  0 |          0 | 0.406634 |
+	# +----+------------+----------+
+	# |  1 |          1 | 0.593366 |
+	# +----+------------+----------+
+
 	print(query.df)
 
 	# Print model
