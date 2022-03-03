@@ -267,8 +267,8 @@ A structured overview of all examples are now available on the [documentation pa
 * http://www.bnlearn.com/bnrepository/
 
 ### Maintainer
+
     Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
     Please cite in your publications if this is useful for your research (see citation).
     All kinds of contributions are welcome!
-    If you wish to buy me a <a href="https://www.buymeacoffee.com/erdogant">Coffee</a> for this work, it is very appreciated :)
     See [LICENSE](LICENSE) for details.
