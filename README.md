@@ -41,8 +41,7 @@ On the [documentation pages](https://erdogant.github.io/bnlearn/) you can find d
 
 ### Installation
 
-##### Conda
-It is advisable to create a new environment. 
+##### It is advisable to create a new environment (e.g. with Conda). 
 ```bash
 conda create -n env_bnlearn python=3.8
 conda activate env_bnlearn
