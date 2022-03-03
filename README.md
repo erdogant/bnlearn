@@ -19,25 +19,40 @@
 
 ``bnlearn`` is Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods. This work is inspired by the R package (bnlearn.com) that has been very usefull to me for many years. Although there are very good Python packages for probabilistic graphical models, it still can remain difficult (and somethimes unnecessarily) to (re)build certain pipelines. Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information.
 
+# 
 **Star this repo if you like it! ⭐️**
+# 
 
-## 
+### Blogs
+
+Read the blogs to get a structured overview of bayesian methods and detailed usage of ``bnlearn``.
+
+* [Step-by-step guide for structure learning.](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
+* [Step-by-step guide for knowledge-driven models.](https://link.medium.com/LBp2eW8qNjb)
+
+# 
 
 
-### Blog/Documentation
+### [Documentation pages](https://erdogant.github.io/bnlearn/)
 
-* [**Step-by-step guide for structure learning!**](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
-* [**Step-by-step guide for knowledge-driven models!**](https://link.medium.com/LBp2eW8qNjb)
-* [**bnlearn documentation pages (Sphinx)**](https://erdogant.github.io/bnlearn/)
+On the [documentation pages](https://erdogant.github.io/bnlearn/) you can find detailed information about the working of the ``bnlearn`` with many examples. 
 
+# 
 
-### Method overview
-Learning a Bayesian network can be split into the underneath problems which are all implemented in this package:
-* Structure learning: Given the data: Estimate a DAG that captures the dependencies between the variables.
-* Parameter learning: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
-* Inference: Given the learned model: Determine the exact probability values for your queries.
+### Installation
 
-#### The following functions are available after installation:
+##### It is advisable to create a new environment (e.g. with Conda). 
+```bash
+conda create -n env_bnlearn python=3.8
+conda activate env_bnlearn
+```
+
+##### Install bnlearn from PyPI
+```bash
+pip install bnlearn
+```
+
+##### The following functions are available after installation:
 
 ```python
 # Import library
@@ -85,46 +100,81 @@ bn.topological_sort()
 # See below for the exact working of the functions
 ```
 
-#### The following methods are also included:
+##### The following methods are also included:
 * inference
 * sampling
 * comparing two networks
 * loading bif files
 * conversion of directed to undirected graphs
 
-## Conda installation
-It is advisable to create a new environment. 
-```bash
-conda create -n env_bnlearn python=3.8
-conda activate env_bnlearn
-```
 
-## Pip installation
-```python
-pip install bnlearn
-```
+# 
 
-* Alternatively, install bnlearn from the GitHub source:
-```bash
-git clone https://github.com/erdogant/bnlearn.git
-cd bnlearn
-pip install -U .
-```  
+### Method overview
+Learning a Bayesian network can be split into the underneath problems which are all implemented in this package:
 
-## Import bnlearn package
-```python
-import bnlearn as bn
-```
+* **Structure learning**: Given the data: Estimate a DAG that captures the dependencies between the variables.
+   * There are multiple manners to perform structure learning.
+      * Exhaustivesearch
+      * Hillclimbsearch
+      * NaiveBayes
+      * TreeSearch
+          * Chow-liu
+          * Tree-augmented Naive Bayes (TAN)
 
-## Example: Structure Learning
+* **Parameter learning**: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
+* **Inference**: Given the learned model: Determine the exact probability values for your queries.
 
-There are multiple manners to perform structure learning.
-* Exhaustivesearch
-* Hillclimbsearch
-* NaiveBayes
-* TreeSearch
-    * Chow-liu
-    * Tree-augmented Naive Bayes (TAN)
+# 
+
+
+### Examples
+
+A structured overview of all examples are now available on the [documentation pages](https://erdogant.github.io/bnlearn/).
+
+##### Structure learning
+
+* [Example: Learn structure on the Sprinkler dataset based on a simple dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-1)
+
+* [Example: Comparison method and scoring types types for structure learning](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-2)
+
+* [Example: Learn structure on  more complex dataset (Asia)](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-3)
+
+##### Parameter learning
+
+* [Example: Parameter learning using a DAG and dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#parameter-learning)
+
+
+##### Inferences
+
+* [Example: Make predictions on a dataframe using inference](https://erdogant.github.io/bnlearn/pages/html/Predict.html)
+
+
+##### Complete examples
+
+* [Example: Create a Bayesian Network, learn its parameters from data and perform the inference](https://erdogant.github.io/bnlearn/pages/html/Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference)
+
+* [Example: Use case in the medical domain](https://erdogant.github.io/bnlearn/pages/html/UseCases.html)
+
+
+##### Plotting  
+* [Example: Interactive plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#)
+
+* [Example: Static plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#static-plot)
+
+##### Various
+
+* [Example: Saving and loading of bnlearn models](https://erdogant.github.io/bnlearn/pages/html/saving%20and%20loading.html)
+
+* [Example: Data conversions such as creating sparse datamatrix from source-target and weights](https://erdogant.github.io/bnlearn/pages/html/dataframe%20conversions.html?highlight=target#)
+
+* [Example: Load DAG from BIF files](https://erdogant.github.io/bnlearn/pages/html/Examples.html?highlight=comparison#import-from-bif)
+
+
+
+ 
+
+### Unstructured Examples
 
 
 ```python
@@ -250,59 +300,6 @@ CPD of Wet_Grass:
 (Wet_Grass _|_ Cloudy | Rain, Sprinkler)
 ```
 
-## Example: Loading DAG from bif files
-```python
-
-    import bnlearn as bn
-    
-    bif_file= 'sprinkler'
-    bif_file= 'alarm'
-    bif_file= 'andes'
-    bif_file= 'asia'
-    bif_file= 'pathfinder'
-    bif_file= 'sachs'
-    bif_file= 'miserables'
-    bif_file= 'filepath/to/model.bif'
-    
-    # Loading example dataset
-    model = bn.import_DAG(bif_file)
-```
-
-## Example: Comparing networks
-```python
-
-    # Load asia DAG
-    model = bn.import_DAG('asia')
-    # plot ground truth
-    G = bn.plot(model)
-    # Sampling
-    df = bn.sampling(model, n=10000)
-    # Structure learning of sampled dataset
-    model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    # Compute edge strength with the chi_square test statistic
-    model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
-    # Plot based on structure learning of sampled data
-    bn.plot(model_sl, pos=G['pos'])
-    # Compare networks and make plot
-    bn.compare_networks(model, model_sl, pos=G['pos'])
-```
-
-#### Graph of ground truth
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2a_asia_groundtruth.png" width="600" />
-</p>
-
-#### Graph based on Structure learning
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2b_asia_structurelearning.png" width="600" />
-</p>
-
-#### Graph comparison ground truth vs. structure learning
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2c_asia_comparion.png" width="600" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig2d_confmatrix.png" width="400" />
-</p>
-
 
 ## Example: Titanic example
 
@@ -351,142 +348,8 @@ CPD of Wet_Grass:
 </p>
 
 
-## Example: Make predictions on a dataframe using inference
-
-```python
-
-    # Import bnlearn
-    import bnlearn as bn
-    
-    # Load example DataFrame
-    df = bn.import_example('asia')
-
-    print(df)
-    #       smoke  lung  bronc  xray
-    # 0         0     1      0     1
-    # 1         0     1      1     1
-    # 2         1     1      1     1
-    # 3         1     1      0     1
-    # 4         1     1      1     1
-    #     ...   ...    ...   ...
-    # 9995      1     1      1     1
-    # 9996      1     1      1     1
-    # 9997      0     1      1     1
-    # 9998      0     1      1     1
-    # 9999      0     1      1     0
-
-    # Create some edges for the DAG
-    edges = [('smoke', 'lung'),
-             ('smoke', 'bronc'),
-             ('lung', 'xray'),
-             ('bronc', 'xray')]
-    
-    # Construct the Bayesian DAG
-    DAG = bn.make_DAG(edges, verbose=0)
-    # Plot DAG
-    bn.plot(DAG)
-
-    # Learn CPDs using the DAG and dataframe
-    model = bn.parameter_learning.fit(DAG, df, verbose=3)
-    bn.print_CPD(model)
-
-    # CPD of smoke:
-    # +----------+----------+
-    # | smoke(0) | 0.500364 |
-    # +----------+----------+
-    # | smoke(1) | 0.499636 |
-    # +----------+----------+
-    # CPD of lung:
-    # +---------+---------------------+----------------------+
-    # | smoke   | smoke(0)            | smoke(1)             |
-    # +---------+---------------------+----------------------+
-    # | lung(0) | 0.13753633720930233 | 0.055131004366812224 |
-    # +---------+---------------------+----------------------+
-    # | lung(1) | 0.8624636627906976  | 0.9448689956331878   |
-    # +---------+---------------------+----------------------+
-    # CPD of bronc:
-    # +----------+--------------------+--------------------+
-    # | smoke    | smoke(0)           | smoke(1)           |
-    # +----------+--------------------+--------------------+
-    # | bronc(0) | 0.5988372093023255 | 0.3282387190684134 |
-    # +----------+--------------------+--------------------+
-    # | bronc(1) | 0.4011627906976744 | 0.6717612809315866 |
-    # +----------+--------------------+--------------------+
-    # CPD of xray:
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | bronc   | bronc(0)            | bronc(0)            | bronc(1)            | bronc(1)            |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | lung    | lung(0)             | lung(1)             | lung(0)             | lung(1)             |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | xray(0) | 0.7787162162162162  | 0.09028393966282165 | 0.7264957264957265  | 0.07695139911634757 |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # | xray(1) | 0.22128378378378377 | 0.9097160603371783  | 0.27350427350427353 | 0.9230486008836525  |
-    # +---------+---------------------+---------------------+---------------------+---------------------+
-    # [bnlearn] >Independencies:
-    # (smoke ⟂ xray | bronc, lung)
-    # (lung ⟂ bronc | smoke)
-    # (bronc ⟂ lung | smoke)
-    # (xray ⟂ smoke | bronc, lung)
-    # [bnlearn] >Nodes: ['smoke', 'lung', 'bronc', 'xray']
-    # [bnlearn] >Edges: [('smoke', 'lung'), ('smoke', 'bronc'), ('lung', 'xray'), ('bronc', 'xray')]
-
-
-    # Generate some example data based on DAG
-    Xtest = bn.sampling(model, n=1000)
-    print(Xtest)
-    #      smoke  lung  bronc  xray
-    # 0        1     1      1     1
-    # 1        1     1      1     1
-    # 2        0     1      1     1
-    # 3        1     0      0     1
-    # 4        1     1      1     1
-    # ..     ...   ...    ...   ...
-    # 995      1     1      1     1
-    # 996      1     1      1     1
-    # 997      0     1      0     1
-    # 998      0     1      0     1
-    # 999      0     1      1     1
-    
-
-    # Make predictions
-    Pout = bn.predict(model, Xtest, variables=['bronc','xray'])
-    print(Pout)
-
-    #         xray  bronc         p
-    # 0       1      0  0.542757
-    # 1       1      1  0.624117
-    # 2       1      0  0.542757
-    # 3       1      1  0.624117
-    # 4       1      0  0.542757
-    # ..    ...    ...       ...
-    # 995     1      0  0.542757
-    # 996     1      0  0.542757
-    # 997     1      1  0.624117
-    # 998     1      1  0.624117
-    # 999     1      0  0.542757
-
-    
-
-```
 
 ### Example of interactive plotting
-
-```python
-
-    import bnlearn as bn
-    df = bn.import_example()
-
-    # Structure learning
-    model = bn.structure_learning.fit(df)
-
-
-    # Add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
-
-    # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'directed':True, 'height':'800px', 'width':'70%', 'notebook':False, 'heading':'bnlearn title', 'layout':None, 'font_color': False, 'bgcolor':'#ffffff'})
-
-```
 
 <p align="center">
   <a href="https://erdogant.github.io/docs/d3graph/sprinkler_example/sprinkler_bnlearn_causal_network.html">
@@ -496,100 +359,13 @@ CPD of Wet_Grass:
 
 
 ### Example of interactive and static plotting
-In case of static plotting, simply set the interactive parameter to False.
-
-```python
-
-    import bnlearn as bn
-    df = bn.import_example(data='asia')
-    
-    # Structure learning
-    model = bn.structure_learning.fit(df)
-    
-    # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, df, test='chi_square', prune=True)
-    
-    # Make simple interactive plot
-    bn.plot(model, interactive=False)
-    
-    # Make simple interactive plot, set color to entire network
-    bn.plot(model, node_color='#8A0707', interactive=True)
-    
-    # Make simple interactive plot, set color and size to entire network
-    bn.plot(model, node_color='#8A0707', node_size=25, interactive=True)
-    
-    # Set some edge properties
-    edge_properties = bn.get_edge_properties(model)
-    edge_properties['either', 'xray']['color']='#8A0707'
-    edge_properties['either', 'xray']['weight']=4
-    edge_properties['bronc', 'dysp']['weight']=15
-    edge_properties['bronc', 'dysp']['color']='#8A0707'
-    
-    # Set some node properties
-    node_properties = bn.get_node_properties(model)
-    node_properties['xray']['node_color']='#8A0707'
-    node_properties['xray']['node_size']=20
-    
-    # Add more parameters for the interactive plot
-    bn.plot(model, interactive=True, node_color='#8A0707', node_properties=node_properties, edge_properties=edge_properties, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
-    
-    # Add more parameters for the static plot
-    bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, node_properties=node_properties, edge_properties=edge_properties, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000', 'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60})
-    
-    # You can also add some parameters for the interactive plot
-    bn.plot(model, interactive=True, params_interactive = {'height':'600px'})
-
-
-```
 
 <p align="center">
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/network_settings.png" width="600" />
 </p>
 
 
-### Example of saving and loading models
 
-```python
-
-    # Load data
-    # Import example
-    df = bn.import_example(data='asia')
-    # Learn structure
-    model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
-    # Save model
-    bn.save(model, filepath='bnlearn_model', overwrite=True)
-    # Load model
-    model = bn.load(filepath='bnlearn_model')
-
-```
-
-
-### Example of creating sparse datamatrix from source-target and weights
-
-```python
-
-    import bnlearn as bn
-
-    source=['Cloudy','Cloudy','Sprinkler','Rain']
-    target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
-    weights=[1,2,1,3]
-
-    # Convert into sparse datamatrix
-    df = bn.vec2df(source, target, weights=weights)
-
-    # The sparse datamatrix should now contain 1 row cloudy-Sprinkler, 2 rows with Cloudy-Rain, 1 row with Sprinkler-Wet_Grass and 3 rows with Rain-Wet_Grass
-
-
-    #    Cloudy   Rain  Sprinkler  Wet_Grass
-    # 0    True  False       True      False
-    # 1    True   True      False      False
-    # 2    True   True      False      False
-    # 3   False  False       True       True
-    # 4   False   True      False       True
-    # 5   False   True      False       True
-    # 6   False   True      False       True
-
-```
 
 
 ### References
