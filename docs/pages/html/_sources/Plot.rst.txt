@@ -110,7 +110,7 @@ To create static plots simply set the ``interactive=False`` in all the above exa
 
 
 Comparison of two networks
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+==================================
 
 In come cases you may derive two networks where you need to know the differences. In the following example I will learn a network using structure learning and compare it to the ground truth.
 
@@ -151,8 +151,8 @@ In come cases you may derive two networks where you need to know the differences
    +----------+
 
 
-.. |fig_cn1| image:: ../figs/fig2c_asia_comparion.png
-.. |fig_cn2| image:: ../figs/fig2d_confmatrix.png
+.. |fig_cn3| image:: ../figs/fig2c_asia_comparion.png
+.. |fig_cn4| image:: ../figs/fig2d_confmatrix.png
 
 .. table:: Differences in het edges.
    :align: center

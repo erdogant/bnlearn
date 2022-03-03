@@ -89,10 +89,8 @@
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#static-plot">Static plot</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#comparison-of-two-networks">Comparison of two networks</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="#static-plot">Static plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#comparison-of-two-networks">Comparison of two networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#node-properties">Node properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#edge-properties">Edge properties</a></li>
 </ul>
@@ -225,8 +223,9 @@ pip install pyvis
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">params_static</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;font_family&#39;</span><span class="p">:</span><span class="s1">&#39;times new roman&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;node_shape&#39;</span><span class="p">:</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="s1">&#39;#000000&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
+</section>
 <section id="comparison-of-two-networks">
-<h2>Comparison of two networks<a class="headerlink" href="#comparison-of-two-networks" title="Permalink to this headline"></a></h2>
+<h1>Comparison of two networks<a class="headerlink" href="#comparison-of-two-networks" title="Permalink to this headline"></a></h1>
 <p>In come cases you may derive two networks where you need to know the differences. In the following example I will learn a network using structure learning and compare it to the ground truth.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load asia DAG</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
@@ -256,9 +255,9 @@ pip install pyvis
 <col style="width: 100%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><img alt="fig_cn1" src="_images/fig2c_asia_comparion.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="fig_cn1" src="_images/fig2a_asia_groundtruth.png" /></p></td>
 </tr>
-<tr class="row-even"><td><p><img alt="fig_cn2" src="_images/fig2d_confmatrix.png" /></p></td>
+<tr class="row-even"><td><p><img alt="fig_cn2" src="_images/fig2b_asia_structurelearning.png" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -269,12 +268,11 @@ pip install pyvis
 <col style="width: 50%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a href="#id7"><span class="problematic" id="id8">|fig_cn3|</span></a></p></td>
-<td><p><a href="#id9"><span class="problematic" id="id10">|fig_cn4|</span></a></p></td>
+<tr class="row-odd"><td><p><img alt="fig_cn3" src="_images/fig2c_asia_comparion.png" /></p></td>
+<td><p><img alt="fig_cn4" src="_images/fig2d_confmatrix.png" /></p></td>
 </tr>
 </tbody>
 </table>
-</section>
 </section>
 <section id="node-properties">
 <h1>Node properties<a class="headerlink" href="#node-properties" title="Permalink to this headline"></a></h1>

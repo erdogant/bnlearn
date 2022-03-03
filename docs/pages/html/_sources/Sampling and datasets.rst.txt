@@ -42,13 +42,16 @@ Example Sampling
 
 .. code-block:: python
  
-   import bnlearn as bn
+	# Import library
+	import bnlearn as bn
+	
+	# Load example DAG with CPD
+	model = bn.import_DAG('sprinkler', CPD=True)
+	
+	# Take 1000 samples from the CPD distribution
+	df = bn.sampling(model, n=1000)
 
-   DAG = bn.import_DAG('sprinkler', CPD=True)
-
-   df = bn.sampling(DAG, n=1000)
-
-   df.head()
+	df.head()
 
 
 .. table::
