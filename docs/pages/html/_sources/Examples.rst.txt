@@ -61,15 +61,24 @@ The sprinkler DAG is a special case because it is not loaded from a *bif* file b
 Import from BIF
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-
 Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
 
-.. code-block:: python
-   
-   import bnlearn as bn
-   # Import dataset
-   DAG = bn.import_DAG('filepath/to/model.bif')
 
+.. code-block:: python
+
+	import bnlearn as bn
+
+	bif_file= 'sprinkler'
+	bif_file= 'alarm'
+	bif_file= 'andes'
+	bif_file= 'asia'
+	bif_file= 'pathfinder'
+	bif_file= 'sachs'
+	bif_file= 'miserables'
+	bif_file= 'filepath/to/model.bif'
+
+	# Loading example dataset
+	model = bn.import_DAG(bif_file)
 
 
 Start with RAW data

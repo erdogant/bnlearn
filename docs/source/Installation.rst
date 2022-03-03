@@ -1,5 +1,5 @@
 Installation
-============
+==============
 
 Installation of ``bnlearn`` is straightforward. 
 

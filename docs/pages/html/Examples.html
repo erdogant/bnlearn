@@ -204,8 +204,18 @@ The sprinkler DAG is a special case because it is not loaded from a <em>bif</em>
 <h2>Import from BIF<a class="headerlink" href="#import-from-bif" title="Permalink to this headline"></a></h2>
 <p>Each Bayesian DAG model that is loaded with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> is derived from a <em>bif</em> file. The <em>bif</em> file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[<a class="reference external" href="http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm">http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm</a>].</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="c1"># Import dataset</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;filepath/to/model.bif&#39;</span><span class="p">)</span>
+
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;alarm&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;andes&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;asia&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;pathfinder&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;filepath/to/model.bif&#39;</span>
+
+<span class="c1"># Loading example dataset</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">bif_file</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

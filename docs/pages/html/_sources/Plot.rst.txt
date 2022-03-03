@@ -109,6 +109,59 @@ To create static plots simply set the ``interactive=False`` in all the above exa
     bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
 
 
+Comparison of two networks
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In come cases you may derive two networks where you need to know the differences. In the following example I will learn a network using structure learning and compare it to the ground truth.
+
+.. code-block:: python
+
+	# Load asia DAG
+	model = bn.import_DAG('asia')
+
+	# plot ground truth
+	G = bn.plot(model)
+	
+	# Sampling
+	df = bn.sampling(model, n=10000)
+	
+	# Structure learning of sampled dataset
+	model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+	
+	# Compute edge strength with the chi_square test statistic
+	model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
+	
+	# Plot based on structure learning of sampled data
+	bn.plot(model_sl, pos=G['pos'])
+	
+	# Compare networks and make plot
+	bn.compare_networks(model, model_sl, pos=G['pos'])
+
+
+.. |fig_cn1| image:: ../figs/fig2a_asia_groundtruth.png
+.. |fig_cn2| image:: ../figs/fig2b_asia_structurelearning.png
+
+.. table:: Asia ground truth network versus the learned network.
+   :align: center
+
+   +----------+
+   | |fig_cn1||
+   +----------+
+   | |fig_cn2||
+   +----------+
+
+
+.. |fig_cn1| image:: ../figs/fig2c_asia_comparion.png
+.. |fig_cn2| image:: ../figs/fig2d_confmatrix.png
+
+.. table:: Differences in het edges.
+   :align: center
+
+   +----------+----------+
+   | |fig_cn3|| |fig_cn4||
+   +----------+----------+
+
+
 Node properties
 =================
 
