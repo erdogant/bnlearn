@@ -192,15 +192,13 @@ A structured overview of all examples are now available on the [documentation pa
     # Example dataframe sprinkler_data.csv can be loaded with: 
     df = bn.import_example()
     # df = pd.read_csv('sprinkler_data.csv')
-    model = bn.structure_learning.fit(df)
-    # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, df)
-    G = bn.plot(model)
 ```
 
-#### df looks like this
-```
-     Cloudy  Sprinkler  Rain  Wet_Grass
+##### df looks like this
+
+```python
+
+Cloudy  Sprinkler  Rain  Wet_Grass
 0         0          1     0          1
 1         1          1     1          1
 2         1          0     1          1
@@ -212,6 +210,15 @@ A structured overview of all examples are now available on the [documentation pa
 997       0          0     1          0
 998       1          1     0          1
 999       1          0     1          1
+
+```
+
+```python
+
+    model = bn.structure_learning.fit(df)
+    # Compute edge strength with the chi_square test statistic
+    model = bn.independence_test(model, df)
+    G = bn.plot(model)
 ```
 
 <p align="center">
@@ -219,7 +226,9 @@ A structured overview of all examples are now available on the [documentation pa
 </p>
 
 * Choosing various methodtypes and scoringtypes:
+
 ```python
+
     model_hc_bic  = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     model_hc_k2   = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
     model_hc_bdeu = bn.structure_learning.fit(df, methodtype='hc', scoretype='bdeu')
