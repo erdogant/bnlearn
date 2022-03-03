@@ -19,25 +19,40 @@
 
 ``bnlearn`` is Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods. This work is inspired by the R package (bnlearn.com) that has been very usefull to me for many years. Although there are very good Python packages for probabilistic graphical models, it still can remain difficult (and somethimes unnecessarily) to (re)build certain pipelines. Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information.
 
+# 
 **Star this repo if you like it! ⭐️**
+# 
 
-## 
+### Blogs
+
+Read the blogs to get a structured overview of bayesian methods and detailed usage of ``bnlearn``.
+
+* [Step-by-step guide for structure learning.](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
+* [Step-by-step guide for knowledge-driven models.](https://link.medium.com/LBp2eW8qNjb)
+
+# 
 
 
-### Blog/Documentation
+### [Documentation pages](https://erdogant.github.io/bnlearn/)
 
-* [**Step-by-step guide for structure learning!**](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
-* [**Step-by-step guide for knowledge-driven models!**](https://link.medium.com/LBp2eW8qNjb)
-* [**bnlearn documentation pages (Sphinx)**](https://erdogant.github.io/bnlearn/)
+On the [documentation pages](https://erdogant.github.io/bnlearn/) you can find detailed information about the working of the ``bnlearn`` with many examples. 
 
+# 
 
-### Method overview
-Learning a Bayesian network can be split into the underneath problems which are all implemented in this package:
-* Structure learning: Given the data: Estimate a DAG that captures the dependencies between the variables.
-* Parameter learning: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
-* Inference: Given the learned model: Determine the exact probability values for your queries.
+### Conda installation
+It is advisable to create a new environment. 
+```bash
+conda create -n env_bnlearn python=3.8
+conda activate env_bnlearn
+```
 
-#### The following functions are available after installation:
+### Install bnlearn from PyPI
+
+```bash
+pip install bnlearn
+```
+
+##### The following functions are available after installation:
 
 ```python
 # Import library
@@ -85,46 +100,47 @@ bn.topological_sort()
 # See below for the exact working of the functions
 ```
 
-#### The following methods are also included:
+##### The following methods are also included:
 * inference
 * sampling
 * comparing two networks
 * loading bif files
 * conversion of directed to undirected graphs
 
-## Conda installation
-It is advisable to create a new environment. 
-```bash
-conda create -n env_bnlearn python=3.8
-conda activate env_bnlearn
-```
 
-## Pip installation
-```python
-pip install bnlearn
-```
+# 
 
-* Alternatively, install bnlearn from the GitHub source:
-```bash
-git clone https://github.com/erdogant/bnlearn.git
-cd bnlearn
-pip install -U .
-```  
+### Method overview
+Learning a Bayesian network can be split into the underneath problems which are all implemented in this package:
 
-## Import bnlearn package
+* **Structure learning**: Given the data: Estimate a DAG that captures the dependencies between the variables.
+   * There are multiple manners to perform structure learning.
+      * Exhaustivesearch
+      * Hillclimbsearch
+      * NaiveBayes
+      * TreeSearch
+          * Chow-liu
+          * Tree-augmented Naive Bayes (TAN)
+
+* **Parameter learning**: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
+* **Inference**: Given the learned model: Determine the exact probability values for your queries.
+
+# 
+
+
+### Examples
+
+All examples are now available on the [documentation pages](https://erdogant.github.io/bnlearn/).
+
+
+* [Example: Find peaks in 1D-vector with low number of samples](https://erdogant.github.io/findpeaks/pages/html/Examples.html#find-peaks-in-low-sampled-dataset)
+
+* [Example: Comparison peak detection methods](https://erdogant.github.io/findpeaks/pages/html/Examples.html#comparison-methods-1)
+
+
 ```python
 import bnlearn as bn
 ```
-
-## Example: Structure Learning
-
-There are multiple manners to perform structure learning.
-* Exhaustivesearch
-* Hillclimbsearch
-* NaiveBayes
-* TreeSearch
-    * Chow-liu
-    * Tree-augmented Naive Bayes (TAN)
 
 
 ```python
