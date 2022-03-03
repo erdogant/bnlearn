@@ -150,17 +150,27 @@ A structured overview of all examples are now available on the [documentation pa
 * [Example: Make predictions on a dataframe using inference](https://erdogant.github.io/bnlearn/pages/html/Predict.html)
 
 
+##### Sampling
+
+* [Example: Sampling to create datasets](https://erdogant.github.io/bnlearn/pages/html/Sampling%20and%20datasets.html)
+
+
 ##### Complete examples
 
 * [Example: Create a Bayesian Network, learn its parameters from data and perform the inference](https://erdogant.github.io/bnlearn/pages/html/Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference)
 
 * [Example: Use case in the medical domain](https://erdogant.github.io/bnlearn/pages/html/UseCases.html)
 
+* [Example: Use case Titanic](https://erdogant.github.io/bnlearn/pages/html/UseCases.html#)
+
+
 
 ##### Plotting  
 * [Example: Interactive plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#)
 
 * [Example: Static plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html#static-plot)
+
+* [Example: Comparison of two networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks)
 
 ##### Various
 
@@ -171,10 +181,9 @@ A structured overview of all examples are now available on the [documentation pa
 * [Example: Load DAG from BIF files](https://erdogant.github.io/bnlearn/pages/html/Examples.html?highlight=comparison#import-from-bif)
 
 
+ #
 
- 
-
-### Unstructured Examples
+### Various basic examples
 
 
 ```python
@@ -248,124 +257,6 @@ A structured overview of all examples are now available on the [documentation pa
     print(query.df)
 
 ```
-
-## Example: Sampling to create dataframe
-```python
-    import bnlearn as bn
-    model = bn.import_DAG('sprinkler')
-    df = bn.sampling(model, n=1000)
-```
-
-* Output of the model:
-```
-[bnlearn] Model correct: True
-CPD of Cloudy:
-+-----------+-----+
-| Cloudy(0) | 0.5 |
-+-----------+-----+
-| Cloudy(1) | 0.5 |
-+-----------+-----+
-CPD of Sprinkler:
-+--------------+-----------+-----------+
-| Cloudy       | Cloudy(0) | Cloudy(1) |
-+--------------+-----------+-----------+
-| Sprinkler(0) | 0.5       | 0.9       |
-+--------------+-----------+-----------+
-| Sprinkler(1) | 0.5       | 0.1       |
-+--------------+-----------+-----------+
-CPD of Rain:
-+---------+-----------+-----------+
-| Cloudy  | Cloudy(0) | Cloudy(1) |
-+---------+-----------+-----------+
-| Rain(0) | 0.8       | 0.2       |
-+---------+-----------+-----------+
-| Rain(1) | 0.2       | 0.8       |
-+---------+-----------+-----------+
-CPD of Wet_Grass:
-+--------------+--------------+--------------+--------------+--------------+
-| Sprinkler    | Sprinkler(0) | Sprinkler(0) | Sprinkler(1) | Sprinkler(1) |
-+--------------+--------------+--------------+--------------+--------------+
-| Rain         | Rain(0)      | Rain(1)      | Rain(0)      | Rain(1)      |
-+--------------+--------------+--------------+--------------+--------------+
-| Wet_Grass(0) | 1.0          | 0.1          | 0.1          | 0.01         |
-+--------------+--------------+--------------+--------------+--------------+
-| Wet_Grass(1) | 0.0          | 0.9          | 0.9          | 0.99         |
-+--------------+--------------+--------------+--------------+--------------+
-[bnlearn] Nodes: ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
-[bnlearn] Edges: [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
-[bnlearn] Independencies:
-(Cloudy _|_ Wet_Grass | Rain, Sprinkler)
-(Sprinkler _|_ Rain | Cloudy)
-(Rain _|_ Sprinkler | Cloudy)
-(Wet_Grass _|_ Cloudy | Rain, Sprinkler)
-```
-
-
-## Example: Titanic example
-
-```python
-
-    import bnlearn as bn
-    
-    # Load example mixed dataset
-    df = bn.import_example(data='titanic')
-
-    # Convert to onehot
-    dfhot, dfnum = bn.df2onehot(df)
-
-    # Structure learning
-    # model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
-    model = bn.structure_learning.fit(dfnum)
-    # Plot
-    G = bn.plot(model, interactive=False)
-
-    # Compute edge strength with the chi_square test statistic
-    model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
-    # Plot
-    bn.plot(model, interactive=False, pos=G['pos'])
-
-    # Parameter learning
-    model = bn.parameter_learning.fit(model, dfnum)
-    
-    # Make inference
-    query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
-    print(query)
-    print(query.df)
-    
-    # Another inference using only sex for evidence
-    query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
-    print(query)
-    print(query.df)
-    
-    # Print model
-    bn.print_CPD(model)
-
-```
-#### Plot DAG
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/titanic_dag.png" width="400" />
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/titanic_dag_chi2.png" width="400" />
-</p>
-
-
-
-### Example of interactive plotting
-
-<p align="center">
-  <a href="https://erdogant.github.io/docs/d3graph/sprinkler_example/sprinkler_bnlearn_causal_network.html">
-     <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/interactive_plot.png" width="1200" />
-  </a>
-</p>
-
-
-### Example of interactive and static plotting
-
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/network_settings.png" width="600" />
-</p>
-
-
-
 
 
 ### References
