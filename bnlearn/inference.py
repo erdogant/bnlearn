@@ -85,7 +85,7 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
 
     # Convert to BayesianNetwork
     if 'BayesianNetwork' not in str(type(model)):
-        model = bnlearn.to_bayesianmodel(adjmat, verbose=verbose)
+        model = bnlearn.to_bayesiannetwork(adjmat, verbose=verbose)
 
     try:
         model_infer = VariableElimination(model)

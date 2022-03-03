@@ -116,7 +116,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     # Convert to BayesianNetwork
     if 'BayesianNetwork' not in str(type(model)):
-        model = bnlearn.to_bayesianmodel(adjmat, verbose=config['verbose'])
+        model = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
 
     # pe = ParameterEstimator(model, df)
     # print("\n", pe.state_counts('Cloudy'))

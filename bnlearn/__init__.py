@@ -1,5 +1,5 @@
 from bnlearn.bnlearn import (
-    to_bayesianmodel,
+    to_bayesiannetwork,
     make_DAG,
     print_CPD,
     import_DAG,
@@ -35,7 +35,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.6.1'
+__version__ = '0.6.2'
 
 try:
     import pgmpy

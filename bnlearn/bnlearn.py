@@ -31,7 +31,7 @@ import bnlearn
 
 
 # %%  Convert adjmat to bayesian model
-def to_bayesianmodel(model, verbose=3):
+def to_bayesiannetwork(model, verbose=3):
     """Convert adjacency matrix to BayesianNetwork.
 
     Description
@@ -52,7 +52,7 @@ def to_bayesianmodel(model, verbose=3):
 
     Returns
     -------
-    bayesianmodel : Object
+    BayesianNetwork : Object
         BayesianNetwork that can be used in ``parameter_learning.fit``.
 
     """
@@ -60,7 +60,7 @@ def to_bayesianmodel(model, verbose=3):
         adjmat = model.get('adjmat', None)
     else:
         adjmat = model
-    if adjmat is None: raise Exception('[bnlearn] >Error: input for "to_bayesianmodel" should be adjmat or a dict containing a key "adjmat".')
+    if adjmat is None: raise Exception('[bnlearn] >Error: input for "bayesiannetwork" should be adjmat or a dict containing a key "adjmat".')
 
     if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianNetwork.')
 
@@ -178,7 +178,7 @@ def print_CPD(DAG, checkmodel=False):
             # print CPDs using Maximum Likelihood Estimators
             for node in DAG.state_names:
                 print(DAG.estimate_cpd(node))
-        elif ('bayesianmodel' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
+        elif ('bayesiannetwork' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
             # print CPDs using Bayesian Parameter Estimation
             if len(DAG.get_cpds())==0:
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
@@ -186,7 +186,7 @@ def print_CPD(DAG, checkmodel=False):
             for cpd in DAG.get_cpds():
                 print("CPD of {variable}:".format(variable=cpd.variable))
                 print(cpd)
-            if ('bayesianmodel' in str(type(DAG)).lower()):
+            if ('bayesiannetwork' in str(type(DAG)).lower()):
                 print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
             print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
             print('[bnlearn] >Edges: %s' %(DAG.edges()))
