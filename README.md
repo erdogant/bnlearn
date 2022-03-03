@@ -130,17 +130,28 @@ Learning a Bayesian network can be split into the underneath problems which are 
 
 ### Examples
 
-All examples are now available on the [documentation pages](https://erdogant.github.io/bnlearn/).
-
-
-* [Example: Find peaks in 1D-vector with low number of samples](https://erdogant.github.io/findpeaks/pages/html/Examples.html#find-peaks-in-low-sampled-dataset)
-
-* [Example: Comparison peak detection methods](https://erdogant.github.io/findpeaks/pages/html/Examples.html#comparison-methods-1)
-
+A structured overview of all examples are now available on the [documentation pages](https://erdogant.github.io/bnlearn/).
 
 ```python
 import bnlearn as bn
 ```
+
+
+* [Example: Learn structure on the Sprinkler dataset based on a simple dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-1)
+
+* [Example: Comparison method and scoring types types for structure learning](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-2)
+
+* [Example: Learn structure on  more complex dataset (Asia)](https://erdogant.github.io/bnlearn/pages/html/Examples.html#example-3)
+
+* [Example: Parameter learning using a DAG and dataframe](https://erdogant.github.io/bnlearn/pages/html/Examples.html#parameter-learning)
+
+* [Example: Create a Bayesian Network, learn its parameters from data and perform the inference](https://erdogant.github.io/bnlearn/pages/html/Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference)
+
+* [Example: Use case in the medical domain](https://erdogant.github.io/bnlearn/pages/html/UseCases.html)
+
+# 
+
+### Unstructured Examples
 
 
 ```python
