@@ -272,12 +272,16 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 * https://erdogant.github.io/bnlearn/
 * http://pgmpy.org
 * https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
-* http://www.bnlearn.com/
 * http://www.bnlearn.com/bnrepository/
 
-### Maintainer
+### Contribute
+* All kinds of contributions are welcome!
 
-    Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
-    Please cite in your publications if this is useful for your research (see citation).
-    All kinds of contributions are welcome!
-    See [LICENSE](LICENSE) for details.
+### Citation
+Please cite d3graph in your publications if this is useful for your research. See column right for citation information.
+
+### Maintainer
+* Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
+* Contributions are welcome.
+* If you wish to buy me a <a href="https://erdogant.github.io/donate/?currency=USD&amount=5">Coffee</a> for this work, it is very appreciated :)
+
