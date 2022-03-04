@@ -267,6 +267,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 
 ```
 
+<hr>
 
 ### References
 * https://erdogant.github.io/bnlearn/
