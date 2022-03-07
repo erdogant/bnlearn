@@ -92,7 +92,7 @@ Content
   :maxdepth: 1
   :caption: Documentation
 
-  Blog
+  Documentation
   bnlearn.structure_learning
   bnlearn.parameter_learning
   bnlearn.inference
