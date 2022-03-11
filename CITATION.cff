@@ -14,7 +14,7 @@ keywords:
   - "Causal relationships"
 license: "MIT"
 message: "If you use this software, please cite it using these metadata."
-repository-code: "https://github.com/erdogant/bnlearn"
+repository-code: "https://erdogant.github.io/bnlearn"
 title: "bnlearn - Library for Bayesian network learning and inference"
 version: "0.3.22"
 ...
