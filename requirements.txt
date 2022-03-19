@@ -20,3 +20,4 @@ fsspec
 pypickle
 tabulate
 ipywidgets
+pyvis

@@ -45,6 +45,7 @@ df = bn.vec2df(source, target, weights=weights)
 DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
 # Make plot
 bn.plot(DAG, interactive=True)
+bn.plot(DAG, interactive=False)
 
 
 # %%
