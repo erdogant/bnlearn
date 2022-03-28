@@ -52,8 +52,8 @@ if not version.parse(matplotlib.__version__) >= version.parse("3.3.4"):
     raise ImportError('[bnlearn] >Error: Matplotlib version should be >= v3.3.4.\nTry to: pip install -U matplotlib')
 
 import networkx as nx
-if not version.parse(nx.__version__) > version.parse("2.7"):
-    raise ImportError('[bnlearn] >Error: networkx version should be > 2.7.\nTry to: pip install -U networkx')
+if not version.parse(nx.__version__) >= version.parse("2.7.1"):
+    raise ImportError('[bnlearn] >Error: networkx version should be > 2.7.1.\nTry to: pip install -U networkx')
 
 
 # module level doc-string

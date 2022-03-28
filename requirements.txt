@@ -2,7 +2,7 @@
 #conda activate env_BNLEARN
 
 pgmpy>='0.1.13'
-networkx>'2.7'
+networkx>='2.7.1'
 matplotlib>='3.3.4'
 numpy
 pandas
