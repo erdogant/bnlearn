@@ -690,7 +690,7 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     adjmat = model.get('adjmat', None)
 
     if adjmat is not None:
-        if verbose>=3: print('[bnlearn]> Set node properties.')
+        if verbose>=3: print('[bnlearn] >Set node properties.')
         # For each node, use the default node properties.
         for node in adjmat.columns:
             node_property = defaults.copy()
@@ -774,7 +774,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
 
     # Store edge properties
     if adjmat is not None:
-        if verbose>=3: print('[bnlearn]> Set edge properties.')
+        if verbose>=3: print('[bnlearn] >Set edge properties.')
         # For each edge, use the default properties.
         for u, v in model_edges:
             edge_property = defaults.copy()
