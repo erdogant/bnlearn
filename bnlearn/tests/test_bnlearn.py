@@ -328,7 +328,18 @@ def test_independence_test():
         assert np.any(model['independence_test']['stat_test'])
         assert model['independence_test'].shape[0]>1
 
-    DAG = bn.import_DAG('water', verbose=0)
+    # Run 10 times with random data
+    for i in np.arange(0, 10):
+        df = bn.import_example(data='random')
+        # Parameter learning
+        model = bn.structure_learning.fit(df)
+        # Test for independence
+        assert bn.independence_test(model, df, prune=False)
+        # Test for independence
+        assert bn.independence_test(model, df, prune=True)
+
+
+    DAG = bn.import_DAG(data='random', verbose=0)
     # Sampling
     df = bn.sampling(DAG, n=1000)
     # Parameter learning
@@ -337,11 +348,7 @@ def test_independence_test():
     model1 = bn.independence_test(model, df, prune=False)
     # Test for independence
     model2 = bn.independence_test(model, df, prune=True)
-    assert model['model_edges']==model1['model_edges']
-    assert len(model1['model_edges'])==model1['independence_test'].shape[0]
-    assert len(model2['model_edges'])==model2['independence_test'].shape[0]
-    assert len(model2['model_edges'])<len(model1['model_edges'])
-    assert len(model2['model_edges'])<len(model['model_edges'])
+
 
 
 def test_edge_properties():
