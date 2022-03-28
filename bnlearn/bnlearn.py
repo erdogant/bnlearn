@@ -1548,7 +1548,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     model_update['independence_test'] = pd.DataFrame(results)
 
     # Remove not significant edges
-    if prune:
+    if prune and len(model_update['model_edges'])>0:
         model_update = _prune(model_update, test, alpha, verbose=verbose)
 
     # Return
