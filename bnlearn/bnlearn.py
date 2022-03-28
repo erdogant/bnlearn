@@ -798,8 +798,8 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         params_interactive={'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'},
-         params_static={'minscale': 1, 'maxscale': 10, 'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'fruchterman_reingold', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
+         params_interactive={'width': '70%', 'height': '800px', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'},
+         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
          verbose=3):
     """Plot the learned stucture.
 
@@ -832,6 +832,7 @@ def plot(model,
         Dictionary containing various settings in case of creating interactive plots.
     params_static : dict.
         Dictionary containing various settings in case of creating static plots.
+        layout: 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'graphviz_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace
@@ -863,7 +864,7 @@ def plot(model,
     >>> G = bn.plot(model, interactive=True)
     >>>
     >>> # plot interactive with various settings
-    >>> bn.plot(model, node_color='#8A0707', node_size=35, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+    >>> bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':'800px', 'width':'70%', 'bgcolor':'#0f0f0f0f'})
     >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
@@ -883,8 +884,15 @@ def plot(model,
     # Plot properties
     defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 10, 'height': 8, 'width': 15, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'fruchterman_reingold', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
+    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
     params_static = {**defaults, **params_static}
+
+    ##### DEPRECATED IN LATER VERSION #####
+    if (params_static.get('width') is not None) or (params_static.get('height') is not None):
+        # if verbose>=2: print('[bnlearn]> Warning: [height] and [width] will be removed in further version. Please use: params_static={"figsize": (15, 10)}.')
+        params_static['figsize'] = (15 if params_static['width'] is None else params_static['width'], 10 if params_static['height'] is None else params_static['height'])
+    ##### END BLOCK #####
+
     out = {}
     G = nx.DiGraph()  # Directed graph
     node_size_default = 10 if interactive else 800
@@ -908,11 +916,15 @@ def plot(model,
     else:
         bnmodel = model.copy()
 
+    # get node properties
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+
     # Bayesian model
     if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
         if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
         # positions for all nodes
-        pos = bnlearn.network.graphlayout(bnmodel, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+        G = nx.DiGraph(model['adjmat'])
+        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
     elif 'networkx' in str(type(bnmodel)):
         if verbose>=3: print('[bnlearn] >Plot based on networkx model')
         G = bnmodel
@@ -922,9 +934,6 @@ def plot(model,
         G = bnlearn.network.adjmat2graph(model['adjmat'])
         # Get positions
         pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
-
-    # get node properties
-    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
 
     # Plot
     if interactive:
@@ -944,14 +953,14 @@ def plot(model,
 
 # %% Plot interactive
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_color, edge_weights):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights):
     # Bootup figure
-    plt.figure(figsize=(params_static['width'], params_static['height']), facecolor=params_static['facecolor'])
+    plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
     # nodes
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
     # nx.draw_networkx_edges(G, pos, arrowstyle='-|>', arrowsize=30, edge_color=edge_color, width=edge_weights)
-    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_color, width=edge_weights, alpha=params_static['edge_alpha'])
+    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
     # Labels
     nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'])
     # Plot text of the weights
@@ -1583,44 +1592,3 @@ def _normalize_weights(weights, minscale=1, maxscale=10):
     from sklearn.preprocessing import MinMaxScaler
     weights = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(weights).flatten()
     return(weights)
-
-
-# %% Download files from github source
-# def wget(url, writepath):
-    # """ Retrieve file from url.
-
-    # Parameters
-    # ----------
-    # url : str.
-    #     Internet source.
-    # writepath : str.
-    #     Directory to write the file.
-
-    # Returns
-    # -------
-    # None.
-
-    # Example
-    # -------
-    # >>> import clustimage as cl
-    # >>> images = cl.wget('https://erdogant.github.io/datasets/flower_images.zip', 'c://temp//flower_images.zip')
-
-    # """
-    # import requests
-    # r = requests.get(url, stream=True)
-    # with open(writepath, "wb") as fd:
-    #     for chunk in r.iter_content(chunk_size=1024):
-    #         fd.write(chunk)
-
-
-# %% Make graph layout
-# def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
-#     if isinstance(pos, type(None)):
-#         if layout=='fruchterman_reingold':
-#             pos = nx.fruchterman_reingold_layout(model, scale=scale, iterations=50)
-#         else:
-#             pos = nx.spring_layout(model, scale=scale, iterations=50)
-#     else:
-#         if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
-
-#     return(pos)

@@ -112,7 +112,7 @@ def cluster(G, verbose=3):
     return(G, labx)
 
 # %% Compute cluster comparison
-def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', verbose=3):
+def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', layout='spring_layout', verbose=3):
     config=dict()
     config['showfig']=showfig
     config['width']=width
@@ -125,7 +125,8 @@ def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodt
     centralities=['betweenness', 'closeness', 'eigenvector', 'degree', 'edge', 'harmonic', 'katz', 'local', 'out_degree', 'percolation', 'second_order', 'subgraph', 'subgraph_exp', 'information']
 
     # Compute best positions for the network
-    pos=nx.spring_layout(G)
+    layout_func = getattr(nx, layout)
+    pos = layout_func(G)
 
     # Cluster data nd store label in G
     [G, score] = cluster(G)
@@ -146,9 +147,9 @@ def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodt
     return(G, df)
 
 # %% Make plot
-def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default', verbose=3):
+def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype=None, layout='spring_layout', verbose=3):
     # https://networkx.github.io/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html
-    config=dict()
+    config = {}
     config['filename']=filename
     config['width']=width
     config['height']=height
@@ -156,6 +157,17 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
     config['node_size_scale']=node_size_scale
 
     if verbose>=3: print('[bnlearn] >Creating network plot')
+
+    ##### DEPRECATED IN LATER VERSION #####
+    if methodtype is not None:
+        if verbose>=2: print('[bnlearn] >Methodtype will be removed in future version. Please use "layout" instead')
+        if methodtype=='circular':
+            layout = 'draw_circular'
+        elif methodtype=='kawai':
+            layout = 'draw_kamada_kawai'
+        else:
+            layout = 'spring_layout'
+    ##### END BLOCK #####
 
     if 'pandas' in str(type(node_size)):
         node_size=node_size.values
@@ -165,23 +177,24 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
         if verbose>=3: print('[bnlearn] >Scaling node sizes')
         node_size=minmax_scale(node_size, feature_range=(node_size_scale[0], node_size_scale[1]))
 
-    # Node positions
-#    if isinstance(pos, type(None)):
-#        pos=nx.spring_layout(G)
-
-#    if isinstance(node_label, type(None)):
-#        node_label=[*G.nodes])
-
-    fig=plt.figure(figsize=(config['width'], config['height']))
+    # Setup figure
+    fig = plt.figure(figsize=(config['width'], config['height']))
 
     # Make the graph
-    if methodtype=='circular':
-        nx.draw_circular(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    elif methodtype=='kawai':
-        nx.draw_kamada_kawai(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    else:
-        nx.draw_networkx(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-#        nx.draw_networkx(G, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size)
+    try:
+        # Get the layout
+        layout_func = getattr(nx, layout)
+        layout_func(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
+    except:
+        if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The [spring_layout] is used instead.' %(layout))
+        nx.spring_layout(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
+
+    # if methodtype=='circular':
+    #     nx.draw_circular(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
+    # elif methodtype=='kawai':
+    #     nx.draw_kamada_kawai(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
+    # else:
+        # nx.draw_networkx(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
 
     plt.title(title)
     plt.grid(True)
@@ -311,7 +324,7 @@ def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[2
     show(plot)
 
 # %% Comparison of two networks
-def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, verbose=3):
+def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, layout='spring_layout', verbose=3):
     # Make sure columns and indices to match
     [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
     [IAcol, IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
@@ -344,7 +357,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
         #    G_true = adjmat2graph(adjmat_true)
         G_diff = adjmat2graph(adjmat_diff)
         # Graph layout
-        pos = graphlayout(G_diff, pos=pos, scale=1, layout='fruchterman_reingold', verbose=verbose)
+        pos = graphlayout(G_diff, pos=pos, scale=1, layout=layout, verbose=verbose)
         # Bootup figure
         plt.figure(figsize=(width, height))
         # nodes
@@ -369,12 +382,18 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     return(scores, adjmat_diff)
 
 # %% Make graph layout
-def graphlayout(model, pos, scale=1, layout='fruchterman_reingold', verbose=3):
-    if isinstance(pos, type(None)):
-        if layout=='fruchterman_reingold':
-            pos = nx.fruchterman_reingold_layout(model, scale=scale, iterations=50)
+def graphlayout(G, pos, scale=1, layout='spring_layout', verbose=3):
+    if pos is None:
+        if layout is not None:
+            try:
+                # Get the layout
+                layout_func = getattr(nx, layout)
+                pos = layout_func(G, scale=scale)
+            except:
+                if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The layout [spring_layout] is used instead.' %(layout))
+                pos = nx.spring_layout(G, scale=scale)
         else:
-            pos = nx.spring_layout(model, scale=scale, iterations=50)
+            pos = nx.spring_layout(G, scale=scale)
     else:
         if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
 

@@ -13,6 +13,18 @@ import bnlearn as bn
 # print(dir(bn.inference))
 
 # %%
+import bnlearn as bn
+df = bn.import_example('asia')
+model = bn.structure_learning.fit(df)
+bn.plot(model)
+bn.plot(model, params_static={'layout':'spectral_layout'})
+bn.plot(model, params_static={'layout':'planar_layout'})
+bn.plot(model, params_static={'layout':'kamada_kawai_layout'})
+bn.plot(model, params_static={'layout':'spring_layout'})
+bn.plot(model, params_static={'layout':'circular_layout', "figsize": (15, 10)})
+
+
+# %%
 
 # Load example dataset
 df = bn.import_example('sprinkler')
@@ -29,7 +41,7 @@ bn.print_CPD(DAG)
 
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
 bn.print_CPD(model)
-
+bn.plot(model)
 
 # %%
 import bnlearn as bn
@@ -58,6 +70,8 @@ df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
 DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])), verbose=0)
 # Make plot
 bn.plot(DAG, interactive=True)
+bn.plot(DAG, interactive=False)
+
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, df, verbose=3)
 # Structure learning
@@ -66,6 +80,13 @@ DAG_learned = bn.structure_learning.fit(df.iloc[:, 0:50])
 DAG_learned = bn.independence_test(DAG_learned, df, prune=True)
 # Plot
 bn.plot(DAG_learned, interactive=True)
+
+fig_properties = bn.plot(model, params_static={'layout':'spectral_layout'})
+fig_properties = bn.plot(model, params_static={'layout':'planar_layout'})
+fig_properties = bn.plot(model, params_static={'layout':'kamada_kawai_layout', 'figsize':(25,15)})
+fig_properties = bn.plot(model, params_static={'layout':'spring_layout'})
+fig_properties = bn.plot(model, params_static={'layout':'circular_layout'})
+
 
 # Generate some data based on DAG
 # df1 = bn.sampling(model, n=1000)
@@ -109,6 +130,10 @@ print(adjmat.sum(axis=0))
 # Example 1: Plot the TRUE DAG
 DAG_1 = bn.import_DAG('sprinkler', verbose=0)
 graph = bn.plot(DAG_1)
+
+graph = bn.plot(DAG_1, params_static={'layout':'kamada_kawai_layout'})
+graph = bn.plot(DAG_1, params_static={'layout':'spring_layout'})
+
 
 # Example 2: Download small spinkler example with 1000 samples
 df = bn.import_example('sprinkler')
