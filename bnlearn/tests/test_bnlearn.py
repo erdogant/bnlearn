@@ -338,7 +338,6 @@ def test_independence_test():
         # Test for independence
         assert bn.independence_test(model, df, prune=True)
 
-
     DAG = bn.import_DAG(data='random', verbose=0)
     # Sampling
     df = bn.sampling(DAG, n=1000)
