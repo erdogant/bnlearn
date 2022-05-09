@@ -224,7 +224,6 @@ def test_query2df():
     dfhot, dfnum = bn.df2onehot(df_raw)
     dfnum.loc[0:50, 'Survived'] = 2
     # Structure learning
-    # DAG = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
     DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked', 'Parch', 'Name'], bw_list_method='edges')
     # Parameter learning
     model = bn.parameter_learning.fit(DAG, dfnum)
@@ -337,17 +336,6 @@ def test_independence_test():
         assert bn.independence_test(model, df, prune=False)
         # Test for independence
         assert bn.independence_test(model, df, prune=True)
-
-    DAG = bn.import_DAG(data='random', verbose=0)
-    # Sampling
-    df = bn.sampling(DAG, n=1000)
-    # Parameter learning
-    model = bn.parameter_learning.fit(DAG, df)
-    # Test for independence
-    model1 = bn.independence_test(model, df, prune=False)
-    # Test for independence
-    model2 = bn.independence_test(model, df, prune=True)
-
 
 
 def test_edge_properties():
