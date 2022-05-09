@@ -1368,29 +1368,27 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
 
     # Get only the unique records in the DataFrame to reduce computation time.
     dfU = dfX.drop_duplicates()
+    dfU.reset_index(drop=True, inplace=True)
     # Make empty array
     P = np.array([None] *dfX.shape[0])
-    for i in tqdm(range(dfU.shape[0])):
+
+    evidences = list(map(lambda x: dfU.iloc[x, :].to_dict(), range(dfU.shape[0])))
+    dfU_shape = dfU.shape[1]
+    # for i in tqdm(range(dfU.shape[0])):
+    for evidence in tqdm(evidences):
         # Get input data and create a dict.
-        evidence = dfU.iloc[i, :].to_dict()
+        # evidence = dfU.iloc[i, :].to_dict()
         # Do the inference.
         query = bnlearn.inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
         # Find original location of the input data.
-        loc = np.sum((dfX==dfU.iloc[i, :]).values, axis=1)==dfU.shape[1]
+        # loc = np.sum((dfX==dfU.iloc[i, :]).values, axis=1)==dfU_shape
+        loc = np.sum(dfX.values==[*evidence.values()], axis=1)==dfU_shape
         # Store inference
         P[loc] = _get_prob(query, method=method)
+
+    # Make list
     P = list(P)
-
-    # Loop the dataframe
-    # P1 = []
-    # for i in tqdm(range(dfX.shape[0])):
-    #     # Setup input data
-    #     evidence = dfX.iloc[i,:].to_dict()
-    #     # Do the inferemce
-    #     query = inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
-    #     # Store in list
-    #     P1.append(_get_max_prob(query))
-
+    # Make dataframe
     if to_df: P = pd.DataFrame(P)
     return P
 
