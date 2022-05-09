@@ -28,7 +28,7 @@ warnings.filterwarnings("ignore")
 
 
 # %% Sampling from model
-def fit(model, df, methodtype='bayes', smooth=None, verbose=3):
+def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, verbose=3):
     """Learn the parameters given the DAG and data.
 
     Description
@@ -75,6 +75,11 @@ def fit(model, df, methodtype='bayes', smooth=None, verbose=3):
         Strategy for parameter learning.
             * 'ml', 'maximumlikelihood': Learning CPDs using Maximum Likelihood Estimators.
             * 'bayes': Bayesian Parameter Estimation.
+    scoretype : str, (default : 'bic')
+        Scoring function for the search spaces.
+            * 'bdeu'
+            * 'dirichlet'
+            * 'k2'
     smooth : float (default: None)
         The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.
     Print progress to screen. The default is 3.
@@ -107,6 +112,9 @@ def fit(model, df, methodtype='bayes', smooth=None, verbose=3):
     config['method'] = methodtype
     adjmat = model['adjmat']
 
+    if (scoretype=='dirichlet') and (smooth is None):
+        raise Exception('[bnlearn] >dirichlet requires "smooth" to be not None')
+
     # Check whether all labels in the adjacency matrix are included from the dataframe
     # adjmat, model = _check_adjmat(model, df)
     df = bnlearn._filter_df(adjmat, df, verbose=config['verbose'])
@@ -129,7 +137,8 @@ def fit(model, df, methodtype='bayes', smooth=None, verbose=3):
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
-        model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
+        model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth)
+        # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
