@@ -1,9 +1,9 @@
-import pandas as pd
-import numpy as np
-from pgmpy.inference import VariableElimination
-from pgmpy.models import BayesianNetwork, NaiveBayes
-from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
-from pgmpy.factors.discrete import TabularCPD
+# import pandas as pd
+# import numpy as np
+# from pgmpy.inference import VariableElimination
+# from pgmpy.models import BayesianNetwork, NaiveBayes
+# from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+# from pgmpy.factors.discrete import TabularCPD
 
 # %%
 import bnlearn as bn
@@ -11,6 +11,24 @@ import bnlearn as bn
 # print(dir(bn.structure_learning))
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
+
+# %%
+# from pgmpy.estimators import BayesianEstimator
+# from pgmpy.utils import get_example_model
+# from pgmpy.models import BayesianNetwork
+# model = get_example_model('alarm')
+# df = model.simulate(int(1e4))
+
+# new_model = BayesianNetwork(model.edges())
+# cpds = BayesianEstimator(new_model, df).get_parameters(prior_type='dirichlet', pseudo_counts=1)
+# new_model.add_cpds(*cpds)
+ 
+# %% LOAD BIF FILE
+DAG = bn.import_DAG('water', verbose=0)
+# Sampling
+df = bn.sampling(DAG, n=1000)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df, smooth=None)
 
 # %%
 import bnlearn as bn

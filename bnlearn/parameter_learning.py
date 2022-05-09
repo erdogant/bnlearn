@@ -28,7 +28,7 @@ warnings.filterwarnings("ignore")
 
 
 # %% Sampling from model
-def fit(model, df, methodtype='bayes', verbose=3):
+def fit(model, df, methodtype='bayes', smooth=None, verbose=3):
     """Learn the parameters given the DAG and data.
 
     Description
@@ -75,6 +75,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
         Strategy for parameter learning.
             * 'ml', 'maximumlikelihood': Learning CPDs using Maximum Likelihood Estimators.
             * 'bayes': Bayesian Parameter Estimation.
+    smooth : float (default: None)
+        The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.
     Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
@@ -118,15 +120,8 @@ def fit(model, df, methodtype='bayes', verbose=3):
     if 'BayesianNetwork' not in str(type(model)):
         model = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
 
-    # pe = ParameterEstimator(model, df)
-    # print("\n", pe.state_counts('Cloudy'))
-    # print("\n", pe.state_counts('Sprinkler'))
-
     # Learning CPDs using Maximum Likelihood Estimators
     if config['method']=='ml' or config['method']=='maximumlikelihood':
-        # model = MaximumLikelihoodEstimator(model, df)
-        # for node in model.state_names:
-        #     print(model.estimate_cpd(node))
         model.fit(df, estimator=None)  # estimator as None makes it maximum likelihood estimator according pgmpy docs.
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
@@ -134,7 +129,7 @@ def fit(model, df, methodtype='bayes', verbose=3):
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
-        model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000)
+        model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
