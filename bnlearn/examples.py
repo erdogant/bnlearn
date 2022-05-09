@@ -1,9 +1,9 @@
-# import pandas as pd
-# import numpy as np
-# from pgmpy.inference import VariableElimination
-# from pgmpy.models import BayesianNetwork, NaiveBayes
-# from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
-# from pgmpy.factors.discrete import TabularCPD
+import pandas as pd
+import numpy as np
+from pgmpy.inference import VariableElimination
+from pgmpy.models import BayesianNetwork, NaiveBayes
+from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+from pgmpy.factors.discrete import TabularCPD
 
 # %%
 import bnlearn as bn
@@ -24,11 +24,12 @@ import bnlearn as bn
 # new_model.add_cpds(*cpds)
  
 # %% LOAD BIF FILE
+import bnlearn as bn
 DAG = bn.import_DAG('water', verbose=0)
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
-model = bn.parameter_learning.fit(DAG, df, smooth=None)
+model = bn.parameter_learning.fit(DAG, df, scoretype='bdeu', smooth=None)
 
 # %%
 import bnlearn as bn
@@ -564,7 +565,6 @@ model = bn.structure_learning.fit(df)
 model = bn.structure_learning.fit(df, methodtype='hc')
 
 # %% Predict
-
 df = bn.import_example('asia')
 edges = [('smoke', 'lung'),
          ('smoke', 'bronc'),
