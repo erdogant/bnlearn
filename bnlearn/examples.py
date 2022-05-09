@@ -340,7 +340,7 @@ print(cpd_C)
 cpd_D = TabularCPD(variable='D', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
 print(cpd_D)
 
-DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
+DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=False)
 bn.print_CPD(DAG, checkmodel=True)
 
 # %% Adjust some edge properties
