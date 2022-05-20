@@ -10,6 +10,7 @@
 [![Downloads](https://pepy.tech/badge/bnlearn)](https://pepy.tech/project/bnlearn)
 [![DOI](https://zenodo.org/badge/231263493.svg)](https://zenodo.org/badge/latestdoi/231263493)
 [![Sphinx](https://img.shields.io/badge/Sphinx-Docs-Green)](https://erdogant.github.io/bnlearn/)
+[![Medium](https://img.shields.io/badge/Medium-Blog-green)](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog)
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#colab-notebook)
 <!---[![BuyMeCoffee](https://img.shields.io/badge/buymea-coffee-yellow.svg)](https://www.buymeacoffee.com/erdogant)-->
 <!---[![Coffee](https://img.shields.io/badge/coffee-black-grey.svg)](https://erdogant.github.io/donate/?currency=USD&amount=5)-->
@@ -27,8 +28,8 @@
 
 Read the blogs to get a structured overview of bayesian methods and detailed usage of ``bnlearn``.
 
-* [Step-by-step guide for structure learning.](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
-* [Step-by-step guide for knowledge-driven models.](https://link.medium.com/LBp2eW8qNjb)
+* [Step-by-step guide for structure learning.](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog)
+* [Step-by-step guide for knowledge-driven models.](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog)
 
 # 
 
