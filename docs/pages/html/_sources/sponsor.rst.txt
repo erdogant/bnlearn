@@ -2,7 +2,7 @@
 	This project needs some love! ❤️ You can help in various ways.
 
 	* Become a **Sponsor**!
-	* **Star** this repo at the github page.
+	* **Star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_.
 	* Buy me a coffee! I ❤️ coffee :)
 	* Other contributions can be in the form of feature requests, idea discussions, reporting bugs, opening pull requests.
 	
