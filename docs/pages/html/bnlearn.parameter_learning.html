@@ -106,7 +106,6 @@
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#advertising">Advertising</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#blog">Blog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
@@ -163,7 +162,7 @@ i.e. for seperately for each parent configuration</p>
 </dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.parameter_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bdeu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Learn the parameters given the DAG and data.</p>
 <dl>
 <dt>Maximum Likelihood Estimation</dt><dd><p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>,
@@ -207,11 +206,24 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 </dl>
 </p></li>
+<li><p><strong>scoretype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'bic'</em><em>)</em>) – <dl class="simple">
+<dt>Scoring function for the search spaces.</dt><dd><ul>
+<li><p>’bdeu’</p></li>
+<li><p>’dirichlet’</p></li>
+<li><p>’k2’</p></li>
+</ul>
+</dd>
+</dl>
+</p></li>
+<li><p><strong>smooth</strong> (<em>float</em><em> (</em><em>default: None</em><em>)</em>) – The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.</p></li>
 <li><p><strong>3.</strong> (<em>Print progress to screen. The default is</em>) – 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>dict with model.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict with model.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

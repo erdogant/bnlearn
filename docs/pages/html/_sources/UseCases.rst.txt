@@ -107,7 +107,7 @@ Source
 Import data
 ''''''''''''
 
-The first step is to import the data set. If you have **unstructured** data, use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The :ref:`Examples` section contains examples how to import a raw data set followed by (basic) structering approaches (section: :ref:`Start with RAW data`). In my case I will load the data from ``bnlearn``, which is readily a **structured** dataset.
+The first step is to import the data set. If you have **unstructured** data, use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The **Examples** section contains examples how to import a raw data set followed by (basic) structering approaches (section: :ref:`Start with RAW data`). In my case I will load the data from ``bnlearn``, which is readily a **structured** dataset.
 
 
 .. code-block:: python
