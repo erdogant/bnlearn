@@ -12,6 +12,20 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% Naive Bayesian model
+df = bn.import_example('random')
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='hc', verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='cs', verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='cl', verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='tan', class_node="A", verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='ex', verbose=4, n_jobs=1)
+model = bn.independence_test(model, df, prune=True)
+# Plot
+bn.plot(model)
+
+
 # %%
 # from pgmpy.estimators import BayesianEstimator
 # from pgmpy.utils import get_example_model

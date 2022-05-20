@@ -27,7 +27,7 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, return_all_dags=False, verbose=3):
+def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, return_all_dags=False, n_jobs=-1, verbose=3):
     """Structure learning fit model.
 
     Description
@@ -129,7 +129,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     """
     out = []
     # Set config
-    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'verbose': verbose}
+    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
     # Make some checks
     config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
@@ -140,19 +140,21 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
-    if config['method']=='nv' or config['method']=='naivebayes':
+    if config['method']=='nb' or config['method']=='naivebayes':
         out = _naivebayes(df,
                           root_node=config['root_node'],
                           estimator_type=None,
                           feature_vars=None,
                           dependent_var=None,
-                          verbose=3)
+                          n_jobs=config['n_jobs'],
+                          verbose=config['verbose'])
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
         out = _exhaustivesearch(df,
                                 scoretype=config['scoring'],
                                 return_all_dags=config['return_all_dags'],
+                                n_jobs=config['n_jobs'],
                                 verbose=config['verbose'])
 
     # HillClimbSearch
@@ -167,6 +169,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
                                epsilon=config['epsilon'],
                                max_iter=config['max_iter'],
                                fixed_edges=config['fixed_edges'],
+                               n_jobs=config['n_jobs'],
                                verbose=config['verbose'],
                                )
 
@@ -177,12 +180,12 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
         Independencies in the data can be identified using chi2 conditional independence tests."""
-        out = _constraintsearch(df, verbose=config['verbose'])
+        out = _constraintsearch(df, n_jobs=config['n_jobs'], verbose=config['verbose'])
 
     # TreeSearch-based Structure Learning
     if config['method']=='chow-liu' or config['method']=='tan':
         """TreeSearch based Structure Learning."""
-        out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], verbose=config['verbose'])
+        out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], n_jobs=config['n_jobs'], verbose=config['verbose'])
 
     # Store
     out['model_edges'] = list(out['model'].edges())
@@ -241,7 +244,7 @@ def _make_checks(df, config, verbose=3):
 
 
 # %% TreeSearch methods
-def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent_var=None, verbose=3):
+def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent_var=None, n_jobs=-1, verbose=3):
     """Naive Bayesian model.
 
     Description
@@ -276,6 +279,7 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
     * https://pgmpy.org/_modules/pgmpy/models/NaiveBayes.html#NaiveBayes
 
     """
+    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [NaiveBayes]')
     model = NaiveBayes(feature_vars=feature_vars, dependent_var=dependent_var)
     model.fit(df, parent_node=root_node, estimator=estimator_type)
 
@@ -320,7 +324,7 @@ def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges',
 
 
 # %% TreeSearch methods
-def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
+def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbose=3):
     """Tree search methods.
 
     Description
@@ -330,7 +334,7 @@ def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
 
     """
     out={}
-    est = TreeSearch(df, root_node=root_node)
+    est = TreeSearch(df, root_node=root_node, n_jobs=n_jobs)
     model = est.estimate(estimator_type=estimator_type, class_node=class_node)
 
     # Store
@@ -340,7 +344,7 @@ def _treesearch(df, estimator_type, root_node, class_node=None, verbose=3):
 
 
 # %% Constraint-based Structure Learning
-def _constraintsearch(df, significance_level=0.05, verbose=3):
+def _constraintsearch(df, significance_level=0.05, n_jobs=-1, verbose=3):
     """Contrain search.
 
     PC PDAG construction is only guaranteed to work under the assumption that the
@@ -366,17 +370,13 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
         The first two steps form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
 
     """
+    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [constraintsearch]')
     out = {}
     # Set search algorithm
     model = ConstraintBasedEstimator(df)
 
-    # Some checks for dependency
-    #    print(_is_independent(est, 'Sprinkler', 'Rain', significance_level=significance_level))
-    #    print(_is_independent(est, 'Cloudy', 'Rain', significance_level=significance_level))
-    #    print(_is_independent(est, 'Sprinkler', 'Rain',  ['Wet_Grass'], significance_level=significance_level))
-
     # Estimate using chi2
-    [skel, seperating_sets] = model.build_skeleton(significance_level=significance_level)
+    skel, seperating_sets = model.build_skeleton(significance_level=significance_level)
 
     if verbose>=4: print("Undirected edges: ", skel.edges())
     pdag = model.skeleton_to_pdag(skel, seperating_sets)
@@ -400,7 +400,7 @@ def _constraintsearch(df, significance_level=0.05, verbose=3):
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='edges', fixed_edges=set(), verbose=3):
+def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='edges', fixed_edges=set(), n_jobs=-1, verbose=3):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
     Description
@@ -423,6 +423,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     edges or to limit the search.
 
     """
+    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
     out={}
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
@@ -446,7 +447,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
 
 
 # %% ExhaustiveSearch
-def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
+def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, verbose=3):
     """Exhaustivesearch.
 
     Description
@@ -476,7 +477,8 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, verbose=3):
 
     """
     if df.shape[1]>15 and verbose>=3:
-        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!!')  # noqa
+        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
+    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [exhaustivesearch]')
 
     out={}
     # Set scoring type
