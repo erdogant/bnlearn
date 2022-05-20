@@ -292,16 +292,6 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
 
 # %% white_list and black_list
 def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges', verbose=3):
-    # if bw_list_method=='edges':
-    #     # Keep only edges that are in white_list.
-    #     if white_list is not None:
-    #         if verbose>=3: print('[bnlearn] >Filter variables on white_list..')
-    #         parent = [ u  for (u, v) in white_list]
-    #         child = [ v  for (u, v) in white_list]
-    #         white_list_node = [x.lower() for x in set(parent+child)]
-    #         Iloc = np.isin(df.columns.str.lower(), white_list_node)
-    #         df = df.loc[:, Iloc]
-
     if bw_list_method=='nodes':
         # Keep only variables that are in white_list.
         if white_list is not None:
