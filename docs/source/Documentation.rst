@@ -4,7 +4,7 @@ Sponsor
 .. include:: sponsor.rst
 
 
-Blog
+Medium Blog
 ################
 
 .. note::
