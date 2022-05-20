@@ -28,7 +28,7 @@ warnings.filterwarnings("ignore")
 
 
 # %% Sampling from model
-def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, verbose=3):
+def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
     """Learn the parameters given the DAG and data.
 
     Description
@@ -110,6 +110,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, verbose=3)
     config = {}
     config['verbose'] = verbose
     config['method'] = methodtype
+    config['n_jobs'] = n_jobs
     adjmat = model['adjmat']
 
     if (scoretype=='dirichlet') and (smooth is None):
@@ -137,7 +138,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, verbose=3)
 
     #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
-        model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth)
+        model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth, n_jobs=config['n_jobs'])
         # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
