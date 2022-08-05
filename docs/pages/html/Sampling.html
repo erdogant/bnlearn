@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; bnlearn bnlearn documentation</title>
+  <title>Forward Sampling &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Causation" href="Structure%20learning.html" />
-    <link rel="prev" title="Introduction" href="Introduction.html" /> 
+    <link rel="next" title="Directed Acyclic Graphs" href="Create%20DAG.html" />
+    <link rel="prev" title="Predict" href="Predict.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,11 +44,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#validate">Validate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#uninstalling">Uninstalling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstalling">Uninstalling</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -78,9 +78,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Sampling</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#gibbs-sampling">Gibbs Sampling</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul>
@@ -136,9 +136,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Installation</li>
+      <li>Forward Sampling</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/Installation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Sampling.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -146,74 +146,162 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
-<p>Installation of <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> is straightforward.</p>
-<p>It is advisable to create a new environment which is done as following:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda create -n env_bnlearn python=3.8</span>
-<span class="go">conda activate env_bnlearn</span>
-</pre></div>
-</div>
-<figure class="align-default" id="id1">
-<span id="installation-step-1"></span><img alt="_images/01_installation.png" src="_images/01_installation.png" />
-<figcaption>
-<p><span class="caption-text">Create environment.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
-<p>Notice the last line. You need to see that your environment is now set as <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>. In my case it is as following:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(env_bnlearn)</span> <span class="go">D:\&gt;</span>
-</pre></div>
-</div>
-<p>Deactivate and then activate your environment if the packages are not recognized.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda deactivate</span>
-<span class="go">conda activate env_bnlearn</span>
-</pre></div>
-</div>
-<p>After creating the environment, install <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> with pip:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install bnlearn and if a version is readily present on your local machine, this version will be installed.</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">bnlearn</span>
+  <p>Sampling of data is based on the joint distribution of the network.
+In order to do that, it requires a DAG connected with CPDs.
+It is also possible to create a DAG manually and learn it’s model parameters.</p>
+<section id="forward-sampling">
+<h1>Forward Sampling<a class="headerlink" href="#forward-sampling" title="Permalink to this headline"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
-<span class="c1"># Make sure to have the latest version from pypi by using the -U (update) argument.</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">U</span> <span class="n">bnlearn</span>
+<span class="c1"># Load example DAG with CPD</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Take 1000 samples from the CPD distribution</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
-<figure class="align-default" id="id2">
-<span id="installation-step-3"></span><img alt="_images/03_installation.png" src="_images/03_installation.png" />
-<figcaption>
-<p><span class="caption-text">Install bnlearn.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
-</figcaption>
-</figure>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="validate">
-<h1>Validate<a class="headerlink" href="#validate" title="Permalink to this headline"></a></h1>
-<p>Lets checkout whether it works by a simple example. Start python in your console:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python</span>
-</pre></div>
-</div>
-<p>Run the following lines which should result in a figure:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
-<figure class="align-default" id="installation-step-4">
-<img alt="_images/04_installation.png" src="_images/04_installation.png" />
-</figure>
-</section>
-<section id="uninstalling">
-<h1>Uninstalling<a class="headerlink" href="#uninstalling" title="Permalink to this headline"></a></h1>
-<p>If you want to remove your <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> installation with your environment, it can be as following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># List all the active environments. BNLEARN should be listed.</span>
-<span class="n">conda</span> <span class="n">env</span> <span class="nb">list</span>
+<section id="gibbs-sampling">
+<h1>Gibbs Sampling<a class="headerlink" href="#gibbs-sampling" title="Permalink to this headline"></a></h1>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
-<span class="c1"># Remove the env_bnlearn environment</span>
-<span class="n">conda</span> <span class="n">env</span> <span class="n">remove</span> <span class="o">--</span><span class="n">name</span> <span class="n">env_bnlearn</span>
+<span class="c1"># Load example DAG with CPD</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># List all the active environments. env_bnlearn should be absent.</span>
-<span class="n">conda</span> <span class="n">env</span> <span class="nb">list</span>
+<span class="c1"># Take 1000 samples from the CPD distribution</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;gibbs&#39;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Another example with Gibbs sampling but now by creating some user-defined edges</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load example dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create some edges</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Make the actual Bayesian DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Fit model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+
+<span class="c1"># Sampling using gibbs</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;gibbs&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 34%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <center>
         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
@@ -224,8 +312,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Structure%20learning.html" class="btn btn-neutral float-right" title="Causation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Predict.html" class="btn btn-neutral float-left" title="Predict" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Create%20DAG.html" class="btn btn-neutral float-right" title="Directed Acyclic Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

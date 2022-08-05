@@ -61,13 +61,19 @@ Content
 
   Predict
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Sampling
+
+  Sampling
+
 
 .. toctree::
   :maxdepth: 2
   :caption: Other functionalities
 
   Create DAG
-  Sampling and datasets
+  Example Datasets
   whitelist_blacklist
   topological_sort
   dataframe conversions
