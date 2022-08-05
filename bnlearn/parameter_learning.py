@@ -127,22 +127,26 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
 
     # Convert to BayesianNetwork
     if 'BayesianNetwork' not in str(type(model)):
+        if config['verbose']>=3: print('[bnlearn] >Converting [%s] to BayesianNetwork model.' %(str(type(model))))
         model = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
 
-    # Learning CPDs using Maximum Likelihood Estimators
+    # Learn on CPDs
     if config['method']=='ml' or config['method']=='maximumlikelihood':
+        # Learning CPDs using Maximum Likelihood Estimators
         model.fit(df, estimator=None)  # estimator as None makes it maximum likelihood estimator according pgmpy docs.
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
-
-    #  Learning CPDs using Bayesian Parameter Estimation
     if config['method']=='bayes':
+        #  Learning CPDs using Bayesian Parameter Estimation
         model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth, n_jobs=config['n_jobs'])
         # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
+    else:
+        if config['verbose']>=2: print("[bnlearn] >Warning: methodtype [%s] is unknown. Returning None." %(config['method']))
+        return None
 
     out = {}
     out['model'] = model
