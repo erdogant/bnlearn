@@ -62,7 +62,7 @@ Finally, we can start making inferences. Note that the variable and evidence nam
 
 
 Structure learning
-=========================
+==================
 
 A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
 
@@ -107,7 +107,7 @@ Wet_grass is connected to nothing.
 
 
 Example (2)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
 
 For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
 
@@ -190,7 +190,7 @@ We can specificy the method and scoring type. As described previously, some meth
 
 
 Example (3)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^
 
 Lets learn the structure of a more complex data set and compare it to another one.
 
@@ -239,7 +239,7 @@ Lets learn the structure of a more complex data set and compare it to another on
 
 
 Parameter learning
-=========================
+==================
 
 Extracting adjacency matrix after Parameter learning:
 
@@ -276,7 +276,7 @@ Extracting adjacency matrix after Parameter learning:
 
 
 Create a Bayesian Network, learn its parameters from data and perform the inference
-====================================================================================================
+===================================================================================
 
 Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes. 
 Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcase this, I will use the sprinkler example.

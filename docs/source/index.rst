@@ -97,6 +97,13 @@ Content
 
 .. toctree::
   :maxdepth: 2
+  :caption: Plot
+
+  Plot
+
+
+.. toctree::
+  :maxdepth: 2
   :caption: Other functionalities
 
   Create DAG
@@ -106,12 +113,6 @@ Content
   dataframe conversions
   saving and loading
 
-
-.. toctree::
-  :maxdepth: 2
-  :caption: Plot
-
-  Plot
 
 .. toctree::
   :maxdepth: 2
