@@ -133,6 +133,10 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     elif isinstance(DAG, list) and methodtype=='bayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
         DAG = BayesianNetwork(DAG)
+    elif isinstance(DAG, list) and methodtype=='markov':
+        from pgmpy.models import MarkovNetwork
+        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
+        DAG = MarkovNetwork(DAG)
 
     if CPD is not None:
         for cpd in CPD:
