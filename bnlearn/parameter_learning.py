@@ -137,7 +137,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)
-    if config['method']=='bayes':
+    elif config['method']=='bayes':
         #  Learning CPDs using Bayesian Parameter Estimation
         model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth, n_jobs=config['n_jobs'])
         # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
