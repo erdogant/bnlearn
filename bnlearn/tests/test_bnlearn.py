@@ -37,6 +37,7 @@ def test_QUERY():
     q.shape==(48, 3)
     list(q.columns)==['SibSp', 'Sex', 'p']
 
+
 def test_import_DAG():
     DAG = bn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
