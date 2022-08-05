@@ -12,6 +12,29 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% Issue MAIL: Store CPDs after printing.
+
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges)
+model = bn.parameter_learning.fit(DAG, df)
+
+# Print CPDs
+CPD = bn.print_CPD(model)
+
+from tabulate import tabulate
+print(tabulate(CPD['Cloudy'], tablefmt="grid", headers="keys"))
+
+
 # %% Issue 37
 import bnlearn as bn
 # Load example DataFrame

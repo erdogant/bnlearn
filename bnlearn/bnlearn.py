@@ -169,10 +169,42 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
 
     Returns
     -------
-    None.
+    dict
+        Dictionary containing the CPDs.
+
+    Examples
+    --------
+    >>> # Import library
+    >>> import bnlearn as bn
+    >>>
+    >>> # Load example dataset
+    >>> df = bn.import_example('sprinkler')
+    >>>
+    >>> # Set edges
+    >>> edges = [('Cloudy', 'Sprinkler'),
+    >>>          ('Cloudy', 'Rain'),
+    >>>          ('Sprinkler', 'Wet_Grass'),
+    >>>          ('Rain', 'Wet_Grass')]
+    >>>
+    >>> # Make the actual Bayesian DAG
+    >>> DAG = bn.make_DAG(edges)
+    >>> model = bn.parameter_learning.fit(DAG, df)
+    >>>
+    >>> # Gather and store the CPDs in dictionary contaning dataframes for each node.
+    >>> CPD = bn.print_CPD(model, verbose=0)
+    >>>
+    >>> CPD['Cloudy']
+    >>> CPD['Rain']
+    >>> CPD['Wet_Grass']
+    >>> CPD['Sprinkler']
+    >>>
+    >>> # Print nicely
+    >>> from tabulate import tabulate
+    >>> print(tabulate(CPD['Cloudy'], tablefmt="grid", headers="keys"))
 
     """
     # config = None
+    CPDs = {}
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
 
@@ -193,6 +225,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
                 return
             for cpd in DAG.get_cpds():
+                CPDs[cpd.variable] = query2df(cpd, verbose=verbose)
                 if verbose>=3:
                     print("CPD of {variable}:".format(variable=cpd.variable))
                     print(cpd)
@@ -207,6 +240,9 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
             _check_model(DAG, verbose=3)
     except:
         if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
+
+    # Returning dict with CPDs
+    return CPDs
 
 
 # %%
