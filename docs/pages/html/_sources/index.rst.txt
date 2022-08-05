@@ -15,6 +15,33 @@ bnlearn's documentation!
 	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 
+Sponsor
+=======
+**This library is created and maintained in my free time**. I like to work on my open-source libraries, and you can help by becoming a sponsor! The easiest way is by simply following me on medium, and it will cost you nothing! Simply go to my `medium profile <https://erdogant.medium.com/>`_ and press "follow". Read more on my `sponsor github page <https://github.com/sponsors/erdogant/>`_ why this is important. This also gives you various other ways to sponsor me!
+
+
+Star is important too!
+======================
+If you like this project, **star** this repo at the github page! This is important because only then I know how much you like it :)
+
+
+Quick install
+=============
+.. code-block:: console
+
+   pip install bnlearn
+
+
+Github
+======
+Available on Github, `erdogant/bnlearn <https://github.com/erdogant/bnlearn/>`_.
+Please report bugs, issues and feature extensions there.
+
+
+Citing *bnlearn*
+================
+The bibtex can be found in the right side menu at the `github page <https://github.com/erdogant/bnlearn/>`_.
+
 
 Content
 ========
@@ -122,29 +149,6 @@ Related Packages
 * `Causality <https://github.com/akelleh/causality>`_
 * `Causal Inference <https://github.com/laurencium/causalinference>`_
 
-
-Source code and issue tracker
-------------------------------
-
-Available on Github, `erdogant/bnlearn <https://github.com/erdogant/bnlearn/>`_.
-Please report bugs, issues and feature extensions there.
-
-
-Citing *bnlearn*
------------------
-
-The bibtex can be found in the right side menu at the `github page <https://github.com/erdogant/bnlearn/>`_.
-
-
-Sponsor this project
-------------------------------
-
-If you like this project, Star this repo at the github page and become a sponsor!
-Read more why this is important on my sponsor page. The sponsor button will direct you to the sponsor github page.
-
-.. raw:: html
-
-	<iframe src="https://github.com/sponsors/erdogant/button" title="Sponsor erdogant" height="35" width="116" style="border: 0;"></iframe>
 
 
 Indices and tables

@@ -1,13 +1,8 @@
 Example Datasets
 ================
 
-`bnlearn` contins various example datasets that can be used to better understand how the datasets should be structured as an input to the `bnlearn` functions 
-It is also possible to create a DAG manually (see create DAG section) but here we are going to load some of the well-known bayesian models.
-
-Datasets
-''''''''
-
-Various DAGs available that can be easily loaded:
+``bnlearn`` contains various example datasets that can be used to better understand how the datasets should be structured as an input to the ``bnlearn`` functions.
+It is also possible to import other DAG files manually that are stored in bif files. DAGs can be loaded and/or imported as following:
 
 .. code-block:: python
 
