@@ -62,7 +62,7 @@ def to_bayesiannetwork(model, verbose=3):
         adjmat = model
     if adjmat is None: raise Exception('[bnlearn] >Error: input for "bayesiannetwork" should be adjmat or a dict containing a key "adjmat".')
 
-    if verbose>=3: print('[bnlearn] >Conversion of adjmat to BayesianNetwork.')
+    if verbose>=3: print('[bnlearn] >Converting adjmat to BayesianNetwork.')
 
     # Convert to vector
     vec = adjmat2vec(adjmat)[['source', 'target']].values.tolist()
@@ -152,7 +152,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
 
 # %% Print DAG
-def print_CPD(DAG, checkmodel=False):
+def print_CPD(DAG, checkmodel=False, verbose=3):
     """Print DAG-model to screen.
 
     Parameters
@@ -174,6 +174,10 @@ def print_CPD(DAG, checkmodel=False):
     # Print CPDs
     # if config['method']=='ml' or config['method']=='maximumlikelihood':
     try:
+        if ('markovnetwork' in str(type(DAG)).lower()):
+            if verbose>=3: print('[bnlearn] >Converting markovnetwork to Bayesian model')
+            DAG=DAG.to_bayesian_model()
+
         if 'MaximumLikelihood' in str(type(DAG)):
             # print CPDs using Maximum Likelihood Estimators
             for node in DAG.state_names:
@@ -184,17 +188,20 @@ def print_CPD(DAG, checkmodel=False):
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
                 return
             for cpd in DAG.get_cpds():
-                print("CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+                if verbose>=3:
+                    print("CPD of {variable}:".format(variable=cpd.variable))
+                    print(cpd)
             if ('bayesiannetwork' in str(type(DAG)).lower()):
-                print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
-            print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
-            print('[bnlearn] >Edges: %s' %(DAG.edges()))
+                if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
+
+            if verbose>=3:
+                print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
+                print('[bnlearn] >Edges: %s' %(DAG.edges()))
 
         if checkmodel:
             _check_model(DAG, verbose=3)
     except:
-        print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
+        if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
 
 
 # %%
