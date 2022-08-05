@@ -654,7 +654,7 @@ None : Returns all Probabilities</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.print_CPD">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">print_CPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkmodel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.print_CPD" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">print_CPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkmodel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.print_CPD" title="Permalink to this definition"></a></dt>
 <dd><p>Print DAG-model to screen.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -694,12 +694,17 @@ None : Returns all Probabilities</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.sampling">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Permalink to this definition"></a></dt>
-<dd><p>Generate sample(s) using forward sampling from joint distribution of the bayesian network.</p>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Permalink to this definition"></a></dt>
+<dd><p>Generate sample(s) using the joint distribution of the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>DAG</strong> (<em>dict</em>) – Contains model and adjmat of the DAG.</p></li>
+<li><p><strong>DAG</strong> (<em>dict</em>) – Contains model and the adjmat of the DAG.</p></li>
+<li><p><strong>methodtype</strong> (<em>str</em><em> (</em><em>default: 'bayes'</em><em>)</em>) – <ul>
+<li><p>‘bayes’: Forward sampling using Bayesian.</p></li>
+<li><p>’gibbs’ : Gibbs sampling.</p></li>
+</ul>
+</p></li>
 <li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
@@ -713,9 +718,30 @@ None : Returns all Probabilities</p></li>
 </dd>
 </dl>
 <p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 1</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG with model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 2:</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the actual Bayesian DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Fit model</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling using gibbs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;gibbs&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
