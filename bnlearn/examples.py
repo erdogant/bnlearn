@@ -12,6 +12,24 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% Issue 37
+import bnlearn as bn
+# Load example DataFrame
+df_as = bn.import_example('titanic')
+dfhot, dfnum = bn.df2onehot(df_as)
+# Train model
+model_as = bn.structure_learning.fit(dfnum, methodtype='hc', scoretype='bic')
+model_as_p = bn.parameter_learning.fit(model_as, dfnum, methodtype='bayes')
+# Do the inference
+query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch'], evidence={'Survived':0, 'Pclass':1}, to_df=True)
+print(query)
+
+# bn.query2df(query)
+
+query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':0, 'Pclass':1})
+query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0, 'Pclass':1})
+
+
 # %% Issue 57
 
 import bnlearn as bn

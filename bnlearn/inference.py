@@ -16,12 +16,9 @@ Inference is same as asking conditional probability questions to the models.
 from pgmpy.inference import VariableElimination
 import bnlearn
 import numpy as np
-from tabulate import tabulate
 
 
 # %% Exact inference using Variable Elimination
-
-
 def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     """Inference using using Variable Elimination.
 
@@ -38,7 +35,7 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
             * {'Rain':1}
             * {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
     to_df : Bool, (default is True)
-        The output is converted to dataframe output. Note that this heavily impacts the speed.
+        The output is converted in the dataframe [query.df]. Enabling this function may heavily impact the processing speed.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -95,8 +92,6 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     # Computing the probability P(class | evidence)
     query = model_infer.query(variables=variables, evidence=evidence, show_progress=(verbose>0))
     # Store also in dataframe
-    query.df = bnlearn.query2df(query, variables=variables) if to_df else None
-    # Print table to screen
-    if verbose>=3: print(tabulate(query.df.head(), tablefmt="grid", headers="keys"))
+    query.df = bnlearn.query2df(query, variables=variables, verbose=verbose) if to_df else None
     # Return
     return(query)

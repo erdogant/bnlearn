@@ -19,6 +19,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
+from tabulate import tabulate
 
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
@@ -558,7 +559,33 @@ def _bif2bayesian(pathname, verbose=3):
 
 
 # %%
-def query2df(query, variables=None):
+# def query2df(query, variables=None):
+#     """Convert query from inference model to a dataframe.
+
+#     Parameters
+#     ----------
+#     query : Object from the inference model.
+#         Convert query object to a dataframe.
+#     variables : list
+#         Order or select variables.
+
+#     Returns
+#     -------
+#     df : pd.DataFrame()
+#         Dataframe with inferences.
+
+#     """
+#     df = pd.DataFrame(data=list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
+#     df['p'] = query.values.flatten()
+#     # Order or filter on input variables
+#     if variables is not None:
+#         # Add Pvalue column
+#         variables = variables + ['p']
+#         df = df[variables]
+#     return df
+
+
+def query2df(query, variables=None, verbose=3):
     """Convert query from inference model to a dataframe.
 
     Parameters
@@ -574,15 +601,26 @@ def query2df(query, variables=None):
         Dataframe with inferences.
 
     """
-    df = pd.DataFrame(data=list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
-    df['p'] = query.values.flatten()
+    states = []
+    getP = []
+    for value_index, prob in enumerate(itertools.product(*[range(card) for card in query.cardinality])):
+        states.append(prob)
+        getP.append(query.values.ravel()[value_index])
+
+    df = pd.DataFrame(data=states, columns=query.scope())
+    df['p'] = getP
     # Order or filter on input variables
     if variables is not None:
         # Add Pvalue column
-        variables=variables +['p']
+        variables = variables + ['p']
         df = df[variables]
-    return df
 
+    # Print table to screen
+    if verbose>=3:
+        print('[bnlearn] >Data is stored in [query.df]')
+        print(tabulate(df.head(), tablefmt="grid", headers="keys"))
+
+    return df
 
 # %% Model Sprinkler
 def _DAG_sprinkler(CPD=True):

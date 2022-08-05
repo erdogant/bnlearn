@@ -13,6 +13,25 @@ from pgmpy.inference import VariableElimination
 from pgmpy.estimators import BDeuScore, K2Score, BicScore
 
 
+def test_QUERY():
+    # Load example DataFrame
+    df = bn.import_example('titanic')
+    dfhot, dfnum = bn.df2onehot(df)
+    # Train model
+    model_as = bn.structure_learning.fit(dfnum, methodtype='hc', scoretype='bic')
+    model_as_p = bn.parameter_learning.fit(model_as, dfnum, methodtype='bayes')
+    # Do the inference
+    variables_list = [ ['Sex', 'Parch', 'SibSp'], ['Sex', 'Parch'], ['Sex'] ]
+    evidences_list = [{'Survived':0, 'Pclass':1, 'Embarked':1}, {'Survived':0, 'Pclass':1}, {'Survived':0}]
+    sizes = [(48, 4), (48, 4), (48, 4),    (8, 3),    (8, 3),    (8, 3),    (2, 2),    (2, 2),    (2, 2)]
+    i=0
+    for variables in variables_list:
+        for evidences in evidences_list:
+            query = bn.inference.fit(model_as_p, variables=variables, evidence=evidences, to_df=True, verbose=0)
+            query.df.shape == sizes[i]
+            assert list(query.df.columns)==variables+['p']
+            i=i+1
+
 def test_import_DAG():
     DAG = bn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
