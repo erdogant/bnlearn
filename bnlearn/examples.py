@@ -23,8 +23,10 @@ model_as_p = bn.parameter_learning.fit(model_as, dfnum, methodtype='bayes')
 # Do the inference
 query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch'], evidence={'Survived':0, 'Pclass':1}, to_df=True)
 print(query)
+print(query.df)
+bn.query2df(query)
+bn.query2df(query, variables=['Sex'])
 
-# bn.query2df(query)
 
 query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':0, 'Pclass':1})
 query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0, 'Pclass':1})

@@ -32,6 +32,11 @@ def test_QUERY():
             assert list(query.df.columns)==variables+['p']
             i=i+1
 
+    query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'SibSp'], evidence={'Survived':0, 'Pclass':1}, to_df=True, verbose=0)
+    q = bn.query2df(query, variables=['SibSp', 'Sex'])
+    q.shape==(48, 3)
+    list(q.columns)==['SibSp', 'Sex', 'p']
+
 def test_import_DAG():
     DAG = bn.import_DAG('Sprinkler')
     # TEST 1: check output is unchanged
