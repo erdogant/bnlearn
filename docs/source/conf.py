@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'bnlearn'
-copyright = '2020, Erdogan Taskesen'
+copyright = '2022, Erdogan Taskesen'
 author = 'Erdogan Taskesen'
 
 # The master toctree document.

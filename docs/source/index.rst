@@ -122,14 +122,20 @@ Content
 
 
 .. toctree::
-  :maxdepth: 1
-  :caption: Documentation
+  :maxdepth: 2
+  :caption: Parameters and attributes
 
-  Documentation
   bnlearn.structure_learning
   bnlearn.parameter_learning
   bnlearn.inference
   bnlearn.bnlearn
+
+
+.. toctree::
+  :maxdepth: 1
+  :caption: Documentation
+
+  Documentation
 
 * :ref:`genindex`
 
