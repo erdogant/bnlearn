@@ -12,6 +12,41 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %% Issue 57
+
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges, verbose=3, methodtype='markov')
+model = bn.parameter_learning.fit(DAG, df, verbose=3, methodtype='bayes')
+
+# Sampling
+df = bn.sampling(model, n=100, methodtype='gibbs', verbose=3)
+
+# Print CPDs
+bn.print_CPD(model)
+
+# Plot
+bn.plot(model)
+
+
+# %%
+import bnlearn as bn
+model = bn.import_DAG('water', verbose=0)
+# Sampling
+df = bn.sampling(model, n=1000, methodtype='markov', verbose=3)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df, scoretype='bdeu', smooth=None)
+
+
 # %% Naive Bayesian model
 df = bn.import_example('random')
 # Structure learning

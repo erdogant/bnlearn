@@ -56,11 +56,12 @@ def test_make_DAG():
 
 def test_sampling():
     # TEST 1:
-    model = bn.import_DAG('Sprinkler')
-    n = np.random.randint(10, 1000)
-    df = bn.sampling(model, n=n)
-    assert df.shape==(n, 4)
-
+    methodtypes = ['bayes', 'gibbs']
+    for methodtype in methodtypes:
+        model = bn.import_DAG('Sprinkler')
+        n = np.random.randint(10, 1000)
+        df = bn.sampling(model, n=n, methodtype=methodtype)
+        assert df.shape==(n, 4)
 
 def test_to_undirected():
     # TEST 1:
