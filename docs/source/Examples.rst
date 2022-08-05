@@ -41,7 +41,7 @@ Finally, we can start making inferences. Note that the variable and evidence nam
 .. code-block:: python
 
    # Print CPDs
-   bn.print_CPD(model)
+   CPDs = bn.print_CPD(model)
    # Make inference
    q = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
    
@@ -326,7 +326,7 @@ Make the actual Bayesian DAG
     # [BNLEARN] Bayesian DAG created.
 
     # Print the CPDs
-    bn.print_CPD(DAG)
+    CPDs = bn.print_CPD(DAG)
     # [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
 
 Plot the DAG
@@ -351,7 +351,7 @@ Lets print the learned CPDs:
 
 .. code-block:: python
 
-    bn.print_CPD(DAG)
+    CPDs = bn.print_CPD(DAG)
     
     # [BNLEARN.print_CPD] Independencies:
     # (Cloudy _|_ Wet_Grass | Rain, Sprinkler)
