@@ -245,7 +245,26 @@
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
 
 <span class="c1"># Print model</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># All CPDs are now stored in the dict CPD which contain the CPD for each node.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">CPDs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="c1"># dict_keys([&#39;Pclass&#39;, &#39;Survived&#39;, &#39;Embarked&#39;, &#39;Sex&#39;, &#39;SibSp&#39;, &#39;Parch&#39;])</span>
+
+<span class="n">CPDs</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">]</span>
+<span class="c1">#     Survived  Pclass  Sex         p</span>
+<span class="c1"># 0          0       0    0  0.331202</span>
+<span class="c1"># 1          0       0    1  0.555427</span>
+<span class="c1"># 2          0       1    0  0.368132</span>
+<span class="c1"># 3          0       1    1  0.634709</span>
+<span class="c1"># 4          0       2    0  0.500000</span>
+<span class="c1"># 5          0       2    1  0.746269</span>
+<span class="c1"># 6          1       0    0  0.668798</span>
+<span class="c1"># 7          1       0    1  0.444573</span>
+<span class="c1"># 8          1       1    0  0.631868</span>
+<span class="c1"># 9          1       1    1  0.365291</span>
+<span class="c1"># 10         1       2    0  0.500000</span>
+<span class="c1"># 11         1       2    1  0.253731</span>
 </pre></div>
 </div>
 </section>
@@ -386,7 +405,7 @@
 <p>At this point we have the data set in our dataframe (df), and we have the <strong>DAG</strong> based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.parameter_learning.fit()</span></code> which will compute the CPDs. See section <a class="reference internal" href="Parameter%20learning.html#parameter-learning"><span class="std std-ref">Parameter learning</span></a> to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!</p>
 <p>Parameter learning on the expert-DAG using the input data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the current CPDs in the DAG.</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 <span class="c1"># [bnlearn] &gt;No CPDs to print. Tip: use bn.plot(DAG) to make a plot.</span>
 <span class="c1"># This is correct, we dit not yet specify any CPD.</span>
 
@@ -395,7 +414,7 @@
 <span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
 
 <span class="c1"># Print the CPDs</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 <span class="c1"># At this point we have a DAG with the learned CPDs</span>
 </pre></div>
 </div>
@@ -684,7 +703,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learning the CPDs using parameter learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
 <span class="c1"># Print the CPDs</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>CPD of smoke:</p>

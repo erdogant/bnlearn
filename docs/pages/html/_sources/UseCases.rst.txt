@@ -83,7 +83,26 @@ At this point we can also start making inferences:
 	print(query.df)
 
 	# Print model
-	bn.print_CPD(model)
+	CPDs = bn.print_CPD(model)
+
+	# All CPDs are now stored in the dict CPD which contain the CPD for each node.
+	print(CPDs.keys())
+	# dict_keys(['Pclass', 'Survived', 'Embarked', 'Sex', 'SibSp', 'Parch'])
+
+	CPDs['Survived']
+	#     Survived  Pclass  Sex         p
+	# 0          0       0    0  0.331202
+	# 1          0       0    1  0.555427
+	# 2          0       1    0  0.368132
+	# 3          0       1    1  0.634709
+	# 4          0       2    0  0.500000
+	# 5          0       2    1  0.746269
+	# 6          1       0    0  0.668798
+	# 7          1       0    1  0.444573
+	# 8          1       1    0  0.631868
+	# 9          1       1    1  0.365291
+	# 10         1       2    0  0.500000
+	# 11         1       2    1  0.253731
 
 
 
@@ -184,7 +203,7 @@ Parameter learning on the expert-DAG using the input data set.
 .. code-block:: python
 
     # Check the current CPDs in the DAG.
-    bn.print_CPD(DAG)
+    CPDs = bn.print_CPD(DAG)
     # [bnlearn] >No CPDs to print. Tip: use bn.plot(DAG) to make a plot.
     # This is correct, we dit not yet specify any CPD.
 
@@ -193,7 +212,7 @@ Parameter learning on the expert-DAG using the input data set.
     DAG = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
     # Print the CPDs
-    bn.print_CPD(DAG)
+    CPDs = bn.print_CPD(DAG)
     # At this point we have a DAG with the learned CPDs
 
 
@@ -410,7 +429,7 @@ The first step is to import and pre-process the data set as depicted in :ref:`Im
     # Learning the CPDs using parameter learning
     model = bn.parameter_learning.fit(model, df, methodtype='bayes')
     # Print the CPDs
-    bn.print_CPD(model)
+    CPDs = bn.print_CPD(model)
 
 
 CPD of smoke:

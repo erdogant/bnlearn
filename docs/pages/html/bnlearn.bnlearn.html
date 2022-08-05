@@ -674,17 +674,47 @@ None : Returns all Probabilities</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p>Dictionary containing the CPDs.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Set edges</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the actual Bayesian DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Gather and store the CPDs in dictionary contaning dataframes for each node.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span><span class="p">[</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Print nicely</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">CPD</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.query2df">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">query2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.query2df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">query2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.query2df" title="Permalink to this definition"></a></dt>
 <dd><p>Convert query from inference model to a dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

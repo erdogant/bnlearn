@@ -185,7 +185,7 @@ With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlea
 </div>
 <p>Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="c1"># Make inference</span>
 <span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 
@@ -562,7 +562,7 @@ Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcas
 <span class="c1"># [BNLEARN] Bayesian DAG created.</span>
 
 <span class="c1"># Print the CPDs</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 <span class="c1"># [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
 </pre></div>
 </div>
@@ -578,7 +578,7 @@ Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcas
 </pre></div>
 </div>
 <p>Lets print the learned CPDs:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 
 <span class="c1"># [BNLEARN.print_CPD] Independencies:</span>
 <span class="c1"># (Cloudy _|_ Wet_Grass | Rain, Sprinkler)</span>
