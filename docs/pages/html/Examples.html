@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Various &mdash; bnlearn bnlearn documentation</title>
+  <title>Start with RAW data &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -85,7 +85,8 @@
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">Example Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
@@ -101,13 +102,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Various</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dataframes">DataFrames</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dag">DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#import-from-bif">Import from BIF</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#start-with-raw-data">Start with RAW data</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Start with RAW data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#structure-learning">Structure learning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#example-1">Example (1)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-2">Example (2)</a></li>
@@ -150,7 +145,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Various</li>
+      <li>Start with RAW data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Examples.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -160,86 +155,22 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="various">
-<h1>Various<a class="headerlink" href="#various" title="Permalink to this headline"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
-<section id="dataframes">
-<h2>DataFrames<a class="headerlink" href="#dataframes" title="Permalink to this headline"></a></h2>
-<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, there is one example dataset that can be imported; the <strong>sprinkler</strong> dataset. Note this dataset is readily one-hot, without missing values, and as such does not require any further pre-processing steps. The DAG example models (see Example DAG section) can however be converted from the model to a dataframe.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="c1"># Import dataset</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
-<span class="c1"># Structure learning</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="c1"># Plot</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="dag">
-<h2>DAG<a class="headerlink" href="#dag" title="Permalink to this headline"></a></h2>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several example Directed Acyclic Graphs:</dt><dd><ul class="simple">
-<li><p>‘sprinkler’ (default)</p></li>
-<li><p>‘alarm’</p></li>
-<li><p>‘andes’</p></li>
-<li><p>‘asia’</p></li>
-<li><p>‘pathfinder’</p></li>
-<li><p>‘sachs’</p></li>
-<li><p>‘miserables’</p></li>
-</ul>
-</dd>
-</dl>
-<p>Each DAG can be loaded using the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> function. With the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling" title="bnlearn.bnlearn.sampling"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.sampling()</span></code></a> function a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be created for <em>n</em> samples.
-The sprinkler DAG is a special case because it is not loaded from a <em>bif</em> file but created manually. Therefore, the <strong>sprinkler</strong> model can be generated with(out) a CPD by: <code class="docutils literal notranslate"><span class="pre">CPD=False</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="c1"># Import dataset</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sachs&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># plot the keys of the DAG</span>
-<span class="n">DAG</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-<span class="c1"># dict_keys([&#39;model&#39;, &#39;adjmat&#39;])</span>
-
-<span class="c1"># The model contains the BayesianNetwork with the CPDs.</span>
-<span class="c1"># The adjmat contains the adjacency matrix with the relationships between the nodes.</span>
-
-<span class="c1"># plot ground truth</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
-
-<span class="c1"># Sampling</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="import-from-bif">
-<h2>Import from BIF<a class="headerlink" href="#import-from-bif" title="Permalink to this headline"></a></h2>
-<p>Each Bayesian DAG model that is loaded with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> is derived from a <em>bif</em> file. The <em>bif</em> file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[<a class="reference external" href="http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm">http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm</a>].</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;alarm&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;andes&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;asia&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;pathfinder&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;filepath/to/model.bif&#39;</span>
-
-<span class="c1"># Loading example dataset</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">bif_file</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
+  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
 <section id="start-with-raw-data">
-<h2>Start with RAW data<a class="headerlink" href="#start-with-raw-data" title="Permalink to this headline"></a></h2>
+<h1>Start with RAW data<a class="headerlink" href="#start-with-raw-data" title="Permalink to this headline"></a></h1>
 <p>Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example" title="bnlearn.bnlearn.import_example"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_example()</span></code></a>.
 With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a> it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load titanic dataset containing mixed variables</span>
+
 <span class="n">df_raw</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
+
 <span class="c1"># Pre-processing of the input dataset</span>
 <span class="n">dfhot</span><span class="p">,</span> <span class="n">dfnum</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span>
+
 <span class="c1"># Structure learning</span>
 <span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">)</span>
+
 <span class="c1"># Plot</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
@@ -281,7 +212,6 @@ With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlea
 </tr>
 </tbody>
 </table>
-</section>
 </section>
 <section id="structure-learning">
 <h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this headline"></a></h1>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example Datasets &mdash; bnlearn bnlearn documentation</title>
+  <title>DataFrames &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -85,7 +85,8 @@
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Datasets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
@@ -101,7 +102,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Various</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Start with RAW data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
@@ -139,7 +140,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Example Datasets</li>
+      <li>DataFrames</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Example Datasets.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,30 +150,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="example-datasets">
-<h1>Example Datasets<a class="headerlink" href="#example-datasets" title="Permalink to this headline"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains various example datasets that can be used to better understand how the datasets should be structured as an input to the <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> functions.
-It is also possible to import other DAG files manually that are stored in bif files. DAGs can be loaded and/or imported as following:</p>
+  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
+<section id="dataframes">
+<h1>DataFrames<a class="headerlink" href="#dataframes" title="Permalink to this headline"></a></h1>
+<p>The <strong>sprinkler</strong> dataset is one of the few internal datasets to import a pandas dataframe. This dataset is readily one-hot coded and without missing values. Therefore it does not require any further pre-processing steps. Note that</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="c1"># Import dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#     Cloudy  Sprinkler  Rain  Wet_Grass</span>
+<span class="c1"># 0         0          0     0          0</span>
+<span class="c1"># 1         1          0     1          1</span>
+<span class="c1"># 2         0          1     0          1</span>
+<span class="c1"># ..      ...        ...   ...        ...</span>
+<span class="c1"># 998       0          0     0          0</span>
+<span class="c1"># 999       0          1     1          1</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="import-dag-bif">
+<h1>Import DAG/BIF<a class="headerlink" href="#import-dag-bif" title="Permalink to this headline"></a></h1>
+<p>Each Bayesian DAG model that is loaded with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> is derived from a <em>bif</em> file. The <em>bif</em> file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[<a class="reference external" href="http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm">http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm</a>].</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
-<span class="c1"># The following models can be loaded:</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;alarm&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;andes&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;asia&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;pathfinder&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
-<span class="n">loadfile</span> <span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;alarm&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;andes&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;asia&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;pathfinder&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
+<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;filepath/to/model.bif&#39;</span>
 
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">loadfile</span><span class="p">)</span>
+<span class="c1"># Loading DAG with model parameters from bif file.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">bif_file</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Models are usually stored in bif files which can also be imported:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">filepath</span> <span class="o">=</span> <span class="s1">&#39;directory/to/model.bif&#39;</span>
-
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>With the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling" title="bnlearn.bnlearn.sampling"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.sampling()</span></code></a> function a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be created for <em>n</em> samples.</p>
 <hr>
 <center>
         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
