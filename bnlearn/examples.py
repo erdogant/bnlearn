@@ -12,6 +12,14 @@ import bnlearn as bn
 # print(dir(bn.parameter_learning))
 # print(dir(bn.inference))
 
+# %%
+# Load asia DAG
+df = bn.import_example(data='asia')
+# Structure learning of sampled dataset
+model = bn.structure_learning.fit(df)
+# Make plot
+G = bn.plot(model)
+
 # %% Issue MAIL: Store CPDs after printing.
 
 import bnlearn as bn
