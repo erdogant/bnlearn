@@ -22,8 +22,8 @@ If you ❤️ this project, **star** this repo at the `github page <https://gith
 
 Github
 ======
-`Github d3blocks <https://github.com/erdogant/bnlearn/>`_.
-Please report bugs, issues and feature extensions there.
+Please report bugs, issues and feature extensions at `github <https://github.com/erdogant/bnlearn/>`_.
+
 
 
 Content
