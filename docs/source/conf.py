@@ -16,7 +16,10 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 ############### Download rst file ####################################################
 from urllib.request import urlretrieve
-urlretrieve ("https://erdogant.github.io/docs/rst/sponsor.rst", "sponsor.rst")
+sponsor_file = "https://erdogant.github.io/docs/rst/sponsor.rst"
+if os.path.isfile(sponsor_file):
+	os.remove(sponsor_file)
+urlretrieve (sponsor_file, "sponsor.rst")
 
 
 # -- Project information -----------------------------------------------------
