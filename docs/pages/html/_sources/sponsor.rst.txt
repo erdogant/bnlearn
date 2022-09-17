@@ -8,8 +8,6 @@
 	* **Star** this repo at the `github page <https://github.com/erdogant/d3blocks/>`_.
 	* Other contributions can be in the form of feature requests, idea discussions, reporting bugs, opening pull requests.
 
-	Read more why becoming an **sponsor** is important on the **`Sponsor Github Page <https://github.com/sponsors/erdogant?o=esb/>`_** (button below).
-
 	Cheers Mate.
 
 .. raw:: html
