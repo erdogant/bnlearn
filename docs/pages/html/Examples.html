@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -127,6 +128,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -155,11 +159,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
+  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code>.</p>
 <section id="start-with-raw-data">
-<h1>Start with RAW data<a class="headerlink" href="#start-with-raw-data" title="Permalink to this headline"></a></h1>
-<p>Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example" title="bnlearn.bnlearn.import_example"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_example()</span></code></a>.
-With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a> it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.</p>
+<h1>Start with RAW data<a class="headerlink" href="#start-with-raw-data" title="Permalink to this heading"></a></h1>
+<p>Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_example()</span></code>.
+With the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code> it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load titanic dataset containing mixed variables</span>
 
@@ -214,10 +218,10 @@ With the function <a class="reference internal" href="bnlearn.bnlearn.html#bnlea
 </table>
 </section>
 <section id="structure-learning">
-<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this headline"></a></h1>
+<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
 <p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
 <section id="example-1">
-<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this headline"></a></h2>
+<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this heading"></a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load dataframe</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
@@ -279,7 +283,7 @@ Wet_grass is connected to nothing.</p>
 </table>
 </section>
 <section id="example-2">
-<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this headline"></a></h2>
+<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this heading"></a></h2>
 <p>For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.</p>
 <p>Let’s bring in our dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -339,7 +343,7 @@ Wet_grass is connected to nothing.</p>
 </tr>
 </tbody>
 </table>
-<p>From the <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> library, we’ll need the <a class="reference internal" href="bnlearn.structure_learning.html#bnlearn.structure_learning.fit" title="bnlearn.structure_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> for this exercise:</p>
+<p>From the <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> library, we’ll need the <code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code> for this exercise:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
  <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
  <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -379,7 +383,7 @@ Wet_grass is connected to nothing.</p>
 </div>
 </section>
 <section id="example-3">
-<h2>Example (3)<a class="headerlink" href="#example-3" title="Permalink to this headline"></a></h2>
+<h2>Example (3)<a class="headerlink" href="#example-3" title="Permalink to this heading"></a></h2>
 <p>Lets learn the structure of a more complex data set and compare it to another one.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load asia DAG</span>
@@ -424,7 +428,7 @@ Wet_grass is connected to nothing.</p>
 </section>
 </section>
 <section id="parameter-learning">
-<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this headline"></a></h1>
+<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
 <p>Extracting adjacency matrix after Parameter learning:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load dataframe</span>
@@ -485,7 +489,7 @@ Wet_grass is connected to nothing.</p>
 </table>
 </section>
 <section id="create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">
-<h1>Create a Bayesian Network, learn its parameters from data and perform the inference<a class="headerlink" href="#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference" title="Permalink to this headline"></a></h1>
+<h1>Create a Bayesian Network, learn its parameters from data and perform the inference<a class="headerlink" href="#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference" title="Permalink to this heading"></a></h1>
 <p>Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes.
 Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcase this, I will use the sprinkler example.</p>
 <p>Import example dataset of the sprinkler dataset.</p>

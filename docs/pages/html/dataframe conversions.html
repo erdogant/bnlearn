@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -131,6 +132,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -160,7 +164,7 @@
            <div itemprop="articleBody">
              
   <section id="data-conversions">
-<h1>Data Conversions<a class="headerlink" href="#data-conversions" title="Permalink to this headline"></a></h1>
+<h1>Data Conversions<a class="headerlink" href="#data-conversions" title="Permalink to this heading"></a></h1>
 <p>Modeling your data and getting it in the right shape may require various conversions, depending your starting point and/or your goal. In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> various functionalities are readily implemented to make conversions <em>from</em> or <em>to</em> the <strong>adjacency matrix</strong> or <strong>vectors</strong>.</p>
 <p>Available functionalities:</p>
 <blockquote>
@@ -173,7 +177,7 @@
 </ul>
 </div></blockquote>
 <section id="adjacency-matrix">
-<h2>Adjacency matrix<a class="headerlink" href="#adjacency-matrix" title="Permalink to this headline"></a></h2>
+<h2>Adjacency matrix<a class="headerlink" href="#adjacency-matrix" title="Permalink to this heading"></a></h2>
 <p>The adjacency matrix is used to store relationships across source-target variables (nodes) with its edges.
 In graph theory, a square matrix is used to represent a finite graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph.
 <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> outputs an adjacency matrix in some functionalities. Values 0 or False indicate that nodes are not connected whereas pairs of vertices with value &gt;0 or True are connected.</p>
@@ -368,7 +372,7 @@ This indicates that Erk influences gene Ark but not the otherway arround because
 </table>
 </section>
 <section id="vector">
-<h2>Vector<a class="headerlink" href="#vector" title="Permalink to this headline"></a></h2>
+<h2>Vector<a class="headerlink" href="#vector" title="Permalink to this heading"></a></h2>
 <p>The <strong>vector</strong> is used to store relationships based on source-target variables (nodes), and with its weigths.
 An example is illustrated below for which edges are defined when weights are True or a number &gt;=1.</p>
 <table class="docutils align-default">
@@ -402,8 +406,8 @@ An example is illustrated below for which edges are defined when weights are Tru
 </table>
 </section>
 <section id="adjmat2vec">
-<h2>adjmat2vec<a class="headerlink" href="#adjmat2vec" title="Permalink to this headline"></a></h2>
-<p>Converting an adjacency matrix into vector with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2vec" title="bnlearn.bnlearn.adjmat2vec"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2vec()</span></code></a></p>
+<h2>adjmat2vec<a class="headerlink" href="#adjmat2vec" title="Permalink to this heading"></a></h2>
+<p>Converting an adjacency matrix into vector with <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2vec()</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load DAG</span>
 <span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
@@ -442,8 +446,8 @@ An example is illustrated below for which edges are defined when weights are Tru
 </table>
 </section>
 <section id="vec2adjmat">
-<h2>vec2adjmat<a class="headerlink" href="#vec2adjmat" title="Permalink to this headline"></a></h2>
-<p>Converting the created vector in the example above back into an adjacency matrix with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2adjmat" title="bnlearn.bnlearn.vec2adjmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2adjmat()</span></code></a></p>
+<h2>vec2adjmat<a class="headerlink" href="#vec2adjmat" title="Permalink to this heading"></a></h2>
+<p>Converting the created vector in the example above back into an adjacency matrix with <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2adjmat()</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Convert vector back to adjmat.</span>
 <span class="n">adjmat</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vector</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vector</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
@@ -494,8 +498,8 @@ An example is illustrated below for which edges are defined when weights are Tru
 </table>
 </section>
 <section id="adjmat2dict">
-<h2>adjmat2dict<a class="headerlink" href="#adjmat2dict" title="Permalink to this headline"></a></h2>
-<p>Convert adjacency matrix to dictionary with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2dict" title="bnlearn.bnlearn.adjmat2dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2dict()</span></code></a></p>
+<h2>adjmat2dict<a class="headerlink" href="#adjmat2dict" title="Permalink to this heading"></a></h2>
+<p>Convert adjacency matrix to dictionary with <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2dict()</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load DAG</span>
@@ -513,8 +517,8 @@ An example is illustrated below for which edges are defined when weights are Tru
 </div>
 </section>
 <section id="dag2adjmat">
-<h2>dag2adjmat<a class="headerlink" href="#dag2adjmat" title="Permalink to this headline"></a></h2>
-<p>Convert model into adjacency matrix with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.dag2adjmat" title="bnlearn.bnlearn.dag2adjmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.dag2adjmat()</span></code></a></p>
+<h2>dag2adjmat<a class="headerlink" href="#dag2adjmat" title="Permalink to this heading"></a></h2>
+<p>Convert model into adjacency matrix with <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.dag2adjmat()</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load DAG</span>
@@ -568,8 +572,8 @@ An example is illustrated below for which edges are defined when weights are Tru
 </table>
 </section>
 <section id="vec2df">
-<h2>vec2df<a class="headerlink" href="#vec2df" title="Permalink to this headline"></a></h2>
-<p>Convert edges between source and taget into a dataframe based on the weight with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2df" title="bnlearn.bnlearn.vec2df"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2df()</span></code></a>
+<h2>vec2df<a class="headerlink" href="#vec2df" title="Permalink to this heading"></a></h2>
+<p>Convert edges between source and taget into a dataframe based on the weight with <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2df()</span></code>
 For demonstration purposes, A small example is created below for which can be seen that the weights are indicative for the number of rows; a weight of 2 will result that a row with the edge is created 2 times.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>

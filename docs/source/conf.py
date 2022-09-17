@@ -14,6 +14,11 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
+############### Download rst file ####################################################
+from urllib.request import urlretrieve
+urlretrieve ("https://erdogant.github.io/docs/rst/sponsor.rst", "sponsor.rst")
+
+
 # -- Project information -----------------------------------------------------
 
 project = 'bnlearn'

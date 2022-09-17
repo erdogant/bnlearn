@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -122,6 +123,9 @@
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -150,116 +154,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-bnlearn.structure_learning">
-<span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Permalink to this headline"></a></h1>
-<p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition"></a></dt>
-<dd><p>Structure learning fit model.</p>
-<p>Search strategies for structure learning
-The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
-<dl class="simple">
-<dt>To learn model structure (a DAG) from a data set, there are three broad techniques:</dt><dd><ol class="arabic simple">
-<li><dl class="simple">
-<dt>Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)</dt><dd><ul class="simple">
-<li><p>exhaustivesearch</p></li>
-<li><p>hillclimbsearch</p></li>
-<li><p>chow-liu</p></li>
-<li><p>Tree-augmented Naive Bayes (tan)</p></li>
-<li><p>NaiveBayesian</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Constraint-based structure learning (PC)</dt><dd><ol class="loweralpha simple">
-<li><p>chi-square test</p></li>
-</ol>
-</dd>
-</dl>
-</li>
-<li><p>Hybrid structure learning (The combination of both techniques) (MMHC)</p></li>
-</ol>
-</dd>
-</dl>
-<p>Score-based Structure Learning.
-This approach construes model selection as an optimization task. It has two building blocks:
-A scoring function sD:-&gt;R that maps models to a numerical score, based on how well they fit to a given data set D.
-A search strategy to traverse the search space of possible models M and select a model with optimal score.
-Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
-BDeu is dependent on an equivalent sample size.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'hc'</em><em>)</em>) – String Search strategy for structure_learning.
-‘hc’ or ‘hillclimbsearch’ (default)
-‘ex’ or ‘exhaustivesearch’
-‘cs’ or ‘constraintsearch’
-‘cl’ or ‘chow-liu’ (requires setting root_node parameter)
-‘nb’ or ‘naivebayes’ (requires &lt;root_node&gt;)
-‘tan’ (requires &lt;root_node&gt; and &lt;class_node&gt; parameter)</p></li>
-<li><p><strong>scoretype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'bic'</em><em>)</em>) – Scoring function for the search spaces.
-‘bic’, ‘k2’, ‘bdeu’</p></li>
-<li><p><strong>black_list</strong> (<em>List</em><em> or </em><em>None</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – List of edges are black listed.
-In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.</p></li>
-<li><p><strong>white_list</strong> (<em>List</em><em> or </em><em>None</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – List of edges are white listed.
-In case of filtering on nodes, the search is limited to those edges. The resulting model will then only contain nodes that are in white_list.
-Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_method</cite></p></li>
-<li><p><strong>bw_list_method</strong> (<em>list of str</em><em> or </em><em>tuple</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – <dl class="simple">
-<dt>A list of edges can be passed as <cite>black_list</cite> or <cite>white_list</cite> to exclude or to limit the search.</dt><dd><ul>
-<li><p>’edges’ : [(‘A’, ‘B’), (‘C’,’D’), (…)] This option is limited to only methodtype=’hc’</p></li>
-<li><p>’nodes’ : [‘A’, ‘B’, …] Filter the dataframe based on the nodes for <cite>black_list</cite> or <cite>white_list</cite>. Filtering can be done for every methodtype/scoretype.</p></li>
-</ul>
-</dd>
-</dl>
-</p></li>
-<li><p><strong>max_indegree</strong> (<em>int</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>epsilon</strong> (<em>float</em><em> (</em><em>default: 1e-4</em><em>)</em>) – Defines the exit condition. If the improvement in score is less than <cite>epsilon</cite>, the learned model is returned. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em> (</em><em>default: 1e6</em><em>)</em>) – The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than <cite>max_iter</cite>. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>root_node</strong> (<em>String.</em><em> (</em><em>only in case of chow-liu</em><em>, </em><em>Tree-augmented Naive Bayes</em><em> (</em><em>TAN</em><em>)</em><em>)</em>) – The root node for treeSearch based methods.</p></li>
-<li><p><strong>class_node</strong> (<em>String</em>) – The class node is required for Tree-augmented Naive Bayes (TAN)</p></li>
-<li><p><strong>fixed_edges</strong> (<em>iterable</em><em>, </em><em>Only in case of HillClimbSearch.</em>) – A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.</p></li>
-<li><p><strong>return_all_dags</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: False</em><em>)</em>) – Return all possible DAGs. Only in case methodtype=’exhaustivesearch’</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default : 3</em><em>)</em>) – 0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict with model.</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import bnlearn</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot ground truth</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning of sampled dataset</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_sl</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute edge strength using chi-square independence test</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_sl</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot based on structure learning of sampled data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
-<span class="go">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compare networks and make plot</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</dd></dl>
-
+  <section id="bnlearn-structure-learning">
+<h1>bnlearn.structure_learning<a class="headerlink" href="#bnlearn-structure-learning" title="Permalink to this heading"></a></h1>
 <hr>
 <center>
         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
