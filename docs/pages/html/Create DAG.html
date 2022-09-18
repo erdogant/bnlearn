@@ -15,7 +15,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -162,10 +161,10 @@
            <div itemprop="articleBody">
              
   <section id="directed-acyclic-graphs">
-<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Permalink to this heading"></a></h1>
+<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Permalink to this headline"></a></h1>
 <p>This example is to better understand the importance and working of a Directed Acyclic Graph. The underneath topics are going to be explained:</p>
 <section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Building a DAG</p></li>
 <li><p>plotting a DAG</p></li>
@@ -175,7 +174,7 @@
 </ul>
 </section>
 <section id="building-a-causal-dag">
-<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Permalink to this heading"></a></h2>
+<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Permalink to this headline"></a></h2>
 <p>If you readily know (or you have domain knowledge) of the relationships between variables, we can setup the (causal) relationships between the variables with a directed graph (DAG).
 Each node corresponds to a variable and each edge represents conditional dependencies between pairs of variables.
 In bnlearn, we can graphically represent the relationships between variables. To demonstrate this I will create the simple Sprinkler example by hand.</p>
@@ -212,7 +211,7 @@ In bnlearn, we can graphically represent the relationships between variables. To
 <p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.</p>
 </section>
 <section id="the-causal-dag-as-a-generative-representation-of-joint-probability">
-<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this heading"></a></h2>
+<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this headline"></a></h2>
 <p>Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 
@@ -222,7 +221,7 @@ In bnlearn, we can graphically represent the relationships between variables. To
 <p>There are no CPDs attached to the DAG yet. Therefore there is nothing to show.</p>
 </section>
 <section id="specifying-the-probability-distributions-on-your-own">
-<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Permalink to this heading"></a></h2>
+<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Permalink to this headline"></a></h2>
 <p>Each factor is a conditional probability distribution (CPD). In the discrete case the CPD is sometimes called a conditional probability table (CPT).
 Though we can factorize over any DAG and get a set of CPDs, when we factorize along a DAG we consider to be a representation of causality, we call each CPD a causal Markov kernel (CMK).
 The factorization that provides a set of CMKs is the most useful factorization because CMKs correspond to independent causal mechanisms we assume to be invariant across data sets.
@@ -284,7 +283,7 @@ To further examine the CPDs, print the DAG as following:</p>
 </div>
 </section>
 <section id="inference-on-the-causal-generative-model">
-<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Permalink to this heading"></a></h2>
+<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Permalink to this headline"></a></h2>
 <p>This is an great basis to make inferences or update your this model with new data (parameter learning).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>

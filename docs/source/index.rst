@@ -15,9 +15,10 @@ bnlearn's documentation!
 	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 
-Star is important
-======================
-If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_!
+
+You contribution is important
+==============================
+If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_ and have a look at the `sponser page <https://github.com/erdogant/bnlearn/pages/html/Documentation.html>`_!
 
 
 Github
