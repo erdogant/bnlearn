@@ -18,7 +18,7 @@ bnlearn's documentation!
 
 You contribution is important
 ==============================
-If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_ and have a look at the `sponser page <https://github.com/erdogant/bnlearn/pages/html/Documentation.html>`_!
+If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_ and have a look at the `sponser page <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_!
 
 
 Github
@@ -122,7 +122,6 @@ Content
 
   Documentation
 
-* :ref:`genindex`
 
 
 
