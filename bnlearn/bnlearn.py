@@ -3,7 +3,7 @@
 # Name        : bnlearn.py
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
-# Licence     : See licences
+# Licence     : See LICENSE
 # ------------------------------------
 
 
