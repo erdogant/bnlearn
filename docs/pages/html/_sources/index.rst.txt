@@ -34,14 +34,14 @@ Content
    :maxdepth: 2
    :caption: Quickstart
 
+   Introduction
    Quickstart
 
 
 .. toctree::
    :maxdepth: 2
-   :caption: Introduction
+   :caption: Installation
 
-   Introduction
    Installation
 
 
