@@ -5,6 +5,7 @@ __pycache__/
 
 bnlearn/.pylint.d/
 bnlearn/data/
+*.pkl
 
 # C extensions
 *.so
