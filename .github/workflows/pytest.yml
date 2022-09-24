@@ -19,6 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
+	  pip install -U bnlearn
           pip install -r requirements.txt
           # pip install opencv-python
       - name: Test with pytest
