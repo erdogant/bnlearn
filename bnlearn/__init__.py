@@ -23,6 +23,7 @@ from bnlearn.bnlearn import (
     independence_test,
     save,
     load,
+    check_CPDs,
 )
 
 # Import function in new level

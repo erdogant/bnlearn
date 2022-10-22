@@ -5,6 +5,26 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+# %% Issue #60: Floating Point Errors.
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges)
+model = bn.parameter_learning.fit(DAG, df)
+# Print CPDs
+CPD = bn.print_CPD(model)
+
+bn.check_CPDs(CPD)
+bn.check_CPDs(model)
+
 # %%
 import bnlearn as bn
 # print(bn.__version__)

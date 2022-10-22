@@ -146,7 +146,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
             if verbose>=3: print('[bnlearn] >Add CPD: %s' %(cpd.variable))
         # Check model
         if checkmodel:
-            _check_model(DAG, verbose=verbose)
+            check_CPDs(DAG, verbose=verbose)
 
     # Create adjacency matrix from DAG
     out = {}
@@ -238,7 +238,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
                 print('[bnlearn] >Edges: %s' %(DAG.edges()))
 
         if checkmodel:
-            _check_model(DAG, verbose=3)
+            check_CPDs(DAG, verbose=3)
     except:
         if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
 
@@ -246,14 +246,32 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
     return CPDs
 
 
-# %%
-def _check_model(DAG, verbose=3):
-    if verbose>=3: print('[bnlearn] >Checking CPDs..')
-    for cpd in DAG.get_cpds():
-        # print(cpd)
-        if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
-            if verbose>=4: print('[bnlearn] >Warning: CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
-    if verbose>=3: print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
+# %% Check model CPDs
+def check_CPDs(DAG, verbose=3):
+    """Check if the CPDs associated with the nodes are consistent.
+
+    Parameters
+    ----------
+    DAG : Object.
+        Object containing CPDs.
+    verbose : int, optional
+        Print progress to screen. The default is 3.
+        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
+
+    Returns
+    -------
+    None.
+
+    """
+    if isinstance(DAG, dict): DAG = DAG.get('model', None)
+    if DAG is not None:
+        for cpd in DAG.get_cpds():
+            # print(cpd)
+            if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
+                if verbose>=3: print('[bnlearn] >CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
+        if verbose>=3: print('[bnlearn] >CPDs associated with the nodes are consistent (sum up to one): %s' %(DAG.check_model()))
+    else:
+        if verbose>=2: print('[bnlearn] >No CPDs found.')
 
 
 # %% Convert DAG into adjacency matrix
@@ -321,14 +339,14 @@ def vec2df(source, target, weights=None):
 
     Examples
     --------
-    >>> Example 1
+    >>> # Example 1
     >>> import bnlearn as bn
     >>> source=['Cloudy','Cloudy','Sprinkler','Rain']
     >>> target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
     >>> weights=[1,2,1,3]
     >>> df = bn.vec2df(source, target, weights=weights)
 
-    >>> Example 2
+    >>> # Example 2
     >>> import bnlearn as bn
     >>> vec = bn.import_example("stormofswords")
     >>> df = bn.vec2df(vec['source'], vec['target'], weights=vec['weight'])
@@ -1343,7 +1361,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and CPD and checkmodel:
-        _check_model(out['model'], verbose=verbose)
+        check_CPDs(out['model'], verbose=verbose)
         if verbose>=4:
             print_CPD(out)
 
