@@ -146,7 +146,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
             if verbose>=3: print('[bnlearn] >Add CPD: %s' %(cpd.variable))
         # Check model
         if checkmodel:
-            check_CPDs(DAG, verbose=verbose)
+            check_model(DAG, verbose=verbose)
 
     # Create adjacency matrix from DAG
     out = {}
@@ -238,7 +238,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
                 print('[bnlearn] >Edges: %s' %(DAG.edges()))
 
         if checkmodel:
-            check_CPDs(DAG, verbose=3)
+            check_model(DAG, verbose=3)
     except:
         if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
 
@@ -247,7 +247,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
 
 
 # %% Check model CPDs
-def check_CPDs(DAG, verbose=3):
+def check_model(DAG, verbose=3):
     """Check if the CPDs associated with the nodes are consistent.
 
     Parameters
@@ -263,16 +263,15 @@ def check_CPDs(DAG, verbose=3):
     None.
 
     """
+    if verbose>=3: print('[bnlearn] >Check whether CPDs sum up to one.')
     if isinstance(DAG, dict): DAG = DAG.get('model', None)
     if DAG is not None:
         for cpd in DAG.get_cpds():
-            if verbose>=3: print('[bnlearn] >Check whether CPDs sum up to one.')
-            # print(cpd)
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
                 if verbose>=3: print('[bnlearn] >CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
         if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
     else:
-        if verbose>=2: print('[bnlearn] >No CPDs found.')
+        if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
 
 
 # %% Convert DAG into adjacency matrix
@@ -1362,7 +1361,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and CPD and checkmodel:
-        check_CPDs(out['model'], verbose=verbose)
+        check_model(out['model'], verbose=verbose)
         if verbose>=4:
             print_CPD(out)
 

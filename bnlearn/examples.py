@@ -22,8 +22,8 @@ model = bn.parameter_learning.fit(DAG, df)
 # Print CPDs
 CPD = bn.print_CPD(model)
 
-bn.check_CPDs(CPD)
-bn.check_CPDs(model)
+bn.check_model(CPD) # Input should be model
+bn.check_model(model)
 
 # %%
 import bnlearn as bn
@@ -1124,7 +1124,7 @@ print(cpt_wet_grass)
 # The make_DAG function will required a CPD for each node. If this is not the case, use the checkmodel=False
 DAG = bn.make_DAG(DAG, CPD=cpt_cloudy, checkmodel=False)
 DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler], checkmodel=False)
-DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass], checkmodel=True)
 bn.print_CPD(DAG)
 
 q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
