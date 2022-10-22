@@ -266,10 +266,11 @@ def check_CPDs(DAG, verbose=3):
     if isinstance(DAG, dict): DAG = DAG.get('model', None)
     if DAG is not None:
         for cpd in DAG.get_cpds():
+            if verbose>=3: print('[bnlearn] >Check whether CPDs sum up to one.')
             # print(cpd)
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
                 if verbose>=3: print('[bnlearn] >CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
-        if verbose>=3: print('[bnlearn] >CPDs associated with the nodes are consistent (sum up to one): %s' %(DAG.check_model()))
+        if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
     else:
         if verbose>=2: print('[bnlearn] >No CPDs found.')
 
