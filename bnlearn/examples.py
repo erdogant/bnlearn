@@ -1102,7 +1102,7 @@ cpd_E = TabularCPD(variable='E', variable_card=2,
 print(cpd_E)
 
 
-DAG = bn.make_DAG(DAG, CPD=cpd_A, checkmodel=True)
+DAG = bn.make_DAG(DAG, CPD=cpd_A, checkmodel=False)
 bn.print_CPD(DAG, checkmodel=True)
 
 # %% Create a simple DAG:
