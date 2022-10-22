@@ -460,7 +460,7 @@ print(cpd_C)
 cpd_D = TabularCPD(variable='D', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
 print(cpd_D)
 
-DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=False)
+DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
 bn.print_CPD(DAG, checkmodel=True)
 
 # %% Adjust some edge properties
@@ -1056,6 +1056,8 @@ vector = bn.adjmat2vec(DAG['adjmat'])
 adjmat = bn.vec2adjmat(vector['source'], vector['target'])
 
 # %%
+import bnlearn as bn
+
 edges = [('A', 'E'),
          ('S', 'E'),
          ('E', 'O'),
@@ -1081,8 +1083,8 @@ cpd_E = TabularCPD(variable='E', variable_card=2,
 print(cpd_E)
 
 
-DAG = bn.make_DAG(DAG, CPD=cpd_A, checkmodel=False)
-bn.print_CPD(DAG, checkmodel=False)
+DAG = bn.make_DAG(DAG, CPD=cpd_A, checkmodel=True)
+bn.print_CPD(DAG, checkmodel=True)
 
 # %% Create a simple DAG:
 # Building a causal DAG
