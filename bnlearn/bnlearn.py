@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from tqdm import tqdm
 from tabulate import tabulate
+from decimal import Decimal
 
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
@@ -250,10 +251,9 @@ def _check_model(DAG, verbose=3):
     if verbose>=3: print('[bnlearn] >Checking CPDs..')
     for cpd in DAG.get_cpds():
         # print(cpd)
-        if not np.all(cpd.values.sum(axis=0)==1):
-            print('[bnlearn] >Warning: CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
-    if verbose>=3:
-        print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
+        if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
+            if verbose>=4: print('[bnlearn] >Warning: CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
+    if verbose>=3: print('[bnlearn] >Check for DAG structure. Correct: %s' %(DAG.check_model()))
 
 
 # %% Convert DAG into adjacency matrix
