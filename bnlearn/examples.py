@@ -5,6 +5,26 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+# %% Issue Mail:
+# from pgmpy.models import BayesianNetwork
+
+# # create instance
+# hd_bn = BayesianNetwork()
+
+# # create dag
+# hd_bn.add_edges_from(hd_edges)
+
+# # structure score
+# print(f'K2 score: {structure_score(hd_bn,bn_df,scoring_method="k2")}')
+# print(f'BDeu score: {metrics.structure_score(hd_bn,bn_df,scoring_method="bdeu")}')
+# print(f'BDS score: {metrics.structure_score(hd_bn,bn_df,scoring_method="bds")}')
+# print(f'BIC score: {metrics.structure_score(hd_bn,bn_df,scoring_method="bic")}')
+
+# K2 score: -3469.9237414747818
+# BDeu score: -3501.3510316331763
+# BDS score: -3579.8380555853423
+# BIC score: -3616.8520164722863
+
 # %% Issue #60: Floating Point Errors.
 import bnlearn as bn
 
@@ -41,7 +61,6 @@ model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
 # %% Issue MAIL: Store CPDs after printing.
-
 import bnlearn as bn
 
 # Load example dataset

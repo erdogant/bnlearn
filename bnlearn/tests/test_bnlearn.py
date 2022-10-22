@@ -118,23 +118,23 @@ def test_vec2adjmat():
 def test_structure_learning():
     df = bn.import_example()
     model = bn.structure_learning.fit(df)
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
-    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
-    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['undirected', 'undirected_edges', 'pdag', 'pdag_edges', 'dag', 'dag_edges', 'model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
     model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
-    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config']
+    assert [*model.keys()]==['model', 'model_edges', 'adjmat', 'config', 'structure_scores']
 
     # Test the filtering
     DAG = bn.import_DAG('asia')
@@ -221,7 +221,7 @@ def test_parameter_learning():
     df = bn.import_example()
     model = bn.import_DAG('sprinkler', CPD=False)
     model_update = bn.parameter_learning.fit(model, df)
-    assert [*model_update.keys()]==['model', 'adjmat', 'config', 'model_edges']
+    assert [*model_update.keys()]==['model', 'adjmat', 'config', 'model_edges', 'structure_scores']
 
 
 def test_inference():
@@ -403,3 +403,27 @@ def test_edge_properties():
     # Get the edge properties
     edge_properties2 = bn.get_edge_properties(model)
     assert np.sum(pd.DataFrame(edge_properties2).iloc[1, :]>1)>len(edge_properties2) -2
+
+
+def test_structure_scores():
+    # Example 1
+    # Load example dataset
+    df = bn.import_example('sprinkler')
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+
+    # Make the actual Bayesian DAG
+    DAG = bn.make_DAG(edges)
+    model = bn.parameter_learning.fit(DAG, df)
+    assert [*model['structure_scores'].keys()]==['k2', 'bds', 'bic', 'bdeu']
+    assert [*model['structure_scores'].values()]==[-1952.7499005180116, -1961.36196289961, -1953.219110059786, -1954.4304910940107]
+    # Print CPDs
+    CPD = bn.print_CPD(model)
+    bn.check_model(CPD)
+    bn.check_model(model)
+
+    df = bn.import_example('asia')
+    model = bn.structure_learning.fit(df)
+    assert [*model['structure_scores'].keys()]==['k2', 'bds', 'bic', 'bdeu']

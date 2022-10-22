@@ -26,6 +26,7 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy import readwrite
+from pgmpy.metrics import structure_score
 
 from ismember import ismember
 import pypickle
@@ -87,6 +88,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     methodtype : str (default: 'bayes')
         * 'bayes': Bayesian model
         * 'nb' or 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+        * 'markov': Markov model
     checkmodel : bool
         Check the validity of the model. The default is True
     verbose : int, optional
@@ -1723,3 +1725,73 @@ def _normalize_weights(weights, minscale=1, maxscale=10):
     from sklearn.preprocessing import MinMaxScaler
     weights = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(weights).flatten()
     return(weights)
+
+
+# %% Compute structure scores.
+def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], verbose=3, **kwargs):
+    """Compute structure scores.
+
+    Description
+    -----------
+    Uses the standard model scoring methods to give a score for each structure.
+    The score doesn't have very straight forward interpretebility but can be
+    used to compare different models. A higher score represents a better fit.
+    This method only needs the model structure to compute the score and parameters
+    aren't required.
+
+    Parameters
+    ----------
+    model: pgmpy.base.DAG or pgmpy.models.BayesianNetwork instance
+        The model whose score needs to be computed.
+
+    df: pd.DataFrame instance
+        The dataset against which to score the model.
+
+    scoring_method: str ( k2 | bdeu | bds | bic )
+        The following four scoring methods are supported currently: 1) K2Score
+        2) BDeuScore 3) BDsScore 4) BicScore
+
+    kwargs: kwargs
+        Any additional parameters parameters that needs to be passed to the
+        scoring method. Check pgmpy.estimators.StructureScore for details.
+
+    Returns
+    -------
+    Model score: float
+        A score value for the model.
+
+    Examples
+    --------
+    >>> from pgmpy.utils import get_example_model
+    >>> from pgmpy.metrics import structure_score
+    >>> model = get_example_model('alarm')
+    >>> data = model.simulate(int(10000))
+    >>> structure_score(model, data, scoring_method="bic")
+    -106665.9383064447
+    """
+    method = None
+    show_message = True
+    scores = {}
+    # Get models and method
+    if isinstance(model, dict):
+        method = model.get('config')['method']
+        model = model.get('model', None)
+    if isinstance(scoring_method, str): scoring_method = [scoring_method]
+    if verbose>=3: print('[bnlearn] >Compute structure scores %s for model comparison (higher is better).' %(scoring_method))
+
+    # Return if method not supported
+    if np.any(np.isin(method, ['cs', 'constraintsearch'])):
+        if verbose>=2: print('[bnlearn] >Warning: Structure scoring could not be computed. Method [%s] not supported.' %(method))
+        return scores
+
+    # Compute structure scores
+    if model is not None:
+        for s in scoring_method:
+            try:
+                scores[s] = structure_score(model, df, scoring_method=s)
+            except:
+                if verbose>=2 and show_message:
+                    print('[bnlearn] >Warning: Structure scoring could not be computed. DataFrame issues (?)')
+                    show_message=False
+    # Return
+    return scores
