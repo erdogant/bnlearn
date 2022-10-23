@@ -1762,12 +1762,18 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
 
     Examples
     --------
-    >>> from pgmpy.utils import get_example_model
-    >>> from pgmpy.metrics import structure_score
-    >>> model = get_example_model('alarm')
-    >>> data = model.simulate(int(10000))
-    >>> structure_score(model, data, scoring_method="bic")
-    -106665.9383064447
+    >>> import bnlearn as bn
+    >>> # Load example dataset
+    >>> df = bn.import_example('sprinkler')
+    >>> edges = [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
+    >>> # Make the Bayesian DAG
+    >>> DAG = bn.make_DAG(edges)
+    >>> model = bn.parameter_learning.fit(DAG, df)
+    >>> # Structure scores are stored in the model dictionary.
+    >>> model['structure_scores']
+    >>> 
+    >>> # Compute the structure score
+    >>> bn.structure_scores(model, df, scoring_method="bic")
     """
     method = None
     show_message = True
