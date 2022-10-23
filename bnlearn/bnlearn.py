@@ -1735,8 +1735,8 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
     -----------
     Each model can be scored based on its structure. However, the score doesn't have very straight forward
     interpretebility but can be used to compare different models. A higher score represents a better fit.
-    This method only needs the model structure to compute the score and parameters
-    aren't required. The structure score functionality can be found here: :func:`bnlearn.bnlearn.structure_scores`.
+    This method only needs the model structure to compute the score. The structure score functionality
+    can be found here: :func:`bnlearn.bnlearn.structure_scores`.
 
     Parameters
     ----------
