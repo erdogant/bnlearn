@@ -1763,15 +1763,18 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
     --------
     >>> import bnlearn as bn
     >>> # Load example dataset
+    >>>
     >>> df = bn.import_example('sprinkler')
     >>> edges = [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
+    >>>
     >>> # Make the Bayesian DAG
     >>> DAG = bn.make_DAG(edges)
     >>> model = bn.parameter_learning.fit(DAG, df)
+    >>>
     >>> # Structure scores are stored in the model dictionary.
     >>> model['structure_scores']
-    >>> 
-    >>> # Compute the structure score
+    >>>
+    >>> # Compute the structure score for as specific scoring-method.
     >>> bn.structure_scores(model, df, scoring_method="bic")
     """
     method = None
