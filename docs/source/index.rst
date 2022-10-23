@@ -95,6 +95,7 @@ Content
   whitelist_blacklist
   topological_sort
   dataframe conversions
+  Structure_scores
   saving and loading
 
 

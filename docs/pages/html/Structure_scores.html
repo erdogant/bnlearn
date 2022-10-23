@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sponsor &mdash; bnlearn bnlearn documentation</title>
+  <title>Structure Scores &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -19,7 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="bnlearn.bnlearn" href="bnlearn.bnlearn.html" /> 
+    <link rel="next" title="Saving and Loading" href="saving%20and%20loading.html" />
+    <link rel="prev" title="Data Conversions" href="dataframe%20conversions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -92,14 +93,17 @@
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure Scores</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
@@ -119,14 +123,14 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Sponsor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#medium-blog">Medium Blog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#github">Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#colab-notebook">Colab Notebook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#citing">Citing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#references">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#related-packages">Related Packages</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -145,9 +149,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Sponsor</li>
+      <li>Structure Scores</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/Documentation.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Structure_scores.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -155,69 +159,68 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="sponsor">
-<h1>Sponsor<a class="headerlink" href="#sponsor" title="Permalink to this headline"></a></h1>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>If you ❤️ this project, you can help in various ways.</p>
-<ul class="simple">
-<li><p>Become a <a class="reference external" href="https://github.com/sponsors/erdogant?o=esb/">Sponsor</a>!</p></li>
-<li><p><a class="reference external" href="https://www.buymeacoffee.com/erdogant">Buy</a> me a coffee! I ❤️ coffee :)</p></li>
-<li><p><a class="reference external" href="https://erdogant.github.io/donate/?currency=USD&amp;amount=1000">Donate</a> in Bitcoin.</p></li>
-<li><p>Follow me on medium! Go to my <a class="reference external" href="https://erdogant.medium.com/">medium profile</a> and press <em>follow</em>.</p></li>
-<li><p><strong>Star</strong> this repo at the github page.</p></li>
-<li><p>Other contributions can be in the form of feature requests, idea discussions, reporting bugs, opening pull requests.</p></li>
-</ul>
-<p>Cheers Mate.</p>
-</div>
-<iframe src="https://github.com/sponsors/erdogant/button" title="Sponsor erdogant" height="35" width="116" style="border: 0;"></iframe></section>
-<section id="medium-blog">
-<h1>Medium Blog<a class="headerlink" href="#medium-blog" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference external" href="https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5">Medium blog: Step-by-step guide for structure learning</a></p>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference external" href="https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5">Medium blog: Step-by-step guide for knowledge-driven models</a></p>
+  <section id="module-bnlearn.bnlearn.structure_scores">
+<span id="structure-scores"></span><h1>Structure Scores<a class="headerlink" href="#module-bnlearn.bnlearn.structure_scores" title="Permalink to this headline"></a></h1>
+<p>Compute structure scores.</p>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<p>Each model can be scored based on its structure. However, the score doesn’t have very straight forward
+interpretebility but can be used to compare different models. A higher score represents a better fit.
+This method only needs the model structure to compute the score. The structure score functionality
+can be found here: <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.structure_scores" title="bnlearn.bnlearn.structure_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_scores()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param model</dt>
+<dd class="field-odd"><p>The model whose score needs to be computed.</p>
+</dd>
+<dt class="field-even">type model</dt>
+<dd class="field-even"><p>The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork</p>
+</dd>
+<dt class="field-odd">param df</dt>
+<dd class="field-odd"><p>The dataset against which to score the model.</p>
+</dd>
+<dt class="field-even">type df</dt>
+<dd class="field-even"><p>pd.DataFrame instance</p>
+</dd>
+<dt class="field-odd">param scoring_method</dt>
+<dd class="field-odd"><p>The following four scoring methods are supported currently: 1) K2Score
+2) BDeuScore 3) BDsScore 4) BicScore</p>
+</dd>
+<dt class="field-even">type scoring_method</dt>
+<dd class="field-even"><p>str ( k2 | bdeu | bds | bic )</p>
+</dd>
+<dt class="field-odd">param kwargs</dt>
+<dd class="field-odd"><p>Any additional parameters parameters that needs to be passed to the
+scoring method.</p>
+</dd>
+<dt class="field-even">type kwargs</dt>
+<dd class="field-even"><p>kwargs</p>
+</dd>
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p><strong>Model score</strong> – A score value for the model.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example dataset</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the Bayesian DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure scores are stored in the model dictionary.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;structure_scores&#39;</span><span class="p">]</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute the structure score for as specific scoring-method.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">structure_scores</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">scoring_method</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">)</span>
+</pre></div>
 </div>
 </section>
-<section id="github">
-<h1>Github<a class="headerlink" href="#github" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference external" href="https://github.com/erdogant/bnlearn/">Source code of bnlearn can be found at Github</a></p>
-</div>
-</section>
-<section id="colab-notebook">
-<h1>Colab Notebook<a class="headerlink" href="#colab-notebook" title="Permalink to this headline"></a></h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Experiment with bnlearn using the <a class="reference external" href="https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/bnlearn.ipynb">Colab notebook</a>.</p>
-</div>
-</section>
-<section id="citing">
-<h1>Citing<a class="headerlink" href="#citing" title="Permalink to this headline"></a></h1>
-<p>The bibtex can be found in the right side menu at the <a class="reference external" href="https://github.com/erdogant/bnlearn/">github page</a>.</p>
-</section>
-<section id="references">
-<h1>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h1>
-<ul class="simple">
-<li><p><a class="reference external" href="https://conference.scipy.org/proceedings/scipy2015/pdfs/ankur_ankan.pdf">Probabilistic Graphical Models using pgmpy</a></p></li>
-<li><p><a class="reference external" href="http://ftp.cs.ucla.edu/pub/stat_ser/r350.pdf">Causality, Pearl, 2009, 2nd Editing</a></p></li>
-<li><p><a class="reference external" href="http://www.michaelnielsen.org/ddi/if-correlation-doesnt-imply-causation-then-what-does/">If correlation doesn’t imply causation, then what does? from Michael Nielsen</a></p></li>
-<li><p><a class="reference external" href="http://www.math.ku.dk/~peters/jonas_files/scriptChapter1-4.pdf">Lecture notes from Jonas Peters</a></p></li>
-<li><p><a class="reference external" href="http://www.math.ku.dk/~peters/jonas_files/bookDRAFT5-online-2017-02-27.pdf">Elements of Causal Inference</a></p></li>
-<li><p><a class="reference external" href="http://mlss.tuebingen.mpg.de/2017/speaker_slides/Causality.pdf">Causality slides</a></p></li>
-</ul>
-</section>
-<section id="related-packages">
-<h1>Related Packages<a class="headerlink" href="#related-packages" title="Permalink to this headline"></a></h1>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/ijmbarr/causalgraphicalmodels">Causal graphical models</a></p></li>
-<li><p><a class="reference external" href="https://github.com/akelleh/causality">Causality</a></p></li>
-<li><p><a class="reference external" href="https://github.com/laurencium/causalinference">Causal Inference</a></p></li>
-</ul>
 <hr>
 <center>
         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
@@ -228,7 +231,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="bnlearn.bnlearn.html" class="btn btn-neutral float-left" title="bnlearn.bnlearn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dataframe%20conversions.html" class="btn btn-neutral float-left" title="Data Conversions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="saving%20and%20loading.html" class="btn btn-neutral float-right" title="Saving and Loading" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
