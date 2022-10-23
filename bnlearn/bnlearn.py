@@ -1733,15 +1733,14 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
 
     Description
     -----------
-    Uses the standard model scoring methods to give a score for each structure.
-    The score doesn't have very straight forward interpretebility but can be
-    used to compare different models. A higher score represents a better fit.
+    Each model can be scored based on its structure. However, the score doesn't have very straight forward
+    interpretebility but can be used to compare different models. A higher score represents a better fit.
     This method only needs the model structure to compute the score and parameters
-    aren't required.
+    aren't required. The structure score functionality can be found here: :func:`bnlearn.bnlearn.structure_scores`.
 
     Parameters
     ----------
-    model: pgmpy.base.DAG or pgmpy.models.BayesianNetwork instance
+    model: The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork
         The model whose score needs to be computed.
 
     df: pd.DataFrame instance
@@ -1753,7 +1752,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
 
     kwargs: kwargs
         Any additional parameters parameters that needs to be passed to the
-        scoring method. Check pgmpy.estimators.StructureScore for details.
+        scoring method.
 
     Returns
     -------
