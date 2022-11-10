@@ -1,4 +1,4 @@
-pgmpy>='0.1.13'
+pgmpy>='0.1.18'
 networkx>='2.7.1'
 matplotlib>='3.3.4'
 numpy
