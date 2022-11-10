@@ -1,5 +1,20 @@
-bnlearn's documentation!
-========================
+BNLearn's Documentation
+=======================
+
+.. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
+.. |figIP2| image:: ../figs/_fig-plot_interactive_simple_color_size.png
+
+.. table:: Structure Learning
+   :align: center
+
+   +----------+----------+
+   | |figIP1| | |figIP2| |
+   +----------+----------+
+
+-----------------------------------
+
+|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
+
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 
@@ -16,18 +31,7 @@ bnlearn's documentation!
 
 
 
-You contribution is important
-==============================
-If you ❤️ this project, **star** this repo at the `github page <https://github.com/erdogant/bnlearn/>`_ and have a look at the `sponser page <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_!
-
-
-Github
-======
-Please report bugs, issues and feature extensions at `github <https://github.com/erdogant/bnlearn/>`_.
-
-
-
-Content
+Contents
 ========
 
 .. toctree::
@@ -142,4 +146,70 @@ Indices and tables
 		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
 	</center>
 	<hr>
+
+
+.. |python| image:: https://img.shields.io/pypi/pyversions/bnlearn.svg
+    :alt: |Python
+    :scale: 100%
+    :target: https://erdogant.github.io/bnlearn/
+
+.. |pypi| image:: https://img.shields.io/pypi/v/bnlearn.svg
+    :alt: |Python Version
+    :scale: 100%
+    :target: https://pypi.org/project/bnlearn/
+
+.. |docs| image:: https://img.shields.io/badge/Sphinx-Docs-blue.svg
+    :alt: Sphinx documentation
+    :scale: 100%
+    :target: https://erdogant.github.io/bnlearn/
+
+.. |LOC| image:: https://sloc.xyz/github/erdogant/bnlearn/?category=code
+    :alt: lines of code
+    :scale: 100%
+    :target: https://github.com/erdogant/bnlearn
+
+.. |downloads_month| image:: https://static.pepy.tech/personalized-badge/bnlearn?period=month&units=international_system&left_color=grey&right_color=brightgreen&left_text=PyPI%20downloads/month
+    :alt: Downloads per month
+    :scale: 100%
+    :target: https://pepy.tech/project/bnlearn
+
+.. |downloads_total| image:: https://static.pepy.tech/personalized-badge/bnlearn?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads
+    :alt: Downloads in total
+    :scale: 100%
+    :target: https://pepy.tech/project/bnlearn
+
+.. |license| image:: https://img.shields.io/badge/license-MIT-green.svg
+    :alt: License
+    :scale: 100%
+    :target: https://github.com/erdogant/bnlearn/blob/master/LICENSE
+
+.. |forks| image:: https://img.shields.io/github/forks/erdogant/bnlearn.svg
+    :alt: Github Forks
+    :scale: 100%
+    :target: https://github.com/erdogant/bnlearn/network
+
+.. |open issues| image:: https://img.shields.io/github/issues/erdogant/bnlearn.svg
+    :alt: Open Issues
+    :scale: 100%
+    :target: https://github.com/erdogant/bnlearn/issues
+
+.. |project status| image:: http://www.repostatus.org/badges/latest/active.svg
+    :alt: Project Status
+    :scale: 100%
+    :target: http://www.repostatus.org/#active
+
+.. |medium| image:: https://img.shields.io/badge/Medium-Blog-green.svg
+    :alt: Medium Blog
+    :scale: 100%
+    :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog
+
+.. |donate| image:: https://img.shields.io/badge/Support%20this%20project-grey.svg?logo=github%20sponsors
+    :alt: donate
+    :scale: 100%
+    :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#
+
+.. |colab| image:: https://colab.research.google.com/assets/colab-badge.svg
+    :alt: Colab example
+    :scale: 100%
+    :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#colab-notebook
 
