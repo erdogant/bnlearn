@@ -15,6 +15,6 @@ keywords:
 license: "MIT"
 message: "If you use this software, please cite it using these metadata."
 repository-code: "https://erdogant.github.io/bnlearn"
-title: "bnlearn - Library for Bayesian network learning and inference"
+title: "Learning Bayesian Networks with the bnlearn Python Package."
 version: "0.3.22"
 ...
