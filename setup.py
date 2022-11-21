@@ -23,7 +23,7 @@ setuptools.setup(
                        'sklearn',
                        'funcsigs',
                        'statsmodels',
-                       'community',
+                       'python-louvain',
                        'packaging',
                        'wget',
                        'df2onehot',
