@@ -82,6 +82,7 @@ def test_sampling_bayes(sprinkler_dag):
     assert df.shape == (n, 4)
 
 
+@pytest.mark.skip('Will be fixed by https://github.com/pgmpy/pgmpy/issues/1582')
 def test_sampling_gibbs(sprinkler_dag):
     n = np.random.randint(10, 1000)
     df = bn.sampling(sprinkler_dag, n=n, methodtype='gibbs')
