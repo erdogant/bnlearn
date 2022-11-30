@@ -21,6 +21,7 @@ from pathlib import Path
 from tqdm import tqdm
 from tabulate import tabulate
 from decimal import Decimal
+# from numba import njit
 
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
@@ -1442,6 +1443,7 @@ def _filter_df(adjmat, df, verbose=3):
 
 
 # %% Make prediction in inference model
+# @njit
 def predict(model, df, variables, to_df=True, method='max', verbose=3):
     """Predict on data from a Bayesian network.
 
