@@ -9,9 +9,9 @@ from pgmpy.factors.discrete import TabularCPD
 import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
-G1 = bn.plot(model, params_static={'visible': True})
+fig = bn.plot(model, params_static={'visible': True})
 
-G2 = bn.plot(model, interactive=True)
+fig2 = bn.plot(model, interactive=True)
 
 
 # %% Issue Mail:

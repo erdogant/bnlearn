@@ -108,7 +108,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     >>> import bnlearn as bn
     >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     >>> DAG = bn.make_DAG(edges, methodtype='naivebayes')
-    >>> bn.plot(DAG)
+    >>> fig = bn.plot(DAG)
 
     """
     if (CPD is not None) and (not isinstance(CPD, list)):
@@ -812,11 +812,11 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     >>> node_properties['A']['node_size']=2000
     >>> node_properties['A']['node_color']='#000000'
     >>> # Make plot
-    >>> bn.plot(model, interactive=False, node_properties=node_properties)
+    >>> fig = bn.plot(model, interactive=False, node_properties=node_properties)
     >>>
     >>> # Example: Specify all nodes
     >>> node_properties = bn.get_node_properties(model, node_size=1000, node_color='#000000')
-    >>> bn.plot(model, interactive=False, node_properties=node_properties)
+    >>> fig = bn.plot(model, interactive=False, node_properties=node_properties)
 
     """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
@@ -872,7 +872,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
     >>> edge_properties[('A', 'B')]['weight']=10
     >>> edge_properties[('A', 'B')]['color']='#8A0707'
     >>> # Make plot
-    >>> bn.plot(model, interactive=False, edge_properties=edge_properties)
+    >>> fig = bn.plot(model, interactive=False, edge_properties=edge_properties)
     >>>
     >>> # Example 2:
     >>>  # Load asia DAG
@@ -886,7 +886,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
     >>> # Make adjustments
     >>> edge_properties[('tub', 'either')]['color']='#8A0707'
     >>> # Make plot
-    >>> bn.plot(model, interactive=True, edge_properties=edge_properties)
+    >>> fig = bn.plot(model, interactive=True, edge_properties=edge_properties)
 
     """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
@@ -993,13 +993,13 @@ def plot(model,
     >>> model = bn.structure_learning.fit(df)
     >>>
     >>> # plot static
-    >>> G = bn.plot(model)
+    >>> fig = bn.plot(model)
     >>>
     >>> # plot interactive
-    >>> G = bn.plot(model, interactive=True)
+    >>> fig = bn.plot(model, interactive=True)
     >>>
     >>> # plot interactive with various settings
-    >>> bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':'800px', 'width':'70%', 'bgcolor':'#0f0f0f0f'})
+    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':'800px', 'width':'70%', 'bgcolor':'#0f0f0f0f'})
     >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
@@ -1007,7 +1007,7 @@ def plot(model,
     >>> node_properties['xray']['node_color']='#8A0707'
     >>> node_properties['xray']['node_size']=50
     >>> # Plot
-    >>> bn.plot(model, interactive=True, node_properties=node_properties)
+    >>> fig = bn.plot(model, interactive=True, node_properties=node_properties)
     >>>
 
     """
@@ -1333,7 +1333,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     --------
     >>> import bnlearn as bn
     >>> model = bn.import_DAG('sprinkler')
-    >>> bn.plot(model)
+    >>> fig = bn.plot(model)
 
     """
     PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
