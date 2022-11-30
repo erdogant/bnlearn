@@ -5,12 +5,14 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
-# %%
+# %% Issue 65: return (fig, ax)
 import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
+G1 = bn.plot(model, params_static={'visible': True})
 
-df.head()
+G2 = bn.plot(model, interactive=True)
+
 
 # %% Issue Mail:
 # from pgmpy.models import BayesianNetwork

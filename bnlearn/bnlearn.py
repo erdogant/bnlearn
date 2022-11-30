@@ -934,7 +934,7 @@ def plot(model,
          node_properties=None,
          edge_properties=None,
          params_interactive={'width': '70%', 'height': '800px', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'},
-         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30},
+         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True},
          verbose=3):
     """Plot the learned stucture.
 
@@ -1011,6 +1011,7 @@ def plot(model,
     >>>
 
     """
+    ax = None
     # Check whether edges are available
     if model['adjmat'].sum().sum()==0:
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
@@ -1019,14 +1020,14 @@ def plot(model,
     # Plot properties
     defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30}
+    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True}
     params_static = {**defaults, **params_static}
 
-    ##### DEPRECATED IN LATER VERSION #####
+    # DEPRECATED IN LATER VERSION
     if (params_static.get('width') is not None) or (params_static.get('height') is not None):
         # if verbose>=2: print('[bnlearn]> Warning: [height] and [width] will be removed in further version. Please use: params_static={"figsize": (15, 10)}.')
         params_static['figsize'] = (15 if params_static['width'] is None else params_static['width'], 10 if params_static['height'] is None else params_static['height'])
-    ##### END BLOCK #####
+    # END BLOCK
 
     out = {}
     G = nx.DiGraph()  # Directed graph
@@ -1073,24 +1074,25 @@ def plot(model,
     # Plot
     if interactive:
         # Make interactive plot
-        _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
+        ax = _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
     else:
         # Make static plot
-        _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights)
+        ax = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=params_static['visible'])
 
     # Store
+    out['ax']=ax
     out['pos']=pos
     out['G']=G
     out['node_properties']=node_properties
     out['edge_properties']=edge_properties
-    return(out)
+    return out
 
 
 # %% Plot interactive
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=True):
     # Bootup figure
-    plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
+    ax = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
     # nodes
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
@@ -1101,9 +1103,10 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # Plot text of the weights
     # nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'), font_color=params_static['font_color'])
     # Making figure nice
-    ax = plt.gca()
-    ax.set_axis_off()
-    plt.show()
+    # ax = plt.gca()
+    # ax.set_axis_off()
+    ax.set_visible(visible)
+    return ax
 
 
 # %% Plot interactive
@@ -1138,6 +1141,7 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     g.show(filename)
     display(HTML(filename))
     # webbrowser.open('bnlearn.html')
+    return os.path.abspath(filename)
 
 
 # %% Plot properties
