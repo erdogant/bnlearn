@@ -5,6 +5,17 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+
+import bnlearn as bn
+model = bn.import_DAG('asia', CPD=True)
+CPDs = bn.print_CPD(model)
+CPDs.keys()
+# dict_keys(['asia', 'bronc', 'dysp', 'either', 'lung', 'smoke', 'tub', 'xray'])
+print(CPDs['smoke'])
+#    smoke    p
+# 0      0  0.5
+# 1      1  0.5
+
 # %% Issue 65: return (fig, ax)
 import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)

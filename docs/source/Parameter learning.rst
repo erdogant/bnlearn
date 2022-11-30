@@ -41,6 +41,7 @@ A somewhat more sensible choice of prior is *BDeu* (Bayesian Dirichlet equivalen
 For BDeu we need to specify an *equivalent sample size* "N" and then the pseudo-counts are the equivalent of having observed `N` uniform samples of each variable (and each parent configuration).
 
 
+
 Examples Parameter learning
 ======================================
 
@@ -321,6 +322,35 @@ CPD of xray:
   +---------+-----------+-----------+
   | xray(1) | 0.230     | 0.929     |
   +---------+-----------+-----------+
+
+
+Conditional Probability Distributions (CPD)
+===========================================
+
+The **Conditional Probabilistic Tables (CPTs)** or Conditional Probability Distributions (CPD) quantitatively describe the statistical relationship between each node and its parents, and can be computed using Parameter learning as shown in the examples.
+In the following example I will show how to extract the CPDs from a model.
+
+.. code-block:: python
+
+	# Import library
+	import bnlearn as bn
+
+	# Import one of the example models
+	# sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'filepath/to/model.bif',
+	model = bn.import_DAG('asia', CPD=True)
+
+	# Print the CPD for the model
+	CPDs = bn.print_CPD(model)
+
+	# Deeper investigate the CPDs
+	CPDs.keys()
+	# dict_keys(['asia', 'bronc', 'dysp', 'either', 'lung', 'smoke', 'tub', 'xray'])
+
+	print(CPDs['smoke'])
+	#    smoke    p
+	# 0      0  0.5
+	# 1      1  0.5
+
 
 .. raw:: html
 
