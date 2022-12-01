@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -173,7 +174,7 @@
            <div itemprop="articleBody">
              
   <section id="use-case-titanic">
-<h1>Use Case Titanic<a class="headerlink" href="#use-case-titanic" title="Permalink to this headline"></a></h1>
+<h1>Use Case Titanic<a class="headerlink" href="#use-case-titanic" title="Permalink to this heading"></a></h1>
 <p>In the following example we will learn the structure on the Titanic dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
@@ -276,10 +277,10 @@
 </div>
 </section>
 <section id="use-case-medical-domain">
-<h1>Use Case Medical domain<a class="headerlink" href="#use-case-medical-domain" title="Permalink to this headline"></a></h1>
+<h1>Use Case Medical domain<a class="headerlink" href="#use-case-medical-domain" title="Permalink to this heading"></a></h1>
 <p>In this section I will describe the use-case to analyse patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily know some associatons from literature and/or experience, like smoking is related to dyspnoea. In this use-case I will demonstrate how to use your expert-knowledge in a bayesian model. Furthermore, the data set is small (few variables) and synthetic from Lauritzen and Spiegelhalter (1988), and is about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia.</p>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>Motivation</dt><dd><p>“<em>Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.</em>”</p>
 </dd>
@@ -288,8 +289,8 @@
 </dl>
 </section>
 <section id="import-data">
-<h2>Import data<a class="headerlink" href="#import-data" title="Permalink to this headline"></a></h2>
-<p>The first step is to import the data set. If you have <strong>unstructured</strong> data, use the <code class="docutils literal notranslate"><span class="pre">df2onehot</span></code> functionality <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a>. The <strong>Examples</strong> section contains examples how to import a raw data set followed by (basic) structering approaches (section: <a class="reference internal" href="Examples.html#start-with-raw-data"><span class="std std-ref">Start with RAW data</span></a>). In my case I will load the data from <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, which is readily a <strong>structured</strong> dataset.</p>
+<h2>Import data<a class="headerlink" href="#import-data" title="Permalink to this heading"></a></h2>
+<p>The first step is to import the data set. If you have <strong>unstructured</strong> data, use the <code class="docutils literal notranslate"><span class="pre">df2onehot</span></code> functionality <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code>. The <strong>Examples</strong> section contains examples how to import a raw data set followed by (basic) structering approaches (section: <a class="reference internal" href="Examples.html#start-with-raw-data"><span class="std std-ref">Start with RAW data</span></a>). In my case I will load the data from <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, which is readily a <strong>structured</strong> dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load dataset with 10.000 samples</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
@@ -377,7 +378,7 @@
 <p>This data set contains 8 variables with discrete values, meaning that the variables have the state yes/no, true/false or 1/0 values. <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> can handle multiple catagories (also non-numerical, <a class="reference internal" href="Examples.html#start-with-raw-data"><span class="std std-ref">Start with RAW data</span></a>). In this example we generate 10.000 samples (representing the patients). Note that the number of variables depends on the complexity of the data set (number of variables and the catagories per variable). If you want to get <em>feeling</em> of the performance of bayesian models, I would advice to play arround with various example data sets in <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> and determine when you can re-construct the entire DAG given the complexity of the data set. As an example, 1000 samples is sufficient for the <strong>sprinkler</strong> data set because there are only 4 variables, each with state yes/no. Some other data sets (such as <strong>alarm</strong>) are way more complicated and 1000 samples would not be sufficient.</p>
 </section>
 <section id="make-inferences-when-you-have-data-and-know-how">
-<h2>Make inferences when you have data and know-how<a class="headerlink" href="#make-inferences-when-you-have-data-and-know-how" title="Permalink to this headline"></a></h2>
+<h2>Make inferences when you have data and know-how<a class="headerlink" href="#make-inferences-when-you-have-data-and-know-how" title="Permalink to this heading"></a></h2>
 <p>Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences <a class="reference internal" href="Inference.html#inference"><span class="std std-ref">Inference</span></a>.</p>
 <dl class="simple">
 <dt>Aim: Make inferences about shortness-of-breath (dyspnoea) when:</dt><dd><ol class="arabic simple">
@@ -387,7 +388,7 @@
 </dd>
 </dl>
 <section id="create-a-custom-directed-acyclic-graph">
-<h3>Create a custom Directed Acyclic Graph<a class="headerlink" href="#create-a-custom-directed-acyclic-graph" title="Permalink to this headline"></a></h3>
+<h3>Create a custom Directed Acyclic Graph<a class="headerlink" href="#create-a-custom-directed-acyclic-graph" title="Permalink to this heading"></a></h3>
 <p>My knowledge about <em>dyspnoea</em> is limited to: smoking is related to lung cancer, smoking is related to bronchitis, and if you have lung or bronchitus you may need an xray examination. Basically, I will create a simple DAG. Note that bayesian modeling is especially fun because you can make very complex DAGs. Note that the direction is very important. The first column is “from” or “source” and the second column “to” or “destination”. Note, this is a <strong>very simple model</strong> that is designed for demonstration purposes only.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;bronc&#39;</span><span class="p">),</span>
@@ -408,7 +409,7 @@
 </figure>
 </section>
 <section id="compute-conditional-probability-distributions-cpds">
-<h3>Compute Conditional Probability Distributions (CPDs)<a class="headerlink" href="#compute-conditional-probability-distributions-cpds" title="Permalink to this headline"></a></h3>
+<h3>Compute Conditional Probability Distributions (CPDs)<a class="headerlink" href="#compute-conditional-probability-distributions-cpds" title="Permalink to this heading"></a></h3>
 <p>At this point we have the data set in our dataframe (df), and we have the <strong>DAG</strong> based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.parameter_learning.fit()</span></code> which will compute the CPDs. See section <a class="reference internal" href="Parameter%20learning.html#parameter-learning"><span class="std std-ref">Parameter learning</span></a> to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!</p>
 <p>Parameter learning on the expert-DAG using the input data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the current CPDs in the DAG.</span>
@@ -524,7 +525,7 @@
 </table>
 </section>
 <section id="make-inferences">
-<h3>Make inferences<a class="headerlink" href="#make-inferences" title="Permalink to this headline"></a></h3>
+<h3>Make inferences<a class="headerlink" href="#make-inferences" title="Permalink to this heading"></a></h3>
 <p>When you are at this part, you combined your expert knowledge with a data set! Now we can make inferences which allows to ask questions to the model. Let me demonstrate a few questions.</p>
 <p><strong>Question 1</strong></p>
 <p>What is the probability of lung-cancer, given that we know that patient does smoke?
@@ -653,7 +654,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </section>
 </section>
 <section id="determine-causalities-when-you-have-data">
-<h2>Determine causalities when you have data<a class="headerlink" href="#determine-causalities-when-you-have-data" title="Permalink to this headline"></a></h2>
+<h2>Determine causalities when you have data<a class="headerlink" href="#determine-causalities-when-you-have-data" title="Permalink to this heading"></a></h2>
 <p>Suppose that we have the medical records of hundreds or even thousands patients treatment regarding shortness-of-breath (dyspnoea). Our goal is to determine the causality across variables given the data set.</p>
 <dl class="simple">
 <dt>Steps to take</dt><dd><ol class="arabic simple">
@@ -664,7 +665,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </dd>
 </dl>
 <section id="compute-directed-acyclic-graph-from-data">
-<h3>Compute Directed Acyclic Graph from data<a class="headerlink" href="#compute-directed-acyclic-graph-from-data" title="Permalink to this headline"></a></h3>
+<h3>Compute Directed Acyclic Graph from data<a class="headerlink" href="#compute-directed-acyclic-graph-from-data" title="Permalink to this heading"></a></h3>
 <p>Import and process teh data set (<a class="reference internal" href="#import-data"><span class="std std-ref">Import data</span></a>). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_learning.fit()</span></code>. More about Directed Acyclic Graphs can be found in the section <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Structure learning on the data set</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -696,7 +697,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </section>
 </section>
 <section id="make-inference-when-you-have-data">
-<h2>Make inference when you have data<a class="headerlink" href="#make-inference-when-you-have-data" title="Permalink to this headline"></a></h2>
+<h2>Make inference when you have data<a class="headerlink" href="#make-inference-when-you-have-data" title="Permalink to this heading"></a></h2>
 <p>In this scenario we the goal is to make inferences across variables given the data set.</p>
 <dl class="simple">
 <dt>Steps to take</dt><dd><ol class="arabic simple">

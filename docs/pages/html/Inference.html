@@ -15,6 +15,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -163,7 +164,7 @@
            <div itemprop="articleBody">
              
   <section id="inference">
-<h1>Inference<a class="headerlink" href="#inference" title="Permalink to this headline"></a></h1>
+<h1>Inference<a class="headerlink" href="#inference" title="Permalink to this heading"></a></h1>
 <p>The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
 But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
 So basically if we want to eliminate <strong>X</strong> from our distribution, then we compute
@@ -171,7 +172,7 @@ the product of all the factors involving <strong>X</strong> and marginalize over
 thus allowing us to work on much smaller factors.</p>
 </section>
 <section id="inference-algorithms">
-<h1>Inference Algorithms<a class="headerlink" href="#inference-algorithms" title="Permalink to this headline"></a></h1>
+<h1>Inference Algorithms<a class="headerlink" href="#inference-algorithms" title="Permalink to this heading"></a></h1>
 <dl class="simple">
 <dt>The main categories for inference algorithms:</dt><dd><ol class="arabic simple">
 <li><p>Exact Inference: These algorithms find the exact probability values for our queries.</p></li>
@@ -186,9 +187,9 @@ thus allowing us to work on much smaller factors.</p>
 </dl>
 </section>
 <section id="examples-inference">
-<h1>Examples Inference<a class="headerlink" href="#examples-inference" title="Permalink to this headline"></a></h1>
+<h1>Examples Inference<a class="headerlink" href="#examples-inference" title="Permalink to this heading"></a></h1>
 <section id="example-1">
-<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this headline"></a></h2>
+<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this heading"></a></h2>
 <p>Lets load the Sprinkler data set and make some inferences.</p>
 <p>What is the probability of <em>wet grass</em> given that it <em>Rains</em>, and the <em>sprinkler</em> is off and its <em>cloudy</em>: P(wet grass | rain=1, sprinkler=0, cloudy=1)?</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
@@ -220,7 +221,7 @@ thus allowing us to work on much smaller factors.</p>
 </div></blockquote>
 </section>
 <section id="example-2">
-<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this headline"></a></h2>
+<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this heading"></a></h2>
 <p>What is the probability of wet grass given and Rain given that the <em>Sprinkler</em> is on?</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q2</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>
@@ -261,7 +262,7 @@ thus allowing us to work on much smaller factors.</p>
 </div></blockquote>
 </section>
 <section id="example-3">
-<h2>Example (3)<a class="headerlink" href="#example-3" title="Permalink to this headline"></a></h2>
+<h2>Example (3)<a class="headerlink" href="#example-3" title="Permalink to this heading"></a></h2>
 <p>Given our model, what is the probability on lung cancer given that the person is a smoker and xray is negative?
 P(lung | smoker=1, xray=0)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets create the dataset</span>

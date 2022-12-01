@@ -6,6 +6,30 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
 
+# %%
+import bnlearn as bn
+model = bn.import_DAG('asia')
+
+# Make single inference
+query = bn.inference.fit(model, variables=['lung', 'bronc', 'xray'], evidence={'smoke':1})
+print(query)
+print(bn.query2df(query))
+
+# Lets create an example dataset with 100 samples and make inferences on the entire dataset.
+df = bn.sampling(model, n=10000)
+
+# Each sample will be assesed and the states with highest probability are returned.
+Pout = bn.predict(model, df, variables=['lung'])
+
+print(Pout)
+#     Cloudy  Rain         p
+# 0        0     0  0.647249
+# 1        0     0  0.604230
+# ..     ...   ...       ...
+# 998      0     0  0.604230
+# 999      1     1  0.878049
+
+# %%
 import bnlearn as bn
 model = bn.import_DAG('asia', CPD=True)
 CPDs = bn.print_CPD(model)

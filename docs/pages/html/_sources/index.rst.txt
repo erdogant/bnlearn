@@ -13,7 +13,7 @@ BNLearn's Documentation
 
 -----------------------------------
 
-|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |donate|
+|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
 
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
@@ -213,3 +213,7 @@ Indices and tables
     :scale: 100%
     :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#colab-notebook
 
+.. |DOI| image:: https://zenodo.org/badge/231263493.svg
+    :alt: Cite
+    :scale: 100%
+    :target: https://zenodo.org/badge/latestdoi/231263493
