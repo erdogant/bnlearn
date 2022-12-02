@@ -278,9 +278,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 * http://www.bnlearn.com/bnrepository/
 
 
-Contributors
-=============
-
+### Contributors
 Setting up and maintaining bnlearn has been possible thanks to users and contributors. Thanks to:
 
 <p align="left">
