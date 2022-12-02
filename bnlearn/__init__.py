@@ -37,7 +37,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.7.9'
+__version__ = '0.7.10'
 
 try:
     import pgmpy
@@ -60,12 +60,12 @@ if not version.parse(nx.__version__) >= version.parse("2.7.1"):
 
 # module level doc-string
 __doc__ = """
-BNLEARN - bnlearn is an Python package for learning the graphical structure of Bayesian networks, estimate their parameters, perform inference, sampling and comparing networks.
+bnlearn - bnlearn is an Python package for learning the graphical structure of Bayesian networks, estimate their parameters, perform inference, sampling and comparing networks.
 ================================================================================================================================================================================
 
 Description
 -----------
-* Learning a Bayesian network can be split into two problems:
+* Learning a Bayesian network can be split into:
     * Structure learning: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.
     * Parameter learning: Given a set of data samples and a DAG that captures the dependencies between the variables.
     * Making inferences.
@@ -73,7 +73,6 @@ Description
         * Score-based structure estimation (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
         * Constraint-based structure estimation (PC)
         * Hybrid structure estimation (MMHC)
-
 
 Example
 -------
@@ -111,8 +110,8 @@ Example
 
 References
 ----------
-* Blog1: https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5
-* Blog2: https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be
+* Blog: https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5
+* Blog: https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be
 * Github: https://github.com/erdogant/bnlearn
 * Documentation: https://bnlearn.readthedocs.io
 

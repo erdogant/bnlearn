@@ -20,7 +20,7 @@ setuptools.setup(
                        'pandas',
                        'tqdm',
                        'ismember',
-                       'sklearn',
+                       'scikit-learn',
                        'funcsigs',
                        'statsmodels',
                        'python-louvain',
