@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DataFrames &mdash; bnlearn bnlearn documentation</title>
+  <title>Python Module Index &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -20,8 +19,9 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Black and white lists" href="whitelist_blacklist.html" />
-    <link rel="prev" title="Directed Acyclic Graphs" href="Create%20DAG.html" /> 
+ 
+
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -95,10 +95,10 @@
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">DataFrames</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
@@ -148,9 +148,8 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>DataFrames</li>
+      <li>Python Module Index</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/Example Datasets.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -158,63 +157,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a> and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
-<section id="dataframes">
-<h1>DataFrames<a class="headerlink" href="#dataframes" title="Permalink to this heading"></a></h1>
-<p>The <strong>sprinkler</strong> dataset is one of the few internal datasets to import a pandas dataframe. This dataset is readily one-hot coded and without missing values. Therefore it does not require any further pre-processing steps. Note that</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="c1"># Import dataset</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-<span class="c1">#     Cloudy  Sprinkler  Rain  Wet_Grass</span>
-<span class="c1"># 0         0          0     0          0</span>
-<span class="c1"># 1         1          0     1          1</span>
-<span class="c1"># 2         0          1     0          1</span>
-<span class="c1"># ..      ...        ...   ...        ...</span>
-<span class="c1"># 998       0          0     0          0</span>
-<span class="c1"># 999       0          1     1          1</span>
+   <h1>Python Module Index</h1>
 
-<span class="c1"># Structure learning</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+   <div class="modindex-jumpbox">
+   <a href="#cap-b"><strong>b</strong></a>
+   </div>
 
-<span class="c1"># Plot</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="import-dag-bif">
-<h1>Import DAG/BIF<a class="headerlink" href="#import-dag-bif" title="Permalink to this heading"></a></h1>
-<p>Each Bayesian DAG model that is loaded with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG" title="bnlearn.bnlearn.import_DAG"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_DAG()</span></code></a> is derived from a <em>bif</em> file. The <em>bif</em> file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[<a class="reference external" href="http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm">http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm</a>].</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sprinkler&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;alarm&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;andes&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;asia&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;pathfinder&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;sachs&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;miserables&#39;</span>
-<span class="n">bif_file</span><span class="o">=</span> <span class="s1">&#39;filepath/to/model.bif&#39;</span>
-
-<span class="c1"># Loading DAG with model parameters from bif file.</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="n">bif_file</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>With the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling" title="bnlearn.bnlearn.sampling"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.sampling()</span></code></a> function a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> can be created for <em>n</em> samples.</p>
-<hr>
-<center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-</center>
-<hr></section>
+   <table class="indextable modindextable">
+     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
+     <tr class="cap" id="cap-b"><td></td><td>
+       <strong>b</strong></td><td></td></tr>
+     <tr>
+       <td><img src="_static/minus.png" class="toggler"
+              id="toggle-1" style="display: none" alt="-" /></td>
+       <td>
+       <code class="xref">bnlearn</code></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="bnlearn.bnlearn.html#module-bnlearn.bnlearn"><code class="xref">bnlearn.bnlearn</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="Structure_scores.html#module-bnlearn.bnlearn.structure_scores"><code class="xref">bnlearn.bnlearn.structure_scores</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="bnlearn.inference.html#module-bnlearn.inference"><code class="xref">bnlearn.inference</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning"><code class="xref">bnlearn.parameter_learning</code></a></td><td>
+       <em></em></td></tr>
+     <tr class="cg-1">
+       <td></td>
+       <td>&#160;&#160;&#160;
+       <a href="bnlearn.structure_learning.html#module-bnlearn.structure_learning"><code class="xref">bnlearn.structure_learning</code></a></td><td>
+       <em></em></td></tr>
+   </table>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Create%20DAG.html" class="btn btn-neutral float-left" title="Directed Acyclic Graphs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="whitelist_blacklist.html" class="btn btn-neutral float-right" title="Black and white lists" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

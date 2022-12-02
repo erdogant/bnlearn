@@ -8,10 +8,10 @@ Medium Blog
 ################
 
 .. note::
-	`Medium blog: Step-by-step guide for structure learning <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+	`A Step-by-Step Guide in detecting causal relationships using Bayesian Structure Learning in Python. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 .. note::
-	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+	`A step-by-step guide in designing knowledge-driven models using Bayesian theorem. <https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be>`_
 
 
 Github

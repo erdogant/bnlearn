@@ -150,70 +150,56 @@ Indices and tables
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/bnlearn.svg
     :alt: |Python
-    :scale: 100%
     :target: https://erdogant.github.io/bnlearn/
 
 .. |pypi| image:: https://img.shields.io/pypi/v/bnlearn.svg
     :alt: |Python Version
-    :scale: 100%
     :target: https://pypi.org/project/bnlearn/
 
 .. |docs| image:: https://img.shields.io/badge/Sphinx-Docs-blue.svg
     :alt: Sphinx documentation
-    :scale: 100%
     :target: https://erdogant.github.io/bnlearn/
 
 .. |LOC| image:: https://sloc.xyz/github/erdogant/bnlearn/?category=code
     :alt: lines of code
-    :scale: 100%
     :target: https://github.com/erdogant/bnlearn
 
 .. |downloads_month| image:: https://static.pepy.tech/personalized-badge/bnlearn?period=month&units=international_system&left_color=grey&right_color=brightgreen&left_text=PyPI%20downloads/month
     :alt: Downloads per month
-    :scale: 100%
     :target: https://pepy.tech/project/bnlearn
 
 .. |downloads_total| image:: https://static.pepy.tech/personalized-badge/bnlearn?period=total&units=international_system&left_color=grey&right_color=brightgreen&left_text=Downloads
     :alt: Downloads in total
-    :scale: 100%
     :target: https://pepy.tech/project/bnlearn
 
 .. |license| image:: https://img.shields.io/badge/license-MIT-green.svg
     :alt: License
-    :scale: 100%
     :target: https://github.com/erdogant/bnlearn/blob/master/LICENSE
 
 .. |forks| image:: https://img.shields.io/github/forks/erdogant/bnlearn.svg
     :alt: Github Forks
-    :scale: 100%
     :target: https://github.com/erdogant/bnlearn/network
 
 .. |open issues| image:: https://img.shields.io/github/issues/erdogant/bnlearn.svg
     :alt: Open Issues
-    :scale: 100%
     :target: https://github.com/erdogant/bnlearn/issues
 
 .. |project status| image:: http://www.repostatus.org/badges/latest/active.svg
     :alt: Project Status
-    :scale: 100%
     :target: http://www.repostatus.org/#active
 
 .. |medium| image:: https://img.shields.io/badge/Medium-Blog-green.svg
     :alt: Medium Blog
-    :scale: 100%
     :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog
 
 .. |donate| image:: https://img.shields.io/badge/Support%20this%20project-grey.svg?logo=github%20sponsors
     :alt: donate
-    :scale: 100%
     :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#
 
 .. |colab| image:: https://colab.research.google.com/assets/colab-badge.svg
     :alt: Colab example
-    :scale: 100%
     :target: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#colab-notebook
 
 .. |DOI| image:: https://zenodo.org/badge/231263493.svg
     :alt: Cite
-    :scale: 100%
     :target: https://zenodo.org/badge/latestdoi/231263493
