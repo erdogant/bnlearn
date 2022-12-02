@@ -277,8 +277,18 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 * https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
 * http://www.bnlearn.com/bnrepository/
 
-### Contribute
-* All kinds of contributions are welcome!
+
+Contributors
+=============
+
+Setting up and maintaining bnlearn has been possible thanks to users and contributors. Thanks to:
+
+<p align="left">
+  <a href="https://github.com/erdogant/bnlearn/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=erdogant/bnlearn" />
+  </a>
+</p>
+
 
 ### Citation
 Please cite ``bnlearn`` in your publications if this is useful for your research. See column right for citation information.
