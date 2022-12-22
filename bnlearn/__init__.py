@@ -37,7 +37,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.7.10'
+__version__ = '0.7.11'
 
 try:
     import pgmpy
