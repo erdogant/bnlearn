@@ -1139,7 +1139,7 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     g.show_buttons(filter_=['physics'])
     # Display
     filename = title.strip().replace(' ', '_') + '.html'
-    g.show(filename)
+    g.show(filename, local=False)
     display(HTML(filename))
     # webbrowser.open('bnlearn.html')
     return os.path.abspath(filename)
