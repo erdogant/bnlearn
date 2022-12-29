@@ -1112,7 +1112,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
 # %% Plot interactive
 def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
-    if not params_interactive['notebook']:
+    if params_interactive['notebook']:
         # https://pyvis.readthedocs.io/en/latest/tutorial.html?highlight=cdn_resources#using-pyvis-within-jupyter-notebook
         params_interactive['cdn_resources']='remote'
     try:
