@@ -57,6 +57,11 @@ conda activate env_bnlearn
 pip install bnlearn
 ```
 
+##### Install bnlearn from github source
+```bash
+pip install git+https://github.com/erdogant/bnlearn
+```
+
 ##### The following functions are available after installation:
 
 ```python
