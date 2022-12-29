@@ -1114,7 +1114,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
     if not params_interactive['notebook']:
         # https://pyvis.readthedocs.io/en/latest/tutorial.html?highlight=cdn_resources#using-pyvis-within-jupyter-notebook
-        params_interactive['cdn_resources']='inline'
+        params_interactive['cdn_resources']='remote'
     try:
         from pyvis.network import Network
         from IPython.core.display import display, HTML
@@ -1142,7 +1142,7 @@ def _plot_interactive(model, params_interactive, nodelist, node_colors, node_siz
     g.show_buttons(filter_=['physics'])
     # Display
     filename = title.strip().replace(' ', '_') + '.html'
-    g.show(filename, local=False)
+    g.show(filename, local=params_interactive['notebook'])
     display(HTML(filename))
     # webbrowser.open('bnlearn.html')
     return os.path.abspath(filename)
