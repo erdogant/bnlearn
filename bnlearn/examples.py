@@ -6,6 +6,31 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
 
+# %% Notebook example
+# Example dataframe sprinkler_data.csv can be loaded with: 
+import bnlearn as bn
+df = bn.import_example()
+# df = pd.read_csv('sprinkler_data.csv')
+model = bn.structure_learning.fit(df)
+
+
+# Set some colors to the edges and nodes
+node_properties = bn.get_node_properties(model)
+node_properties['Sprinkler']['node_color']='#FF0000'
+
+edge_properties = bn.get_edge_properties(model)
+edge_properties[('Rain', 'Cloudy')]['color']='#FF0000'
+edge_properties[('Rain', 'Cloudy')]['weight']=5
+
+G = bn.plot(model,
+            node_properties=node_properties,
+            edge_properties=edge_properties,
+            interactive=True,
+            params_interactive={'notebook': False, 'filter_menu': True, 'select_menu': True},
+            )
+
+# G = bn.plot(model, interactive=True, params_interactive={'notebook': True}, node_properties=node_properties, edge_properties=edge_properties)
+
 # %%
 import bnlearn as bn
 model = bn.import_DAG('asia')
