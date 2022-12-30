@@ -70,8 +70,7 @@ import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
 fig = bn.plot(model, params_static={'visible': True})
-
-fig2 = bn.plot(model, interactive=True)
+fig2 = bn.plot(model, interactive=False)
 
 
 # %% Issue Mail:

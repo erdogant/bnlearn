@@ -1012,7 +1012,7 @@ def plot(model,
     >>>
 
     """
-    ax = None
+    fig = None
     # Check whether edges are available
     if model['adjmat'].sum().sum()==0:
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
@@ -1075,13 +1075,14 @@ def plot(model,
     # Plot
     if interactive:
         # Make interactive plot
-        ax = _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
+        fig = _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
     else:
         # Make static plot
-        ax = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=params_static['visible'])
+        fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=params_static['visible'])
 
     # Store
-    out['ax']=ax
+    out['fig']=fig
+    out['ax']=fig  # Should be removed in later releases
     out['pos']=pos
     out['G']=G
     out['node_properties']=node_properties
@@ -1093,7 +1094,7 @@ def plot(model,
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
 def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=True):
     # Bootup figure
-    ax = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
+    fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
     # nodes
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
@@ -1104,10 +1105,11 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # Plot text of the weights
     # nx.draw_networkx_edge_labels(G, pos, edge_labels=nx.get_edge_attributes(G, 'weight'), font_color=params_static['font_color'])
     # Making figure nice
-    # ax = plt.gca()
-    # ax.set_axis_off()
-    ax.set_visible(visible)
-    return ax
+    # fig = plt.gca()
+    # fig.set_axis_off()
+    fig.set_visible(visible)
+    # Return
+    return fig
 
 
 # %% Plot interactive
