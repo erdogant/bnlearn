@@ -1107,7 +1107,8 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # Making figure nice
     # fig = plt.gca()
     # fig.set_axis_off()
-    fig.set_visible(visible)
+    if visible:
+        plt.show()
     # Return
     return fig
 
