@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Data Conversions
 ========================
 
@@ -252,3 +254,6 @@ The results is that 107 unique names are extracted with 4324 edges. This datafra
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

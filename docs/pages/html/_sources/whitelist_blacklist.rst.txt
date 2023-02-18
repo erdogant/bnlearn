@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Black and white lists
 ========================
 
@@ -49,11 +51,7 @@ When variables are black listed, they are excluded from the search and the resul
     Ge = bnlearn.plot(DAG_edges)
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+
+.. include:: add_bottom.add

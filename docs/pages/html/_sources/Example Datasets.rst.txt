@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 ``bnlearn`` contains several examples within the library that can be used to practice with the functionalities of :func:`bnlearn.structure_learning`, :func:`bnlearn.parameter_learning` and :func:`bnlearn.inference`.
 
 
@@ -64,3 +66,6 @@ With the :func:`bnlearn.bnlearn.sampling` function a ``DataFrame`` can be create
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

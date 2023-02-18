@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Parameter learning
 ===================
 
@@ -360,3 +362,6 @@ In the following example I will show how to extract the CPDs from a model.
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

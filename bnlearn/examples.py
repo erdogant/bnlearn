@@ -533,6 +533,7 @@ model = bn.independence_test(model, df, prune=True)
 bn.plot(model)
 
 # %% Naive Bayesian model
+from pgmpy.factors.discrete import TabularCPD
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
 DAG = bn.make_DAG(edges, methodtype='naivebayes')
@@ -1144,6 +1145,7 @@ adjmat = bn.vec2adjmat(vector['source'], vector['target'])
 
 # %%
 import bnlearn as bn
+from pgmpy.factors.discrete import TabularCPD
 
 edges = [('A', 'E'),
          ('S', 'E'),

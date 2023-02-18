@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Causation
 ===================
 Causation means that one (independent) variable causes the other (dependent) variable and is formulated by Reichenbach (1956) as follows:
@@ -481,3 +483,6 @@ Lets determine the best possible structure for the *water* dataset.
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

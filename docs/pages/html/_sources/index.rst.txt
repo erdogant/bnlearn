@@ -1,3 +1,4 @@
+
 BNLearn's Documentation
 =======================
 
@@ -15,6 +16,7 @@ BNLearn's Documentation
 
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
 
+.. include:: add_top.add
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 
@@ -139,14 +141,6 @@ Indices and tables
 
 
 
-.. raw:: html
-
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
-
 
 .. |python| image:: https://img.shields.io/pypi/pyversions/bnlearn.svg
     :alt: |Python
@@ -203,3 +197,6 @@ Indices and tables
 .. |DOI| image:: https://zenodo.org/badge/231263493.svg
     :alt: Cite
     :target: https://zenodo.org/badge/latestdoi/231263493
+
+
+.. include:: add_bottom.add

@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Sampling of data is based on the joint distribution of the network.
 In order to do that, it requires a DAG connected with CPDs.
 It is also possible to create a DAG manually and learn it's model parameters.
@@ -102,11 +104,6 @@ Another example with Gibbs sampling but now by creating some user-defined edges
   |    1   |      0    |  1   |      1      |
   +--------+-----------+------+-------------+
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+.. include:: add_bottom.add

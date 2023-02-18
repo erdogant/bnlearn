@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Saving and Loading
 ========================
 
@@ -28,3 +30,6 @@ All models can be saved and loading using the :func:`bnlearn.bnlearn.save` and :
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

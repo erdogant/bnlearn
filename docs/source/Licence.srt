@@ -1,11 +1,5 @@
-.. _code_directive:
-
--------------------------------------
-
-
 Licence
 '''''''
-
 
 MIT License
 

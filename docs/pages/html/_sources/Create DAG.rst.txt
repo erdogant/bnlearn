@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Directed Acyclic Graphs
 ========================
 
@@ -161,3 +163,6 @@ This is an great basis to make inferences or update your this model with new dat
 	</center>
 	<hr>
 
+
+
+.. include:: add_bottom.add

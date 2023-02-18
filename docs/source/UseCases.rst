@@ -1,5 +1,8 @@
+
 Use Case Titanic
 =======================
+
+.. include:: add_top.add
 
 In the following example we will learn the structure on the Titanic dataset.
 
@@ -528,11 +531,6 @@ What is the probability of lung-cancer or bronchitis, given that we know that pa
 The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51). 
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
 
+.. include:: add_bottom.add

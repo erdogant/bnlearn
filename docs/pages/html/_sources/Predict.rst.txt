@@ -1,3 +1,5 @@
+.. include:: add_top.add
+
 Predict
 ========================
 
@@ -115,11 +117,5 @@ Lets create a small example to understand how it exactly works..
     # This line is returned as it had the maximum probability as you can see in the query.
 
 
-.. raw:: html
 
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
-
+.. include:: add_bottom.add
