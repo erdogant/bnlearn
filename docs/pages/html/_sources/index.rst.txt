@@ -2,6 +2,10 @@
 BNLearn's Documentation
 =======================
 
+|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
+
+-----------------------------------
+
 .. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
 .. |figIP2| image:: ../figs/_fig-plot_interactive_simple_color_size.png
 
@@ -14,9 +18,8 @@ BNLearn's Documentation
 
 -----------------------------------
 
-|python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
-
 .. include:: add_top.add
+
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 
@@ -25,12 +28,28 @@ BNLearn's Documentation
 * Simple and intuitive
 * Focus on structure learning, parameter learning and inference.
 
+
+-----------------------------------
+
 .. tip::
 	`Medium blog: Step-by-step guide for structure learning <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
 .. tip::
 	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 
+
+
+-----------------------------------
+
+.. note::
+	**Your ❤️ is important to keep maintaining this package.** You can `support <https://erdogant.github.io/XXX/pages/html/Documentation.html>`_ in various ways, have a look at the `sponser page <https://erdogant.github.io/XXX/pages/html/Documentation.html>`_.
+	Report bugs, issues and feature extensions at `github <https://github.com/erdogant/XXX/>`_ page.
+
+	.. code-block:: console
+
+	   pip install XXX
+
+-----------------------------------
 
 
 Contents
