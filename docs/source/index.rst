@@ -40,12 +40,12 @@ BNLearn's Documentation
 -----------------------------------
 
 .. note::
-	**Your ❤️ is important to keep maintaining this package.** You can `support <https://erdogant.github.io/XXX/pages/html/Documentation.html>`_ in various ways, have a look at the `sponser page <https://erdogant.github.io/XXX/pages/html/Documentation.html>`_.
-	Report bugs, issues and feature extensions at `github <https://github.com/erdogant/XXX/>`_ page.
+	**Your ❤️ is important to keep maintaining this package.** You can `support <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_ in various ways, have a look at the `sponser page <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_.
+	Report bugs, issues and feature extensions at `github <https://github.com/erdogant/bnlearn/>`_ page.
 
 	.. code-block:: console
 
-	   pip install XXX
+	   pip install bnlearn
 
 -----------------------------------
 
