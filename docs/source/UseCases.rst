@@ -2,8 +2,6 @@
 Use Case Titanic
 =======================
 
-.. include:: add_top.add
-
 In the following example we will learn the structure on the Titanic dataset.
 
 .. code-block:: python

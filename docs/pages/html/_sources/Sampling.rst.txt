@@ -1,5 +1,3 @@
-.. include:: add_top.add
-
 Sampling of data is based on the joint distribution of the network.
 In order to do that, it requires a DAG connected with CPDs.
 It is also possible to create a DAG manually and learn it's model parameters.

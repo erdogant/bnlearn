@@ -1,4 +1,5 @@
 
+
 BNLearn's Documentation
 =======================
 
@@ -17,9 +18,6 @@ BNLearn's Documentation
    +----------+----------+
 
 -----------------------------------
-
-.. include:: add_top.add
-
 
 *bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
 

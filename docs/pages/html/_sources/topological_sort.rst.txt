@@ -2,8 +2,6 @@
 Topological sort
 ========================
 
-.. include:: add_top.add
-
 Topological sort or topological ordering of a directed graph is a linear ordering of its vertices and only possible if and only if the graph has no directed cycles, that is, if it is a directed acyclic graph (DAG).
 Any DAG has at least one topological ordering. Topological sorting has many applications especially in ranking problems such as feedback arc set. The vertices of the graph may represent the tasks to be performed, and the edges may represent constraints that one task must be performed before another.
 
