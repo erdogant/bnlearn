@@ -10,9 +10,9 @@
 # %% Libraries
 import os
 import copy
-import wget
 import zipfile
 import itertools
+import requests
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -26,7 +26,6 @@ from decimal import Decimal
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
-from pgmpy import readwrite
 from pgmpy.metrics import structure_score
 
 from ismember import ismember
@@ -585,9 +584,10 @@ def _bif2bayesian(pathname, verbose=3):
     >>> reader.get_model()
     <pgmpy.models.BayesianNetwork object at 0x7f20af154320>
     """
+    from pgmpy.readwrite import BIFReader
     if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
 
-    bifmodel=readwrite.BIF.BIFReader(path=pathname)
+    bifmodel = BIFReader(path=pathname)
 
     try:
         model = BayesianNetwork(bifmodel.variable_edges)
@@ -1311,7 +1311,7 @@ def _download_example(data, verbose=3):
     # Check file exists.
     if not os.path.isfile(PATH_TO_DATA):
         if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
-        wget.download(url, curpath)
+        wget.download(url, PATH_TO_DATA)
 
     return PATH_TO_DATA
 
@@ -1347,9 +1347,9 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     """
     PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-    out={}
-    model=None
-    filepath=filepath.lower()
+    out = {}
+    model = None
+    filepath= filepath.lower()
     if verbose>=3: print('[bnlearn] >Import <%s>' %(filepath))
 
     # Load data
@@ -1388,7 +1388,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 def _unzip(getZip, ext='.bif', verbose=3):
     if not os.path.isdir(getZip):
         if verbose>=3: print('[bnlearn] >Extracting files..')
-        [pathname, _] = os.path.split(getZip)
+        pathname, _ = os.path.split(getZip)
         # Unzip
         zip_ref = zipfile.ZipFile(getZip, 'r')
         zip_ref.extractall(pathname)
@@ -1818,3 +1818,32 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
                     show_message=False
     # Return
     return scores
+
+
+# %% Retrieve files files.
+class wget:
+    """Retrieve file from url."""
+
+    def filename_from_url(url):
+        """Return filename."""
+        return os.path.basename(url)
+
+    def download(url, writepath):
+        """Download.
+
+        Parameters
+        ----------
+        url : str.
+            Internet source.
+        writepath : str.
+            Directory to write the file.
+
+        Returns
+        -------
+        None.
+
+        """
+        r = requests.get(url, stream=True)
+        with open(writepath, "wb") as fd:
+            for chunk in r.iter_content(chunk_size=1024):
+                fd.write(chunk)

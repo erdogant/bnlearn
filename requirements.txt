@@ -1,7 +1,7 @@
 pgmpy>='0.1.18'
 networkx>='2.7.1'
 matplotlib>='3.3.4'
-numpy
+numpy>='1.24.1'
 pandas
 tqdm
 ismember
@@ -10,7 +10,6 @@ funcsigs
 statsmodels
 python-louvain
 packaging
-wget
 df2onehot
 fsspec
 pypickle

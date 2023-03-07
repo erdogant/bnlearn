@@ -6,6 +6,17 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
 
+# %%
+
+import bnlearn as bn
+shapes = [(10000, 37), (10000, 223), (10000, 8), (10000, 11), (10000, 32), (352, 3)]
+for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofswords']):
+    print(data)
+    df = bn.import_example(data=data)
+    assert df.shape==shapes[i]
+    
+
+
 # %% Notebook example
 # Example dataframe sprinkler_data.csv can be loaded with: 
 import bnlearn as bn
