@@ -48,7 +48,7 @@ On the [documentation pages](https://erdogant.github.io/bnlearn/) you can find d
 
 ##### It is advisable to create a new environment (e.g. with Conda). 
 ```bash
-conda create -n env_bnlearn python=3.8
+conda create -n env_bnlearn python=3.10
 conda activate env_bnlearn
 ```
 
