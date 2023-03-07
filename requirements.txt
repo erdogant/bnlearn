@@ -16,3 +16,4 @@ pypickle
 tabulate
 ipywidgets
 pyvis
+requests
