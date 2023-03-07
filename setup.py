@@ -13,10 +13,10 @@ else:
 with open("README.md", "r") as fh:
     long_description = fh.read()
 setuptools.setup(
-     install_requires=['pgmpy>=0.1.18',
-                       'networkx>=2.7.1',
-                       'matplotlib>=3.3.4',
-                       'numpy=1.24.1',
+     install_requires=["pgmpy>=0.1.18",
+                       "networkx>=2.7.1",
+                       "matplotlib>=3.3.4",
+                       "numpy>=1.24.1",
                        'pandas',
                        'tqdm',
                        'ismember',
