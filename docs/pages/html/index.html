@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -229,6 +231,7 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -355,16 +358,49 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.structure_learning.html#bnlearn.structure_learning.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.parameter_learning.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.parameter_learning.html#bnlearn.parameter_learning.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.inference.html#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.inference.html#bnlearn.inference.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.check_model"><code class="docutils literal notranslate"><span class="pre">check_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.compare_networks"><code class="docutils literal notranslate"><span class="pre">compare_networks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.dag2adjmat"><code class="docutils literal notranslate"><span class="pre">dag2adjmat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot"><code class="docutils literal notranslate"><span class="pre">df2onehot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_edge_properties"><code class="docutils literal notranslate"><span class="pre">get_edge_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_node_properties"><code class="docutils literal notranslate"><span class="pre">get_node_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.independence_test"><code class="docutils literal notranslate"><span class="pre">independence_test()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling"><code class="docutils literal notranslate"><span class="pre">sampling()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.structure_scores"><code class="docutils literal notranslate"><span class="pre">structure_scores()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.to_bayesiannetwork"><code class="docutils literal notranslate"><span class="pre">to_bayesiannetwork()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.to_undirected"><code class="docutils literal notranslate"><span class="pre">to_undirected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.topological_sort"><code class="docutils literal notranslate"><span class="pre">topological_sort()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2df"><code class="docutils literal notranslate"><span class="pre">vec2df()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.wget"><code class="docutils literal notranslate"><span class="pre">wget</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">

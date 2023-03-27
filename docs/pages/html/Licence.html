@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Black and white lists &mdash; bnlearn bnlearn documentation</title>
+  <title>Licence &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -20,9 +20,7 @@
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Topological sort" href="topological_sort.html" />
-    <link rel="prev" title="DataFrames" href="Example%20Datasets.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -97,11 +95,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
@@ -150,9 +148,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Black and white lists</li>
+      <li>Licence</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/whitelist_blacklist.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/Licence.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -160,48 +158,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="black-and-white-lists">
-<h1>Black and white lists<a class="headerlink" href="#black-and-white-lists" title="Permalink to this heading"></a></h1>
-<p>Input variablescan be black or white listed in the model.
-When variables are black listed, they are excluded from the search and the resulting model will not contain any of those edges. If variables are white listed, the search is limited to only those edges. The resulting model will then only contain edges that are in white_list.</p>
-<p><strong>White list example</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
-<span class="c1"># Load example mixed dataset</span>
-<span class="n">df_raw</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
-
-<span class="c1"># Convert to onehot</span>
-<span class="n">dfhot</span><span class="p">,</span> <span class="n">dfnum</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span>
-
-<span class="c1"># Structure learning by including only &#39;Survived&#39;,&#39;Pclass&#39;,&#39;Sex&#39;,&#39;Embarked&#39;,&#39;Parch&#39;.</span>
-<span class="n">DAG_nodes</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">bw_list_method</span><span class="o">=</span><span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="n">white_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Parch&#39;</span><span class="p">])</span>
-
-<span class="c1"># Structure learning by enforcing variables &#39;Survived&#39;,&#39;Pclass&#39;,&#39;Sex&#39;,&#39;Embarked&#39;,&#39;Parch&#39;.</span>
-<span class="n">DAG_edges</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">bw_list_method</span><span class="o">=</span><span class="s1">&#39;edges&#39;</span><span class="p">,</span> <span class="n">white_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Parch&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot</span>
-<span class="n">Gf</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG_nodes</span><span class="p">)</span>
-<span class="n">Ge</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG_edges</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Black list example</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span>
-<span class="c1"># Load example mixed dataset</span>
-<span class="n">df_raw</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
-
-<span class="c1"># Convert to onehot</span>
-<span class="n">dfhot</span><span class="p">,</span> <span class="n">dfnum</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span>
-
-<span class="c1"># Structure learning after removing &#39;Survived&#39;,&#39;Pclass&#39;,&#39;Sex&#39;,&#39;Embarked&#39;,&#39;Parch&#39;.</span>
-<span class="n">DAG_nodes</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">bw_list_method</span><span class="o">=</span><span class="s1">&#39;nodes&#39;</span><span class="p">,</span> <span class="n">black_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Parch&#39;</span><span class="p">])</span>
-
-<span class="c1"># Structure learning by enforcing variables &#39;Survived&#39;,&#39;Pclass&#39;,&#39;Sex&#39;,&#39;Embarked&#39;,&#39;Parch&#39;.</span>
-<span class="n">DAG_edges</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">bw_list_method</span><span class="o">=</span><span class="s1">&#39;edges&#39;</span><span class="p">,</span> <span class="n">black_list</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">,</span><span class="s1">&#39;Pclass&#39;</span><span class="p">,</span><span class="s1">&#39;Sex&#39;</span><span class="p">,</span><span class="s1">&#39;Embarked&#39;</span><span class="p">,</span><span class="s1">&#39;Parch&#39;</span><span class="p">])</span>
-
-<span class="c1"># Plot</span>
-<span class="n">Gf</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG_nodes</span><span class="p">)</span>
-<span class="n">Ge</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG_edges</span><span class="p">)</span>
-</pre></div>
-</div>
+  <section id="licence">
+<h1>Licence<a class="headerlink" href="#licence" title="Permalink to this heading"></a></h1>
+<p>MIT License</p>
+<p>Copyright (c) 2020 Erdogan Taskesen
+bnlearn - Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the “Software”), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.</p>
+<p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -214,10 +190,7 @@ When variables are black listed, they are excluded from the search and the resul
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Example%20Datasets.html" class="btn btn-neutral float-left" title="DataFrames" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="topological_sort.html" class="btn btn-neutral float-right" title="Topological sort" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

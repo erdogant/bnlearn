@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -120,6 +122,7 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.inference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.inference.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
@@ -167,6 +170,7 @@
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>Inference is same as asking conditional probability questions to the models.</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.inference.fit">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.inference.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.inference.fit" title="Permalink to this definition"></a></dt>
@@ -220,7 +224,6 @@
 </div>
 </dd></dl>
 
-</section>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

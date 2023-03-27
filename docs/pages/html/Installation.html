@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#create-environment">Create environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#uninstall">Uninstall</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#import-error">Import Error</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -221,6 +223,22 @@
 <figure class="align-default" id="installation-step-4">
 <img alt="_images/04_installation.png" src="_images/04_installation.png" />
 </figure>
+</section>
+<section id="import-error">
+<h1>Import Error<a class="headerlink" href="#import-error" title="Permalink to this heading"></a></h1>
+<p>If you are using jupyter notebook or colab, you can get a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> error because by default, an older version of <code class="docutils literal notranslate"><span class="pre">numpy</span></code> is installed.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># The following error occurs</span>
+<span class="ne">RuntimeError</span> <span class="p">:</span> <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">)</span>
+<span class="ne">RuntimeError</span><span class="p">:</span> <span class="n">module</span> <span class="n">compiled</span> <span class="n">against</span> <span class="n">API</span> <span class="n">version</span> <span class="mh">0x10</span> <span class="n">but</span> <span class="n">this</span> <span class="n">version</span> <span class="n">of</span> <span class="n">numpy</span> <span class="ow">is</span> <span class="mh">0xf</span> <span class="o">.</span> <span class="n">Check</span> <span class="n">the</span> <span class="n">section</span> <span class="n">C</span><span class="o">-</span><span class="n">API</span> <span class="n">incompatibility</span> <span class="n">at</span> <span class="n">the</span> <span class="n">Troubleshooting</span> <span class="ne">ImportError</span> <span class="n">section</span> <span class="n">at</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">numpy</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">devdocs</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">troubleshooting</span><span class="o">-</span><span class="n">importerror</span><span class="o">.</span><span class="n">html</span><span class="c1">#c-api-incompatibility for indications on how to solve this problem .</span>
+<span class="ne">ImportError</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">multiarray</span> <span class="n">failed</span> <span class="n">to</span> <span class="kn">import</span>
+</pre></div>
+</div>
+<p>To fix this, you need an installation of <em>numpy version=&gt;1.24.1</em> which is installed during the <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> installation.
+However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work.
+Go to the menu and click <strong>Runtime -&gt; restart runtime</strong>. Now again import bnlearn, and it should work.</p>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

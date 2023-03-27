@@ -88,5 +88,27 @@ Run the following lines which should result in a figure:
 
 
 
+Import Error
+#####################
+
+If you are using jupyter notebook or colab, you can get a ``numpy`` error because by default, an older version of ``numpy`` is installed.
+
+
+.. code-block:: python
+	
+	# Import
+	import bnlearn as bn
+
+	# The following error occurs
+	RuntimeError : Traceback (most recent call last)
+	RuntimeError: module compiled against API version 0x10 but this version of numpy is 0xf . Check the section C-API incompatibility at the Troubleshooting ImportError section at https://numpy.org/devdocs/user/troubleshooting-importerror.html#c-api-incompatibility for indications on how to solve this problem .
+	ImportError: numpy.core.multiarray failed to import
+
+
+To fix this, you need an installation of *numpy version=>1.24.1* which is installed during the ``bnlearn`` installation.
+However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work. 
+Go to the menu and click **Runtime -> restart runtime**. Now again import bnlearn, and it should work.
+
+
 
 .. include:: add_bottom.add

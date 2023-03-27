@@ -17,6 +17,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,6 +53,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -119,7 +121,39 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.bnlearn</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.bnlearn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.check_model"><code class="docutils literal notranslate"><span class="pre">check_model()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.compare_networks"><code class="docutils literal notranslate"><span class="pre">compare_networks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.dag2adjmat"><code class="docutils literal notranslate"><span class="pre">dag2adjmat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.df2onehot"><code class="docutils literal notranslate"><span class="pre">df2onehot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_edge_properties"><code class="docutils literal notranslate"><span class="pre">get_edge_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_node_properties"><code class="docutils literal notranslate"><span class="pre">get_node_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.independence_test"><code class="docutils literal notranslate"><span class="pre">independence_test()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.sampling"><code class="docutils literal notranslate"><span class="pre">sampling()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.structure_scores"><code class="docutils literal notranslate"><span class="pre">structure_scores()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.to_bayesiannetwork"><code class="docutils literal notranslate"><span class="pre">to_bayesiannetwork()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.to_undirected"><code class="docutils literal notranslate"><span class="pre">to_undirected()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.topological_sort"><code class="docutils literal notranslate"><span class="pre">topological_sort()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.vec2df"><code class="docutils literal notranslate"><span class="pre">vec2df()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.wget"><code class="docutils literal notranslate"><span class="pre">wget</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bnlearn.bnlearn.wget.download"><code class="docutils literal notranslate"><span class="pre">wget.download()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bnlearn.bnlearn.wget.filename_from_url"><code class="docutils literal notranslate"><span class="pre">wget.filename_from_url()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -287,7 +321,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe for which the rows are the features, and colums are the samples.</p></li>
-<li><p><strong>dtypes</strong> (<em>list of str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
+<li><p><strong>dtypes</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
 <li><p><strong>y_min</strong> (<em>int</em><em> [</em><em>0..len</em><em>(</em><em>y</em><em>)</em><em>]</em><em>, </em><em>optional</em>) – Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.</p></li>
 <li><p><strong>perc_min_num</strong> (<em>float</em><em> [</em><em>None</em><em>, </em><em>0..1</em><em>]</em><em>, </em><em>optional</em>) – Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print message to screen. The default is 3.
@@ -453,16 +487,27 @@ adjmat : Adjacency matrix</p>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.independence_test">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">independence_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'chi_square'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.independence_test" title="Permalink to this definition"></a></dt>
 <dd><p>Compute edge strength using test statistic.</p>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>Compute the edge strength using a statistical test of independence based using the model structure (DAG) and the data.
 For the pairs in the DAG (either by structure learning or user-defined), an statistical test is performed.
 Any two variables are associated if the test’s p-value &lt; significance_level.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Instance of bnlearn.structure_learning.</em>) – The (learned) model which needs to be tested.</p></li>
-<li><p><strong>df</strong> (<em>pandas.DataFrame instance</em>) – The dataset against which to test the model structure.</p></li>
-<li><p><strong>test</strong> (<em>str</em><em> or </em><em>function</em>) – <dl class="simple">
-<dt>The statistical test to compute associations.</dt><dd><ul>
+<dt class="field-odd">param model</dt>
+<dd class="field-odd"><p>The (learned) model which needs to be tested.</p>
+</dd>
+<dt class="field-even">type model</dt>
+<dd class="field-even"><p>Instance of bnlearn.structure_learning.</p>
+</dd>
+<dt class="field-odd">param df</dt>
+<dd class="field-odd"><p>The dataset against which to test the model structure.</p>
+</dd>
+<dt class="field-even">type df</dt>
+<dd class="field-even"><p>pandas.DataFrame instance</p>
+</dd>
+<dt class="field-odd">param test</dt>
+<dd class="field-odd"><dl class="simple">
+<dt>The statistical test to compute associations.</dt><dd><ul class="simple">
 <li><p>chi_square</p></li>
 <li><p>g_sq</p></li>
 <li><p>log_likelihood</p></li>
@@ -473,17 +518,28 @@ Any two variables are associated if the test’s p-value &lt; significance_level
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>alpha</strong> (<em>float</em>) – A value between 0 and 1. If p_value &lt; significance_level, the variables are
-considered uncorrelated.</p></li>
-<li><p><strong>prune</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em>) – True: Keep only edges that are significant (&lt;=alpha) based on the independence test.</p></li>
-</ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>df</strong> – The dataset against which to test the model structure.</p>
+<dt class="field-even">type test</dt>
+<dd class="field-even"><p>str or function</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pandas.DataFrame instance</p>
+<dt class="field-odd">param alpha</dt>
+<dd class="field-odd"><p>A value between 0 and 1. If p_value &lt; significance_level, the variables are
+considered uncorrelated.</p>
+</dd>
+<dt class="field-even">type alpha</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param prune</dt>
+<dd class="field-odd"><p>True: Keep only edges that are significant (&lt;=alpha) based on the independence test.</p>
+</dd>
+<dt class="field-even">type prune</dt>
+<dd class="field-even"><p>bool (default: False)</p>
+</dd>
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p><strong>df</strong> – The dataset against which to test the model structure.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>pandas.DataFrame instance</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -496,6 +552,7 @@ considered uncorrelated.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -637,27 +694,55 @@ layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectra
 <dt class="sig sig-object py" id="bnlearn.bnlearn.predict">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.predict" title="Permalink to this definition"></a></dt>
 <dd><p>Predict on data from a Bayesian network.</p>
+<section id="id1">
+<h2>Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
 The states with highest probability are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>Object</em>) – An object of class from bn.fit.</p></li>
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Each row in the DataFrame will be predicted</p></li>
-<li><p><strong>variables</strong> (<em>str</em><em> or </em><em>list of str</em>) – The label(s) of node(s) to be predicted.</p></li>
-<li><p><strong>to_df</strong> (<em>Bool</em><em>, </em><em>(</em><em>default is True</em><em>)</em>) – The output is converted to dataframe output. Note that this heavily impacts the speed.</p></li>
-<li><p><strong>method</strong> (<em>str</em>) – The method that is used to select the for the inferences.
+<dt class="field-odd">param model</dt>
+<dd class="field-odd"><p>An object of class from bn.fit.</p>
+</dd>
+<dt class="field-even">type model</dt>
+<dd class="field-even"><p>Object</p>
+</dd>
+<dt class="field-odd">param df</dt>
+<dd class="field-odd"><p>Each row in the DataFrame will be predicted</p>
+</dd>
+<dt class="field-even">type df</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+<dt class="field-odd">param variables</dt>
+<dd class="field-odd"><p>The label(s) of node(s) to be predicted.</p>
+</dd>
+<dt class="field-even">type variables</dt>
+<dd class="field-even"><p>str or list of str</p>
+</dd>
+<dt class="field-odd">param to_df</dt>
+<dd class="field-odd"><p>The output is converted to dataframe output. Note that this heavily impacts the speed.</p>
+</dd>
+<dt class="field-even">type to_df</dt>
+<dd class="field-even"><p>Bool, (default is True)</p>
+</dd>
+<dt class="field-odd">param method</dt>
+<dd class="field-odd"><p>The method that is used to select the for the inferences.
 ‘max’ : Return the variable values based on the maximum probability.
-None : Returns all Probabilities</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
-</ul>
+None : Returns all Probabilities</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>P</strong> – Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.</p>
+<dt class="field-even">type method</dt>
+<dd class="field-even"><p>str</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict or DataFrame</p>
+<dt class="field-odd">param verbose</dt>
+<dd class="field-odd"><p>Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p>
+</dd>
+<dt class="field-even">type verbose</dt>
+<dd class="field-even"><p>int, optional</p>
+</dd>
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p><strong>P</strong> – Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>dict or DataFrame</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -684,6 +769,7 @@ None : Returns all Probabilities</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># 999      1     1  0.878049</span>
 </pre></div>
 </div>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -835,26 +921,44 @@ None : Returns all Probabilities</p></li>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.structure_scores">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">structure_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['k2',</span> <span class="pre">'bds',</span> <span class="pre">'bic',</span> <span class="pre">'bdeu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.structure_scores" title="Permalink to this definition"></a></dt>
 <dd><p>Compute structure scores.</p>
+<section id="id2">
+<h2>Description<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
 <p>Each model can be scored based on its structure. However, the score doesn’t have very straight forward
 interpretebility but can be used to compare different models. A higher score represents a better fit.
 This method only needs the model structure to compute the score. The structure score functionality
 can be found here: <a class="reference internal" href="#bnlearn.bnlearn.structure_scores" title="bnlearn.bnlearn.structure_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_scores()</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>The bnlearn instance such as pgmpy.base.DAG</em><em> or </em><em>pgmpy.models.BayesianNetwork</em>) – The model whose score needs to be computed.</p></li>
-<li><p><strong>df</strong> (<em>pd.DataFrame instance</em>) – The dataset against which to score the model.</p></li>
-<li><p><strong>scoring_method</strong> (<em>str</em><em> ( </em><em>k2</em><em> | </em><em>bdeu</em><em> | </em><em>bds</em><em> | </em><em>bic</em><em> )</em>) – The following four scoring methods are supported currently: 1) K2Score
-2) BDeuScore 3) BDsScore 4) BicScore</p></li>
-<li><p><strong>kwargs</strong> (<em>kwargs</em>) – Any additional parameters parameters that needs to be passed to the
-scoring method.</p></li>
-</ul>
+<dt class="field-odd">param model</dt>
+<dd class="field-odd"><p>The model whose score needs to be computed.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><strong>Model score</strong> – A score value for the model.</p>
+<dt class="field-even">type model</dt>
+<dd class="field-even"><p>The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>float</p>
+<dt class="field-odd">param df</dt>
+<dd class="field-odd"><p>The dataset against which to score the model.</p>
+</dd>
+<dt class="field-even">type df</dt>
+<dd class="field-even"><p>pd.DataFrame instance</p>
+</dd>
+<dt class="field-odd">param scoring_method</dt>
+<dd class="field-odd"><p>The following four scoring methods are supported currently: 1) K2Score
+2) BDeuScore 3) BDsScore 4) BicScore</p>
+</dd>
+<dt class="field-even">type scoring_method</dt>
+<dd class="field-even"><p>str ( k2 | bdeu | bds | bic )</p>
+</dd>
+<dt class="field-odd">param kwargs</dt>
+<dd class="field-odd"><p>Any additional parameters parameters that needs to be passed to the
+scoring method.</p>
+</dd>
+<dt class="field-even">type kwargs</dt>
+<dd class="field-even"><p>kwargs</p>
+</dd>
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p><strong>Model score</strong> – A score value for the model.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>float</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -875,29 +979,36 @@ scoring method.</p></li>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">structure_scores</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">scoring_method</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.to_bayesiannetwork">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_bayesiannetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_bayesiannetwork" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix to BayesianNetwork.</p>
+<section id="id3">
+<h2>Description<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <p>Convert a adjacency to a Bayesian model. This is required as some of the
 functionalities, such as <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> output a DAGmodel.
 If the output of <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> is provided, the adjmat is extracted and processed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>model</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
+<dt class="field-odd">param model</dt>
+<dd class="field-odd"><p>Adjacency matrix.</p>
 </dd>
-<dt class="field-even">Raises</dt>
-<dd class="field-even"><p><strong>Exception</strong> – The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
+<dt class="field-even">type model</dt>
+<dd class="field-even"><p>pd.DataFrame()</p>
 </dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><strong>BayesianNetwork</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
+<dt class="field-odd">raises Exception</dt>
+<dd class="field-odd"><p>The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>Object</p>
+<dt class="field-even">returns</dt>
+<dd class="field-even"><p><strong>BayesianNetwork</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
+</dd>
+<dt class="field-odd">rtype</dt>
+<dd class="field-odd"><p>Object</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -921,19 +1032,27 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <dt class="sig sig-object py" id="bnlearn.bnlearn.topological_sort">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">topological_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.topological_sort" title="Permalink to this definition"></a></dt>
 <dd><p>Topological sort.</p>
+<section id="id4">
+<h2>Description<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
 <p>Get nodes list in the topological sort order.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em> or </em><em>bnlearn object.</em>) – Adjacency matrix.</p></li>
-<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – Start position. The default is None and the whole network is examined.</p></li>
-</ul>
+<dt class="field-odd">param adjmat</dt>
+<dd class="field-odd"><p>Adjacency matrix.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Topological sort order.</p>
+<dt class="field-even">type adjmat</dt>
+<dd class="field-even"><p>pd.DataFrame or bnlearn object.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">param start</dt>
+<dd class="field-odd"><p>Start position. The default is None and the whole network is examined.</p>
+</dd>
+<dt class="field-even">type start</dt>
+<dd class="field-even"><p>str, optional</p>
+</dd>
+<dt class="field-odd">returns</dt>
+<dd class="field-odd"><p>Topological sort order.</p>
+</dd>
+<dt class="field-even">rtype</dt>
+<dd class="field-even"><p>list</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -943,6 +1062,7 @@ bn.topological_sort(DAG, ‘Rain’)
 bn.topological_sort(DAG)</p>
 <p class="rubric">References</p>
 <p><a class="reference external" href="https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python">https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python</a></p>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -954,7 +1074,7 @@ bn.topological_sort(DAG)</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<em>list</em>) – The source node.</p></li>
 <li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
-<li><p><strong>weights</strong> (<em>list of int</em>) – The Weights between the source-target values</p></li>
+<li><p><strong>weights</strong> (<em>list</em><em> of </em><em>int</em>) – The Weights between the source-target values</p></li>
 <li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
 </ul>
 </dd>
@@ -980,18 +1100,31 @@ bn.topological_sort(DAG)</p>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.vec2df">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">vec2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2df" title="Permalink to this definition"></a></dt>
 <dd><p>Convert source-target edges into sparse dataframe.</p>
+<section id="id5">
+<h2>Description<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
 <p>Convert edges between source and taget into a dataframe based on the weight.
 A weight of 2 will result that a row with the edge is created 2x.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>source</strong> (<em>array-like</em>) – The source node.</p></li>
-<li><p><strong>target</strong> (<em>array-like</em>) – The target node.</p></li>
-<li><p><strong>weights</strong> (<em>array-like of int</em>) – The Weights between the source-target values</p></li>
-</ul>
+<dt class="field-odd">param source</dt>
+<dd class="field-odd"><p>The source node.</p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">type source</dt>
+<dd class="field-even"><p>array-like</p>
+</dd>
+<dt class="field-odd">param target</dt>
+<dd class="field-odd"><p>The target node.</p>
+</dd>
+<dt class="field-even">type target</dt>
+<dd class="field-even"><p>array-like</p>
+</dd>
+<dt class="field-odd">param weights</dt>
+<dd class="field-odd"><p>The Weights between the source-target values</p>
+</dd>
+<dt class="field-even">type weights</dt>
+<dd class="field-even"><p>array-like of int</p>
+</dd>
+<dt class="field-odd">rtype</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -1009,6 +1142,36 @@ A weight of 2 will result that a row with the edge is created 2x.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
+</section>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.wget">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">wget</span></span><a class="headerlink" href="#bnlearn.bnlearn.wget" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve file from url.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.wget.download">
+<span class="sig-name descname"><span class="pre">download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writepath</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.wget.download" title="Permalink to this definition"></a></dt>
+<dd><p>Download.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str.</em>) – Internet source.</p></li>
+<li><p><strong>writepath</strong> (<em>str.</em>) – Directory to write the file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.wget.filename_from_url">
+<span class="sig-name descname"><span class="pre">filename_from_url</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.wget.filename_from_url" title="Permalink to this definition"></a></dt>
+<dd><p>Return filename.</p>
+</dd></dl>
+
 </dd></dl>
 
 <hr>
