@@ -28,12 +28,21 @@ Because probabilistic graphical models can be difficult in usage, Bnlearn for py
 **⭐️ Star this repo if you like it ⭐️**
 # 
 
-### Blogs
+### Read the Medium blog for more details.
 
-Read the blogs to get a structured overview of bayesian methods and detailed usage of ``bnlearn``.
+<p align="left">
+  <a href="https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5" target="_blank">
+    <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/medium_blog2.png?raw=true" width="150" />
+  </a>
 
-* [Step-by-step guide for structure learning.](https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5)
-* [Step-by-step guide for knowledge-driven models.](https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be)
+  <a href="https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be" target="_blank">
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/medium_blog1.png?raw=true" width="150" />
+  </a>
+
+</p>
+
+
+---
 
 # 
 
