@@ -113,6 +113,7 @@ Contents
   :maxdepth: 2
   :caption: Other functionalities
 
+  independence_test
   Create DAG
   Example Datasets
   whitelist_blacklist
