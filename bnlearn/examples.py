@@ -1324,4 +1324,5 @@ q1 = bn.inference.fit(DAGbay, variables=['Wet_Grass'], evidence={'Rain': 1, 'Spr
 
 print(q1.values)
 
-# %%
+# %% Comparison between methods
+
