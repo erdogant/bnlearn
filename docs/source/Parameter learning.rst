@@ -352,14 +352,6 @@ In the following example I will show how to extract the CPDs from a model.
 	# 1      1  0.5
 
 
-.. raw:: html
-
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
-
 
 
 .. include:: add_bottom.add
