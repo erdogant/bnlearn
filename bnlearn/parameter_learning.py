@@ -26,7 +26,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-# %% Sampling from model
+# %% Parameter learning
 def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
     """Learn the parameters given the DAG and data.
 
@@ -111,6 +111,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     config['method'] = methodtype
     config['n_jobs'] = n_jobs
     adjmat = model['adjmat']
+    independence_test = model.get('independence_test', None)
 
     if (scoretype=='dirichlet') and (smooth is None):
         raise Exception('[bnlearn] >dirichlet requires "smooth" to be not None')
@@ -153,5 +154,5 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     out['config'] = config
     out['model_edges'] = list(model.edges())
     out['structure_scores'] = bnlearn.structure_scores(out, df)
-
-    return(out)
+    out['independence_test'] = independence_test
+    return out
