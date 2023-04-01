@@ -1264,7 +1264,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     ----------
     data: str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords'
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords', 'census_income'
     n: int, optional
         Number of samples to generate. The default is 1000.
     verbose: int, (default: 3)
