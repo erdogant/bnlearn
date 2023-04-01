@@ -672,6 +672,10 @@ def query2df(query, variables=None, verbose=3):
         variables = variables + ['p']
         df = df[variables]
 
+    # Convert the numbers into variable names
+    for col in query.scope():
+        df[col] = np.array(query.state_names[col])[df[col].values.astype(int)]
+
     # Print table to screen
     if verbose>=3:
         print('[bnlearn] >Data is stored in [query.df]')
