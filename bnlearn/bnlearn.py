@@ -1812,7 +1812,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
         method = model.get('config')['method']
         model = model.get('model', None)
     if isinstance(scoring_method, str): scoring_method = [scoring_method]
-    if verbose>=3: print('[bnlearn] >Compute structure scores %s for model comparison (higher is better).' %(scoring_method))
+    if verbose>=3: print('[bnlearn] >Compute structure scores for model comparison (higher is better).' %(scoring_method))
 
     # Return if method not supported
     if np.any(np.isin(method, ['cs', 'constraintsearch'])):
@@ -1826,7 +1826,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
                 scores[s] = structure_score(model, df, scoring_method=s)
             except:
                 if verbose>=2 and show_message:
-                    print('[bnlearn] >Warning: Structure scoring could not be computed. DataFrame issues (?)')
+                    print('[bnlearn] >Skipping computing structure score for [%s].' %(s))
                     show_message=False
     # Return
     return scores
