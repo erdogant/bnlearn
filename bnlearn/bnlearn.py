@@ -898,8 +898,13 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=1
     if adjmat is not None:
         if verbose>=3: print('[bnlearn]> Set edge weights based on the [%s] test statistic.' %(model['independence_test'].columns[-2]))
         logp = -np.log10(model['independence_test']['p_value'])
-        logp[np.isinf(logp)] = logp[np.isfinite(logp)].max()
+        Iloc = np.isinf(logp)
+        max_logp = np.max(logp[~Iloc]) * 1.5  # For visualization purposes, set the max higher then what is present to mark the difference.
+        if np.isnan(max_logp): max_logp = 1
+        logp.loc[Iloc] = max_logp
+        # Rescale the weights
         weights = _normalize_weights(logp.values, minscale=minscale, maxscale=maxscale)
+        # Add to adjmat
         adjmat = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=weights)
     else:
         adjmat = model.get('adjmat', None)
@@ -1028,7 +1033,6 @@ def plot(model,
     if (params_static.get('width') is not None) or (params_static.get('height') is not None):
         # if verbose>=2: print('[bnlearn]> Warning: [height] and [width] will be removed in further version. Please use: params_static={"figsize": (15, 10)}.')
         params_static['figsize'] = (15 if params_static['width'] is None else params_static['width'], 10 if params_static['height'] is None else params_static['height'])
-    # END BLOCK
 
     out = {}
     G = nx.DiGraph()  # Directed graph
