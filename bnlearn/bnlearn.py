@@ -1264,7 +1264,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     ----------
     data: str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords', 'census_income'
+        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords', 'census_income', 'student_train'
     n: int, optional
         Number of samples to generate. The default is 1000.
     verbose: int, (default: 3)
@@ -1274,6 +1274,10 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     Returns
     -------
     df: pd.DataFrame()
+
+    References
+    ----------
+    * Census Income. (1996). UCI Machine Learning Repository. https://doi.org/10.24432/C5S595.
 
     """
     if data=='random':
@@ -1286,7 +1290,7 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     PATH_TO_DATA = _download_example(data, verbose=verbose)
 
     # Import dataset
-    if (data=='sprinkler') or (data=='titanic_train') or (data=='stormofswords'):
+    if (data=='sprinkler') or (data=='titanic_train') or (data=='stormofswords') or (data=='census_income') or (data=='student_train'):
         if verbose>=3: print('[bnlearn] >Import dataset..')
         df = pd.read_csv(PATH_TO_DATA, delimiter=',')
     else:
