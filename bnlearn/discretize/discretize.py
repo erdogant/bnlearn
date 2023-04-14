@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 import pandas as pd
 
 from .learn_discrete_bayes_net import discretize_all
@@ -5,8 +7,8 @@ from .learn_discrete_bayes_net import discretize_all
 
 def discretize(
     data: pd.DataFrame,
-    edges: list[tuple[str, str]],
-    continuous_columns: list[str],
+    edges: List[Tuple[str, str]],
+    continuous_columns: List[str],
     max_iterations=8,
 ) -> pd.DataFrame:
     """
@@ -53,7 +55,7 @@ def discretize(
     return data_disc
 
 
-def _bayes_net_graph(nodes: list[str], edges: list[tuple[str, str]]):
+def _bayes_net_graph(nodes: List[str], edges: List[Tuple[str, str]]):
     """
     >>> nodes = ['A', 'B', 'C', 'D']
     >>> edges = [('A', 'B'), ('A', 'C'), ('B', 'D'), ('C', 'D')]

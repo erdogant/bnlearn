@@ -26,12 +26,12 @@ References
 """
 
 import math
-from typing import Union
+from typing import List, Tuple, Union
 
 import numpy as np
 import pandas as pd
 
-Graph = list[Union[int, tuple[int, ...]]]
+Graph = List[Union[int, Tuple[int, ...]]]
 
 
 def combine_spouses_data(spouse_value_matrix):
@@ -384,8 +384,8 @@ def continuous_to_discrete(data: pd.Series, bin_edge) -> pd.Series:
 
 
 def sort_disc_by_vorder(
-    continuous_order, disc_edge: list[np.ndarray]
-) -> list[np.ndarray]:
+    continuous_order, disc_edge: List[np.ndarray]
+) -> List[np.ndarray]:
     return [disc_edge[i] for i in np.argsort(continuous_order, kind="stable")]
 
 
@@ -397,13 +397,13 @@ def disc_intval_seq():
     pass
 
 
-def graph_to_reverse_order(graph: Graph) -> list[int]:
+def graph_to_reverse_order(graph: Graph) -> List[int]:
     return [n[-1] if isinstance(n, tuple) else n for n in reversed(graph)]
 
 
 def graph_to_reverse_conti_order(
-    graph: Graph, continuous_index: list[int]
-) -> list[int]:
+    graph: Graph, continuous_index: List[int]
+) -> List[int]:
     return [n for n in graph_to_reverse_order(graph) if n in continuous_index]
 
 
@@ -444,11 +444,11 @@ def one_iteration(
     data: pd.DataFrame,
     data_integer: pd.DataFrame,
     graph: Graph,
-    discrete_index: list[int],
-    continuous_index: list[int],
+    discrete_index: List[int],
+    continuous_index: List[int],
     l_card: int,
     approx=False,
-) -> tuple[pd.DataFrame, list[np.ndarray]]:
+) -> Tuple[pd.DataFrame, List[np.ndarray]]:
     # Save discretization edge
     disc_edge_collect = []
 
@@ -484,8 +484,8 @@ def one_iteration(
 def bn_discretizer_iteration_converge(
     data: pd.DataFrame,
     graph: Graph,
-    discrete_index: list[int],
-    continuous_index: list[int],
+    discrete_index: List[int],
+    continuous_index: List[int],
     cut_time: int,
     approx=False,
 ):
@@ -535,7 +535,7 @@ def K2_w_discretization():
 
 
 def discretize_all(
-    data_matrix: pd.DataFrame, graph: Graph, continuous_index: list[int], cut_time: int
+    data_matrix: pd.DataFrame, graph: Graph, continuous_index: List[int], cut_time: int
 ):
     """
     discretize continuous variables in a Bayesian network for which
