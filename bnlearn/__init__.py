@@ -33,6 +33,7 @@ import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
+from bnlearn.discretize.discretize import discretize, discretize_value
 from packaging import version
 
 __author__ = 'Erdogan Tasksen'
