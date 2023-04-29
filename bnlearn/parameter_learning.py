@@ -153,6 +153,6 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     out['adjmat'] = adjmat
     out['config'] = config
     out['model_edges'] = list(model.edges())
-    out['structure_scores'] = bnlearn.structure_scores(out, df)
+    out['structure_scores'] = bnlearn.structure_scores(out, df, verbose=verbose)
     out['independence_test'] = independence_test
     return out
