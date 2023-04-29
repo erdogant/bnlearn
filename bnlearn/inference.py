@@ -94,4 +94,4 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     # Store also in dataframe
     query.df = bnlearn.query2df(query, variables=variables, verbose=verbose) if to_df else None
     # Return
-    return(query)
+    return query
