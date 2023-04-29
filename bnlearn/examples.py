@@ -117,7 +117,7 @@ edges = [('Cloudy', 'Sprinkler'),
 
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges)
-model = bn.parameter_learning.fit(DAG, df)
+model1 = bn.parameter_learning.fit(DAG, df)
 # Print CPDs
 CPD = bn.print_CPD(model)
 
@@ -1324,5 +1324,6 @@ q1 = bn.inference.fit(DAGbay, variables=['Wet_Grass'], evidence={'Rain': 1, 'Spr
 
 print(q1.values)
 
-# %% Comparison between methods
 
+# %%
+    
