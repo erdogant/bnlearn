@@ -5,6 +5,8 @@ __pycache__/
 
 bnlearn/.pylint.d/
 bnlearn/data/
+julia/
+
 *.pkl
 
 # C extensions
