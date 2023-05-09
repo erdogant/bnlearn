@@ -666,15 +666,16 @@ def query2df(query, variables=None, verbose=3):
 
     df = pd.DataFrame(data=states, columns=query.scope())
     df['p'] = getP
+
+    # Convert the numbers into variable names
+    for col in query.scope():
+        df[col] = np.array(query.state_names[col])[df[col].values.astype(int)]
+
     # Order or filter on input variables
     if variables is not None:
         # Add Pvalue column
         variables = variables + ['p']
         df = df[variables]
-
-    # Convert the numbers into variable names
-    for col in query.scope():
-        df[col] = np.array(query.state_names[col])[df[col].values.astype(int)]
 
     # Print table to screen
     if verbose>=3:
