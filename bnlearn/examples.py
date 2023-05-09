@@ -22,7 +22,7 @@ for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofsw
 import bnlearn as bn
 df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
-model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, verbose=0)
 
 
 # Set some colors to the edges and nodes
