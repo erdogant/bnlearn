@@ -5,6 +5,68 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+# %%
+import bnlearn as bn
+
+# Example dataset
+source=['Cloudy','Cloudy','Sprinkler','Rain']
+target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
+weights=[1,2,1,3]
+
+# Convert into sparse datamatrix
+df = bn.vec2df(source, target, weights=weights)
+# Make DAG
+DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
+# Make plot
+bn.plot(DAG, interactive=True)
+bn.plot(DAG, interactive=False)
+
+
+# %% Import examples
+import bnlearn as bn
+df = bn.import_example(data='sprinkler', n=1000)
+
+DAG = bn.import_DAG('Sprinkler')
+
+# %% Working with continues data
+import bnlearn as bn
+df = bn.import_example(data='auto_mpg')
+
+edges = [
+    ("cylinders", "displacement"),
+    ("displacement", "model_year"),
+    ("displacement", "weight"),
+    ("displacement", "horsepower"),
+    ("weight", "model_year"),
+    ("weight", "mpg"),
+    ("horsepower", "acceleration"),
+    ("mpg", "model_year"),
+]
+
+# Create DAG based on edges
+DAG = bn.make_DAG(edges)
+
+# df_num = df.select_dtypes(include='float64').columns.values
+continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
+# Discretize the continous columns
+df_disc = bn.discretize(df, edges, continuous_columns, max_iterations=1)
+
+# Fit model based on DAG and discretize the continous columns
+model_mle = bn.parameter_learning.fit(DAG, df_disc)
+# model_mle = bn.parameter_learning.fit(DAG, data_disc, methodtype="maximumlikelihood")
+
+# Make plot
+bn.plot(model_mle)
+
+print(model_mle["model"].get_cpds("mpg"))
+
+
+print("Weight categories: ", df_disc["weight"].dtype.categories)
+evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
+print(evidence)
+print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence, verbose=0))
+
+
 
 # %%
 
@@ -211,13 +273,12 @@ bn.plot(model)
 import bnlearn as bn
 model = bn.import_DAG('water', verbose=0)
 # Sampling
-df = bn.sampling(model, n=1000, methodtype='markov', verbose=3)
-# Parameter learning
-model = bn.parameter_learning.fit(DAG, df, scoretype='bdeu', smooth=None)
+df = bn.sampling(model, n=1000, methodtype='bayes', verbose=3)
 
 
 # %% Naive Bayesian model
-df = bn.import_example('random')
+import bnlearn as bn
+df = bn.import_example('random_discrete')
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='hc', verbose=4, n_jobs=1)
@@ -536,7 +597,7 @@ bn.plot(model2, pos=G['pos'])
 
 
 # %% Naive Bayesian model
-df = bn.import_example('random')
+df = bn.import_example('random_discrete')
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
 model = bn.independence_test(model, df, prune=True)
