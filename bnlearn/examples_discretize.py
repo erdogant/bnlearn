@@ -3,7 +3,7 @@ import pandas as pd
 import bnlearn as bn
 
 df = pd.read_csv(
-    "bnlearn/tests/discretize/data/data_auto_mpg.csv",
+    "bnlearn/tests/discretize/data/auto_mpg.csv",
     dtype={
         "mpg": "float64",
         "cylinders": "int64",

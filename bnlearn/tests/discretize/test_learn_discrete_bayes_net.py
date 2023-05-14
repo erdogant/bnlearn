@@ -48,7 +48,7 @@ test_data = Path("./bnlearn/tests/discretize/data")
 @pytest.fixture()
 def data():
     return pd.read_csv(
-        test_data / "data_auto_mpg.csv",
+        test_data / "auto_mpg.csv",
         dtype={
             "mpg": "float64",
             "cylinders": "int64",

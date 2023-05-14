@@ -23,7 +23,7 @@ Main.token_data = jl.eval("tokens_data = TokenDocument(data) ; return(tokens_dat
 # 2. Run Julia with “magic” command
 # 3. Run Julia with a script
     
-df = pd.read_csv('data_auto_mpg.csv', header=None)
+df = pd.read_csv('auto_mpg.csv', header=None)
 
 
 x = jl.rand(range(10), 3, 5)
@@ -31,8 +31,8 @@ x = jl.rand(range(10), 3, 5)
 jl.eval("readcsv")
 
 jl.eval('include("L_DVBN.jl")')
-A = jl.eval('data = readcsv("data_auto_mpg.csv") ; return(data)')
-A = jl.eval('f = readcsv("data_auto_mpg.csv")')
+A = jl.eval('data = readcsv("auto_mpg.csv") ; return(data)')
+A = jl.eval('f = readcsv("auto_mpg.csv")')
 
 A = jl.eval(Array(Any,392,8))
 

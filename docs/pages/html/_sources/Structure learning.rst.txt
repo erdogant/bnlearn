@@ -394,7 +394,7 @@ Example for structure learning with the naivebayes model:
     # Load library
     import bnlearn as bn
     # Load example
-    df = bn.import_example('random')
+    df = bn.import_example('random_discrete')
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
     # Compute edge strength using chi-square independence test

@@ -1,5 +1,5 @@
 # read data and set as a matrix
-f = readcsv("data_auto_mpg.csv")
+f = readcsv("auto_mpg.csv")
 
 data = Array(Any,392,8)
 

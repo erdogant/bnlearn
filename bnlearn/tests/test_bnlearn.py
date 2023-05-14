@@ -36,8 +36,7 @@ def test_QUERY():
             assert list(query.df.columns) == variables + ['p']
             i = i + 1
 
-    query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'SibSp'], evidence={'Survived': 0, 'Pclass': 1},
-                             to_df=True, verbose=0)
+    query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'SibSp'], evidence={'Survived': 0, 'Pclass': 1}, to_df=True, verbose=0)
     q = bn.query2df(query, variables=['SibSp', 'Sex'])
     assert q.shape == (48, 3)
     assert list(q.columns) == ['SibSp', 'Sex', 'p']
@@ -256,8 +255,7 @@ def test_independence_test():
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
     # Compute edge weights based on chi_square test statistic
-    tests = ['chi_square', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman',
-             'cressie_read']
+    tests = ['chi_square', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read']
     for test in tests:
         model = bn.independence_test(model, df, test=test)
         assert model.get('independence_test', None) is not None
@@ -268,7 +266,7 @@ def test_independence_test():
 
     # Run 10 times with random data
     for i in np.arange(0, 10):
-        df = bn.import_example(data='random')
+        df = bn.import_example(data='random_discrete')
         # Parameter learning
         model = bn.structure_learning.fit(df)
         # Test for independence

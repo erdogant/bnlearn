@@ -29,6 +29,7 @@ from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.metrics import structure_score
 
 from ismember import ismember
+import datazets as dz
 import pypickle
 import bnlearn
 
@@ -570,7 +571,7 @@ def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
         df = gibbs.sample(size=n, seed=None)
     else:
         if verbose>=3: print('[bnlearn] >Methodtype [%s] unknown' %(methodtype))
-    return(df)
+    return df
 
 
 # %% Convert BIF model to bayesian model
@@ -1262,16 +1263,23 @@ def topological_sort(adjmat, start=None):
 
 
 # %% Example data
-def import_example(data='sprinkler', n=10000, verbose=3):
+def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
     """Load example dataset.
 
     Parameters
     ----------
     data: str, (default: sprinkler)
         Pre-defined examples.
-        'titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'random', 'stormofswords', 'census_income', 'student_train'
+            * 'sprinkler'
+            * 'alarm'
+            * 'andes'
+            * 'asia'
+            * 'sachs'
+            * 'water'
+        Continous data sets:
+            * 'auto_mpg'
     n: int, optional
-        Number of samples to generate. The default is 1000.
+        Number of samples to generate. The default is 10000.
     verbose: int, (default: 3)
         Print progress to screen.
         0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace
@@ -1280,32 +1288,18 @@ def import_example(data='sprinkler', n=10000, verbose=3):
     -------
     df: pd.DataFrame()
 
-    References
-    ----------
-    * Census Income. (1996). UCI Machine Learning Repository. https://doi.org/10.24432/C5S595.
-
     """
-    if data=='random':
-        return pd.DataFrame(np.random.randint(low=0, high=2, size=(n, 5)), columns=['A', 'B', 'C', 'D', 'E'])
 
-    # Change name for downloading
-    if data=='titanic': data = 'titanic_train'
-
-    # Download example dataset from github source
-    PATH_TO_DATA = _download_example(data, verbose=verbose)
-
-    # Import dataset
-    if (data=='sprinkler') or (data=='titanic_train') or (data=='stormofswords') or (data=='census_income') or (data=='student_train'):
-        if verbose>=3: print('[bnlearn] >Import dataset..')
-        df = pd.read_csv(PATH_TO_DATA, delimiter=',')
-    else:
+    if (data=='alarm') or (data=='andes') or (data=='asia') or (data=='sachs') or (data=='water'):
         try:
-            _ = _unzip(PATH_TO_DATA, verbose=verbose)
             DAG = import_DAG(data, verbose=2)
             df = sampling(DAG, n=n, verbose=2)
         except:
             print('[bnlearn] >Error: Loading data not possible!')
             df = None
+
+    else:
+        df = dz.get(data, url, sep, n=n, verbose=0)
 
     return df
 
@@ -1359,11 +1353,15 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     >>> fig = bn.plot(model)
 
     """
-    PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
     out = {}
     model = None
     filepath= filepath.lower()
     if verbose>=3: print('[bnlearn] >Import <%s>' %(filepath))
+    # Get the data properties
+    dataproperties = dz.get_dataproperties(filepath)
+    # Get path to data
+    # PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    PATH_TO_DATA = dataproperties['curpath']
 
     # Load data
     if filepath=='sprinkler':
@@ -1371,8 +1369,9 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     elif (filepath=='asia') or (filepath=='alarm') or (filepath=='andes') or (filepath=='sachs') or (filepath=='water'):
         getfile = os.path.join(PATH_TO_DATA, filepath +'.bif')
         if not os.path.isfile(getfile):
-            PATH_TO_DATA = _download_example(filepath, verbose=3)
-            _ = _unzip(PATH_TO_DATA, verbose=verbose)
+            PATH_TO_DATA = dz.download_from_url(dataproperties['filename'], url=dataproperties['url'])
+            _ = dz.unzip(PATH_TO_DATA)
+
         model = _bif2bayesian(getfile, verbose=verbose)
     else:
         if os.path.isfile(filepath):
