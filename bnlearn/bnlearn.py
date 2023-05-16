@@ -945,7 +945,7 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         params_interactive={'width': '70%', 'height': '800px', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'select_menu': True, 'filter_menu': True, 'cdn_resources': 'remote'},
+         params_interactive={'minmax_distance': [100, 250], 'width': None, 'height': None, 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
          params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True},
          verbose=3):
     """Plot the learned stucture.
@@ -1011,7 +1011,7 @@ def plot(model,
     >>> fig = bn.plot(model, interactive=True)
     >>>
     >>> # plot interactive with various settings
-    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':'800px', 'width':'70%', 'bgcolor':'#0f0f0f0f'})
+    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':800, 'width':400, 'bgcolor':'#0f0f0f0f'})
     >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
@@ -1030,7 +1030,7 @@ def plot(model,
         return None
 
     # Plot properties
-    defaults = {'height': '800px', 'width': '70%', 'notebook': False, 'layout': None, 'font_color': False, 'bgcolor': '#ffffff', 'directed': True, 'cdn_resources': 'remote', 'select_menu': True, 'filter_menu': True}
+    defaults = {'minmax_distance': [100, 250], 'height': 800, 'width': 1500, 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
     defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True}
     params_static = {**defaults, **params_static}
@@ -1066,27 +1066,28 @@ def plot(model,
     # get node properties
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
 
-    # Bayesian model
-    if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
-        if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
-        # positions for all nodes
-        G = nx.DiGraph(model['adjmat'])
-        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
-    elif 'networkx' in str(type(bnmodel)):
-        if verbose>=3: print('[bnlearn] >Plot based on networkx model')
-        G = bnmodel
-        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
-    else:
-        if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
-        G = bnlearn.network.adjmat2graph(model['adjmat'])
-        # Get positions
-        pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
-
     # Plot
     if interactive:
         # Make interactive plot
-        fig = _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
+        fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
     else:
+
+        # Bayesian model
+        if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
+            if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
+            # positions for all nodes
+            G = nx.DiGraph(model['adjmat'])
+            pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+        elif 'networkx' in str(type(bnmodel)):
+            if verbose>=3: print('[bnlearn] >Plot based on networkx model')
+            G = bnmodel
+            pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+        else:
+            if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
+            G = bnlearn.network.adjmat2graph(model['adjmat'])
+            # Get positions
+            pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+
         # Make static plot
         fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=params_static['visible'])
 
@@ -1104,7 +1105,8 @@ def plot(model,
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
 def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=True):
     # Bootup figure
-    fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'])
+    fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=100)
+    fig.set_visible(visible)
     # nodes
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
     # edges
@@ -1124,44 +1126,90 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
 
 # %% Plot interactive
-def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
-    # If not notebook
-    if not params_interactive['notebook']:
-        # https://pyvis.readthedocs.io/en/latest/tutorial.html?highlight=cdn_resources#using-pyvis-within-jupyter-notebook
-        params_interactive['cdn_resources']='local'
-
-    # Try to import pyvis
+def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, min_weight=None, verbose=3):
+    # Try to import d3blocks
     try:
-        from pyvis.network import Network
-        from IPython.core.display import display, HTML
+        # Load library
+        from d3blocks import D3Blocks
     except ModuleNotFoundError:
-        if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
-    # Convert adjacency matrix into Networkx Graph
-    G = bnlearn.network.adjmat2graph(model['adjmat'])
-    # Setup of the interactive network figure
-    g = Network(**params_interactive)
-    # Convert from graph G
-    g.from_nx(G)
-    # Nodes
-    for i, _ in enumerate(g.nodes):
-        g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
-        g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+        if verbose>=1: raise Exception('[bnlearn] >"d3blocks" library is not installed. Please pip install first: "pip install d3blocks"')
 
-    # Edges
-    g_edges = list(map(lambda x: (x.get('from'), x.get('to')), g.edges))
-    for i, _ in enumerate(g.edges):
-        idx = np.where(list(map(lambda x: g_edges[i]==x, edgelist)))[0][0]
-        g.edges[i]['color']=edge_colors[idx]
-        g.edges[i]['weight']=edge_weights[idx]
+    if params_interactive['filepath'] is None: params_interactive['filepath'] = title.strip().replace(' ', '_') + '.html'
 
-    # Create advanced buttons
-    g.show_buttons(filter_=['physics'])
-    # Display
-    filename = title.strip().replace(' ', '_') + '.html'
-    g.show(filename, local=params_interactive['notebook'])
-    display(HTML(filename))
-    # webbrowser.open('bnlearn.html')
-    return os.path.abspath(filename)
+    # Initialize
+    d3 = D3Blocks()
+
+    # Set the min_weight
+    X = pd.DataFrame(data=edgelist, columns=['source', 'target'])
+    X['weight'] = edge_weights
+
+    # Create network using default
+    d3.d3graph(X,
+               showfig=False,
+               title=title,
+               notebook=params_interactive['notebook'])
+
+    # Change node properties
+    d3.D3graph.set_node_properties(label=nodelist,
+                                   tooltip=nodelist,
+                                   size=node_sizes,
+                                   color=node_colors,
+                                   fontcolor=params_interactive['font_color'],
+                                   )
+
+    # Change edge properties
+    d3.D3graph.set_edge_properties(directed=params_interactive['directed'],
+                                   minmax_distance=params_interactive['minmax_distance'],
+                                   marker_color=edge_colors)
+
+    # Show the interactive plot
+    d3.D3graph.show(show_slider=params_interactive['show_slider'],
+                    filepath=params_interactive['filepath'],
+                    figsize=[params_interactive['width'], params_interactive['height']])
+
+    # Return
+    return os.path.abspath(d3.D3graph.config['filepath'])
+    #
+
+# %% Plot interactive
+# def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
+#     # If not notebook
+#     if not params_interactive['notebook']:
+#         # https://pyvis.readthedocs.io/en/latest/tutorial.html?highlight=cdn_resources#using-pyvis-within-jupyter-notebook
+#         params_interactive['cdn_resources']='local'
+
+#     # Try to import pyvis
+#     try:
+#         from pyvis.network import Network
+#         from IPython.core.display import display, HTML
+#     except ModuleNotFoundError:
+#         if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
+#     # Convert adjacency matrix into Networkx Graph
+#     G = bnlearn.network.adjmat2graph(model['adjmat'])
+#     # Setup of the interactive network figure
+#     g = Network(**params_interactive)
+#     # Convert from graph G
+#     g.from_nx(G)
+#     # Nodes
+#     for i, _ in enumerate(g.nodes):
+#         g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+#         g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
+
+#     # Edges
+#     g_edges = list(map(lambda x: (x.get('from'), x.get('to')), g.edges))
+#     for i, _ in enumerate(g.edges):
+#         idx = np.where(list(map(lambda x: g_edges[i]==x, edgelist)))[0][0]
+#         g.edges[i]['color']=edge_colors[idx]
+#         g.edges[i]['weight']=edge_weights[idx]
+
+#     # Create advanced buttons
+#     g.show_buttons(filter_=['physics'])
+#     # Display
+#     filename = title.strip().replace(' ', '_') + '.html'
+#     g.show(filename, local=params_interactive['notebook'])
+#     display(HTML(filename))
+#     # webbrowser.open('bnlearn.html')
+#     return os.path.abspath(filename)
 
 
 # %% Plot properties
@@ -1305,22 +1353,22 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
 
 
 # %% Download data from github source
-def _download_example(data, verbose=3):
-    # Set url location
-    url = 'https://erdogant.github.io/datasets/'
-    url=url + data + '.zip'
+# def _download_example(data, verbose=3):
+#     # Set url location
+#     url = 'https://erdogant.github.io/datasets/'
+#     url=url + data + '.zip'
 
-    curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-    PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
-    if not os.path.isdir(curpath):
-        os.mkdir(curpath)
+#     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+#     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
+#     if not os.path.isdir(curpath):
+#         os.mkdir(curpath)
 
-    # Check file exists.
-    if not os.path.isfile(PATH_TO_DATA):
-        if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
-        wget.download(url, PATH_TO_DATA)
+#     # Check file exists.
+#     if not os.path.isfile(PATH_TO_DATA):
+#         if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
+#         wget.download(url, PATH_TO_DATA)
 
-    return PATH_TO_DATA
+#     return PATH_TO_DATA
 
 
 # %% Make DAG
@@ -1397,19 +1445,19 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
 
 # %% unzip
-def _unzip(getZip, ext='.bif', verbose=3):
-    if not os.path.isdir(getZip):
-        if verbose>=3: print('[bnlearn] >Extracting files..')
-        pathname, _ = os.path.split(getZip)
-        # Unzip
-        zip_ref = zipfile.ZipFile(getZip, 'r')
-        zip_ref.extractall(pathname)
-        zip_ref.close()
-        getPath = getZip.replace('.zip', ext)
-        if not os.path.isfile(getPath):
-            getPath = None
+# def _unzip(getZip, ext='.bif', verbose=3):
+#     if not os.path.isdir(getZip):
+#         if verbose>=3: print('[bnlearn] >Extracting files..')
+#         pathname, _ = os.path.split(getZip)
+#         # Unzip
+#         zip_ref = zipfile.ZipFile(getZip, 'r')
+#         zip_ref.extractall(pathname)
+#         zip_ref.close()
+#         getPath = getZip.replace('.zip', ext)
+#         if not os.path.isfile(getPath):
+#             getPath = None
 
-    return getPath
+#     return getPath
 
 
 # %% Pre-processing of input raw dataset
