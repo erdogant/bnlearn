@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directed Acyclic Graphs &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="DataFrames" href="Example%20Datasets.html" />
+    <link rel="prev" title="Independence test" href="independence_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Install from Pypi (pip)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#install-from-github">Install from github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#examples-parameter-learning">Examples Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Advanced discretizing continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Sampling</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Directed Acyclic Graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-a-causal-dag">Building a causal DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-causal-dag-as-a-generative-representation-of-joint-probability">The causal DAG as a generative representation of joint probability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#specifying-the-probability-distributions-on-your-own">Specifying the probability distributions on your own</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference-on-the-causal-generative-model">Inference on the causal generative model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Start with RAW data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Directed Acyclic Graphs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Create DAG.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="directed-acyclic-graphs">
+<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Permalink to this heading"></a></h1>
+<p>This example is to better understand the importance and working of a Directed Acyclic Graph. The underneath topics are going to be explained:</p>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Building a DAG</p></li>
+<li><p>plotting a DAG</p></li>
+<li><p>Specifying your own probability distributions</p></li>
+<li><p>Estimating parameters of CPDs</p></li>
+<li><p>Inference on the causal generative model</p></li>
+</ul>
+</section>
+<section id="building-a-causal-dag">
+<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Permalink to this heading"></a></h2>
+<p>If you readily know (or you have domain knowledge) of the relationships between variables, we can setup the (causal) relationships between the variables with a directed graph (DAG).
+Each node corresponds to a variable and each edge represents conditional dependencies between pairs of variables.
+In bnlearn, we can graphically represent the relationships between variables. To demonstrate this I will create the simple Sprinkler example by hand.</p>
+<p>First we need to define the one-to-one relationships (edges) between the variables. Here we make the edges:</p>
+<ul class="simple">
+<li><p>Cloudy    -&gt; Sprinkler</p></li>
+<li><p>Cloudy    -&gt; Rain</p></li>
+<li><p>Sprinkler -&gt; Wet_Grass</p></li>
+<li><p>Rain      -&gt; Wet_Grass</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Make the actual Bayesian DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lets make the plot. Note that the plot can be differently orientiated if you re-make the plot.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id1">
+<span id="fig-sprinkler"></span><img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
+<figcaption>
+<p><span class="caption-text">Causal DAG.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.</p>
+</section>
+<section id="the-causal-dag-as-a-generative-representation-of-joint-probability">
+<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Permalink to this heading"></a></h2>
+<p>Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
+</pre></div>
+</div>
+<p>There are no CPDs attached to the DAG yet. Therefore there is nothing to show.</p>
+</section>
+<section id="specifying-the-probability-distributions-on-your-own">
+<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Permalink to this heading"></a></h2>
+<p>Each factor is a conditional probability distribution (CPD). In the discrete case the CPD is sometimes called a conditional probability table (CPT).
+Though we can factorize over any DAG and get a set of CPDs, when we factorize along a DAG we consider to be a representation of causality, we call each CPD a causal Markov kernel (CMK).
+The factorization that provides a set of CMKs is the most useful factorization because CMKs correspond to independent causal mechanisms we assume to be invariant across data sets.
+Here again, the term CPD is more often used than CMK.</p>
+<p>For each node we can specify the probability distributions as following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">from</span> <span class="nn">pgmpy.factors.discrete</span> <span class="kn">import</span> <span class="n">TabularCPD</span>
+
+<span class="c1"># Cloudy</span>
+<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_cloudy</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Cloudy(0)</p></td>
+<td><p>0.3</p></td>
+</tr>
+<tr class="row-even"><td><p>Cloudy(1)</p></td>
+<td><p>0.7</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sprinkler</span>
+<span class="n">cpt_sprinkler</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+                                   <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span>
+                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_sprinkler</span><span class="p">)</span>
+
+<span class="c1"># Rain</span>
+<span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                      <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                              <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span>
+                      <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_rain</span><span class="p">)</span>
+
+<span class="c1"># Wet Grass</span>
+<span class="n">cpt_wet_grass</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+                                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]],</span>
+                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span>
+                           <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_wet_grass</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now need to connect the DAG with CPDs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_cloudy</span><span class="p">,</span> <span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wet_grass</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Nice work! You created a directed acyclic graph with probability tables connected to it.
+To further examine the CPDs, print the DAG as following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="inference-on-the-causal-generative-model">
+<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Permalink to this heading"></a></h2>
+<p>This is an great basis to make inferences or update your this model with new data (parameter learning).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+<hr>
+<center>
+        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
+</center>
+<hr><hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="independence_test.html" class="btn btn-neutral float-left" title="Independence test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Example%20Datasets.html" class="btn btn-neutral float-right" title="DataFrames" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
