@@ -40,8 +40,24 @@ To demonstrate the usage of parameter learning on continuous data, I will use th
     # 389  32.0          4         135.0  ...          11.6          82       1
     # 390  28.0          4         120.0  ...          18.6          82       1
     # 391  31.0          4         119.0  ...          19.4          82       1
-    
-    [392 rows x 8 columns]
+    # 
+    # [392 rows x 8 columns]
+
+    # Define the edges
+    edges = [
+        ("cylinders", "displacement"),
+        ("displacement", "model_year"),
+        ("displacement", "weight"),
+        ("displacement", "horsepower"),
+        ("weight", "model_year"),
+        ("weight", "mpg"),
+        ("horsepower", "acceleration"),
+        ("mpg", "model_year"),
+    ]
+
+    # Create DAG based on edges
+    DAG = bn.make_DAG(edges)
+
 
 We can now discretize the continuous columns as following:
 
@@ -75,7 +91,8 @@ discrete data frame and fit a model using ``bnlearn``.
 Structure learning
 ======================================
 
-We will first learn the structure on the continuous data.
+We will learn the structure on the continuous data. Note that the data is also discretezed on a set of edges which will
+likely introduce a bias in the learned structure.
 
 .. code-block:: python
 
@@ -110,21 +127,6 @@ To demonstrate the usage of parameter learning on continuous data, I will use th
 
 .. code-block:: python
 
-    # Define the edges
-    edges = [
-        ("cylinders", "displacement"),
-        ("displacement", "model_year"),
-        ("displacement", "weight"),
-        ("displacement", "horsepower"),
-        ("weight", "model_year"),
-        ("weight", "mpg"),
-        ("horsepower", "acceleration"),
-        ("mpg", "model_year"),
-    ]
-
-    # Create DAG based on edges
-    DAG = bn.make_DAG(edges)
-
     # Fit model based on DAG and discretized continous columns
     model = bn.parameter_learning.fit(DAG, df_discrete)
     
@@ -133,7 +135,7 @@ To demonstrate the usage of parameter learning on continuous data, I will use th
 
 
 After fitting the model on the DAG and data frame, we can perform the independence test to remove any spurious edges and
-create a plot.
+create a plot. In this case, the tooltips will contain the CPDs as these are computed with parameter learning.
 
 .. code-block:: python
 
@@ -142,12 +144,17 @@ create a plot.
 
     # Make plot
     bn.plot(model)
+    # Create interactive plot.
     bn.plot(model, interactive=True)
 
 
 .. _fig_cont_1:
 
 .. figure:: ../figs/fig_cont_1.png
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 There are various manners to deeper investigate the results such as looking at the CPDs.

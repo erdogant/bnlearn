@@ -204,8 +204,23 @@ variables and simultaneously learn Bayesian network structures.</p>
 <span class="c1"># 389  32.0          4         135.0  ...          11.6          82       1</span>
 <span class="c1"># 390  28.0          4         120.0  ...          18.6          82       1</span>
 <span class="c1"># 391  31.0          4         119.0  ...          19.4          82       1</span>
+<span class="c1">#</span>
+<span class="c1"># [392 rows x 8 columns]</span>
 
-<span class="p">[</span><span class="mi">392</span> <span class="n">rows</span> <span class="n">x</span> <span class="mi">8</span> <span class="n">columns</span><span class="p">]</span>
+<span class="c1"># Define the edges</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;cylinders&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create DAG based on edges</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>We can now discretize the continuous columns as following:</p>
@@ -236,7 +251,8 @@ discrete data frame and fit a model using <code class="docutils literal notransl
 </section>
 <section id="structure-learning">
 <h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
-<p>We will first learn the structure on the continuous data.</p>
+<p>We will learn the structure on the continuous data. Note that the data is also discretezed on a set of edges which will
+likely introduce a bias in the learned structure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
 
@@ -258,22 +274,7 @@ discrete data frame and fit a model using <code class="docutils literal notransl
 <section id="parameter-learning">
 <h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
 <p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the edges</span>
-<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;cylinders&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-<span class="p">]</span>
-
-<span class="c1"># Create DAG based on edges</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-
-<span class="c1"># Fit model based on DAG and discretized continous columns</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model based on DAG and discretized continous columns</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
 
 <span class="c1"># Use MLE method</span>
@@ -281,19 +282,20 @@ discrete data frame and fit a model using <code class="docutils literal notransl
 </pre></div>
 </div>
 <p>After fitting the model on the DAG and data frame, we can perform the independence test to remove any spurious edges and
-create a plot.</p>
+create a plot. In this case, the tooltips will contain the CPDs as these are computed with parameter learning.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Independence test</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Make plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># Create interactive plot.</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default" id="fig-cont-1">
 <img alt="_images/fig_cont_1.png" src="_images/fig_cont_1.png" />
 </figure>
-<p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
+<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="400px" width="750px", frameBorder="0"></iframe><p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_cpds</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">))</span>
 </pre></div>
