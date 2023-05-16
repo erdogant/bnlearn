@@ -915,7 +915,7 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         params_interactive={'minmax_distance': [100, 250], 'width': None, 'height': None, 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
+         params_interactive={'minmax_distance': [100, 250], 'figsize': (800, 1500), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
          params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True},
          verbose=3):
     """Plot the learned stucture.
@@ -981,7 +981,7 @@ def plot(model,
     >>> fig = bn.plot(model, interactive=True)
     >>>
     >>> # plot interactive with various settings
-    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'height':800, 'width':400, 'bgcolor':'#0f0f0f0f'})
+    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'figsize':(800, 400), 'bgcolor':'#0f0f0f0f'})
     >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
@@ -1000,7 +1000,7 @@ def plot(model,
         return None
 
     # Plot properties
-    defaults = {'minmax_distance': [100, 250], 'height': 800, 'width': 1500, 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
+    defaults = {'minmax_distance': [100, 250], 'figsize': (800, 1500), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
     defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True}
     params_static = {**defaults, **params_static}
@@ -1135,7 +1135,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
     # Show the interactive plot
     d3.D3graph.show(show_slider=params_interactive['show_slider'],
                     filepath=params_interactive['filepath'],
-                    figsize=[params_interactive['width'], params_interactive['height']])
+                    figsize=params_interactive['figsize'])
 
     # Return
     return os.path.abspath(d3.D3graph.config['filepath'])
