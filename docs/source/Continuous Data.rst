@@ -99,7 +99,7 @@ We will first learn the structure on the continuous data.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe>
 
 
 Parameter learning

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parameter learning &mdash; bnlearn bnlearn documentation</title>
@@ -13,8 +13,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            bnlearn
+            <a href="index.html" class="icon icon-home"> bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -162,8 +159,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Parameter learning</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Parameter learning</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Parameter learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -174,7 +171,7 @@
            <div itemprop="articleBody">
              
   <section id="parameter-learning">
-<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
+<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this headline"></a></h1>
 <p>Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
 To make sense of the given data, we can start by counting how often each state of the variable occurs.
 If the variable is dependent on the parents, the counts are done conditionally on the parents states,
@@ -188,7 +185,7 @@ i.e. for seperately for each parent configuration.</p>
 </div></blockquote>
 </section>
 <section id="maximum-likelihood-estimation">
-<h1>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this heading"></a></h1>
+<h1>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Permalink to this headline"></a></h1>
 <p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>, with which the variable states have occured.</p>
 <p>While very straightforward, the ML estimator has the problem of <em>overfitting</em> to the data.
 If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
@@ -199,7 +196,7 @@ This makes MLE very fragile and unstable for learning Bayesian Network parameter
 A way to mitigate MLE’s overfitting is <em>Bayesian Parameter Estimation</em>.</p>
 </section>
 <section id="bayesian-parameter-estimation">
-<h1>Bayesian Parameter Estimation<a class="headerlink" href="#bayesian-parameter-estimation" title="Permalink to this heading"></a></h1>
+<h1>Bayesian Parameter Estimation<a class="headerlink" href="#bayesian-parameter-estimation" title="Permalink to this headline"></a></h1>
 <p>The Bayesian Parameter Estimator starts with already existing prior CPDs, that express our beliefs about the variables <em>before</em> the data was observed.
 Those “priors” are then updated, using the state counts from the observed data.</p>
 <p>One can think of the priors as consisting in <em>pseudo state counts</em>, that are added to the actual counts before normalization. Unless one wants to encode specific beliefs
@@ -209,9 +206,9 @@ A somewhat more sensible choice of prior is <em>BDeu</em> (Bayesian Dirichlet eq
 For BDeu we need to specify an <em>equivalent sample size</em> “N” and then the pseudo-counts are the equivalent of having observed <cite>N</cite> uniform samples of each variable (and each parent configuration).</p>
 </section>
 <section id="examples-parameter-learning">
-<h1>Examples Parameter learning<a class="headerlink" href="#examples-parameter-learning" title="Permalink to this heading"></a></h1>
+<h1>Examples Parameter learning<a class="headerlink" href="#examples-parameter-learning" title="Permalink to this headline"></a></h1>
 <section id="example-1">
-<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this heading"></a></h2>
+<h2>Example (1)<a class="headerlink" href="#example-1" title="Permalink to this headline"></a></h2>
 <p>For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0].
 The question we can ask: What are the parameters for the DAG given a dataset? Note that his data set is already pre-processed and no missing values are present.
 We need both a directed acycle graph (DAG) and dataset with the same variables. The idea is to link the dataset with the DAG.</p>
@@ -222,6 +219,12 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </pre></div>
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 29%" />
+<col style="width: 16%" />
+<col style="width: 34%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Sprinkler</p></th>
@@ -272,6 +275,13 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </pre></div>
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 17%" />
+<col style="width: 23%" />
+<col style="width: 15%" />
+<col style="width: 23%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"><p>Cloudy</p></th>
@@ -324,6 +334,10 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </div>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 61%" />
+<col style="width: 39%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy(0)</p></th>
 <th class="head"><p>0.494</p></th>
@@ -337,6 +351,11 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Sprinkler:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 38%" />
+<col style="width: 35%" />
+<col style="width: 27%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Cloudy(0)</p></th>
@@ -356,6 +375,11 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Rain:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Cloudy(0)</p></th>
@@ -375,6 +399,13 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Wet_Grass:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Rain</p></th>
 <th class="head"><p>Rain(0)</p></th>
@@ -414,6 +445,10 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </div>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 69%" />
+<col style="width: 31%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy(0)</p></td>
 <td><p>0.5</p></td>
@@ -425,6 +460,11 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Sprinkler:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 39%" />
+<col style="width: 31%" />
+<col style="width: 31%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy</p></td>
 <td><p>Cloudy(0)</p></td>
@@ -442,6 +482,11 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Rain:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy</p></td>
 <td><p>Cloudy(0)</p></td>
@@ -459,6 +504,13 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Wet_Grass:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Sprinkler</p></td>
 <td><p>Sprinkler(0)</p></td>
@@ -495,7 +547,7 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </div>
 </section>
 <section id="example-2">
-<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this heading"></a></h2>
+<h2>Example (2)<a class="headerlink" href="#example-2" title="Permalink to this headline"></a></h2>
 <p>Lets try out a more complexer model. We need both a directed acycle graph (DAG) and dataset with the same variables.
 So again, the idea is to link the dataset with the DAG.</p>
 <p>Let’s bring in the <strong>asia</strong> dataset.</p>
@@ -523,6 +575,10 @@ So again, the idea is to link the dataset with the DAG.</p>
 <p>This DAG is now updated with parameters which is great because it opens many possibilities in terms of inference or you can start sampling any number of samples you desire.</p>
 <dl>
 <dt>CPD of asia:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 56%" />
+<col style="width: 44%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>asia(0)</p></td>
 <td><p>0.055</p></td>
@@ -534,6 +590,11 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of bronc:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -551,6 +612,13 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of dysp:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -580,6 +648,13 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of either:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 19%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>lung</p></td>
 <td><p>lung(0)</p></td>
@@ -609,6 +684,11 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of lung:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 34%" />
+<col style="width: 34%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -626,6 +706,10 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of smoke:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 59%" />
+<col style="width: 41%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.498</p></td>
@@ -637,6 +721,11 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of tub:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>asia</p></td>
 <td><p>asia(0)</p></td>
@@ -654,6 +743,11 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of xray:</dt><dd><table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 35%" />
+<col style="width: 35%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>either</p></td>
 <td><p>either(0)</p></td>
@@ -674,7 +768,7 @@ So again, the idea is to link the dataset with the DAG.</p>
 </section>
 </section>
 <section id="conditional-probability-distributions-cpd">
-<h1>Conditional Probability Distributions (CPD)<a class="headerlink" href="#conditional-probability-distributions-cpd" title="Permalink to this heading"></a></h1>
+<h1>Conditional Probability Distributions (CPD)<a class="headerlink" href="#conditional-probability-distributions-cpd" title="Permalink to this headline"></a></h1>
 <p>The <strong>Conditional Probabilistic Tables (CPTs)</strong> or Conditional Probability Distributions (CPD) quantitatively describe the statistical relationship between each node and its parents, and can be computed using Parameter learning as shown in the examples.
 In the following example I will show how to extract the CPDs from a model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
