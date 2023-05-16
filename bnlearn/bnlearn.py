@@ -10,9 +10,7 @@
 # %% Libraries
 import os
 import copy
-import zipfile
 import itertools
-import requests
 import pandas as pd
 import numpy as np
 import networkx as nx
@@ -21,7 +19,6 @@ from pathlib import Path
 from tqdm import tqdm
 from tabulate import tabulate
 from decimal import Decimal
-# from numba import njit
 
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.factors.discrete import TabularCPD
@@ -126,7 +123,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         # Extract methodtype from existing model.
         if ('bayesianmodel' in str(type(DAG)).lower()):
             methodtype='bayes'
-        elif('naivebayes' in str(type(DAG)).lower()):
+        elif ('naivebayes' in str(type(DAG)).lower()):
             methodtype='naivebayes'
         if verbose>=3: print('[bnlearn] >No changes made to existing %s DAG.' %(methodtype))
     elif isinstance(DAG, list) and methodtype=='naivebayes':
@@ -315,7 +312,7 @@ def dag2adjmat(model, verbose=3):
         adjmat.columns.name='target'
     else:
         if verbose>=1: print('[bnlearn] >Could not convert to adjmat because nodes and/or edges were missing.')
-    return(adjmat)
+    return adjmat
 
 
 # %%  Convert vector into sparse dataframe
@@ -435,7 +432,7 @@ def vec2adjmat(source, target, weights=None, symmetric=True):
         adjmat.index.name='source'
         adjmat.columns.name='target'
 
-    return(adjmat)
+    return adjmat
 
 
 # %%  Convert adjacency matrix to vector
@@ -475,7 +472,7 @@ def adjmat2vec(adjmat, min_weight=1):
     # Take only connected nodes
     adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
-    return(adjmat)
+    return adjmat
 
 
 # %%
@@ -614,33 +611,6 @@ def _bif2bayesian(pathname, verbose=3):
 
     except AttributeError:
         raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
-
-
-# %%
-# def query2df(query, variables=None):
-#     """Convert query from inference model to a dataframe.
-
-#     Parameters
-#     ----------
-#     query : Object from the inference model.
-#         Convert query object to a dataframe.
-#     variables : list
-#         Order or select variables.
-
-#     Returns
-#     -------
-#     df : pd.DataFrame()
-#         Dataframe with inferences.
-
-#     """
-#     df = pd.DataFrame(data=list(itertools.product(np.arange(0, len(query.values)), repeat=len(query.variables))), columns=query.variables)
-#     df['p'] = query.values.flatten()
-#     # Order or filter on input variables
-#     if variables is not None:
-#         # Add Pvalue column
-#         variables = variables + ['p']
-#         df = df[variables]
-#     return df
 
 
 def query2df(query, variables=None, verbose=3):
@@ -816,14 +786,14 @@ def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
     >>> model = bn.make_DAG(edges)
     >>> node_properties = bn.get_node_properties(model)
     >>> # Adjust the properties
-    >>> node_properties['A']['node_size']=2000
+    >>> node_properties['A']['node_size']=100
     >>> node_properties['A']['node_color']='#000000'
     >>> # Make plot
     >>> fig = bn.plot(model, interactive=False, node_properties=node_properties)
     >>>
     >>> # Example: Specify all nodes
-    >>> node_properties = bn.get_node_properties(model, node_size=1000, node_color='#000000')
-    >>> fig = bn.plot(model, interactive=False, node_properties=node_properties)
+    >>> node_properties = bn.get_node_properties(model, node_size=10, node_color='#000000')
+    >>> bn.plot(model, interactive=True, node_properties=node_properties)
 
     """
     # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
@@ -1126,7 +1096,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
 
 # %% Plot interactive
-def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, min_weight=None, verbose=3):
+def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
     # Try to import d3blocks
     try:
         # Load library
@@ -1169,47 +1139,6 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
 
     # Return
     return os.path.abspath(d3.D3graph.config['filepath'])
-    #
-
-# %% Plot interactive
-# def _plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
-#     # If not notebook
-#     if not params_interactive['notebook']:
-#         # https://pyvis.readthedocs.io/en/latest/tutorial.html?highlight=cdn_resources#using-pyvis-within-jupyter-notebook
-#         params_interactive['cdn_resources']='local'
-
-#     # Try to import pyvis
-#     try:
-#         from pyvis.network import Network
-#         from IPython.core.display import display, HTML
-#     except ModuleNotFoundError:
-#         if verbose>=1: raise Exception('[bnlearn] >"pyvis" module is not installed. Please pip install first: "pip install pyvis"')
-#     # Convert adjacency matrix into Networkx Graph
-#     G = bnlearn.network.adjmat2graph(model['adjmat'])
-#     # Setup of the interactive network figure
-#     g = Network(**params_interactive)
-#     # Convert from graph G
-#     g.from_nx(G)
-#     # Nodes
-#     for i, _ in enumerate(g.nodes):
-#         g.nodes[i]['color']=node_colors[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
-#         g.nodes[i]['size']=node_sizes[np.where(nodelist==g.nodes[i].get('label'))[0][0]]
-
-#     # Edges
-#     g_edges = list(map(lambda x: (x.get('from'), x.get('to')), g.edges))
-#     for i, _ in enumerate(g.edges):
-#         idx = np.where(list(map(lambda x: g_edges[i]==x, edgelist)))[0][0]
-#         g.edges[i]['color']=edge_colors[idx]
-#         g.edges[i]['weight']=edge_weights[idx]
-
-#     # Create advanced buttons
-#     g.show_buttons(filter_=['physics'])
-#     # Display
-#     filename = title.strip().replace(' ', '_') + '.html'
-#     g.show(filename, local=params_interactive['notebook'])
-#     display(HTML(filename))
-#     # webbrowser.open('bnlearn.html')
-#     return os.path.abspath(filename)
 
 
 # %% Plot properties
@@ -1352,25 +1281,6 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
     return df
 
 
-# %% Download data from github source
-# def _download_example(data, verbose=3):
-#     # Set url location
-#     url = 'https://erdogant.github.io/datasets/'
-#     url=url + data + '.zip'
-
-#     curpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-#     PATH_TO_DATA = os.path.join(curpath, wget.filename_from_url(url))
-#     if not os.path.isdir(curpath):
-#         os.mkdir(curpath)
-
-#     # Check file exists.
-#     if not os.path.isfile(PATH_TO_DATA):
-#         if verbose>=3: print('[bnlearn] >Downloading example [%s] dataset..' %(data))
-#         wget.download(url, PATH_TO_DATA)
-
-#     return PATH_TO_DATA
-
-
 # %% Make DAG
 def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     """Import Directed Acyclic Graph.
@@ -1426,7 +1336,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
             model = _bif2bayesian(filepath, verbose=verbose)
         else:
             if verbose>=3: print('[bnlearn] >filepath does not exist! <%s>' %(filepath))
-            return(out)
+            return out
 
     # Setup adjacency matrix
     adjmat = dag2adjmat(model)
@@ -1442,22 +1352,6 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
             print_CPD(out)
 
     return(out)
-
-
-# %% unzip
-# def _unzip(getZip, ext='.bif', verbose=3):
-#     if not os.path.isdir(getZip):
-#         if verbose>=3: print('[bnlearn] >Extracting files..')
-#         pathname, _ = os.path.split(getZip)
-#         # Unzip
-#         zip_ref = zipfile.ZipFile(getZip, 'r')
-#         zip_ref.extractall(pathname)
-#         zip_ref.close()
-#         getPath = getZip.replace('.zip', ext)
-#         if not os.path.isfile(getPath):
-#             getPath = None
-
-#     return getPath
 
 
 # %% Pre-processing of input raw dataset
@@ -1512,7 +1406,6 @@ def _filter_df(adjmat, df, verbose=3):
 
 
 # %% Make prediction in inference model
-# @njit
 def predict(model, df, variables, to_df=True, method='max', verbose=3):
     """Predict on data from a Bayesian network.
 
@@ -1879,31 +1772,3 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
     # Return
     return scores
 
-
-# %% Retrieve files files.
-# class wget:
-#     """Retrieve file from url."""
-
-#     def filename_from_url(url):
-#         """Return filename."""
-#         return os.path.basename(url)
-
-#     def download(url, writepath):
-#         """Download.
-
-#         Parameters
-#         ----------
-#         url : str.
-#             Internet source.
-#         writepath : str.
-#             Directory to write the file.
-
-#         Returns
-#         -------
-#         None.
-
-#         """
-#         r = requests.get(url, stream=True)
-#         with open(writepath, "wb") as fd:
-#             for chunk in r.iter_content(chunk_size=1024):
-#                 fd.write(chunk)

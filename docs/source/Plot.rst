@@ -3,16 +3,15 @@ Interactive plot
 
 ``bnlearn`` contains **interactive** and **static** plotting functionalities with :func:`bnlearn.bnlearn.plot` for which many network and figure properties can be adjusted, such as node colors and sizes. 
 To make interactive plots, it simply needs to set the ``interactive=True`` parameter in :func:`bnlearn.bnlearn.plot`. 
-The interactive plots are created using the ``pyvis`` library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
-Lets make some interactive and static examples. All the parameters to specify the interactive plot can be found `here <https://pyvis.readthedocs.io/en/latest/documentation.html>`_.
-
+The interactive plots are created using the ``D3Blocks`` library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
+Lets make some interactive and static examples. 
 
 **Interactive plot examples**
 
 .. code-block:: bash
 
-	# Install the pyvis library first if you want interactive plots
-	pip install pyvis
+	# Install the d3blocks library first if you want interactive plots
+	pip install d3blocks
 
 
 .. code-block:: python

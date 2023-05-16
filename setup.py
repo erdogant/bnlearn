@@ -30,8 +30,6 @@ setuptools.setup(
                        'pypickle',
                        'tabulate',
                        'ipywidgets',
-                       'pyvis',
-                       'requests',
                        'datazets'],
      python_requires='>=3',
      name='bnlearn',
