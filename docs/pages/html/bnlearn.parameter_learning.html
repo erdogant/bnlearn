@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.parameter_learning &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -78,6 +79,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -154,8 +160,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>bnlearn.parameter_learning</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">bnlearn.parameter_learning</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/bnlearn.parameter_learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -218,19 +224,19 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">param model</dt>
+<dt class="field-odd">param model<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Contains a model object with a key ‘adjmat’ (adjacency matrix).</p>
 </dd>
-<dt class="field-even">type model</dt>
+<dt class="field-even">type model<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
-<dt class="field-odd">param df</dt>
+<dt class="field-odd">param df<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Pandas DataFrame containing the data.</p>
 </dd>
-<dt class="field-even">type df</dt>
+<dt class="field-even">type df<span class="colon">:</span></dt>
 <dd class="field-even"><p>pd.DataFrame()</p>
 </dd>
-<dt class="field-odd">param methodtype</dt>
+<dt class="field-odd">param methodtype<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>Strategy for parameter learning.</dt><dd><ul class="simple">
 <li><p>‘ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators.</p></li>
@@ -239,10 +245,10 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 </dl>
 </dd>
-<dt class="field-even">type methodtype</dt>
+<dt class="field-even">type methodtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>str, (default: ‘bayes’)</p>
 </dd>
-<dt class="field-odd">param scoretype</dt>
+<dt class="field-odd">param scoretype<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>Scoring function for the search spaces.</dt><dd><ul class="simple">
 <li><p>‘bdeu’</p></li>
@@ -252,19 +258,19 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 </dl>
 </dd>
-<dt class="field-even">type scoretype</dt>
+<dt class="field-even">type scoretype<span class="colon">:</span></dt>
 <dd class="field-even"><p>str, (default : ‘bic’)</p>
 </dd>
-<dt class="field-odd">param smooth</dt>
+<dt class="field-odd">param smooth<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.</p>
 </dd>
-<dt class="field-even">type smooth</dt>
+<dt class="field-even">type smooth<span class="colon">:</span></dt>
 <dd class="field-even"><p>float (default: None)</p>
 </dd>
-<dt class="field-odd">param Print progress to screen. The default is 3.</dt>
+<dt class="field-odd">param Print progress to screen. The default is 3.<span class="colon">:</span></dt>
 <dd class="field-odd"><p>0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p>
 </dd>
-<dt class="field-even">rtype</dt>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict with model.</p>
 </dd>
 </dl>

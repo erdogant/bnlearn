@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Structure Scores &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -78,6 +79,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -153,8 +159,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Structure Scores</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Structure Scores</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Structure_scores.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -174,36 +180,36 @@ interpretebility but can be used to compare different models. A higher score rep
 This method only needs the model structure to compute the score. The structure score functionality
 can be found here: <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.structure_scores" title="bnlearn.bnlearn.structure_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_scores()</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model</dt>
+<dt class="field-odd">param model<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The model whose score needs to be computed.</p>
 </dd>
-<dt class="field-even">type model</dt>
+<dt class="field-even">type model<span class="colon">:</span></dt>
 <dd class="field-even"><p>The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork</p>
 </dd>
-<dt class="field-odd">param df</dt>
+<dt class="field-odd">param df<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The dataset against which to score the model.</p>
 </dd>
-<dt class="field-even">type df</dt>
+<dt class="field-even">type df<span class="colon">:</span></dt>
 <dd class="field-even"><p>pd.DataFrame instance</p>
 </dd>
-<dt class="field-odd">param scoring_method</dt>
+<dt class="field-odd">param scoring_method<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The following four scoring methods are supported currently: 1) K2Score
 2) BDeuScore 3) BDsScore 4) BicScore</p>
 </dd>
-<dt class="field-even">type scoring_method</dt>
+<dt class="field-even">type scoring_method<span class="colon">:</span></dt>
 <dd class="field-even"><p>str ( k2 | bdeu | bds | bic )</p>
 </dd>
-<dt class="field-odd">param kwargs</dt>
+<dt class="field-odd">param kwargs<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Any additional parameters parameters that needs to be passed to the
 scoring method.</p>
 </dd>
-<dt class="field-even">type kwargs</dt>
+<dt class="field-even">type kwargs<span class="colon">:</span></dt>
 <dd class="field-even"><p>kwargs</p>
 </dd>
-<dt class="field-odd">returns</dt>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>Model score</strong> – A score value for the model.</p>
 </dd>
-<dt class="field-even">rtype</dt>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>

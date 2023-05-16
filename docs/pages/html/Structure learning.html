@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Causation &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,6 +83,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -154,8 +160,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Causation</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Causation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Structure learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -263,9 +269,6 @@ This search approach is only attractable for very small networks and prohibits e
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Exhaustivesearch example</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="_images/exhaustivesearch_example.png"><img alt="exh1" src="_images/exhaustivesearch_example.png" style="width: 851.0px; height: 449.0px;" /></a></p></td>
 </tr>
@@ -355,11 +358,6 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 </div>
 <table class="docutils align-center" id="id2">
 <caption><span class="caption-text">Hillclimbsearch. (A) Detected DAG. (B) DAG with significance. (C) DAG pruned.</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="hill1" src="_images/Hillclimbsearch1.png" /></p></td>
 <td><p><img alt="hill2" src="_images/Hillclimbsearch2.png" /></p></td>
@@ -403,10 +401,6 @@ The complexity can be limited by restricting to tree structures which makes this
 </div>
 <table class="docutils align-center" id="id3">
 <caption><span class="caption-text">Chow-Liu. (A) Detected DAG. (B) DAG pruned on significance.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="chow1" src="_images/Chow1.png" /></p></td>
 <td><p><img alt="chow2" src="_images/Chow2.png" /></p></td>
@@ -477,11 +471,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id4">
 <caption><span class="caption-text">Tree-augmented Naive Bayes. (A) Detected DAG. (B) DAG depicting significance. (C) DAG pruned.</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="tan1" src="_images/tan1.png" /></p></td>
 <td><p><img alt="tan2" src="_images/tan2.png" /></p></td>
@@ -531,7 +520,7 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load example</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;random&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;random_discrete&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;naivebayes&#39;</span><span class="p">,</span> <span class="n">root_node</span><span class="o">=</span><span class="s2">&quot;B&quot;</span><span class="p">)</span>
 <span class="c1"># Compute edge strength using chi-square independence test</span>
@@ -551,10 +540,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id5">
 <caption><span class="caption-text">Naivebayes Example without and with pruning using chi2 test</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="logo1" src="_images/naivebayes_example2.png" /></p></td>
 <td><p><img alt="logo2" src="_images/naivebayes_example21.png" /></p></td>
@@ -590,10 +575,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id6">
 <caption><span class="caption-text">Constraint-based. (A) Detected DAG. (B) DAG depicting significance.</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="const1" src="_images/const1.png" /></p></td>
 <td><p><img alt="const2" src="_images/const2.png" /></p></td>
@@ -608,10 +589,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </ol>
 </div></blockquote>
 <hr>
-<center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-</center>
-<hr><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

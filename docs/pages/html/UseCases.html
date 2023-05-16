@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Use Case Titanic &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -78,6 +79,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -165,8 +171,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Use Case Titanic</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use Case Titanic</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/UseCases.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -204,10 +210,6 @@
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Learned structure on the Titanic dataset.</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_t1" src="_images/titanic_dag.png" /></p></td>
 <td><p><img alt="fig_t2" src="_images/titanic_dag_chi2.png" /></p></td>
@@ -302,17 +304,6 @@
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 6%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 10%" />
-<col style="width: 14%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"><p>smoke</p></th>
@@ -432,10 +423,6 @@
 <p>The learned Conditional Probability Distributions are depicted in the tables below. As an example, the probability that a patient does <strong>not</strong> smoke is P(smoke=0)=0.49 whereas the probability of a patient smoking is P(smoke=1)=0.5.</p>
 <p>CPD of smoke:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.495273</p></td>
@@ -448,11 +435,6 @@
 <p>Slightly more complicated are the patients that smoke and have lung-cancer which is basically the intersection. The more edges towards a node the more complicated the CPD becomes. Luckily we have <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> to do the heavy lifting!</p>
 <p>CPD of lung:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 41%" />
-<col style="width: 41%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -470,11 +452,6 @@
 </table>
 <p>CPD of bronc:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 40%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -492,13 +469,6 @@
 </table>
 <p>CPD of xray:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 22%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -542,10 +512,6 @@ The model returns that the probability of lung-cancer or lung(1) is 0.94 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 41%" />
-<col style="width: 59%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>phi(lung)</p></th>
@@ -571,10 +537,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>bronc</p></th>
 <th class="head"><p>phi(bronc)</p></th>
@@ -599,10 +561,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 41%" />
-<col style="width: 59%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>phi(lung)</p></th>
@@ -623,11 +581,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 26%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>bronc</p></th>
@@ -719,10 +672,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </div>
 <p>CPD of smoke:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.495455</p></td>
@@ -734,11 +683,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of bronc:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 40%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -756,11 +700,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of lung:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 39%" />
-<col style="width: 43%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -778,13 +717,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of dysp:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -814,13 +746,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of either:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 20%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>lung</p></td>
 <td><p>lung(0)</p></td>
@@ -850,10 +775,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of tub:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>tub(0)</p></td>
 <td><p>0.0555455</p></td>
@@ -865,11 +786,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of xray:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 42%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>either</p></td>
 <td><p>either(0)</p></td>
@@ -892,11 +808,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 26%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>bronc</p></th>

@@ -468,15 +468,11 @@ def one_iteration(
             # disc_edge = equal_width_edge(conti, l_card)
             # disc_edge_collect.append(disc_edge)
         else:
-            disc_edge = bn_discretizer_free_number_rep(
-                conti, data_integer_sort, parent_set, child_spouse_set, approx
-            )
+            disc_edge = bn_discretizer_free_number_rep(conti, data_integer_sort, parent_set, child_spouse_set, approx)
             disc_edge_collect.append(disc_edge)
 
         # Update by current discretization
-        data_integer.iloc[:, target] = continuous_to_discrete(
-            data.iloc[:, target], disc_edge
-        )
+        data_integer.iloc[:, target] = continuous_to_discrete(data.iloc[:, target], disc_edge)
 
     return data_integer, disc_edge_collect
 
@@ -488,11 +484,11 @@ def bn_discretizer_iteration_converge(
     continuous_index: List[int],
     cut_time: int,
     approx=False,
-):
+    verbose=3):
+
     # initial the first data_integer
     l_card: int = data.iloc[:, discrete_index].nunique().max()
-    if np.isnan(l_card):
-        l_card = 0
+    if np.isnan(l_card): l_card = 0
 
     # pre-equal-width-discretize on continuous variables
     data_integer = data.copy()
@@ -502,17 +498,13 @@ def bn_discretizer_iteration_converge(
     disc_edge_collect = [[] for _ in continuous_index]
 
     for times in range(cut_time):
-        print(f"iteration times = {times}")
+        if verbose>=3: print('[bnlearn] >Discretizer for continuous values. Iteration [%d].' %(times))
         disc_edge_previous = disc_edge_collect
 
-        data_integer, disc_edge_collect = one_iteration(
-            data, data_integer, graph, discrete_index, continuous_index, l_card, approx
-        )
+        data_integer, disc_edge_collect = one_iteration(data, data_integer, graph, discrete_index, continuous_index, l_card, approx)
         # print(disc_edge_collect)
 
-        if all(
-            np.array_equal(a, b) for a, b in zip(disc_edge_previous, disc_edge_collect)
-        ):
+        if all(np.array_equal(a, b) for a, b in zip(disc_edge_previous, disc_edge_collect)):
             break
 
     return data_integer, disc_edge_collect
@@ -534,9 +526,7 @@ def K2_w_discretization():
     pass
 
 
-def discretize_all(
-    data_matrix: pd.DataFrame, graph: Graph, continuous_index: List[int], cut_time: int
-):
+def discretize_all(data_matrix: pd.DataFrame, graph: Graph, continuous_index: List[int], cut_time: int, verbose=3):
     """
     discretize continuous variables in a Bayesian network for which
     the network structure is known in advance
@@ -564,8 +554,15 @@ def discretize_all(
         i for i in range(data_matrix.shape[1]) if i not in continuous_index
     ]
     sort_continuous = graph_to_reverse_conti_order(graph, continuous_index)
+    # discretizer
     data_integer, edge = bn_discretizer_iteration_converge(
-        data_matrix, graph, discrete_index, sort_continuous, cut_time, False
+        data_matrix,
+        graph,
+        discrete_index,
+        sort_continuous,
+        cut_time,
+        False,
+        verbose=verbose,
     )
 
     reorder_edge = sort_disc_by_vorder(sort_continuous, edge)

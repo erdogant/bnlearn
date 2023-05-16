@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parameter learning &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,6 +83,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -154,8 +160,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Parameter learning</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Parameter learning</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Parameter learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -214,12 +220,6 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 21%" />
-<col style="width: 29%" />
-<col style="width: 16%" />
-<col style="width: 34%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Sprinkler</p></th>
@@ -270,13 +270,6 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 17%" />
-<col style="width: 23%" />
-<col style="width: 15%" />
-<col style="width: 23%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"><p>Cloudy</p></th>
@@ -329,10 +322,6 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </div>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 61%" />
-<col style="width: 39%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy(0)</p></th>
 <th class="head"><p>0.494</p></th>
@@ -346,11 +335,6 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Sprinkler:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 38%" />
-<col style="width: 35%" />
-<col style="width: 27%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Cloudy(0)</p></th>
@@ -370,11 +354,6 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Rain:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 29%" />
-<col style="width: 35%" />
-<col style="width: 35%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Cloudy</p></th>
 <th class="head"><p>Cloudy(0)</p></th>
@@ -394,13 +373,6 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 <dt>CPD of Wet_Grass:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>Rain</p></th>
 <th class="head"><p>Rain(0)</p></th>
@@ -440,10 +412,6 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </div>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 69%" />
-<col style="width: 31%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy(0)</p></td>
 <td><p>0.5</p></td>
@@ -455,11 +423,6 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Sprinkler:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 39%" />
-<col style="width: 31%" />
-<col style="width: 31%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy</p></td>
 <td><p>Cloudy(0)</p></td>
@@ -477,11 +440,6 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Rain:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 29%" />
-<col style="width: 35%" />
-<col style="width: 35%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Cloudy</p></td>
 <td><p>Cloudy(0)</p></td>
@@ -499,13 +457,6 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 <dt>CPD of Wet_Grass:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 20%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>Sprinkler</p></td>
 <td><p>Sprinkler(0)</p></td>
@@ -570,10 +521,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 <p>This DAG is now updated with parameters which is great because it opens many possibilities in terms of inference or you can start sampling any number of samples you desire.</p>
 <dl>
 <dt>CPD of asia:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 56%" />
-<col style="width: 44%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>asia(0)</p></td>
 <td><p>0.055</p></td>
@@ -585,11 +532,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of bronc:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -607,13 +549,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of dysp:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-<col style="width: 21%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -643,13 +578,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of either:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 23%" />
-<col style="width: 19%" />
-<col style="width: 19%" />
-<col style="width: 19%" />
-<col style="width: 19%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>lung</p></td>
 <td><p>lung(0)</p></td>
@@ -679,11 +607,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of lung:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 34%" />
-<col style="width: 34%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -701,10 +624,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of smoke:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 59%" />
-<col style="width: 41%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.498</p></td>
@@ -716,11 +635,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of tub:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 35%" />
-<col style="width: 35%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>asia</p></td>
 <td><p>asia(0)</p></td>
@@ -738,11 +652,6 @@ So again, the idea is to link the dataset with the DAG.</p>
 </table>
 </dd>
 <dt>CPD of xray:</dt><dd><table class="docutils align-default">
-<colgroup>
-<col style="width: 29%" />
-<col style="width: 35%" />
-<col style="width: 35%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>either</p></td>
 <td><p>either(0)</p></td>
@@ -787,10 +696,6 @@ In the following example I will show how to extract the CPDs from a model.</p>
 </pre></div>
 </div>
 <hr>
-<center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-</center>
-<hr><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

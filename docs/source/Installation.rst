@@ -1,7 +1,7 @@
 Install from Pypi (pip)
 ########################
 
-.. code-block:: console
+.. code-block:: python
 
     pip install bnlearn
 
@@ -12,7 +12,7 @@ Install from Pypi (pip)
 Install from github
 #####################################
 
-.. code-block:: console
+.. code-block:: python
 
     pip install git+https://github.com/erdogant/bnlearn
 

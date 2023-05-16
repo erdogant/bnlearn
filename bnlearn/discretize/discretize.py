@@ -10,7 +10,8 @@ def discretize(
     edges: List[Tuple[str, str]],
     continuous_columns: List[str],
     max_iterations=8,
-) -> pd.DataFrame:
+    verbose=3,
+    ) -> pd.DataFrame:
     """
     Discretize the continuous columns in a pandas DataFrame based on a given graph.
 
@@ -40,6 +41,7 @@ def discretize(
         graph,
         continuous_index,
         max_iterations,
+        verbose=verbose,
     )
 
     # Extend the breaks to the left with 1% to deal with (open,closed] intervals

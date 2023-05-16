@@ -22,7 +22,6 @@ df = bn.adjmat2vec(adjmat)
 # Make DAG
 DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
 # Make plot
-bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html', 'minmax_distance': [100, 300]})
 bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 # bn.plot(DAG, interactive=True)
 # bn.plot(DAG, interactive=False)

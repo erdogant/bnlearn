@@ -91,6 +91,13 @@ Contents
 
 .. toctree::
   :maxdepth: 2
+  :caption: Continuous Data
+
+  Continuous Data
+
+
+.. toctree::
+  :maxdepth: 2
   :caption:   Predict
 
   Predict

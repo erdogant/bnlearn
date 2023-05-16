@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interactive plot &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,6 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
@@ -30,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -78,6 +79,11 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -150,8 +156,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Interactive plot</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interactive plot</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Plot.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -165,11 +171,11 @@
 <h1>Interactive plot<a class="headerlink" href="#interactive-plot" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>interactive</strong> and <strong>static</strong> plotting functionalities with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a> for which many network and figure properties can be adjusted, such as node colors and sizes.
 To make interactive plots, it simply needs to set the <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> parameter in <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a>.
-The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">pyvis</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
-Lets make some interactive and static examples. All the parameters to specify the interactive plot can be found <a class="reference external" href="https://pyvis.readthedocs.io/en/latest/documentation.html">here</a>.</p>
+The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">D3Blocks</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
+Lets make some interactive and static examples.</p>
 <p><strong>Interactive plot examples</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the pyvis library first if you want interactive plots</span>
-pip install pyvis
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the d3blocks library first if you want interactive plots</span>
+pip install d3blocks
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of interactive plotting</span>
@@ -198,10 +204,6 @@ pip install pyvis
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Plot with node-colors</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP1" src="_images/_fig-plot_interactive_simple_color.png" /></p></td>
 <td><p><img alt="figIP2" src="_images/_fig-plot_interactive_simple_color_size.png" /></p></td>
@@ -224,9 +226,6 @@ pip install pyvis
 </div>
 <table class="docutils align-center" id="id2">
 <caption><span class="caption-text">Plot with user defined node colors and node sizes.</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP3" src="_images/_fig-plot_interactive_user_colors.png" /></p></td>
 </tr>
@@ -272,9 +271,6 @@ pip install pyvis
 </div>
 <table class="docutils align-center" id="id3">
 <caption><span class="caption-text">Asia ground truth network versus the learned network.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_cn1" src="_images/fig2a_asia_groundtruth.png" /></p></td>
 </tr>
@@ -284,10 +280,6 @@ pip install pyvis
 </table>
 <table class="docutils align-center" id="id4">
 <caption><span class="caption-text">Differences in het edges.</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_cn3" src="_images/fig2c_asia_comparion.png" /></p></td>
 <td><p><img alt="fig_cn4" src="_images/fig2d_confmatrix.png" /></p></td>
@@ -322,9 +314,6 @@ Note that these functionalities can be combined with the edge properties.</p>
 </div>
 <table class="docutils align-center" id="id5">
 <caption><span class="caption-text">Plot with user defined node properties.</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP4" src="_images/node_properties_1.png" /></p></td>
 </tr>
@@ -362,9 +351,6 @@ Note that these functionalities can be combined with the node properties.</p>
 </div>
 <table class="docutils align-center" id="id6">
 <caption><span class="caption-text">Plot with user defined edge properties.</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP5" src="_images/edge_properties_1.png" /></p></td>
 </tr>
