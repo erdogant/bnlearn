@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Introduction &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -162,8 +165,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Introduction</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Introduction.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -174,7 +177,7 @@
            <div itemprop="articleBody">
              
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline"></a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
 <p>Learning a Bayesian network can be split into <strong>structure learning</strong> and <strong>parameter learning</strong> which are both implemented in <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
 <ul class="simple">
 <li><p><strong>Structure learning</strong>: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p></li>
@@ -199,7 +202,7 @@
 <li><p>conversion of directed to undirected graphs</p></li>
 </ul>
 <section id="structure-learning-algorithms">
-<h2>Structure Learning algorithms<a class="headerlink" href="#structure-learning-algorithms" title="Permalink to this headline"></a></h2>
+<h2>Structure Learning algorithms<a class="headerlink" href="#structure-learning-algorithms" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>score-based</strong>, <strong>local discovery</strong>, <strong>Bayesian network</strong>, and <strong>constraint-based</strong> structure learning algorithms for <em>discrete</em>, <em>fully observed</em> networks.</p>
 <p><strong>Score-based approaches have two main components</strong>:
 * The search algorithm to optimize throughout the search space of all possible DAGs.
@@ -218,27 +221,27 @@
 </ul>
 </section>
 <section id="score-based-algorithms">
-<h2>Score-based algorithms<a class="headerlink" href="#score-based-algorithms" title="Permalink to this headline"></a></h2>
+<h2>Score-based algorithms<a class="headerlink" href="#score-based-algorithms" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>ExhaustiveSearch (ex)</p></li>
 <li><p>Hill Climbing (hc)</p></li>
 </ul>
 </section>
 <section id="local-discovery-algorithms">
-<h2>Local discovery algorithms<a class="headerlink" href="#local-discovery-algorithms" title="Permalink to this headline"></a></h2>
+<h2>Local discovery algorithms<a class="headerlink" href="#local-discovery-algorithms" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Chow-liu (cl)</p></li>
 </ul>
 </section>
 <section id="bayesian-network-classifiers">
-<h2>Bayesian network classifiers<a class="headerlink" href="#bayesian-network-classifiers" title="Permalink to this headline"></a></h2>
+<h2>Bayesian network classifiers<a class="headerlink" href="#bayesian-network-classifiers" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>NaiveBayesian (nb)</p></li>
 <li><p>Tree-augmented Naive Bayes (tan)</p></li>
 </ul>
 </section>
 <section id="constraint-based-structure-learning-algorithms">
-<h2>Constraint-based structure learning algorithms<a class="headerlink" href="#constraint-based-structure-learning-algorithms" title="Permalink to this headline"></a></h2>
+<h2>Constraint-based structure learning algorithms<a class="headerlink" href="#constraint-based-structure-learning-algorithms" title="Permalink to this heading"></a></h2>
 <p>With constraint-based structure learning, a DAG can be constructed by identifying independencies in the data set using hypothesis tests, such as chi2 test statistic.
 This approach does rely on statistical tests and conditional hypotheses to learn independence among the variables in the model.
 The P-value of the chi2 test is the probability of observing the computed chi2 statistic, given the null hypothesis that X and Y are independent given Z.

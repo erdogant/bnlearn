@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Causation &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -159,8 +162,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Causation</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Causation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Structure learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -171,7 +174,7 @@
            <div itemprop="articleBody">
              
   <section id="causation">
-<h1>Causation<a class="headerlink" href="#causation" title="Permalink to this headline"></a></h1>
+<h1>Causation<a class="headerlink" href="#causation" title="Permalink to this heading"></a></h1>
 <p>Causation means that one (independent) variable causes the other (dependent) variable and is formulated by Reichenbach (1956) as follows:</p>
 <p><em>If two random variables X and Y are statistically dependent (X/Y), then either (a) X causes Y, (b) Y causes X, or (c ) there exists a third variable Z that causes both X and Y. Further, X and Y become independent given Z, i.e., X⊥Y∣Z.</em></p>
 <p>This definition is incorporated in Bayesian graphical models (a.k.a. Bayesian networks, Bayesian belief networks, Bayes Net, causal probabilistic networks, and Influence diagrams). A lot of names for the same technique. To determine causality, we can use Bayesian networks (BN). Let’s start with the graph and visualize the statistical dependencies between the three variables described by Reichenbach (X, Y, Z) (see figure below).
@@ -184,7 +187,7 @@ It should be noted that a Bayesian network is a Directed Acyclic Graph (DAG) and
 </figure>
 <p><em>DAGs encode conditional independencies. (a, b, c) are Equivalence classes. (a, b) Cascade, (c ) Common parent, and (d) is a special class with V-structure.</em></p>
 <section id="probability-theory">
-<h2>Probability theory<a class="headerlink" href="#probability-theory" title="Permalink to this headline"></a></h2>
+<h2>Probability theory<a class="headerlink" href="#probability-theory" title="Permalink to this heading"></a></h2>
 <p>Probability theory, or more specific Bayes theorem or Bayes Rule, forms the fundament for Bayesian networks.
 The Bayes rule is used to update model information, and stated mathematically as the underneath equation.</p>
 <p>The equation consists of four parts; the posterior probability is the probability that Z occurs given X.
@@ -196,7 +199,7 @@ Finally, the marginal probability describes the probability of the new evidence 
 </figure>
 </section>
 <section id="structure-learning">
-<h2>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this headline"></a></h2>
+<h2>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h2>
 <p>With structure learning, we want to determine the structure of the graph that best captures the causal dependencies between the variables in the data set.</p>
 <p><strong>What is the DAG that best fits the data?</strong></p>
 <p>A naïve manner to find the best DAG is simply creating all possible combinations of the graph,
@@ -240,7 +243,7 @@ Note that a local search strategy makes incremental changes aimed at improving t
 </section>
 </section>
 <section id="exhaustivesearch">
-<h1>Exhaustivesearch<a class="headerlink" href="#exhaustivesearch" title="Permalink to this headline"></a></h1>
+<h1>Exhaustivesearch<a class="headerlink" href="#exhaustivesearch" title="Permalink to this heading"></a></h1>
 <p>The <em>ExhaustiveSearch</em> approach scores every possible DAG and returns the best-scoring DAG.
 This search approach is only attractable for very small networks and prohibits efficient local optimization algorithms to always find the optimal structure. Thus, identifying the ideal structure is often not tractable. Nevertheless, heuristic search strategies often yield good results if only a few nodes are involved (read: less than 5 or so).</p>
 <p>Lets determine the best possible structure for the sprinkler dataset.</p>
@@ -268,9 +271,6 @@ This search approach is only attractable for very small networks and prohibits e
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Exhaustivesearch example</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="_images/exhaustivesearch_example.png"><img alt="exh1" src="_images/exhaustivesearch_example.png" style="width: 851.0px; height: 449.0px;" /></a></p></td>
 </tr>
@@ -278,7 +278,7 @@ This search approach is only attractable for very small networks and prohibits e
 </table>
 </section>
 <section id="hillclimbsearch">
-<h1>Hillclimbsearch<a class="headerlink" href="#hillclimbsearch" title="Permalink to this headline"></a></h1>
+<h1>Hillclimbsearch<a class="headerlink" href="#hillclimbsearch" title="Permalink to this heading"></a></h1>
 <p><em>Hillclimbsearch</em> is a heuristic search approach that can be used if more nodes are used. HillClimbSearch implements a greedy local search that starts from the DAG “start” (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
 With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.</p>
 <p>Lets examine the results using hte <strong>alarm</strong> example that contains 37 nodes.</p>
@@ -360,11 +360,6 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 </div>
 <table class="docutils align-center" id="id2">
 <caption><span class="caption-text">Hillclimbsearch. (A) Detected DAG. (B) DAG with significance. (C) DAG pruned.</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="hill1" src="_images/Hillclimbsearch1.png" /></p></td>
 <td><p><img alt="hill2" src="_images/Hillclimbsearch2.png" /></p></td>
@@ -374,7 +369,7 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 </table>
 </section>
 <section id="chow-liu">
-<h1>Chow-liu<a class="headerlink" href="#chow-liu" title="Permalink to this headline"></a></h1>
+<h1>Chow-liu<a class="headerlink" href="#chow-liu" title="Permalink to this heading"></a></h1>
 <p>The <em>Chow-Liu</em> Algorithm is a Tree search based approach which finds the maximum-likelihood tree structure where each node has at most one parent.
 The complexity can be limited by restricting to tree structures which makes this approach very fast to determine the DAG using large datasets (aka with many variables) but requires setting a <strong>root node</strong>.</p>
 <p>The Chow-Liu algorithm has three steps:</p>
@@ -408,10 +403,6 @@ The complexity can be limited by restricting to tree structures which makes this
 </div>
 <table class="docutils align-center" id="id3">
 <caption><span class="caption-text">Chow-Liu. (A) Detected DAG. (B) DAG pruned on significance.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="chow1" src="_images/Chow1.png" /></p></td>
 <td><p><img alt="chow2" src="_images/Chow2.png" /></p></td>
@@ -420,7 +411,7 @@ The complexity can be limited by restricting to tree structures which makes this
 </table>
 </section>
 <section id="tree-augmented-naive-bayes-tan">
-<h1>Tree-augmented Naive Bayes (TAN)<a class="headerlink" href="#tree-augmented-naive-bayes-tan" title="Permalink to this headline"></a></h1>
+<h1>Tree-augmented Naive Bayes (TAN)<a class="headerlink" href="#tree-augmented-naive-bayes-tan" title="Permalink to this heading"></a></h1>
 <p>Tree-augmented Naive Bayes (TAN) algorithm is also a tree-based approach that can be used to model huge datasets involving lots of uncertainties among its various interdependent feature sets.
 It relaxes the naive Bayes attribute independence assumption by employing a tree structure, in which each attribute only depends on the class and one other attribute.
 A maximum weighted spanning tree that maximizes the likelihood of the training data is used to perform classification.</p>
@@ -482,11 +473,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id4">
 <caption><span class="caption-text">Tree-augmented Naive Bayes. (A) Detected DAG. (B) DAG depicting significance. (C) DAG pruned.</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="tan1" src="_images/tan1.png" /></p></td>
 <td><p><img alt="tan2" src="_images/tan2.png" /></p></td>
@@ -496,7 +482,7 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </table>
 </section>
 <section id="naivebayes">
-<h1>NaiveBayes<a class="headerlink" href="#naivebayes" title="Permalink to this headline"></a></h1>
+<h1>NaiveBayes<a class="headerlink" href="#naivebayes" title="Permalink to this heading"></a></h1>
 <p>Naive Bayes is a special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable.</p>
 <p>The method requires specifying:</p>
 <blockquote>
@@ -556,10 +542,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id5">
 <caption><span class="caption-text">Naivebayes Example without and with pruning using chi2 test</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="logo1" src="_images/naivebayes_example2.png" /></p></td>
 <td><p><img alt="logo2" src="_images/naivebayes_example21.png" /></p></td>
@@ -568,7 +550,7 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </table>
 </section>
 <section id="constraint-based">
-<h1>Constraint-based<a class="headerlink" href="#constraint-based" title="Permalink to this headline"></a></h1>
+<h1>Constraint-based<a class="headerlink" href="#constraint-based" title="Permalink to this heading"></a></h1>
 <p>A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristig flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.</p>
 <blockquote>
 <div><ol class="arabic simple">
@@ -595,10 +577,6 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </div>
 <table class="docutils align-center" id="id6">
 <caption><span class="caption-text">Constraint-based. (A) Detected DAG. (B) DAG depicting significance.</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="const1" src="_images/const1.png" /></p></td>
 <td><p><img alt="const2" src="_images/const2.png" /></p></td>

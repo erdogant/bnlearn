@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Use Case Titanic &mdash; bnlearn bnlearn documentation</title>
@@ -13,9 +13,8 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -170,8 +173,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Use Case Titanic</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Use Case Titanic</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/UseCases.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -182,7 +185,7 @@
            <div itemprop="articleBody">
              
   <section id="use-case-titanic">
-<h1>Use Case Titanic<a class="headerlink" href="#use-case-titanic" title="Permalink to this headline"></a></h1>
+<h1>Use Case Titanic<a class="headerlink" href="#use-case-titanic" title="Permalink to this heading"></a></h1>
 <p>In the following example we will learn the structure on the Titanic dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
@@ -209,10 +212,6 @@
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Learned structure on the Titanic dataset.</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_t1" src="_images/titanic_dag.png" /></p></td>
 <td><p><img alt="fig_t2" src="_images/titanic_dag_chi2.png" /></p></td>
@@ -285,10 +284,10 @@
 </div>
 </section>
 <section id="use-case-medical-domain">
-<h1>Use Case Medical domain<a class="headerlink" href="#use-case-medical-domain" title="Permalink to this headline"></a></h1>
+<h1>Use Case Medical domain<a class="headerlink" href="#use-case-medical-domain" title="Permalink to this heading"></a></h1>
 <p>In this section I will describe the use-case to analyse patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily know some associatons from literature and/or experience, like smoking is related to dyspnoea. In this use-case I will demonstrate how to use your expert-knowledge in a bayesian model. Furthermore, the data set is small (few variables) and synthetic from Lauritzen and Spiegelhalter (1988), and is about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia.</p>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <dl class="simple">
 <dt>Motivation</dt><dd><p>“<em>Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.</em>”</p>
 </dd>
@@ -297,7 +296,7 @@
 </dl>
 </section>
 <section id="import-data">
-<h2>Import data<a class="headerlink" href="#import-data" title="Permalink to this headline"></a></h2>
+<h2>Import data<a class="headerlink" href="#import-data" title="Permalink to this heading"></a></h2>
 <p>The first step is to import the data set. If you have <strong>unstructured</strong> data, use the <code class="docutils literal notranslate"><span class="pre">df2onehot</span></code> functionality <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a>. The <strong>Examples</strong> section contains examples how to import a raw data set followed by (basic) structering approaches (section: <a class="reference internal" href="Examples.html#start-with-raw-data"><span class="std std-ref">Start with RAW data</span></a>). In my case I will load the data from <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, which is readily a <strong>structured</strong> dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load dataset with 10.000 samples</span>
@@ -307,17 +306,6 @@
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 6%" />
-<col style="width: 13%" />
-<col style="width: 13%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-<col style="width: 10%" />
-<col style="width: 14%" />
-<col style="width: 11%" />
-<col style="width: 11%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"></th>
 <th class="head"><p>smoke</p></th>
@@ -386,7 +374,7 @@
 <p>This data set contains 8 variables with discrete values, meaning that the variables have the state yes/no, true/false or 1/0 values. <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> can handle multiple catagories (also non-numerical, <a class="reference internal" href="Examples.html#start-with-raw-data"><span class="std std-ref">Start with RAW data</span></a>). In this example we generate 10.000 samples (representing the patients). Note that the number of variables depends on the complexity of the data set (number of variables and the catagories per variable). If you want to get <em>feeling</em> of the performance of bayesian models, I would advice to play arround with various example data sets in <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> and determine when you can re-construct the entire DAG given the complexity of the data set. As an example, 1000 samples is sufficient for the <strong>sprinkler</strong> data set because there are only 4 variables, each with state yes/no. Some other data sets (such as <strong>alarm</strong>) are way more complicated and 1000 samples would not be sufficient.</p>
 </section>
 <section id="make-inferences-when-you-have-data-and-know-how">
-<h2>Make inferences when you have data and know-how<a class="headerlink" href="#make-inferences-when-you-have-data-and-know-how" title="Permalink to this headline"></a></h2>
+<h2>Make inferences when you have data and know-how<a class="headerlink" href="#make-inferences-when-you-have-data-and-know-how" title="Permalink to this heading"></a></h2>
 <p>Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences <a class="reference internal" href="Inference.html#inference"><span class="std std-ref">Inference</span></a>.</p>
 <dl class="simple">
 <dt>Aim: Make inferences about shortness-of-breath (dyspnoea) when:</dt><dd><ol class="arabic simple">
@@ -396,7 +384,7 @@
 </dd>
 </dl>
 <section id="create-a-custom-directed-acyclic-graph">
-<h3>Create a custom Directed Acyclic Graph<a class="headerlink" href="#create-a-custom-directed-acyclic-graph" title="Permalink to this headline"></a></h3>
+<h3>Create a custom Directed Acyclic Graph<a class="headerlink" href="#create-a-custom-directed-acyclic-graph" title="Permalink to this heading"></a></h3>
 <p>My knowledge about <em>dyspnoea</em> is limited to: smoking is related to lung cancer, smoking is related to bronchitis, and if you have lung or bronchitus you may need an xray examination. Basically, I will create a simple DAG. Note that bayesian modeling is especially fun because you can make very complex DAGs. Note that the direction is very important. The first column is “from” or “source” and the second column “to” or “destination”. Note, this is a <strong>very simple model</strong> that is designed for demonstration purposes only.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;lung&#39;</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;smoke&#39;</span><span class="p">,</span> <span class="s1">&#39;bronc&#39;</span><span class="p">),</span>
@@ -417,7 +405,7 @@
 </figure>
 </section>
 <section id="compute-conditional-probability-distributions-cpds">
-<h3>Compute Conditional Probability Distributions (CPDs)<a class="headerlink" href="#compute-conditional-probability-distributions-cpds" title="Permalink to this headline"></a></h3>
+<h3>Compute Conditional Probability Distributions (CPDs)<a class="headerlink" href="#compute-conditional-probability-distributions-cpds" title="Permalink to this heading"></a></h3>
 <p>At this point we have the data set in our dataframe (df), and we have the <strong>DAG</strong> based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.parameter_learning.fit()</span></code> which will compute the CPDs. See section <a class="reference internal" href="Parameter%20learning.html#parameter-learning"><span class="std std-ref">Parameter learning</span></a> to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!</p>
 <p>Parameter learning on the expert-DAG using the input data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check the current CPDs in the DAG.</span>
@@ -437,10 +425,6 @@
 <p>The learned Conditional Probability Distributions are depicted in the tables below. As an example, the probability that a patient does <strong>not</strong> smoke is P(smoke=0)=0.49 whereas the probability of a patient smoking is P(smoke=1)=0.5.</p>
 <p>CPD of smoke:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.495273</p></td>
@@ -453,11 +437,6 @@
 <p>Slightly more complicated are the patients that smoke and have lung-cancer which is basically the intersection. The more edges towards a node the more complicated the CPD becomes. Luckily we have <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> to do the heavy lifting!</p>
 <p>CPD of lung:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 41%" />
-<col style="width: 41%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -475,11 +454,6 @@
 </table>
 <p>CPD of bronc:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 40%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -497,13 +471,6 @@
 </table>
 <p>CPD of xray:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 22%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -533,7 +500,7 @@
 </table>
 </section>
 <section id="make-inferences">
-<h3>Make inferences<a class="headerlink" href="#make-inferences" title="Permalink to this headline"></a></h3>
+<h3>Make inferences<a class="headerlink" href="#make-inferences" title="Permalink to this heading"></a></h3>
 <p>When you are at this part, you combined your expert knowledge with a data set! Now we can make inferences which allows to ask questions to the model. Let me demonstrate a few questions.</p>
 <p><strong>Question 1</strong></p>
 <p>What is the probability of lung-cancer, given that we know that patient does smoke?
@@ -547,10 +514,6 @@ The model returns that the probability of lung-cancer or lung(1) is 0.94 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 41%" />
-<col style="width: 59%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>phi(lung)</p></th>
@@ -576,10 +539,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>bronc</p></th>
 <th class="head"><p>phi(bronc)</p></th>
@@ -604,10 +563,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 41%" />
-<col style="width: 59%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>phi(lung)</p></th>
@@ -628,11 +583,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 26%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>bronc</p></th>
@@ -662,7 +612,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </section>
 </section>
 <section id="determine-causalities-when-you-have-data">
-<h2>Determine causalities when you have data<a class="headerlink" href="#determine-causalities-when-you-have-data" title="Permalink to this headline"></a></h2>
+<h2>Determine causalities when you have data<a class="headerlink" href="#determine-causalities-when-you-have-data" title="Permalink to this heading"></a></h2>
 <p>Suppose that we have the medical records of hundreds or even thousands patients treatment regarding shortness-of-breath (dyspnoea). Our goal is to determine the causality across variables given the data set.</p>
 <dl class="simple">
 <dt>Steps to take</dt><dd><ol class="arabic simple">
@@ -673,7 +623,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </dd>
 </dl>
 <section id="compute-directed-acyclic-graph-from-data">
-<h3>Compute Directed Acyclic Graph from data<a class="headerlink" href="#compute-directed-acyclic-graph-from-data" title="Permalink to this headline"></a></h3>
+<h3>Compute Directed Acyclic Graph from data<a class="headerlink" href="#compute-directed-acyclic-graph-from-data" title="Permalink to this heading"></a></h3>
 <p>Import and process teh data set (<a class="reference internal" href="#import-data"><span class="std std-ref">Import data</span></a>). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_learning.fit()</span></code>. More about Directed Acyclic Graphs can be found in the section <a class="reference internal" href="Create%20DAG.html#directed-acyclic-graphs"><span class="std std-ref">Directed Acyclic Graphs</span></a>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Structure learning on the data set</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -705,7 +655,7 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </section>
 </section>
 <section id="make-inference-when-you-have-data">
-<h2>Make inference when you have data<a class="headerlink" href="#make-inference-when-you-have-data" title="Permalink to this headline"></a></h2>
+<h2>Make inference when you have data<a class="headerlink" href="#make-inference-when-you-have-data" title="Permalink to this heading"></a></h2>
 <p>In this scenario we the goal is to make inferences across variables given the data set.</p>
 <dl class="simple">
 <dt>Steps to take</dt><dd><ol class="arabic simple">
@@ -724,10 +674,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </div>
 <p>CPD of smoke:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke(0)</p></td>
 <td><p>0.495455</p></td>
@@ -739,11 +685,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of bronc:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 19%" />
-<col style="width: 40%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -761,11 +702,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of lung:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 39%" />
-<col style="width: 43%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>smoke</p></td>
 <td><p>smoke(0)</p></td>
@@ -783,13 +719,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of dysp:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>bronc</p></td>
 <td><p>bronc(0)</p></td>
@@ -819,13 +748,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of either:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 12%" />
-<col style="width: 23%" />
-<col style="width: 23%" />
-<col style="width: 20%" />
-<col style="width: 23%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>lung</p></td>
 <td><p>lung(0)</p></td>
@@ -855,10 +777,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of tub:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 42%" />
-<col style="width: 58%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>tub(0)</p></td>
 <td><p>0.0555455</p></td>
@@ -870,11 +788,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </table>
 <p>CPD of xray:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 42%" />
-<col style="width: 40%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>either</p></td>
 <td><p>either(0)</p></td>
@@ -897,11 +810,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </pre></div>
 </div>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 24%" />
-<col style="width: 26%" />
-<col style="width: 50%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>lung</p></th>
 <th class="head"><p>bronc</p></th>
