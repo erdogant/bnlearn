@@ -5,6 +5,13 @@ BNLearn's Documentation
 
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
 
+.. tip::
+	`Medium blog: Step-by-step guide for structure learning <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+
+.. tip::
+	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+
+
 -----------------------------------
 
 .. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
@@ -25,16 +32,6 @@ BNLearn's Documentation
 * Contains the most-wanted bayesian pipelines
 * Simple and intuitive
 * Focus on structure learning, parameter learning and inference.
-
-
------------------------------------
-
-.. tip::
-	`Medium blog: Step-by-step guide for structure learning <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-
-.. tip::
-	`Medium blog: Step-by-step guide for knowledge-driven models <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-
 
 
 -----------------------------------

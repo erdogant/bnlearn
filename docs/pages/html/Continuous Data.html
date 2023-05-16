@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Structure learning &mdash; bnlearn bnlearn documentation</title>
+  <title>Advanced discretizing continous data &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
@@ -82,7 +82,9 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure learning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced discretizing continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#structure-learning">Structure learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#parameter-learning">Parameter learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#inference">Inference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
 </ul>
@@ -160,7 +162,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Structure learning</li>
+      <li class="breadcrumb-item active">Advanced discretizing continous data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Continuous Data.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -170,9 +172,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="structure-learning">
-<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
-<p>Learning Bayesian Networks from continuous data is an challanging task.
+  <p>Learning Bayesian Networks from continuous data is an challanging task.
 In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> this task is now accomplished by learning discrete bayesian networks from continuous data.</p>
 <p>In order to do this, I am using a Bayesian discretization method for continuous
 variables in Bayesian networks with quadratic complexity instead of the cubic
@@ -181,28 +181,35 @@ proposed method is superior to the established minimum description length algori
 The method is described in the paper of Yi-Chun Chen et al.</p>
 <p>The underlying idea i that the implemented method now can perform structure learning by first discretizng the continuous
 variables and simultaneously learn Bayesian network structures.</p>
-<p>To demonstrate the usage of structure learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
+<section id="advanced-discretizing-continous-data">
+<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Permalink to this heading"></a></h1>
+<p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
 <span class="c1"># Load data set</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+<span class="c1"># Print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
-<span class="c1"># Define the edges</span>
-<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s2">&quot;cylinders&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
-<span class="p">]</span>
+<span class="c1">#       mpg  cylinders  displacement  ...  acceleration  model_year  origin</span>
+<span class="c1"># 0    18.0          8         307.0  ...          12.0          70       1</span>
+<span class="c1"># 1    15.0          8         350.0  ...          11.5          70       1</span>
+<span class="c1"># 2    18.0          8         318.0  ...          11.0          70       1</span>
+<span class="c1"># 3    16.0          8         304.0  ...          12.0          70       1</span>
+<span class="c1"># 4    17.0          8         302.0  ...          10.5          70       1</span>
+<span class="c1"># ..    ...        ...           ...  ...           ...         ...     ...</span>
+<span class="c1"># 387  27.0          4         140.0  ...          15.6          82       1</span>
+<span class="c1"># 388  44.0          4          97.0  ...          24.6          82       2</span>
+<span class="c1"># 389  32.0          4         135.0  ...          11.6          82       1</span>
+<span class="c1"># 390  28.0          4         120.0  ...          18.6          82       1</span>
+<span class="c1"># 391  31.0          4         119.0  ...          19.4          82       1</span>
 
-<span class="c1"># Create DAG based on edges</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-
-<span class="c1"># A good habbit is to set the columns with continuous data as float</span>
+<span class="p">[</span><span class="mi">392</span> <span class="n">rows</span> <span class="n">x</span> <span class="mi">8</span> <span class="n">columns</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>We can now discretize the continuous columns as following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># A good habbit is to set the columns with continuous data as float</span>
 <span class="n">continuous_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">]</span>
 
 <span class="c1"># Discretize the continous columns by specifying</span>
@@ -222,14 +229,60 @@ variables and simultaneously learn Bayesian network structures.</p>
 <span class="c1"># 391    (28.9, 46.6]          4  ...         82      1</span>
 <span class="c1">#</span>
 <span class="c1"># [392 rows x 8 columns]</span>
+</pre></div>
+</div>
+<p>At this point it is not different than any other discrete data set. We can specify the DAG together with the
+discrete data frame and fit a model using <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
+</section>
+<section id="structure-learning">
+<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
+<p>We will first learn the structure on the continuous data.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+
+<span class="c1"># Independence test</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># [bnlearn] &gt;Compute edge strength with [chi_square]</span>
+<span class="c1"># [bnlearn] &gt;Edge [weight &lt;-&gt; mpg] [P=0.999112] is excluded because it was not significant (P&lt;0.05) with [chi_square]</span>
+
+<span class="c1"># Make plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># Create interactive plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-cont-2">
+<img alt="_images/fig_cont_2.png" src="_images/fig_cont_2.png" />
+</figure>
+<iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<section id="parameter-learning">
+<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
+<p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the edges</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;cylinders&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create DAG based on edges</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
 
 <span class="c1"># Fit model based on DAG and discretized continous columns</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
 
 <span class="c1"># Use MLE method</span>
 <span class="c1"># model_mle = bn.parameter_learning.fit(DAG, df_discrete, methodtype=&quot;maximumlikelihood&quot;)</span>
-
-<span class="c1"># Independence test</span>
+</pre></div>
+</div>
+<p>After fitting the model on the DAG and data frame, we can perform the independence test to remove any spurious edges and
+create a plot.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Independence test</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Make plot</span>
@@ -240,7 +293,7 @@ variables and simultaneously learn Bayesian network structures.</p>
 <figure class="align-default" id="fig-cont-1">
 <img alt="_images/fig_cont_1.png" src="_images/fig_cont_1.png" />
 </figure>
-<p>Let’s print some categories and evidence.</p>
+<p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_cpds</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">))</span>
 </pre></div>
@@ -288,7 +341,7 @@ variables and simultaneously learn Bayesian network structures.</p>
 </section>
 <section id="inference">
 <h1>Inference<a class="headerlink" href="#inference" title="Permalink to this heading"></a></h1>
-<p>Making inferences is performed in the usual manner.</p>
+<p>Making inferences can be perfomred using the fitted model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="n">evidence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -321,18 +374,14 @@ variables and simultaneously learn Bayesian network structures.</p>
 </table>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id1" role="note">
-<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
-<p>Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
-Learning Discrete Bayesian Networks from Continuous Data <a href="#id2"><span class="problematic" id="id3">:arxiv:`1512.02406`</span></a></p>
-</aside>
-<aside class="footnote brackets" id="id4" role="note">
-<span class="label"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></span>
-<p>Julia 0.4 implementation:
-<a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p>
-</aside>
-</aside>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
+Learning Discrete Bayesian Networks from Continuous Data arxiv 1512.02406</p></li>
+<li><p>Julia 0.4 implementation:
+<a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p></li>
+</ol>
+</div></blockquote>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

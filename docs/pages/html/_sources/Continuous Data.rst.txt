@@ -1,6 +1,3 @@
-Structure learning
-======================================
-
 Learning Bayesian Networks from continuous data is an challanging task.
 In ``bnlearn`` this task is now accomplished by learning discrete bayesian networks from continuous data.
 
@@ -15,30 +12,40 @@ variables and simultaneously learn Bayesian network structures.
 
 
 
-To demonstrate the usage of structure learning on continuous data, I will use the well known **auto mpg** data set.
+Advanced discretizing continous data
+=========================================
+
+To demonstrate the usage of parameter learning on continuous data, I will use the well known **auto mpg** data set.
 
 
 .. code-block:: python
 
     # Import
     import bnlearn as bn
+    
     # Load data set
     df = bn.import_example(data='auto_mpg')
+    # Print
+    print(df)
 
-    # Define the edges
-    edges = [
-        ("cylinders", "displacement"),
-        ("displacement", "model_year"),
-        ("displacement", "weight"),
-        ("displacement", "horsepower"),
-        ("weight", "model_year"),
-        ("weight", "mpg"),
-        ("horsepower", "acceleration"),
-        ("mpg", "model_year"),
-    ]
+    #       mpg  cylinders  displacement  ...  acceleration  model_year  origin
+    # 0    18.0          8         307.0  ...          12.0          70       1
+    # 1    15.0          8         350.0  ...          11.5          70       1
+    # 2    18.0          8         318.0  ...          11.0          70       1
+    # 3    16.0          8         304.0  ...          12.0          70       1
+    # 4    17.0          8         302.0  ...          10.5          70       1
+    # ..    ...        ...           ...  ...           ...         ...     ...
+    # 387  27.0          4         140.0  ...          15.6          82       1
+    # 388  44.0          4          97.0  ...          24.6          82       2
+    # 389  32.0          4         135.0  ...          11.6          82       1
+    # 390  28.0          4         120.0  ...          18.6          82       1
+    # 391  31.0          4         119.0  ...          19.4          82       1
+    
+    [392 rows x 8 columns]
 
-    # Create DAG based on edges
-    DAG = bn.make_DAG(edges)
+We can now discretize the continuous columns as following:
+
+.. code-block:: python
 
     # A good habbit is to set the columns with continuous data as float
     continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
@@ -61,11 +68,74 @@ To demonstrate the usage of structure learning on continuous data, I will use th
     # 
     # [392 rows x 8 columns]
 
+At this point it is not different than any other discrete data set. We can specify the DAG together with the
+discrete data frame and fit a model using ``bnlearn``.
+
+
+Structure learning
+======================================
+
+We will first learn the structure on the continuous data.
+
+.. code-block:: python
+    
+    # Learn the structure
+    model = bn.structure_learning.fit(df_discrete, methodtype='hc', scoretype='bic')
+
+    # Independence test
+    model = bn.independence_test(model, df, prune=True)
+    # [bnlearn] >Compute edge strength with [chi_square]
+    # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
+
+    # Make plot
+    bn.plot(model)
+    # Create interactive plot
+    bn.plot(model, interactive=True)
+
+.. _fig_cont_2:
+
+.. figure:: ../figs/fig_cont_2.png
+
+
+.. raw:: html
+
+   <iframe src="https://erdogant.github.io/docs/d3graph/d3graph/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe>
+
+
+Parameter learning
+======================================
+
+To demonstrate the usage of parameter learning on continuous data, I will use the well known **auto mpg** data set.
+
+
+.. code-block:: python
+
+    # Define the edges
+    edges = [
+        ("cylinders", "displacement"),
+        ("displacement", "model_year"),
+        ("displacement", "weight"),
+        ("displacement", "horsepower"),
+        ("weight", "model_year"),
+        ("weight", "mpg"),
+        ("horsepower", "acceleration"),
+        ("mpg", "model_year"),
+    ]
+
+    # Create DAG based on edges
+    DAG = bn.make_DAG(edges)
+
     # Fit model based on DAG and discretized continous columns
     model = bn.parameter_learning.fit(DAG, df_discrete)
     
     # Use MLE method
     # model_mle = bn.parameter_learning.fit(DAG, df_discrete, methodtype="maximumlikelihood")
+
+
+After fitting the model on the DAG and data frame, we can perform the independence test to remove any spurious edges and
+create a plot.
+
+.. code-block:: python
 
     # Independence test
     model = bn.independence_test(model, df, prune=True)
@@ -80,7 +150,7 @@ To demonstrate the usage of structure learning on continuous data, I will use th
 .. figure:: ../figs/fig_cont_1.png
 
 
-Let's print some categories and evidence.
+There are various manners to deeper investigate the results such as looking at the CPDs.
 
 .. code-block:: python
 
@@ -118,7 +188,7 @@ Let's print some categories and evidence.
 Inference
 ======================================
 
-Making inferences is performed in the usual manner.
+Making inferences can be perfomred using the fitted model.
 
 .. code-block:: python
 
@@ -145,10 +215,11 @@ Making inferences is performed in the usual manner.
 
 References
 ----------
-.. [1] Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
-       Learning Discrete Bayesian Networks from Continuous Data :arxiv:`1512.02406`
 
-.. [2] Julia 0.4 implementation:
+    1. Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
+       Learning Discrete Bayesian Networks from Continuous Data arxiv 1512.02406
+
+    2. Julia 0.4 implementation:
        https://github.com/sisl/LearnDiscreteBayesNets.jl
        
 
