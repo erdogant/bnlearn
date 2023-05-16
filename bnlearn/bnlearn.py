@@ -1038,8 +1038,14 @@ def plot(model,
 
     # Plot
     if interactive:
+        tooltip = []
+        for node in nodelist:
+            tip = model["model"].get_cpds(node)
+            if tip is None: tip = node
+            tooltip.append(tip)
+
         # Make interactive plot
-        fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=verbose)
+        fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, verbose=verbose)
     else:
 
         # Bayesian model
@@ -1096,7 +1102,7 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
 
 # %% Plot interactive
-def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, verbose=3):
+def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, verbose=3):
     # Try to import d3blocks
     try:
         # Load library
@@ -1112,7 +1118,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
     # Set the min_weight
     X = pd.DataFrame(data=edgelist, columns=['source', 'target'])
     X['weight'] = edge_weights
-
+    
     # Create network using default
     d3.d3graph(X,
                showfig=False,
@@ -1121,7 +1127,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
 
     # Change node properties
     d3.D3graph.set_node_properties(label=nodelist,
-                                   tooltip=nodelist,
+                                   tooltip=tooltip,
                                    size=node_sizes,
                                    color=node_colors,
                                    fontcolor=params_interactive['font_color'],

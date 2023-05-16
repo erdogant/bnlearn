@@ -5,6 +5,27 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+# %%
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges)
+model = bn.parameter_learning.fit(DAG, df)
+# Print CPDs
+CPD = bn.print_CPD(model)
+
+bn.check_model(CPD) # Input should be model
+bn.check_model(model)
+
+bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 
 # %%
 import bnlearn as bn
@@ -142,6 +163,9 @@ print(CPDs['smoke'])
 # 0      0  0.5
 # 1      1  0.5
 
+print(model["model"].get_cpds('asia'))
+print(model["model"].get_cpds(np.array(list(CPDs.keys()))[1]))
+
 # %% Issue 65: return (fig, ax)
 import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)
@@ -183,12 +207,14 @@ edges = [('Cloudy', 'Sprinkler'),
 
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges)
-model1 = bn.parameter_learning.fit(DAG, df)
+model = bn.parameter_learning.fit(DAG, df)
 # Print CPDs
 CPD = bn.print_CPD(model)
 
 bn.check_model(CPD) # Input should be model
 bn.check_model(model)
+
+bn.plot(model, interactive=True)
 
 # %%
 import bnlearn as bn
