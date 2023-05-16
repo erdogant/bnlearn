@@ -1035,14 +1035,16 @@ def plot(model,
 
     # get node properties
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+    tooltip = nodelist
 
     # Plot
     if interactive:
-        tooltip = []
-        for node in nodelist:
-            tip = model["model"].get_cpds(node)
-            if tip is None: tip = node
-            tooltip.append(tip)
+        if hasattr(model["model"], 'get_cpds'):
+            tooltip = []
+            for node in nodelist:
+                tip = model["model"].get_cpds(node)
+                if tip is None: tip = node
+                tooltip.append(tip)
 
         # Make interactive plot
         fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, verbose=verbose)
