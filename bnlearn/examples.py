@@ -5,21 +5,27 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+
 # %%
 import bnlearn as bn
 
 # Example dataset
 source=['Cloudy','Cloudy','Sprinkler','Rain']
 target=['Sprinkler','Rain','Wet_Grass','Wet_Grass']
-weights=[1,2,1,3]
+repeats=[1,2,1,3]
+
+adjmat = bn.vec2adjmat(source, target, weights=repeats)
 
 # Convert into sparse datamatrix
-df = bn.vec2df(source, target, weights=weights)
+df = bn.vec2df(source, target, weights=repeats)
+df = bn.adjmat2vec(adjmat)
 # Make DAG
 DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
 # Make plot
-bn.plot(DAG, interactive=True)
-bn.plot(DAG, interactive=False)
+bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html', 'minmax_distance': [100, 300]})
+bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+# bn.plot(DAG, interactive=True)
+# bn.plot(DAG, interactive=False)
 
 
 # %% Import examples
@@ -57,6 +63,8 @@ model_mle = bn.parameter_learning.fit(DAG, df_disc)
 
 # Make plot
 bn.plot(model_mle)
+bn.plot(model_mle, interactive=True)
+# bn.independence_test(model, df)
 
 print(model_mle["model"].get_cpds("mpg"))
 
@@ -69,14 +77,12 @@ print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence, verbose=
 
 
 # %%
-
 import bnlearn as bn
 shapes = [(10000, 37), (10000, 223), (10000, 8), (10000, 11), (10000, 32), (352, 3)]
 for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofswords']):
     print(data)
     df = bn.import_example(data=data)
     assert df.shape==shapes[i]
-    
 
 
 # %% Notebook example
@@ -86,20 +92,19 @@ df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
 model = bn.structure_learning.fit(df, verbose=0)
 
-
 # Set some colors to the edges and nodes
 node_properties = bn.get_node_properties(model)
 node_properties['Sprinkler']['node_color']='#FF0000'
 
 edge_properties = bn.get_edge_properties(model)
-edge_properties[('Rain', 'Cloudy')]['color']='#FF0000'
-edge_properties[('Rain', 'Cloudy')]['weight']=5
+edge_properties[('Cloudy', 'Rain')]['color']='#FF0000'
+edge_properties[('Cloudy', 'Rain')]['weight']=5
 
 G = bn.plot(model,
             node_properties=node_properties,
             edge_properties=edge_properties,
             interactive=True,
-            params_interactive={'notebook': False, 'filter_menu': True, 'select_menu': True},
+            params_interactive={'notebook': False},
             )
 
 # G = bn.plot(model, interactive=True, params_interactive={'notebook': True}, node_properties=node_properties, edge_properties=edge_properties)
@@ -143,7 +148,7 @@ import bnlearn as bn
 model = bn.import_DAG('sprinkler', CPD=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
 fig = bn.plot(model, params_static={'visible': True})
-fig2 = bn.plot(model, interactive=False)
+fig2 = bn.plot(model, interactive=True)
 
 
 # %% Issue Mail:
@@ -200,6 +205,7 @@ df = bn.import_example(data='asia')
 model = bn.structure_learning.fit(df)
 # Make plot
 G = bn.plot(model)
+G = bn.plot(model, interactive=True)
 
 # %% Issue MAIL: Store CPDs after printing.
 import bnlearn as bn
@@ -363,7 +369,8 @@ import bnlearn as bn
 
 raw = bn.import_example('stormofswords')
 # Convert raw data into sparse datamatrix
-df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
+df = bn.vec2adjmat(raw['source'], raw['target'], raw['weight'])
+# df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])), verbose=0)
 # Make plot
@@ -473,8 +480,8 @@ assert len(model2['model_edges'])<len(model1['model_edges'])
 assert len(model2['model_edges'])<len(model['model_edges'])
 
 # Plot
-# G = bn.plot(model1, interactive=True)
-# G = bn.plot(model2, interactive=True)
+G = bn.plot(model1, interactive=True)
+G = bn.plot(model2, interactive=False)
 
 
 # %% Adjust some edge properties
@@ -486,6 +493,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 # Make plot
 bn.plot(model)
+bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/output.html'})
 
 # %% Adjust some edge properties
 # Load asia DAG
@@ -1189,6 +1197,7 @@ dfnum.loc[0:50, 'Survived'] = 2
 DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked', 'Parch', 'Name'], bw_list_method='edges')
 # Plot
 G = bn.plot(DAG)
+G = bn.plot(DAG, interactive=True)
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, dfnum)
 # Make inference
