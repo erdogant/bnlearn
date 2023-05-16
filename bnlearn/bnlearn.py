@@ -1881,29 +1881,29 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
 
 
 # %% Retrieve files files.
-class wget:
-    """Retrieve file from url."""
+# class wget:
+#     """Retrieve file from url."""
 
-    def filename_from_url(url):
-        """Return filename."""
-        return os.path.basename(url)
+#     def filename_from_url(url):
+#         """Return filename."""
+#         return os.path.basename(url)
 
-    def download(url, writepath):
-        """Download.
+#     def download(url, writepath):
+#         """Download.
 
-        Parameters
-        ----------
-        url : str.
-            Internet source.
-        writepath : str.
-            Directory to write the file.
+#         Parameters
+#         ----------
+#         url : str.
+#             Internet source.
+#         writepath : str.
+#             Directory to write the file.
 
-        Returns
-        -------
-        None.
+#         Returns
+#         -------
+#         None.
 
-        """
-        r = requests.get(url, stream=True)
-        with open(writepath, "wb") as fd:
-            for chunk in r.iter_content(chunk_size=1024):
-                fd.write(chunk)
+#         """
+#         r = requests.get(url, stream=True)
+#         with open(writepath, "wb") as fd:
+#             for chunk in r.iter_content(chunk_size=1024):
+#                 fd.write(chunk)
