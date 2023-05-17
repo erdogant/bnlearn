@@ -38,16 +38,12 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.7.16'
+__version__ = '0.8.0'
 
-try:
-    import pgmpy
-except:
-    raise ImportError('[bnlearn] >Error: pgmpy version "0.1.13" or higher must be installed manually. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy>=0.1.13>')
-
+import pgmpy
 # Check version pgmpy
-if version.parse(pgmpy.__version__) < version.parse("0.1.13"):
-    raise ImportError('[bnlearn] >Error: This release requires pgmpy to be version >= 0.1.13. Try to: <conda install -c ankurankan pgmpy> or <pip install -U pgmpy>=0.1.13>')
+if version.parse(pgmpy.__version__) < version.parse("0.1.18"):
+    raise ImportError('[bnlearn] >Error: This release requires pgmpy to be version >= 0.1.18. Try to: <pip install -U pgmpy>=0.1.18>')
 
 # Version check
 import matplotlib
@@ -58,6 +54,13 @@ import networkx as nx
 if not version.parse(nx.__version__) >= version.parse("2.7.1"):
     raise ImportError('[bnlearn] >Error: networkx version should be > 2.7.1.\nTry to: pip install -U networkx')
 
+import numpy as np
+if not version.parse(np.__version__) >= version.parse("1.24.1"):
+    raise ImportError('[bnlearn] >Error: numpy version should be > 1.24.1.\nTry to: pip install -U numpy')
+
+import pandas as pd
+if not version.parse(pd.__version__) <= version.parse("1.5.3"):
+    raise ImportError('[bnlearn] >Error: pands version should be <= 1.5.3.')
 
 # module level doc-string
 __doc__ = """
