@@ -130,7 +130,7 @@ bn.topological_sort()
 # 
 
 ### Method overview
-Learning a Bayesian network can be split into the underneath problems which are all implemented in this package:
+Learning a Bayesian network can be split into the underneath problems which are all implemented in this package for both discrete, continous and mixed data sets:
 
 * **Structure learning**: Given the data: Estimate a DAG that captures the dependencies between the variables.
    * There are multiple manners to perform structure learning.
