@@ -117,6 +117,6 @@ References
 * Blog: https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5
 * Blog: https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be
 * Github: https://github.com/erdogant/bnlearn
-* Documentation: https://bnlearn.readthedocs.io
+* Documentation: https://erdogant.github.io/bnlearn/
 
 """
