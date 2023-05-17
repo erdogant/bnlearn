@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Advanced discretizing continous data &mdash; bnlearn bnlearn documentation</title>
@@ -13,8 +13,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            bnlearn
+            <a href="index.html" class="icon icon-home"> bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -161,8 +158,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Advanced discretizing continous data</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Advanced discretizing continous data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Continuous Data.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -182,7 +179,7 @@ The method is described in the paper of Yi-Chun Chen et al.</p>
 <p>The underlying idea i that the implemented method now can perform structure learning by first discretizng the continuous
 variables and simultaneously learn Bayesian network structures.</p>
 <section id="advanced-discretizing-continous-data">
-<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Permalink to this heading"></a></h1>
+<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Permalink to this headline"></a></h1>
 <p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -250,7 +247,7 @@ variables and simultaneously learn Bayesian network structures.</p>
 discrete data frame and fit a model using <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
 </section>
 <section id="structure-learning">
-<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
+<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this headline"></a></h1>
 <p>We will learn the structure on the continuous data. Note that the data is also discretezed on a set of edges which will
 likely introduce a bias in the learned structure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
@@ -270,10 +267,10 @@ likely introduce a bias in the learned structure.</p>
 <figure class="align-default" id="fig-cont-2">
 <img alt="_images/fig_cont_2.png" src="_images/fig_cont_2.png" />
 </figure>
-<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe></section>
+<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe></section>
 <section id="parameter-learning">
-<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
-<p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
+<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this headline"></a></h1>
+<p>Let’s continue with parameter learning on the continuous data set and see whether we can estimate the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model based on DAG and discretized continous columns</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
 
@@ -295,12 +292,17 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 <figure class="align-default" id="fig-cont-1">
 <img alt="_images/fig_cont_1.png" src="_images/fig_cont_1.png" />
 </figure>
-<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="400px" width="750px", frameBorder="0"></iframe><p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
+<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe><p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_cpds</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 40%" />
+<col style="width: 10%" />
+<col style="width: 50%" />
+</colgroup>
 <tbody>
 <tr class="row-odd"><td><p>weight</p></td>
 <td><p>…</p></td>
@@ -334,20 +336,25 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 </table>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Weight categories: &quot;</span><span class="p">,</span> <span class="n">df_disc</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
 <span class="c1"># Weight categories:  IntervalIndex([(1577.73, 2217.0], (2217.0, 2959.5], (2959.5, 3657.5], (3657.5, 5140.0]], dtype=&#39;interval[float64, right]&#39;)</span>
-
-<span class="n">evidence</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize_value</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="mf">3000.0</span><span class="p">)}</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">evidence</span><span class="p">)</span>
-<span class="c1"># {&#39;weight&#39;: Interval(2959.5, 3657.5, closed=&#39;right&#39;)}</span>
 </pre></div>
 </div>
 </section>
 <section id="inference">
-<h1>Inference<a class="headerlink" href="#inference" title="Permalink to this heading"></a></h1>
-<p>Making inferences can be perfomred using the fitted model.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="n">evidence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<h1>Inference<a class="headerlink" href="#inference" title="Permalink to this headline"></a></h1>
+<p>Making inferences can be perfomred using the fitted model. Note that the evidence should be discretized for which we can
+use the <code class="docutils literal notranslate"><span class="pre">discretize_value</span></code> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">evidence</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize_value</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="mf">3000.0</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">evidence</span><span class="p">)</span>
+<span class="c1"># {&#39;weight&#39;: Interval(2959.5, 3657.5, closed=&#39;right&#39;)}</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="n">evidence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
 </pre></div>
 </div>
 <table class="docutils align-default">
+<colgroup>
+<col style="width: 64%" />
+<col style="width: 36%" />
+</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>mpg</p></th>
 <th class="head"><p>phi(mpg)</p></th>
@@ -375,7 +382,7 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 </tbody>
 </table>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline"></a></h2>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),

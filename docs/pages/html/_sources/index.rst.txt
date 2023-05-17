@@ -14,15 +14,10 @@ BNLearn's Documentation
 
 -----------------------------------
 
-.. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
-.. |figIP2| image:: ../figs/_fig-plot_interactive_simple_color_size.png
+.. raw:: html
 
-.. table:: Structure Learning
-   :align: center
+   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
 
-   +----------+----------+
-   | |figIP1| | |figIP2| |
-   +----------+----------+
 
 -----------------------------------
 

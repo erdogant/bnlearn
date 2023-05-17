@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.bnlearn &mdash; bnlearn bnlearn documentation</title>
@@ -13,8 +13,9 @@
   <![endif]-->
   
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -27,15 +28,11 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            bnlearn
+            <a href="index.html" class="icon icon-home"> bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -130,34 +127,7 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.bnlearn</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.check_model"><code class="docutils literal notranslate"><span class="pre">check_model()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.compare_networks"><code class="docutils literal notranslate"><span class="pre">compare_networks()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.dag2adjmat"><code class="docutils literal notranslate"><span class="pre">dag2adjmat()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.df2onehot"><code class="docutils literal notranslate"><span class="pre">df2onehot()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_edge_properties"><code class="docutils literal notranslate"><span class="pre">get_edge_properties()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_node_properties"><code class="docutils literal notranslate"><span class="pre">get_node_properties()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.independence_test"><code class="docutils literal notranslate"><span class="pre">independence_test()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.sampling"><code class="docutils literal notranslate"><span class="pre">sampling()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.structure_scores"><code class="docutils literal notranslate"><span class="pre">structure_scores()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.to_bayesiannetwork"><code class="docutils literal notranslate"><span class="pre">to_bayesiannetwork()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.to_undirected"><code class="docutils literal notranslate"><span class="pre">to_undirected()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.topological_sort"><code class="docutils literal notranslate"><span class="pre">topological_sort()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.vec2adjmat"><code class="docutils literal notranslate"><span class="pre">vec2adjmat()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.vec2df"><code class="docutils literal notranslate"><span class="pre">vec2df()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.bnlearn</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -185,8 +155,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">bnlearn.bnlearn</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>bnlearn.bnlearn</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/bnlearn.bnlearn.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -197,20 +167,20 @@
            <div itemprop="articleBody">
              
   <section id="module-bnlearn.bnlearn">
-<span id="bnlearn-bnlearn"></span><h1>bnlearn.bnlearn<a class="headerlink" href="#module-bnlearn.bnlearn" title="Permalink to this heading"></a></h1>
+<span id="bnlearn-bnlearn"></span><h1>bnlearn.bnlearn<a class="headerlink" href="#module-bnlearn.bnlearn" title="Permalink to this headline"></a></h1>
 <p>Bayesian techniques for structure learning, parameter learning, inference and sampling.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.adjmat2dict">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">adjmat2dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2dict" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix to dict.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>adjmat</strong> (<em>pd.DataFrame</em>) – Adjacency matrix.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>graph</strong> – Graph.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -221,16 +191,16 @@
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">adjmat2vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.adjmat2vec" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix into vector with source and target.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p></li>
 <li><p><strong>min_weight</strong> (<em>float</em>) – edges are returned with a minimum weight.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>nodes that are connected based on source and target</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
@@ -249,15 +219,18 @@
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">check_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.check_model" title="Permalink to this definition"></a></dt>
 <dd><p>Check if the CPDs associated with the nodes are consistent.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>DAG</strong> (<em>Object.</em>) – Object containing CPDs.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -267,7 +240,7 @@
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">compare_networks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">showfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">figsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(15,</span> <span class="pre">8)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.compare_networks" title="Permalink to this definition"></a></dt>
 <dd><p>Compare networks of two models.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model_1</strong> (<em>dict</em>) – Results of model 1.</p></li>
 <li><p><strong>model_2</strong> (<em>dict</em>) – Results of model 2.</p></li>
@@ -278,11 +251,11 @@
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>scores : Score of differences between the two input models.
 adjmat_diff : Adjacency matrix depicting the differences between the two input models.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>tuple containing (scores, adjmat_diff)</p>
 </dd>
 </dl>
@@ -293,17 +266,17 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">dag2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.dag2adjmat" title="Permalink to this definition"></a></dt>
 <dd><p>Convert model into adjacency matrix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>object</em>) – Model object.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>adjacency matrix.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -322,23 +295,29 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">df2onehot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_min_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtypes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pandas'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excl_background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.df2onehot" title="Permalink to this definition"></a></dt>
 <dd><p>Convert dataframe to one-hot matrix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe for which the rows are the features, and colums are the samples.</p></li>
-<li><p><strong>dtypes</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
+<li><p><strong>dtypes</strong> (<em>list of str</em><em> or </em><em>'pandas'</em><em>, </em><em>optional</em>) – Representation of the columns in the form of [‘cat’,’num’]. By default the dtype is determiend based on the pandas dataframe.</p></li>
 <li><p><strong>y_min</strong> (<em>int</em><em> [</em><em>0..len</em><em>(</em><em>y</em><em>)</em><em>]</em><em>, </em><em>optional</em>) – Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.</p></li>
 <li><p><strong>perc_min_num</strong> (<em>float</em><em> [</em><em>None</em><em>, </em><em>0..1</em><em>]</em><em>, </em><em>optional</em>) – Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print message to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>One-hot dataframe.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.disable_tqdm">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">disable_tqdm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.disable_tqdm" title="Permalink to this definition"></a></dt>
+<dd><p>Set the logger for verbosity messages.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -346,7 +325,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">get_edge_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#000000'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxscale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_edge_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Collect edge properties.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>dict</em>) – dict containing (initialized) model.</p></li>
 <li><p><strong>color</strong> (<em>str</em><em>, </em><em>(</em><em>Default: '#000000'</em><em>)</em>) – The default color of the edges.</p></li>
@@ -357,10 +336,10 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Edge properties.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict.</p>
 </dd>
 </dl>
@@ -399,7 +378,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">get_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#1f456e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_node_properties" title="Permalink to this definition"></a></dt>
 <dd><p>Collect node properties.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>dict</em>) – dict containing (initialized) model.</p></li>
 <li><p><strong>node_color</strong> (<em>str</em><em>, </em><em>(</em><em>Default: '#000000'</em><em>)</em>) – The default color of the edges.</p></li>
@@ -407,10 +386,10 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <li><p><strong>3.</strong> (<em>Print progress to screen. The default is</em>) – 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Node properties.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict.</p>
 </dd>
 </dl>
@@ -438,7 +417,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">import_DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sprinkler'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CPD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkmodel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_DAG" title="Permalink to this definition"></a></dt>
 <dd><p>Import Directed Acyclic Graph.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is ‘sprinkler’.
 ‘sprinkler’, ‘alarm’, ‘andes’, ‘asia’, ‘sachs’, ‘filepath/to/model.bif’,</p></li>
@@ -448,11 +427,11 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>model : BayesianNetwork
 adjmat : Adjacency matrix</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict containing model and adjmat.</p>
 </dd>
 </dl>
@@ -469,7 +448,7 @@ adjmat : Adjacency matrix</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">import_example</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sprinkler'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.import_example" title="Permalink to this definition"></a></dt>
 <dd><p>Load example dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>data</strong> (<em>str</em><em>, </em><em>(</em><em>default: sprinkler</em><em>)</em>) – <dl class="simple">
 <dt>Pre-defined examples.</dt><dd><ul>
@@ -492,10 +471,10 @@ adjmat : Adjacency matrix</p>
 0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>df</strong></p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
@@ -505,27 +484,16 @@ adjmat : Adjacency matrix</p>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.independence_test">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">independence_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'chi_square'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.independence_test" title="Permalink to this definition"></a></dt>
 <dd><p>Compute edge strength using test statistic.</p>
-<section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>Compute the edge strength using a statistical test of independence based using the model structure (DAG) and the data.
 For the pairs in the DAG (either by structure learning or user-defined), an statistical test is performed.
 Any two variables are associated if the test’s p-value &lt; significance_level.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The (learned) model which needs to be tested.</p>
-</dd>
-<dt class="field-even">type model<span class="colon">:</span></dt>
-<dd class="field-even"><p>Instance of bnlearn.structure_learning.</p>
-</dd>
-<dt class="field-odd">param df<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The dataset against which to test the model structure.</p>
-</dd>
-<dt class="field-even">type df<span class="colon">:</span></dt>
-<dd class="field-even"><p>pandas.DataFrame instance</p>
-</dd>
-<dt class="field-odd">param test<span class="colon">:</span></dt>
-<dd class="field-odd"><dl class="simple">
-<dt>The statistical test to compute associations.</dt><dd><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>Instance of bnlearn.structure_learning.</em>) – The (learned) model which needs to be tested.</p></li>
+<li><p><strong>df</strong> (<em>pandas.DataFrame instance</em>) – The dataset against which to test the model structure.</p></li>
+<li><p><strong>test</strong> (<em>str</em><em> or </em><em>function</em>) – <dl class="simple">
+<dt>The statistical test to compute associations.</dt><dd><ul>
 <li><p>chi_square</p></li>
 <li><p>g_sq</p></li>
 <li><p>log_likelihood</p></li>
@@ -536,28 +504,17 @@ Any two variables are associated if the test’s p-value &lt; significance_level
 </ul>
 </dd>
 </dl>
+</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – A value between 0 and 1. If p_value &lt; significance_level, the variables are
+considered uncorrelated.</p></li>
+<li><p><strong>prune</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em>) – True: Keep only edges that are significant (&lt;=alpha) based on the independence test.</p></li>
+</ul>
 </dd>
-<dt class="field-even">type test<span class="colon">:</span></dt>
-<dd class="field-even"><p>str or function</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>df</strong> – The dataset against which to test the model structure.</p>
 </dd>
-<dt class="field-odd">param alpha<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A value between 0 and 1. If p_value &lt; significance_level, the variables are
-considered uncorrelated.</p>
-</dd>
-<dt class="field-even">type alpha<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-<dt class="field-odd">param prune<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True: Keep only edges that are significant (&lt;=alpha) based on the independence test.</p>
-</dd>
-<dt class="field-even">type prune<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool (default: False)</p>
-</dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> – The dataset against which to test the model structure.</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>pandas.DataFrame instance</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.DataFrame instance</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -570,7 +527,6 @@ considered uncorrelated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -578,14 +534,17 @@ considered uncorrelated.</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn_model.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.load" title="Permalink to this definition"></a></dt>
 <dd><p>Load learned model.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filepath</strong> (<em>str</em>) – Pathname to stored pickle files.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Show message. A higher number gives more information. The default is 3.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Object.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -595,7 +554,7 @@ considered uncorrelated.</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">make_DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CPD</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkmodel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.make_DAG" title="Permalink to this definition"></a></dt>
 <dd><p>Create Directed Acyclic Graph based on list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>DAG</strong> (<em>list</em>) – list containing source and target in the form of [(‘A’,’B’), (‘B’,’C’)].</p></li>
 <li><p><strong>CPD</strong> (<em>list</em><em>, </em><em>array-like</em>) – Containing TabularCPD for each node.</p></li>
@@ -610,7 +569,7 @@ considered uncorrelated.</p>
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p>‘adjmat’: Adjacency matrix</p></li>
 <li><p>’model’: pgmpy.models</p></li>
@@ -619,7 +578,7 @@ considered uncorrelated.</p>
 </ul>
 </p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict keys</p>
 </dd>
 </dl>
@@ -637,7 +596,7 @@ considered uncorrelated.</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn_causal_network'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'figsize':</span> <span class="pre">(1500,</span> <span class="pre">800),</span> <span class="pre">'filepath':</span> <span class="pre">None,</span> <span class="pre">'font_color':</span> <span class="pre">'node_color',</span> <span class="pre">'minmax_distance':</span> <span class="pre">[100,</span> <span class="pre">250],</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'show_slider':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">30,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'figsize':</span> <span class="pre">(15,</span> <span class="pre">10),</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">14,</span> <span class="pre">'height':</span> <span class="pre">None,</span> <span class="pre">'layout':</span> <span class="pre">'spring_layout',</span> <span class="pre">'maxscale':</span> <span class="pre">10,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'visible':</span> <span class="pre">True,</span> <span class="pre">'width':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Permalink to this definition"></a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>dict</em>) – Learned model from the .fit() function.</p></li>
 <li><p><strong>pos</strong> (<em>graph</em><em>, </em><em>optional</em>) – Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.</p></li>
@@ -654,7 +613,7 @@ node_properties = {‘node1’:{‘node_color’:’#8A0707’,’node_size’:1
 <div><p>’node2’:{‘node_color’:’#000000’,’node_size’:30}}</p>
 </div></blockquote>
 </p></li>
-<li><p><strong>edge_properties</strong> (<em>dict</em><em> (</em><em>default: None</em><em>)</em><em>.</em>) – Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
+<li><p><strong>edge_properties</strong> (<em>dict</em><em> (</em><em>default: None</em><em>)</em><em></em>) – Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
 edge_properties = bn.get_edge_properties(model)</p></li>
 <li><p><strong>params_interactive</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating interactive plots.</p></li>
 <li><p><strong>params_static</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating static plots.
@@ -663,7 +622,7 @@ layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectra
 0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>pos<span class="classifier">list.</span></dt><dd><p>Positions of the nodes.</p>
 </dd>
@@ -674,7 +633,7 @@ layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectra
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict containing pos and G</p>
 </dd>
 </dl>
@@ -712,55 +671,27 @@ layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectra
 <dt class="sig sig-object py" id="bnlearn.bnlearn.predict">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'max'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.predict" title="Permalink to this definition"></a></dt>
 <dd><p>Predict on data from a Bayesian network.</p>
-<section id="id1">
-<h2>Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <p>The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
 The states with highest probability are returned.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An object of class from bn.fit.</p>
-</dd>
-<dt class="field-even">type model<span class="colon">:</span></dt>
-<dd class="field-even"><p>Object</p>
-</dd>
-<dt class="field-odd">param df<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Each row in the DataFrame will be predicted</p>
-</dd>
-<dt class="field-even">type df<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame</p>
-</dd>
-<dt class="field-odd">param variables<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The label(s) of node(s) to be predicted.</p>
-</dd>
-<dt class="field-even">type variables<span class="colon">:</span></dt>
-<dd class="field-even"><p>str or list of str</p>
-</dd>
-<dt class="field-odd">param to_df<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The output is converted to dataframe output. Note that this heavily impacts the speed.</p>
-</dd>
-<dt class="field-even">type to_df<span class="colon">:</span></dt>
-<dd class="field-even"><p>Bool, (default is True)</p>
-</dd>
-<dt class="field-odd">param method<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The method that is used to select the for the inferences.
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>Object</em>) – An object of class from bn.fit.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Each row in the DataFrame will be predicted</p></li>
+<li><p><strong>variables</strong> (<em>str</em><em> or </em><em>list of str</em>) – The label(s) of node(s) to be predicted.</p></li>
+<li><p><strong>to_df</strong> (<em>Bool</em><em>, </em><em>(</em><em>default is True</em><em>)</em>) – The output is converted to dataframe output. Note that this heavily impacts the speed.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – The method that is used to select the for the inferences.
 ‘max’ : Return the variable values based on the maximum probability.
-None : Returns all Probabilities</p>
+None : Returns all Probabilities</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
 </dd>
-<dt class="field-even">type method<span class="colon">:</span></dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>P</strong> – Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.</p>
 </dd>
-<dt class="field-odd">param verbose<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Print progress to screen. The default is 3.
-0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p>
-</dd>
-<dt class="field-even">type verbose<span class="colon">:</span></dt>
-<dd class="field-even"><p>int, optional</p>
-</dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>P</strong> – Predict() returns a dict with the evidence and states that resulted in the highest probability for the input variable.</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>dict or DataFrame</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict or DataFrame</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -787,7 +718,6 @@ None : Returns all Probabilities</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># 999      1     1  0.878049</span>
 </pre></div>
 </div>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -795,16 +725,16 @@ None : Returns all Probabilities</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">print_CPD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkmodel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.print_CPD" title="Permalink to this definition"></a></dt>
 <dd><p>Print DAG-model to screen.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>DAG</strong> (<em>pgmpy.models.BayesianNetwork</em>) – model of the DAG.</p></li>
 <li><p><strong>checkmodel</strong> (<em>bool</em>) – Check the validity of the model. The default is True</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dictionary containing the CPDs.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -845,16 +775,16 @@ None : Returns all Probabilities</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">query2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.query2df" title="Permalink to this definition"></a></dt>
 <dd><p>Convert query from inference model to a dataframe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>query</strong> (<em>Object from the inference model.</em>) – Convert query object to a dataframe.</p></li>
 <li><p><strong>variables</strong> (<em>list</em>) – Order or select variables.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>df</strong> – Dataframe with inferences.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
@@ -865,7 +795,7 @@ None : Returns all Probabilities</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Permalink to this definition"></a></dt>
 <dd><p>Generate sample(s) using the joint distribution of the network.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>DAG</strong> (<em>dict</em>) – Contains model and the adjmat of the DAG.</p></li>
 <li><p><strong>methodtype</strong> (<em>str</em><em> (</em><em>default: 'bayes'</em><em>)</em>) – <ul>
@@ -878,11 +808,11 @@ None : Returns all Probabilities</p>
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>df</strong> – Dataframe containing sampled data from the input DAG model.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame().</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -919,18 +849,47 @@ None : Returns all Probabilities</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn_model.pkl'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.save" title="Permalink to this definition"></a></dt>
 <dd><p>Save learned model in pickle file.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filepath</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'bnlearn_model.pkl'</em><em>)</em>) – Pathname to store pickle files.</p></li>
 <li><p><strong>overwrite</strong> (<em>bool</em><em>, </em><em>(</em><em>default=False</em><em>)</em>) – Overwite file if exists.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Show message. A higher number gives more informatie. The default is 3.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>bool</strong> – Status whether the file is saved.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>[True, False]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.set_logger">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">set_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.set_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Set the logger for verbosity messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbose</strong> (<em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>, </em><em>default is 'info'</em><em> or </em><em>20</em>) – Set the verbose messages using string or integer values.
+* [0, 60, None, ‘silent’, ‘off’, ‘no’]: No message.
+* [10, ‘debug’]: Messages from debug level and higher.
+* [20, ‘info’]: Messages from info level and higher.
+* [30, ‘warning’]: Messages from warning level and higher.
+* [50, ‘critical’]: Messages from critical level and higher.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>None.</em></p></li>
+<li><p><em>&gt; # Set the logger to warning</em></p></li>
+<li><p><em>&gt; set_logger(verbose=’warning’)</em></p></li>
+<li><p><em>&gt; # Test with different messages</em></p></li>
+<li><p><em>&gt; logger.debug(“Hello debug”)</em></p></li>
+<li><p><em>&gt; logger.info(“Hello info”)</em></p></li>
+<li><p><em>&gt; logger.warning(“Hello warning”)</em></p></li>
+<li><p><em>&gt; logger.critical(“Hello critical”)</em></p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -939,44 +898,26 @@ None : Returns all Probabilities</p>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.structure_scores">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">structure_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['k2',</span> <span class="pre">'bds',</span> <span class="pre">'bic',</span> <span class="pre">'bdeu']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.structure_scores" title="Permalink to this definition"></a></dt>
 <dd><p>Compute structure scores.</p>
-<section id="id2">
-<h2>Description<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h2>
 <p>Each model can be scored based on its structure. However, the score doesn’t have very straight forward
 interpretebility but can be used to compare different models. A higher score represents a better fit.
 This method only needs the model structure to compute the score. The structure score functionality
 can be found here: <a class="reference internal" href="#bnlearn.bnlearn.structure_scores" title="bnlearn.bnlearn.structure_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_scores()</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The model whose score needs to be computed.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>The bnlearn instance such as pgmpy.base.DAG</em><em> or </em><em>pgmpy.models.BayesianNetwork</em>) – The model whose score needs to be computed.</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame instance</em>) – The dataset against which to score the model.</p></li>
+<li><p><strong>scoring_method</strong> (<em>str</em><em> ( </em><em>k2</em><em> | </em><em>bdeu</em><em> | </em><em>bds</em><em> | </em><em>bic</em><em> )</em>) – The following four scoring methods are supported currently: 1) K2Score
+2) BDeuScore 3) BDsScore 4) BicScore</p></li>
+<li><p><strong>kwargs</strong> (<em>kwargs</em>) – Any additional parameters parameters that needs to be passed to the
+scoring method.</p></li>
+</ul>
 </dd>
-<dt class="field-even">type model<span class="colon">:</span></dt>
-<dd class="field-even"><p>The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>Model score</strong> – A score value for the model.</p>
 </dd>
-<dt class="field-odd">param df<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The dataset against which to score the model.</p>
-</dd>
-<dt class="field-even">type df<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame instance</p>
-</dd>
-<dt class="field-odd">param scoring_method<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The following four scoring methods are supported currently: 1) K2Score
-2) BDeuScore 3) BDsScore 4) BicScore</p>
-</dd>
-<dt class="field-even">type scoring_method<span class="colon">:</span></dt>
-<dd class="field-even"><p>str ( k2 | bdeu | bds | bic )</p>
-</dd>
-<dt class="field-odd">param kwargs<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Any additional parameters parameters that needs to be passed to the
-scoring method.</p>
-</dd>
-<dt class="field-even">type kwargs<span class="colon">:</span></dt>
-<dd class="field-even"><p>kwargs</p>
-</dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>Model score</strong> – A score value for the model.</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -997,36 +938,29 @@ scoring method.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">structure_scores</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">scoring_method</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.to_bayesiannetwork">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_bayesiannetwork</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_bayesiannetwork" title="Permalink to this definition"></a></dt>
 <dd><p>Convert adjacency matrix to BayesianNetwork.</p>
-<section id="id3">
-<h2>Description<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h2>
 <p>Convert a adjacency to a Bayesian model. This is required as some of the
 functionalities, such as <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> output a DAGmodel.
 If the output of <code class="docutils literal notranslate"><span class="pre">structure_learning</span></code> is provided, the adjmat is extracted and processed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Adjacency matrix.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
 </dd>
-<dt class="field-even">type model<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame()</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>Exception</strong> – The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
 </dd>
-<dt class="field-odd">raises Exception<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The input should not be None and if a model (as dict) is provided, the key ‘adjmat’ should be included.</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><strong>BayesianNetwork</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
 </dd>
-<dt class="field-even">returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>BayesianNetwork</strong> – BayesianNetwork that can be used in <code class="docutils literal notranslate"><span class="pre">parameter_learning.fit</span></code>.</p>
-</dd>
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Object</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Object</p>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -1034,13 +968,13 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">to_undirected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.to_undirected" title="Permalink to this definition"></a></dt>
 <dd><p>Transform directed adjacency matrix to undirected.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>adjmat</strong> (<em>np.array</em><em>(</em><em>)</em>) – Adjacency matrix.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p><strong>Directed adjacency matrix</strong> – Converted adjmat with undirected edges.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
@@ -1050,27 +984,19 @@ If the output of <code class="docutils literal notranslate"><span class="pre">st
 <dt class="sig sig-object py" id="bnlearn.bnlearn.topological_sort">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">topological_sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adjmat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.topological_sort" title="Permalink to this definition"></a></dt>
 <dd><p>Topological sort.</p>
-<section id="id4">
-<h2>Description<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h2>
 <p>Get nodes list in the topological sort order.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param adjmat<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Adjacency matrix.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em> or </em><em>bnlearn object.</em>) – Adjacency matrix.</p></li>
+<li><p><strong>start</strong> (<em>str</em><em>, </em><em>optional</em>) – Start position. The default is None and the whole network is examined.</p></li>
+</ul>
 </dd>
-<dt class="field-even">type adjmat<span class="colon">:</span></dt>
-<dd class="field-even"><p>pd.DataFrame or bnlearn object.</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Topological sort order.</p>
 </dd>
-<dt class="field-odd">param start<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Start position. The default is None and the whole network is examined.</p>
-</dd>
-<dt class="field-even">type start<span class="colon">:</span></dt>
-<dd class="field-even"><p>str, optional</p>
-</dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Topological sort order.</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>list</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
@@ -1080,7 +1006,6 @@ bn.topological_sort(DAG, ‘Rain’)
 bn.topological_sort(DAG)</p>
 <p class="rubric">References</p>
 <p><a class="reference external" href="https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python">https://stackoverflow.com/questions/47192626/deceptively-simple-implementation-of-topological-sorting-in-python</a></p>
-</section>
 </dd></dl>
 
 <dl class="py function">
@@ -1088,18 +1013,18 @@ bn.topological_sort(DAG)</p>
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">vec2adjmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2adjmat" title="Permalink to this definition"></a></dt>
 <dd><p>Convert source and target into adjacency matrix.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>source</strong> (<em>list</em>) – The source node.</p></li>
 <li><p><strong>target</strong> (<em>list</em>) – The target node.</p></li>
-<li><p><strong>weights</strong> (<em>list</em><em> of </em><em>int</em>) – The Weights between the source-target values</p></li>
+<li><p><strong>weights</strong> (<em>list of int</em>) – The Weights between the source-target values</p></li>
 <li><p><strong>symmetric</strong> (<em>bool</em><em>, </em><em>optional</em>) – Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>adjacency matrix.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -1118,30 +1043,20 @@ bn.topological_sort(DAG)</p>
 <dt class="sig sig-object py" id="bnlearn.bnlearn.vec2df">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">vec2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.vec2df" title="Permalink to this definition"></a></dt>
 <dd><p>Convert source-target edges into sparse dataframe.</p>
-<section id="id5">
-<h2>Description<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h2>
 <p>Convert edges between source and taget into a dataframe based on the weight.
 A weight of 2 will result that a row with the edge is created 2x.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param source<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The source node.</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<em>array-like</em>) – The source node.</p></li>
+<li><p><strong>target</strong> (<em>array-like</em>) – The target node.</p></li>
+<li><p><strong>weights</strong> (<em>array-like of int</em>) – The Weights between the source-target values</p></li>
+</ul>
 </dd>
-<dt class="field-even">type source<span class="colon">:</span></dt>
-<dd class="field-even"><p>array-like</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
 </dd>
-<dt class="field-odd">param target<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The target node.</p>
-</dd>
-<dt class="field-even">type target<span class="colon">:</span></dt>
-<dd class="field-even"><p>array-like</p>
-</dd>
-<dt class="field-odd">param weights<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Weights between the source-target values</p>
-</dd>
-<dt class="field-even">type weights<span class="colon">:</span></dt>
-<dd class="field-even"><p>array-like of int</p>
-</dd>
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -1160,7 +1075,6 @@ A weight of 2 will result that a row with the edge is created 2x.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
-</section>
 </dd></dl>
 
 <hr>

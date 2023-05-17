@@ -116,13 +116,13 @@ likely introduce a bias in the learned structure.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe>
 
 
 Parameter learning
 ======================================
 
-To demonstrate the usage of parameter learning on continuous data, I will use the well known **auto mpg** data set.
+Let's continue with parameter learning on the continuous data set and see whether we can estimate the CPDs.
 
 
 .. code-block:: python
@@ -154,7 +154,7 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="400px" width="750px", frameBorder="0"></iframe>
+   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
 
 
 There are various manners to deeper investigate the results such as looking at the CPDs.
@@ -187,17 +187,18 @@ There are various manners to deeper investigate the results such as looking at t
     print("Weight categories: ", df_disc["weight"].dtype.categories)
     # Weight categories:  IntervalIndex([(1577.73, 2217.0], (2217.0, 2959.5], (2959.5, 3657.5], (3657.5, 5140.0]], dtype='interval[float64, right]')
     
-    evidence = {"weight": bn.discretize_value(df_discrete["weight"], 3000.0)}
-    print(evidence)
-    # {'weight': Interval(2959.5, 3657.5, closed='right')}
-
 
 Inference
 ======================================
 
-Making inferences can be perfomred using the fitted model.
+Making inferences can be perfomred using the fitted model. Note that the evidence should be discretized for which we can 
+use the ``discretize_value`` function.
 
 .. code-block:: python
+
+    evidence = {"weight": bn.discretize_value(df_discrete["weight"], 3000.0)}
+    print(evidence)
+    # {'weight': Interval(2959.5, 3657.5, closed='right')}
 
     print(bn.inference.fit(model, variables=["mpg"], evidence=evidence, verbose=0))
 
