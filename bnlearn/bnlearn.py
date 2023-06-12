@@ -1713,11 +1713,9 @@ def _normalize_weights(weights, minscale=1, maxscale=10):
 
 
 # %% Compute structure scores.
-def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], verbose=3, **kwargs):
+def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], verbose=3, **kwargs):
     """Compute structure scores.
 
-    Description
-    -----------
     Each model can be scored based on its structure. However, the score doesn't have very straight forward
     interpretebility but can be used to compare different models. A higher score represents a better fit.
     This method only needs the model structure to compute the score. The structure score functionality
@@ -1784,7 +1782,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bds', 'bic', 'bdeu'], ver
                 scores[s] = structure_score(model, df, scoring_method=s)
             except:
                 if verbose>=2 and show_message:
-                    print('[bnlearn] >Skipping computing structure score for [%s].' %(s))
+                    print('[bnlearn] >WARNING> Skipping computing structure score for [%s].' %(s))
                     show_message=False
     # Return
     return scores

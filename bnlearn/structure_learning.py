@@ -12,7 +12,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-from pgmpy.estimators import BDeuScore, K2Score, BicScore
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.models import NaiveBayes
 
@@ -51,6 +50,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
     BDeu is dependent on an equivalent sample size.
 
+    The BDs score is determined by adjusting certain settings based on the size of the dataset and the observed
+    variable counts. This adjustment involves using a value called "equivalent sample size" divided by the number of
+    parent configurations with observed variable counts. The score-method evaluates how effectively a model can describe the provided dataset.
+
     Parameters
     ----------
     df : pd.DataFrame()
@@ -65,7 +68,11 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
         'tan' (requires <root_node> and <class_node> parameter)
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-        'bic', 'k2', 'bdeu'
+            * 'bic'
+            * 'k2'
+            * 'bdeu'
+            * 'bds'
+            * 'aic'
     black_list : List or None, (default : None)
         List of edges are black listed.
         In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.
@@ -123,6 +130,10 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
     >>>
     >>> # Compare networks and make plot
     >>> bn.compare_networks(model, model_sl, pos=G['pos'])
+
+    References
+    ----------
+        * [1] Scutari, Marco. An Empirical-Bayes Score for Discrete Bayesian Networks. Journal of Machine Learning Research, 2016, pp. 438–48
 
     """
     out = []
@@ -198,7 +209,7 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 # %% Make Checks
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
+    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
     if not np.isin(config['method'], ['naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
@@ -492,19 +503,51 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
         plt.plot(out['scores'])
         plt.show()
 
-    return(out)
+    return out
 
 
 # %% Set scoring type
-def _SetScoringType(df, scoretype, verbose=3):
+def _SetScoringType(df, scoretype, verbose=3, **kwargs):
+    """Set scoring function.
+
+    Parameters
+    ----------
+    df : pandas DataFrame object
+        dataframe object where each column represents one variable.
+        (If some values in the data are missing the data cells should be set to `numpy.NaN`.
+        Note that pandas converts each column containing `numpy.NaN`s to dtype `float`.)
+    scoretype : string
+        Name of the scoring type method.
+            * bic
+            * k2
+            * bdue
+            * bds
+            * aic
+    verbose : int, (default : 3)
+        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
+
+    Returns
+    -------
+    scoring method initialized with parameters.
+
+    References
+    ----------
+        * [1] Scutari, Marco. An Empirical-Bayes Score for Discrete Bayesian Networks. Journal of Machine Learning Research, 2016, pp. 438–48
+
+    """
     if verbose>=3: print('[bnlearn] >Set scoring type at [%s]' %(scoretype))
 
     if scoretype=='bic':
-        scoring_method = BicScore(df)
+        scoring_method = pgmpy.estimators.BicScore(df)
     elif scoretype=='k2':
-        scoring_method = K2Score(df)
+        scoring_method = pgmpy.estimators.K2Score(df)
     elif scoretype=='bdeu':
-        scoring_method = BDeuScore(df, equivalent_sample_size=5)
+        scoring_method = pgmpy.estimators.BDeuScore(df, equivalent_sample_size=5)
+    elif scoretype=='bds':
+        scoring_method = pgmpy.estimators.BDsScore(df, equivalent_sample_size=5)
+    elif scoretype=='aic':
+        scoring_method = pgmpy.estimators.AICScore(df)
+
 
     return(scoring_method)
 
