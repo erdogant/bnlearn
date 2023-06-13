@@ -15,8 +15,13 @@ import numpy as np
 
 
 # %% Exact inference using Variable Elimination
-def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
+def fit(model, variables=None, evidence=None, to_df=True, elimination_order='greedy', joint=True, groupby=None, verbose=3):
     """Inference using using Variable Elimination.
+
+    The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
+    But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
+    So basically if we want to eliminate X from our distribution, then we compute the product of all the factors
+    involving X and marginalize over them, thus allowing us to work on much smaller factors.
 
     Parameters
     ----------
@@ -32,6 +37,17 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
             * {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
     to_df : Bool, (default is True)
         The output is converted in the dataframe [query.df]. Enabling this function may heavily impact the processing speed.
+    elimination_order: str or list (default='greedy')
+        Order in which to eliminate the variables in the algorithm. If list is provided,
+        should contain all variables in the model except the ones in `variables`. str options
+        are: `greedy`, `WeightedMinFill`, `MinNeighbors`, `MinWeight`, `MinFill`. Please
+        refer https://pgmpy.org/exact_infer/ve.html#module-pgmpy.inference.EliminationOrder
+        for details.
+    joint: boolean (default: True)
+        If True, returns a Joint Distribution over `variables`.
+        If False, returns a dict of distributions over each of the `variables`.
+    groupby: list of strings (default: None)
+        The query is grouped on the variable name by taking the maximum P value for each catagory.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -65,7 +81,7 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
         raise Exception('[bnlearn] >Error: [variables] should match names in the model (Case sensitive!)')
     if not np.all(np.isin([*evidence.keys()], adjmat.columns)):
         raise Exception('[bnlearn] >Error: [evidence] should match names in the model (Case sensitive!)')
-    if verbose>=3: print('[bnlearn] >Variable Elimination..')
+    if verbose>=3: print('[bnlearn] >Variable Elimination.')
 
     # Extract model
     if isinstance(model, dict):
@@ -83,11 +99,11 @@ def fit(model, variables=None, evidence=None, to_df=True, verbose=3):
     try:
         model_infer = VariableElimination(model)
     except:
-        raise Exception('[bnlearn] >Error: Input model does not contain learned CPDs. hint: did you run parameter_learning.fit?')
+        raise Exception('[bnlearn] >Error: Input model does not contain learned CPDs. hint: did you run parameter_learning.fit()?')
 
     # Computing the probability P(class | evidence)
-    query = model_infer.query(variables=variables, evidence=evidence, show_progress=(verbose>0))
+    query = model_infer.query(variables=variables, evidence=evidence, elimination_order=elimination_order, joint=joint, show_progress=(verbose>=3))
     # Store also in dataframe
-    query.df = bnlearn.query2df(query, variables=variables, verbose=verbose) if to_df else None
+    query.df = bnlearn.query2df(query, variables=variables, groupby=groupby, verbose=verbose) if to_df else None
     # Return
     return query

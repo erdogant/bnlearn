@@ -103,7 +103,12 @@ def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, 
 
     Returns
     -------
-    dict with model.
+    dict with keys:
+        'model' : pgmpy model
+        'model_edges' : Edges
+        'adjmat' : Adjacency matrix
+        'config' : Configurations
+        'structure_scores' : Structure scores (the lower the better)
 
     Examples
     --------
