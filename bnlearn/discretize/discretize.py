@@ -32,6 +32,8 @@ def discretize(
         The discretized DataFrame where every continuous column is converted
         into categories.
     """
+    # Convert columns that are object into numerical
+    data = _convert_non_numerical_columns(data, verbose=verbose)
     nodes = list(data.columns)
     graph = _bayes_net_graph(nodes, edges)
     continuous_index = [nodes.index(c) for c in continuous_columns]
@@ -57,8 +59,16 @@ def discretize(
     return data_disc
 
 
+def _convert_non_numerical_columns(df: pd.DataFrame, verbose=3) -> pd.DataFrame:
+    for column in df.columns:
+        if not pd.api.types.is_numeric_dtype(df[column]):
+            df[column] = pd.Categorical(df[column])
+            df[column] = df[column].cat.codes
+
+    return df
+
 def _bayes_net_graph(nodes: List[str], edges: List[Tuple[str, str]]):
-    """
+    """Bayes net graph.
     >>> nodes = ['A', 'B', 'C', 'D']
     >>> edges = [('A', 'B'), ('A', 'C'), ('B', 'D'), ('C', 'D')]
     >>> _bayes_net_graph(nodes, edges)
