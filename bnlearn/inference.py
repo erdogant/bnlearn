@@ -1,8 +1,4 @@
-"""Inferences.
-
-Description
------------
-Inference is same as asking conditional probability questions to the models.
+"""Inference is same as asking conditional probability questions to the models.
 """
 # ------------------------------------
 # Name        : inference.py
