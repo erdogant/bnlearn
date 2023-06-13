@@ -934,7 +934,7 @@ def plot(model,
          pos=None,
          scale=1,
          interactive=False,
-         title='bnlearn_causal_network',
+         title='bnlearn Directed Acyclic Graph (DAG)',
          node_color=None,
          node_size=None,
          node_properties=None,
@@ -1071,9 +1071,17 @@ def plot(model,
                 tooltip.append(tip)
 
         # Make interactive plot
-        fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, verbose=verbose)
+        fig = _plot_interactive(params_interactive,
+                                nodelist,
+                                node_colors,
+                                node_sizes,
+                                edgelist,
+                                edge_colors,
+                                edge_weights,
+                                title,
+                                tooltip,
+                                verbose=verbose)
     else:
-
         # Bayesian model
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
             if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
@@ -1091,7 +1099,18 @@ def plot(model,
             pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
 
         # Make static plot
-        fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=params_static['visible'])
+        fig = _plot_static(model,
+                           params_static,
+                           nodelist,
+                           node_colors,
+                           node_sizes,
+                           G,
+                           pos,
+                           edge_colors,
+                           edge_weights,
+                           visible=params_static['visible'],
+                           title=title,
+                           )
 
     # Store
     out['fig']=fig
@@ -1105,7 +1124,7 @@ def plot(model,
 
 # %% Plot interactive
 # def _plot_static(model, params_static, nodelist, node_colors, node_sizes, title, verbose=3):
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, visible=True):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True):
     # Bootup figure
     fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=100)
     fig.set_visible(visible)
@@ -1121,8 +1140,8 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # Making figure nice
     # fig = plt.gca()
     # fig.set_axis_off()
-    if visible:
-        plt.show()
+    plt.title(title)
+    if visible: plt.show()
     # Return
     return fig
 
