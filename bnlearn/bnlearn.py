@@ -622,7 +622,7 @@ def _bif2bayesian(pathname, verbose=3):
         raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
 
 
-def query2df(query, variables=None, verbose=3):
+def query2df(query, variables=None, groupby=None, verbose=3):
     """Convert query from inference model to a dataframe.
 
     Parameters
@@ -631,6 +631,8 @@ def query2df(query, variables=None, verbose=3):
         Convert query object to a dataframe.
     variables : list
         Order or select variables.
+    groupby: list of strings (default: None)
+        The query is grouped on the variable name by taking the maximum P value for each catagory.
 
     Returns
     -------
@@ -638,6 +640,13 @@ def query2df(query, variables=None, verbose=3):
         Dataframe with inferences.
 
     """
+    if ((groupby is not None) and np.any(np.isin(groupby, variables))):
+        # Needs to be set to true.
+        groupby = list(np.array(groupby)[np.isin(groupby, variables)])
+    else:
+        if verbose>=2: print('[bnlearn] >Warning: variable(s) [%s] does not exists in DAG.' %(groupby))
+        groupby=None
+
     states = []
     getP = []
     for value_index, prob in enumerate(itertools.product(*[range(card) for card in query.cardinality])):
@@ -657,12 +666,18 @@ def query2df(query, variables=None, verbose=3):
         variables = variables + ['p']
         df = df[variables]
 
+    # groupby
+    if groupby is not None:
+        df = df.groupby(groupby).apply(lambda x: x.loc[x['p'].idxmax()])
+        df.reset_index(drop=True, inplace=True)
+
     # Print table to screen
     if verbose>=3:
         print('[bnlearn] >Data is stored in [query.df]')
         print(tabulate(df, tablefmt="grid", headers="keys"))
 
     return df
+
 
 # %% Model Sprinkler
 def _DAG_sprinkler(CPD=True):
