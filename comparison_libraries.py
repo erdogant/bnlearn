@@ -33,7 +33,7 @@ import bnlearn as bn
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='bic')
 # Test for significance
-model = bn.independence_test(model, df, prune=False)
+model = bn.independence_test(model, df, prune=True)
 # Make plot
 G = bn.plot(model, interactive=False, params_static={'layout':'draw_circular'})
 
@@ -43,6 +43,7 @@ print(model['model_edges'])
 
 model = bn.parameter_learning.fit(model, df)
 CPD = bn.print_CPD(model)
+G = bn.plot(model, interactive=True)
 
 # query = bn.inference.fit(model, variables=['education', 'workclass'], evidence={'salary':'>50K'})
 
@@ -65,6 +66,48 @@ print(query)
 query = bn.inference.fit(model, variables=['workclass'], evidence={'education':'Doctorate', 'marital-status':'Never-married'})
 print(query)
 
+# %% pgmpy code block 1
+# Import functions from pgmpy
+from pgmpy.estimators import HillClimbSearch, BicScore, BayesianEstimator
+from pgmpy.models import BayesianNetwork, NaiveBayes
+from pgmpy.inference import VariableElimination
+
+# Import data set and drop continous and sensitive features
+df = bn.import_example(data='census_income')
+drop_cols = ['age', 'fnlwgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week', 'race', 'sex']
+df.drop(labels=drop_cols, axis=1, inplace=True)
+
+# Create estimator
+est = HillClimbSearch(df)
+
+# Create scoring method
+scoring_method = BicScore(df)
+
+# Create the model and print the edges
+model = est.estimate(scoring_method=scoring_method)
+
+print(model.edges())
+
+# %% pgmpy - code block 2
+vec = {
+    'source': ['education', 'marital-status', 'occupation', 'relationship', 'relationship', 'salary'],
+    'target': ['occupation', 'relationship', 'workclass', 'education', 'salary', 'education'],
+    'weight': [True, True, True, True, True, True]
+}
+vec = pd.DataFrame(vec)
+
+# Create Bayesian model
+bayesianmodel = BayesianNetwork(vec)
+
+# Fit the model
+bayesianmodel.fit(df, estimator=BayesianEstimator, prior_type='bdeu', equivalent_sample_size=1000)
+
+# Create model for variable elimination
+model_infer = VariableElimination(bayesianmodel)
+
+# Query
+query = model_infer.query(variables=['salary'], evidence={'education':'Doctorate'})
+print(query)
 
 # %%
 #################################
@@ -108,7 +151,24 @@ scoring_method = BicScore(df)
 best_model = est.estimate(scoring_method=scoring_method)
 print(best_model.edges())
 
+# %%
+# Load libraries
+from causalnex.structure.notears import from_pandas
+from causalnex.network import BayesianNetwork
+import networkx as nx
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
 
+# Import data set and drop continous and sensitive features
+df = bn.import_example(data='census_income')
+drop_cols = ['age', 'fnlwgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week', 'race', 'sex']
+df.drop(labels=drop_cols, axis=1, inplace=True)
+
+# Next, we want to make our data numeric, since this is what the NOTEARS expect.
+df_num = df.copy()
+for col in df_num.columns:
+    df_num[col] = le.fit_transform(df_num[col])
+    
 # %%
 ################################
 #           CausalNex          #

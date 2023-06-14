@@ -88,7 +88,6 @@ bn.plot(model_mle, interactive=True)
 
 print(model_mle["model"].get_cpds("mpg"))
 
-
 print("Weight categories: ", df_disc["weight"].dtype.categories)
 evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
 print(evidence)
@@ -315,7 +314,7 @@ model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", verbose=4,
 model = bn.structure_learning.fit(df, methodtype='hc', verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='cs', verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='cl', verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='tan', class_node="A", verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='tan', class_node="B", verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='ex', verbose=4, n_jobs=1)
 model = bn.independence_test(model, df, prune=True)
 # Plot
@@ -1211,6 +1210,7 @@ print(q2.df)
 
 
 # %% Example with mixed dataset: titanic case
+import bnlearn as bn
 # Load example mixed dataset
 df_raw = bn.import_example(data='titanic')
 # Convert to onehot
