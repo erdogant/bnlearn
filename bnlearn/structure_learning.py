@@ -26,7 +26,22 @@ import bnlearn
 
 
 # %% Structure Learning
-def fit(df, methodtype='hc', scoretype='bic', black_list=None, white_list=None, bw_list_method=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, root_node=None, class_node=None, fixed_edges=None, return_all_dags=False, n_jobs=-1, verbose=3):
+def fit(df,
+        methodtype='hc',
+        scoretype='bic',
+        black_list=None,
+        white_list=None,
+        bw_list_method=None,
+        max_indegree=None,
+        tabu_length=100,
+        epsilon=1e-4,
+        max_iter=1e6,
+        root_node=None,
+        class_node=None,
+        fixed_edges=None,
+        return_all_dags=False,
+        n_jobs=-1,
+        verbose=3):
     """Structure learning fit model.
 
     Search strategies for structure learning
