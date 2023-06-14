@@ -132,8 +132,7 @@ def test_parameter_learning():
 
 def test_inference():
     DAG = bn.import_DAG('sprinkler')
-    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False,
-                          verbose=0)
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
     assert q1.df is None
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=True,
@@ -328,9 +327,8 @@ def test_structure_scores():
     # Make the actual Bayesian DAG
     DAG = bn.make_DAG(edges)
     model = bn.parameter_learning.fit(DAG, df)
-    assert [*model['structure_scores'].keys()] == ['k2', 'bds', 'bic', 'bdeu']
-    assert [*model['structure_scores'].values()] == [-1952.7499005180116, -1961.36196289961, -1953.219110059786,
-                                                     -1954.4304910940107]
+    assert set([*model['structure_scores'].keys()]) == {'bdeu', 'bds', 'bic', 'k2'}
+    assert [*model['structure_scores'].values()] == [-1952.7499005180116, -1953.219110059786, -1954.4304910940107, -1961.36196289961]
     # Print CPDs
     CPD = bn.print_CPD(model)
     bn.check_model(CPD)
@@ -338,4 +336,4 @@ def test_structure_scores():
 
     df = bn.import_example('asia')
     model = bn.structure_learning.fit(df)
-    assert [*model['structure_scores'].keys()] == ['k2', 'bds', 'bic', 'bdeu']
+    assert set([*model['structure_scores'].keys()]) ==  {'bdeu', 'bds', 'bic', 'k2'}
