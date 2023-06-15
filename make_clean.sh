@@ -14,6 +14,7 @@ rm -rf bnlearn/data/*.csv
 rm -rf bnlearn/__pycache__
 rm -rf bnlearn/helpers/__pycache__
 rm -rf bnlearn/tests/__pycache__
+rm -rf bnlearn/tests/discretize/__pycache__
 rm -rf bnlearn/discretize/__pycache__
 rm -rf bnlearn/bnlearn/*.pkl
 rm -rf bnlearn/bnlearn/*.html

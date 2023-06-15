@@ -25,10 +25,10 @@ Colab Notebook
 ################
 
 .. note::
-	Experiment with bnlearn using the `Colab notebook`_.
 
-.. _Colab notebook: https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/bnlearn.ipynb
-
+	* `General functionalities <https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/bnlearn.ipynb>`_
+	* `Inferences on the salary data sets <https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/inferences_on_salary_dataset.ipynb>`_
+	* `Knowledge driven approach <https://colab.research.google.com/github/erdogant/bnlearn/blob/master/notebooks/sprinkler_knowlegde_driven.ipynb>`_
 
 
 Citing

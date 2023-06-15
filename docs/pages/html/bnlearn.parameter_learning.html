@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.parameter_learning &mdash; bnlearn bnlearn documentation</title>
@@ -12,10 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -127,6 +132,7 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.parameter_learning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.parameter_learning.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
@@ -158,8 +164,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>bnlearn.parameter_learning</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">bnlearn.parameter_learning</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/bnlearn.parameter_learning.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -170,10 +176,10 @@
            <div itemprop="articleBody">
              
   <section id="module-bnlearn.parameter_learning">
-<span id="bnlearn-parameter-learning"></span><h1>bnlearn.parameter_learning<a class="headerlink" href="#module-bnlearn.parameter_learning" title="Permalink to this headline"></a></h1>
+<span id="bnlearn-parameter-learning"></span><h1>bnlearn.parameter_learning<a class="headerlink" href="#module-bnlearn.parameter_learning" title="Permalink to this heading"></a></h1>
 <p>Parameter learning.</p>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
 <p>Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
 To make sense of the given data, we can start by counting how often each state of the variable occurs.
 If the variable is dependent on the parents, the counts are done conditionally on the parents states,
@@ -185,14 +191,17 @@ i.e. for seperately for each parent configuration</p>
 </ul>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.parameter_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bdeu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bdeu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
 <dd><p>Learn the parameters given the DAG and data.</p>
+<section id="id1">
+<h2>Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
 <dl>
 <dt>Maximum Likelihood Estimation</dt><dd><p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>,
 with which the variable states have occured. We observed x cloudy` among a total of <cite>all clouds</cite>,
-so we might guess that about <cite>50%</cite> of <cite>cloudy</cite> are <a href="#id1"><span class="problematic" id="id2">`</span></a>sprinkler or so.
+so we might guess that about <cite>50%</cite> of <cite>cloudy</cite> are <a href="#id2"><span class="problematic" id="id3">`</span></a>sprinkler or so.
 According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal.
 This is achieved when using the relative frequencies.</p>
 <p>While very straightforward, the ML estimator has the problem of <em>overfitting</em> to the data.
@@ -219,48 +228,66 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 </dl>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model</strong> (<em>dict</em>) – Contains a model object with a key ‘adjmat’ (adjacency matrix).</p></li>
-<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Pandas DataFrame containing the data.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>(</em><em>default: 'bayes'</em><em>)</em>) – <dl class="simple">
-<dt>Strategy for parameter learning.</dt><dd><ul>
-<li><p>’ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators.</p></li>
-<li><p>’bayes’: Bayesian Parameter Estimation.</p></li>
+<dt class="field-odd">param model<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Contains a model object with a key ‘adjmat’ (adjacency matrix).</p>
+</dd>
+<dt class="field-even">type model<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">param df<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pandas DataFrame containing the data.</p>
+</dd>
+<dt class="field-even">type df<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame()</p>
+</dd>
+<dt class="field-odd">param methodtype<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Strategy for parameter learning.</dt><dd><ul class="simple">
+<li><p>‘ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators.</p></li>
+<li><p>‘bayes’: Bayesian Parameter Estimation.</p></li>
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>scoretype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'bic'</em><em>)</em>) – <dl class="simple">
-<dt>Scoring function for the search spaces.</dt><dd><ul>
-<li><p>’bdeu’</p></li>
-<li><p>’dirichlet’</p></li>
-<li><p>’k2’</p></li>
+</dd>
+<dt class="field-even">type methodtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, (default: ‘bayes’)</p>
+</dd>
+<dt class="field-odd">param scoretype<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Scoring function for the search spaces.</dt><dd><ul class="simple">
+<li><p>‘bdeu’</p></li>
+<li><p>‘dirichlet’</p></li>
+<li><p>‘k2’</p></li>
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>smooth</strong> (<em>float</em><em> (</em><em>default: None</em><em>)</em>) – The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.</p></li>
-<li><p><strong>3.</strong> (<em>Print progress to screen. The default is</em>) – 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
-</ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dt class="field-even">type scoretype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, (default : ‘bic’)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict with model.</p>
+<dt class="field-odd">param smooth<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.</p>
+</dd>
+<dt class="field-even">type smooth<span class="colon">:</span></dt>
+<dd class="field-even"><p>float (default: None)</p>
+</dd>
+<dt class="field-odd">param Print progress to screen. The default is 3.<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with model.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Parameter learning</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model_update</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># LOAD BIF FILE</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;alarm&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
@@ -268,9 +295,9 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 <span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
 </dd></dl>
 
-</section>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Interactive plot &mdash; bnlearn bnlearn documentation</title>
@@ -12,10 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -155,8 +160,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Interactive plot</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Interactive plot</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Plot.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -167,14 +172,14 @@
            <div itemprop="articleBody">
              
   <section id="interactive-plot">
-<h1>Interactive plot<a class="headerlink" href="#interactive-plot" title="Permalink to this headline"></a></h1>
+<h1>Interactive plot<a class="headerlink" href="#interactive-plot" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>interactive</strong> and <strong>static</strong> plotting functionalities with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a> for which many network and figure properties can be adjusted, such as node colors and sizes.
 To make interactive plots, it simply needs to set the <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> parameter in <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot" title="bnlearn.bnlearn.plot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code></a>.
 The interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">D3Blocks</span></code> library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
 Lets make some interactive and static examples.</p>
 <p><strong>Interactive plot examples</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install the d3blocks library first if you want interactive plots</span>
-pip install d3blocks
+pip<span class="w"> </span>install<span class="w"> </span>d3blocks
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of interactive plotting</span>
@@ -203,10 +208,6 @@ pip install d3blocks
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Plot with node-colors</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP1" src="_images/_fig-plot_interactive_simple_color.png" /></p></td>
 <td><p><img alt="figIP2" src="_images/_fig-plot_interactive_simple_color_size.png" /></p></td>
@@ -229,9 +230,6 @@ pip install d3blocks
 </div>
 <table class="docutils align-center" id="id2">
 <caption><span class="caption-text">Plot with user defined node colors and node sizes.</span><a class="headerlink" href="#id2" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP3" src="_images/_fig-plot_interactive_user_colors.png" /></p></td>
 </tr>
@@ -243,7 +241,7 @@ pip install d3blocks
 </div>
 </section>
 <section id="static-plot">
-<h1>Static plot<a class="headerlink" href="#static-plot" title="Permalink to this headline"></a></h1>
+<h1>Static plot<a class="headerlink" href="#static-plot" title="Permalink to this heading"></a></h1>
 <p>To create static plots simply set the <code class="docutils literal notranslate"><span class="pre">interactive=False</span></code> in all the above examples. The only difference is in <code class="docutils literal notranslate"><span class="pre">params_static</span></code> for which the dict contains more variables that adjust the figure properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add parameters for the static plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">params_static</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span><span class="mi">15</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span><span class="p">:</span><span class="mi">8</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="s1">&#39;font_family&#39;</span><span class="p">:</span><span class="s1">&#39;times new roman&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">0.8</span><span class="p">,</span> <span class="s1">&#39;node_shape&#39;</span><span class="p">:</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="s1">&#39;font_color&#39;</span><span class="p">:</span><span class="s1">&#39;#000000&#39;</span><span class="p">})</span>
@@ -251,7 +249,7 @@ pip install d3blocks
 </div>
 </section>
 <section id="comparison-of-two-networks">
-<h1>Comparison of two networks<a class="headerlink" href="#comparison-of-two-networks" title="Permalink to this headline"></a></h1>
+<h1>Comparison of two networks<a class="headerlink" href="#comparison-of-two-networks" title="Permalink to this heading"></a></h1>
 <p>In come cases you may derive two networks where you need to know the differences. In the following example I will learn a network using structure learning and compare it to the ground truth.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load asia DAG</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
@@ -277,9 +275,6 @@ pip install d3blocks
 </div>
 <table class="docutils align-center" id="id3">
 <caption><span class="caption-text">Asia ground truth network versus the learned network.</span><a class="headerlink" href="#id3" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_cn1" src="_images/fig2a_asia_groundtruth.png" /></p></td>
 </tr>
@@ -289,10 +284,6 @@ pip install d3blocks
 </table>
 <table class="docutils align-center" id="id4">
 <caption><span class="caption-text">Differences in het edges.</span><a class="headerlink" href="#id4" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_cn3" src="_images/fig2c_asia_comparion.png" /></p></td>
 <td><p><img alt="fig_cn4" src="_images/fig2d_confmatrix.png" /></p></td>
@@ -301,7 +292,7 @@ pip install d3blocks
 </table>
 </section>
 <section id="node-properties">
-<h1>Node properties<a class="headerlink" href="#node-properties" title="Permalink to this headline"></a></h1>
+<h1>Node properties<a class="headerlink" href="#node-properties" title="Permalink to this heading"></a></h1>
 <p>Edge properties can easily be changed using the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_node_properties" title="bnlearn.bnlearn.get_node_properties"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.get_node_properties()</span></code></a> function.
 Note that these functionalities can be combined with the edge properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -327,9 +318,6 @@ Note that these functionalities can be combined with the edge properties.</p>
 </div>
 <table class="docutils align-center" id="id5">
 <caption><span class="caption-text">Plot with user defined node properties.</span><a class="headerlink" href="#id5" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP4" src="_images/node_properties_1.png" /></p></td>
 </tr>
@@ -337,7 +325,7 @@ Note that these functionalities can be combined with the edge properties.</p>
 </table>
 </section>
 <section id="edge-properties">
-<h1>Edge properties<a class="headerlink" href="#edge-properties" title="Permalink to this headline"></a></h1>
+<h1>Edge properties<a class="headerlink" href="#edge-properties" title="Permalink to this heading"></a></h1>
 <p>Edge properties can easily be changed using the <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_edge_properties" title="bnlearn.bnlearn.get_edge_properties"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.get_edge_properties()</span></code></a> function.
 Note that these functionalities can be combined with the node properties.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -367,9 +355,6 @@ Note that these functionalities can be combined with the node properties.</p>
 </div>
 <table class="docutils align-center" id="id6">
 <caption><span class="caption-text">Plot with user defined edge properties.</span><a class="headerlink" href="#id6" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 100%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><img alt="figIP5" src="_images/edge_properties_1.png" /></p></td>
 </tr>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Structure Scores &mdash; bnlearn bnlearn documentation</title>
@@ -12,10 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> bnlearn
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -110,10 +115,7 @@
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure Scores</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#description">Description</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Structure Scores</a></li>
 <li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
@@ -158,8 +160,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Structure Scores</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Structure Scores</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Structure_scores.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -170,67 +172,64 @@
            <div itemprop="articleBody">
              
   <section id="module-bnlearn.bnlearn.structure_scores">
-<span id="structure-scores"></span><h1>Structure Scores<a class="headerlink" href="#module-bnlearn.bnlearn.structure_scores" title="Permalink to this headline"></a></h1>
+<span id="structure-scores"></span><h1>Structure Scores<a class="headerlink" href="#module-bnlearn.bnlearn.structure_scores" title="Permalink to this heading"></a></h1>
 <p>Compute structure scores.</p>
-<section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this headline"></a></h2>
 <p>Each model can be scored based on its structure. However, the score doesn’t have very straight forward
 interpretebility but can be used to compare different models. A higher score represents a better fit.
 This method only needs the model structure to compute the score. The structure score functionality
 can be found here: <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.structure_scores" title="bnlearn.bnlearn.structure_scores"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.structure_scores()</span></code></a>.</p>
 <dl class="field-list simple">
-<dt class="field-odd">param model</dt>
+<dt class="field-odd">param model<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The model whose score needs to be computed.</p>
 </dd>
-<dt class="field-even">type model</dt>
+<dt class="field-even">type model<span class="colon">:</span></dt>
 <dd class="field-even"><p>The bnlearn instance such as pgmpy.base.DAG or pgmpy.models.BayesianNetwork</p>
 </dd>
-<dt class="field-odd">param df</dt>
+<dt class="field-odd">param df<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The dataset against which to score the model.</p>
 </dd>
-<dt class="field-even">type df</dt>
+<dt class="field-even">type df<span class="colon">:</span></dt>
 <dd class="field-even"><p>pd.DataFrame instance</p>
 </dd>
-<dt class="field-odd">param scoring_method</dt>
+<dt class="field-odd">param scoring_method<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The following four scoring methods are supported currently: 1) K2Score
 2) BDeuScore 3) BDsScore 4) BicScore</p>
 </dd>
-<dt class="field-even">type scoring_method</dt>
+<dt class="field-even">type scoring_method<span class="colon">:</span></dt>
 <dd class="field-even"><p>str ( k2 | bdeu | bds | bic )</p>
 </dd>
-<dt class="field-odd">param kwargs</dt>
+<dt class="field-odd">param kwargs<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Any additional parameters parameters that needs to be passed to the
 scoring method.</p>
 </dd>
-<dt class="field-even">type kwargs</dt>
+<dt class="field-even">type kwargs<span class="colon">:</span></dt>
 <dd class="field-even"><p>kwargs</p>
 </dd>
-<dt class="field-odd">returns</dt>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>Model score</strong> – A score value for the model.</p>
 </dd>
-<dt class="field-even">rtype</dt>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>float</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example dataset</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the Bayesian DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure scores are stored in the model dictionary.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;structure_scores&#39;</span><span class="p">]</span>
-<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute the structure score for as specific scoring-method.</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">structure_scores</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">scoring_method</span><span class="o">=</span><span class="s2">&quot;bic&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
