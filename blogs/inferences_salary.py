@@ -143,3 +143,6 @@ query = bn.inference.fit(model,
 
 
 # %%
+import datazets as dz
+df = dz.get('grocery_products')
+

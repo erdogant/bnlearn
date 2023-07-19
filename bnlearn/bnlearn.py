@@ -1364,7 +1364,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     """
     out = {}
     model = None
-    filepath= filepath.lower()
+    # filepath= filepath.lower()
     if verbose>=3: print('[bnlearn] >Import <%s>' %(filepath))
     # Get the data properties
     dataproperties = dz.get_dataproperties(filepath)
