@@ -5,6 +5,52 @@ from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.factors.discrete import TabularCPD
 
+# %% issue #84
+# Load library
+from pgmpy.factors.discrete import TabularCPD
+import bnlearn as bn
+
+# Create some edges, all starting from the same root node: A
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+DAG = bn.make_DAG(edges, methodtype='naivebayes')
+
+# Set CPDs
+cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
+print(cpd_A)
+cpd_B = TabularCPD(variable='B', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_B)
+cpd_C = TabularCPD(variable='C', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_C)
+cpd_D = TabularCPD(variable='D', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
+print(cpd_D)
+
+DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
+# Plot the CPDs as a sanity check
+bn.print_CPD(DAG, checkmodel=True)
+# Plot the DAG
+bn.plot(DAG)
+
+
+# %%
+import bnlearn as bn
+
+# Load example dataset
+Xy_train = bn.import_example('titanic')
+Xy_train.drop(labels='Cabin', axis=1, inplace=True)
+Xy_train = Xy_train.dropna(axis=0)
+
+tarvar='Survived'
+model = bn.structure_learning.fit(Xy_train, 
+                                  methodtype='tan', 
+                                  class_node = 'Survived')
+model = bn.parameter_learning.fit(model, 
+                                  Xy_train, 
+                                  methodtype='bayes',
+                                  scoretype='bdeu')
+y_train_pred = bn.predict(model, Xy_train, variables = tarvar, verbose=4)
+
+
+
 # %%
 import bnlearn as bn
 
@@ -638,6 +684,7 @@ bn.plot(model)
 
 # %% Naive Bayesian model
 from pgmpy.factors.discrete import TabularCPD
+import bnlearn as bn
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
 DAG = bn.make_DAG(edges, methodtype='naivebayes')
