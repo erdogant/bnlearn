@@ -278,7 +278,7 @@ def check_model(DAG, verbose=3):
         for cpd in DAG.get_cpds():
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
                 if verbose>=3: print('[bnlearn] >CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
-        if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
+        # if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
     else:
         if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
 
