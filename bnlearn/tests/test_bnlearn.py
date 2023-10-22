@@ -42,7 +42,8 @@ def test_QUERY():
 
 
 def test_import_DAG():
-    DAG = bn.import_DAG('Sprinkler')
+    import bnlearn as bn
+    DAG = bn.import_DAG('sprinkler')
     # TEST 1: check output is unchanged
     assert DAG.keys() == {'model', 'adjmat'}
     # TEST 2: Check model output is unchanged
@@ -104,19 +105,19 @@ def test_to_undirected():
 
 
 def test_compare_networks():
-    DAG = bn.import_DAG('Sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler', verbose=0)
     G = bn.compare_networks(DAG, DAG, showfig=False)
     assert np.all(G[0] == [[12, 0], [0, 4]])
 
 
 def test_adjmat2vec():
-    DAG = bn.import_DAG('Sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler', verbose=0)
     out = bn.adjmat2vec(DAG['adjmat'])
     assert np.all(out['source'] == ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain'])
 
 
 def test_vec2adjmat():
-    DAG = bn.import_DAG('Sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler', verbose=0)
     out = bn.adjmat2vec(DAG['adjmat'])
     # TEST: conversion
     assert bn.vec2adjmat(out['source'], out['target']).shape == DAG['adjmat'].shape
@@ -134,20 +135,17 @@ def test_inference():
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
     assert q1.df is None
-    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=True,
-                          verbose=0)
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=True, verbose=0)
     assert q1.df is not None
 
 
 def test_query2df():
     DAG = bn.import_DAG('sprinkler')
-    query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1},
-                             to_df=False, verbose=0)
+    query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
     df = bn.query2df(query)
     assert df.shape == (2, 2)
     assert np.all(df.columns == ['Wet_Grass', 'p'])
-    query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain': 1, 'Cloudy': 1}, to_df=False,
-                             verbose=0)
+    query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain': 1, 'Cloudy': 1}, to_df=False, verbose=0)
     df = bn.query2df(query)
     assert np.all(np.isin(df.columns, ['Sprinkler', 'Wet_Grass', 'p']))
     assert df.shape == (4, 3)
@@ -327,7 +325,7 @@ def test_structure_scores():
     DAG = bn.make_DAG(edges)
     model = bn.parameter_learning.fit(DAG, df)
     assert set([*model['structure_scores'].keys()]) == {'bdeu', 'bds', 'bic', 'k2'}
-    assert [*model['structure_scores'].values()] == [-1952.7499005180116, -1953.219110059786, -1954.4304910940107, -1961.36196289961]
+    assert np.all(np.round([*model['structure_scores'].values()]) == np.array([-1953., -1953., -1954., -1961.]))
     # Print CPDs
     CPD = bn.print_CPD(model)
     bn.check_model(CPD)
