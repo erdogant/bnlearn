@@ -1,9 +1,22 @@
 import pandas as pd
 import numpy as np
-from pgmpy.inference import VariableElimination
-from pgmpy.models import BayesianNetwork, NaiveBayes
-from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
-from pgmpy.factors.discrete import TabularCPD
+# from pgmpy.inference import VariableElimination
+# from pgmpy.models import BayesianNetwork, NaiveBayes
+# from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+# from pgmpy.factors.discrete import TabularCPD
+
+# %%
+import bnlearn as bn
+
+# Load example dataset
+Xy_train = bn.import_example('titanic')
+Xy_train.drop(labels='Cabin', axis=1, inplace=True)
+Xy_train = Xy_train.dropna(axis=0)
+
+tarvar=['Survived']
+model = bn.structure_learning.fit(Xy_train, methodtype='tan', class_node = 'Survived')
+model = bn.parameter_learning.fit(model, Xy_train, methodtype='bayes', scoretype='bdeu')
+y_train_pred = bn.predict(model, Xy_train, variables = tarvar, verbose=4)
 
 # %% issue #84
 # Load library
@@ -29,25 +42,6 @@ DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
 bn.print_CPD(DAG, checkmodel=True)
 # Plot the DAG
 bn.plot(DAG)
-
-
-# %%
-import bnlearn as bn
-
-# Load example dataset
-Xy_train = bn.import_example('titanic')
-Xy_train.drop(labels='Cabin', axis=1, inplace=True)
-Xy_train = Xy_train.dropna(axis=0)
-
-tarvar='Survived'
-model = bn.structure_learning.fit(Xy_train, 
-                                  methodtype='tan', 
-                                  class_node = 'Survived')
-model = bn.parameter_learning.fit(model, 
-                                  Xy_train, 
-                                  methodtype='bayes',
-                                  scoretype='bdeu')
-y_train_pred = bn.predict(model, Xy_train, variables = tarvar, verbose=4)
 
 
 
@@ -98,7 +92,7 @@ bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn
 import bnlearn as bn
 df = bn.import_example(data='sprinkler', n=1000)
 
-DAG = bn.import_DAG('Sprinkler')
+DAG = bn.import_DAG('sprinkler')
 
 # %% Working with continues data
 import bnlearn as bn
@@ -179,7 +173,7 @@ import bnlearn as bn
 model = bn.import_DAG('asia')
 
 # Make single inference
-query = bn.inference.fit(model, variables=['lung', 'bronc', 'xray'], evidence={'smoke':1})
+query = bn.inference.fit(model, variables=['lung', 'bronc', 'xray'], evidence={'smoke': 1})
 print(query)
 print(bn.query2df(query))
 
@@ -360,7 +354,7 @@ model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", verbose=4,
 model = bn.structure_learning.fit(df, methodtype='hc', verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='cs', verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='cl', verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='tan', class_node="B", verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node="A", class_node="B", verbose=4, n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='ex', verbose=4, n_jobs=1)
 model = bn.independence_test(model, df, prune=True)
 # Plot
