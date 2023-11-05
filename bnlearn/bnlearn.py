@@ -1549,11 +1549,12 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
 
 # %%
 def _get_prob(query, method='max'):
-    # Setup all combinations
-    allcomb = np.array(list(itertools.product([0, 1], repeat=len(query.variables))))
-    # Get highest P-value and gather data
-    Pq = query.values.flatten()
     if method=='max':
+        # Setup all combinations
+        possible_values = query.state_names.values()
+        allcomb = np.array(list(itertools.product(*possible_values)))
+        # Get highest P-value and gather data
+        Pq = query.values.flatten()
         idx = np.argmax(Pq)
         comb = allcomb[idx]
         p = Pq[idx]

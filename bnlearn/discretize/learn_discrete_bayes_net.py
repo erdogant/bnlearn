@@ -167,9 +167,11 @@ def prior_of_intval(continuous: pd.Series, lam: int) -> np.ndarray:
     N = len(continuous)
     d_1_N = continuous.iloc[N - 1] - continuous.iloc[0]
     prior = np.zeros(N, dtype="float64")
+    # Small positive number to avoid zero 
+    epsilon = 1e-10  
     for i in range(N - 1):
         d_i = continuous.iloc[i + 1] - continuous.iloc[i]
-        prior[i] = 1 - math.exp(-lam * d_i / d_1_N)
+        prior[i] = 1 - math.exp(-lam * d_i / d_1_N) + epsilon
     prior[N - 1] = 1
 
     return prior
