@@ -1,9 +1,51 @@
+# %% issue plot static vs dynamic is different
+import bnlearn as bn
+
+# Load example dataset
+df = bn.import_example('sprinkler')
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges)
+model = bn.parameter_learning.fit(DAG, df)
+# Print CPDs
+CPD = bn.print_CPD(model)
+
+bn.check_model(CPD)
+bn.check_model(model)
+
+bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+bn.plot(model, interactive=False)
+
+
+# %% Issue 88 (fixed)
 import pandas as pd
 import numpy as np
 # from pgmpy.inference import VariableElimination
 # from pgmpy.models import BayesianNetwork, NaiveBayes
 # from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 # from pgmpy.factors.discrete import TabularCPD
+
+
+import bnlearn as bn
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame(np.random.random_integers(0, 2, (10, 4)), columns=['a', 'b', 'c', 'd'])
+edges = [
+    ('a', 'b'),
+    ('a', 'c'),
+    ('c', 'd'),
+    ('b', 'd'),
+]
+DAG = bn.make_DAG(edges)
+DAG = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
+
+bn.predict(DAG, df, variables=['d'])
 
 # %%
 import bnlearn as bn
