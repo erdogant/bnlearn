@@ -382,7 +382,7 @@ def vec2df(source, target, weights=None):
 
 
 # %%  Convert adjacency matrix to vector
-def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum', verbose=3) -> pd.DataFrame:
+def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='sum', verbose=3) -> pd.DataFrame:
     """Convert source and target into adjacency matrix.
 
     Parameters
@@ -391,7 +391,7 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
         The source node.
     target : list
         The target node.
-    weight : list of int
+    weights : list of int
         The Weights between the source-target values
     symmetric : bool, optional
         Make the adjacency matrix symmetric with the same number of rows as columns. The default is True.
@@ -415,12 +415,12 @@ def vec2adjmat(source, target, weight=None, symmetric: bool = True, aggfunc='sum
 
     """
     if len(source) != len(target): raise ValueError('[d3graph] >Source and Target should have equal elements.')
-    if weight is None: weight = [1] * len(source)
+    if weights is None: weights = [1] * len(source)
     if verbose>=3: print('[bnlearn] >Converting source-target into adjacency matrix..')
 
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     # Make adjacency matrix
-    adjmat = pd.crosstab(df['source'], df['target'], values=weight, aggfunc=aggfunc).fillna(0)
+    adjmat = pd.crosstab(df['source'], df['target'], values=weights, aggfunc=aggfunc).fillna(0)
     # Get all unique nodes
     nodes = np.unique(list(adjmat.columns.values) + list(adjmat.index.values))
     # nodes = np.unique(np.c_[adjmat.columns.values, adjmat.index.values].flatten())
