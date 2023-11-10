@@ -1187,25 +1187,27 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
     # Set the min_weight
     X = pd.DataFrame(data=edgelist, columns=['source', 'target'])
     X['weight'] = edge_weights
-    
+    # X = vec2adjmat(target=X['target'], source=X['source'], weight=X['weight'])
+
     # Create network using default
     d3.d3graph(X,
                showfig=False,
                title=title,
                notebook=params_interactive['notebook'])
 
-    # Change node properties
-    d3.D3graph.set_node_properties(label=nodelist,
-                                   tooltip=tooltip,
-                                   size=node_sizes,
-                                   color=node_colors,
-                                   fontcolor=params_interactive['font_color'],
-                                   )
-
     # Change edge properties
     d3.D3graph.set_edge_properties(directed=params_interactive['directed'],
                                    minmax_distance=params_interactive['minmax_distance'],
                                    marker_color=edge_colors)
+
+    # Change node properties
+    _, IB = ismember([*d3.D3graph.node_properties.keys()], nodelist)
+
+    d3.D3graph.set_node_properties(tooltip=np.array(tooltip)[IB],
+                                   size=np.array(node_sizes)[IB],
+                                   color=np.array(node_colors)[IB],
+                                   fontcolor=params_interactive['font_color'],
+                                   )
 
     # Show the interactive plot
     d3.D3graph.show(show_slider=params_interactive['show_slider'],
@@ -1214,6 +1216,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
 
     # Return
     return os.path.abspath(d3.D3graph.config['filepath'])
+
 
 
 # %% Plot properties
