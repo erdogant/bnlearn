@@ -85,7 +85,8 @@ def sprinkler_dag():
 
 def test_sampling_bayes(sprinkler_dag):
     n = np.random.randint(10, 1000)
-    df = bn.sampling(sprinkler_dag, n=n, methodtype='bayes')
+    model = bn.import_DAG('sprinkler')
+    df = bn.sampling(model, n=n, methodtype='bayes')
     assert df.shape == (n, 4)
 
 
