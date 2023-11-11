@@ -48,18 +48,12 @@ def fit(df,
     The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.
 
     To learn model structure (a DAG) from a data set, there are three broad techniques:
-        1. Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)
-            * exhaustivesearch
-            * hillclimbsearch
-            * chow-liu
-            * Tree-augmented Naive Bayes (tan)
-            * NaiveBayesian
-        2. Constraint-based structure learning (PC)
-            a. chi-square test
+        1. Score-based structure learning: using scoring functions as defined in scoretype and search strategy as defined in methodtype.
+        2. Constraint-based structure learning (PC): Using statistics such as chi-square test for strength of edges prior the modeling.
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
     Score-based Structure Learning.
-    This approach construes model selection as an optimization task. It has two building blocks:
+    This approach performes model selection as an optimization task. It has two building blocks:
     A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
     A search strategy to traverse the search space of possible models M and select a model with optimal score.
     Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
