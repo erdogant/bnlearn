@@ -1,3 +1,11 @@
+import bnlearn as bn
+# Load asia DAG
+model_true = bn.import_DAG('asia')
+# plot ground truth
+G = bn.plot(model_true)
+
+Gi = bn.plot(model_true, interactive=True)
+
 # %% issue plot static vs dynamic is different
 import bnlearn as bn
 
