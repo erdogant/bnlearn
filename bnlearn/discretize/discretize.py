@@ -46,6 +46,8 @@ def discretize(
         verbose=verbose,
     )
 
+    continuous_columns = sorted(continuous_columns, key=lambda x: data.columns.get_loc(x))
+    
     # Extend the breaks to the left with 1% to deal with (open,closed] intervals
     for i, col in enumerate(continuous_columns):
         breaks = continuous_edges[i]
