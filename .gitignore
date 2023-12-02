@@ -8,6 +8,7 @@ bnlearn/data/
 julia/
 
 *.pkl
+.pypirc
 
 # C extensions
 *.so
