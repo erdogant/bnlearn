@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Advanced discretizing continous data &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -184,7 +186,7 @@ The method is described in the paper of Yi-Chun Chen et al.</p>
 <p>The underlying idea i that the implemented method now can perform structure learning by first discretizng the continuous
 variables and simultaneously learn Bayesian network structures.</p>
 <section id="advanced-discretizing-continous-data">
-<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Permalink to this heading"></a></h1>
+<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Link to this heading"></a></h1>
 <p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -252,7 +254,7 @@ variables and simultaneously learn Bayesian network structures.</p>
 discrete data frame and fit a model using <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
 </section>
 <section id="structure-learning">
-<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Permalink to this heading"></a></h1>
+<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h1>
 <p>We will learn the structure on the continuous data. Note that the data is also discretezed on a set of edges which will
 likely introduce a bias in the learned structure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
@@ -274,7 +276,7 @@ likely introduce a bias in the learned structure.</p>
 </figure>
 <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe></section>
 <section id="parameter-learning">
-<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Permalink to this heading"></a></h1>
+<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Link to this heading"></a></h1>
 <p>Let’s continue with parameter learning on the continuous data set and see whether we can estimate the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model based on DAG and discretized continous columns</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
@@ -340,7 +342,7 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 </div>
 </section>
 <section id="inference">
-<h1>Inference<a class="headerlink" href="#inference" title="Permalink to this heading"></a></h1>
+<h1>Inference<a class="headerlink" href="#inference" title="Link to this heading"></a></h1>
 <p>Making inferences can be perfomred using the fitted model. Note that the evidence should be discretized for which we can
 use the <code class="docutils literal notranslate"><span class="pre">discretize_value</span></code> function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">evidence</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize_value</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="mf">3000.0</span><span class="p">)}</span>
@@ -378,7 +380,7 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
 </tbody>
 </table>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading"></a></h2>
+<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
 <blockquote>
 <div><ol class="arabic simple">
 <li><p>Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),

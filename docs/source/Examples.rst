@@ -285,7 +285,14 @@ Import example dataset of the sprinkler dataset.
 
 .. code-block:: python
 
+    pip install tabulate
+
+
+.. code-block:: python
+
     import bnlearn as bn
+    from tabulate import tabulate
+
     df = bn.import_example('sprinkler')
     print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 

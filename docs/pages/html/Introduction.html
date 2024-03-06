@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Introduction &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -179,7 +181,7 @@
            <div itemprop="articleBody">
              
   <section id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h1>
 <p>Learning a Bayesian network can be split into <strong>structure learning</strong> and <strong>parameter learning</strong> which are both implemented in <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
 <ul class="simple">
 <li><p><strong>Structure learning</strong>: Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p></li>
@@ -204,7 +206,7 @@
 <li><p>conversion of directed to undirected graphs</p></li>
 </ul>
 <section id="structure-learning-algorithms">
-<h2>Structure Learning algorithms<a class="headerlink" href="#structure-learning-algorithms" title="Permalink to this heading"></a></h2>
+<h2>Structure Learning algorithms<a class="headerlink" href="#structure-learning-algorithms" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains <strong>score-based</strong>, <strong>local discovery</strong>, <strong>Bayesian network</strong>, and <strong>constraint-based</strong> structure learning algorithms for <em>discrete</em>, <em>fully observed</em> networks.</p>
 <p><strong>Score-based approaches have two main components</strong>:
 * The search algorithm to optimize throughout the search space of all possible DAGs.
@@ -223,27 +225,27 @@
 </ul>
 </section>
 <section id="score-based-algorithms">
-<h2>Score-based algorithms<a class="headerlink" href="#score-based-algorithms" title="Permalink to this heading"></a></h2>
+<h2>Score-based algorithms<a class="headerlink" href="#score-based-algorithms" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>ExhaustiveSearch (ex)</p></li>
 <li><p>Hill Climbing (hc)</p></li>
 </ul>
 </section>
 <section id="local-discovery-algorithms">
-<h2>Local discovery algorithms<a class="headerlink" href="#local-discovery-algorithms" title="Permalink to this heading"></a></h2>
+<h2>Local discovery algorithms<a class="headerlink" href="#local-discovery-algorithms" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Chow-liu (cl)</p></li>
 </ul>
 </section>
 <section id="bayesian-network-classifiers">
-<h2>Bayesian network classifiers<a class="headerlink" href="#bayesian-network-classifiers" title="Permalink to this heading"></a></h2>
+<h2>Bayesian network classifiers<a class="headerlink" href="#bayesian-network-classifiers" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>NaiveBayesian (nb)</p></li>
 <li><p>Tree-augmented Naive Bayes (tan)</p></li>
 </ul>
 </section>
 <section id="constraint-based-structure-learning-algorithms">
-<h2>Constraint-based structure learning algorithms<a class="headerlink" href="#constraint-based-structure-learning-algorithms" title="Permalink to this heading"></a></h2>
+<h2>Constraint-based structure learning algorithms<a class="headerlink" href="#constraint-based-structure-learning-algorithms" title="Link to this heading"></a></h2>
 <p>With constraint-based structure learning, a DAG can be constructed by identifying independencies in the data set using hypothesis tests, such as chi2 test statistic.
 This approach does rely on statistical tests and conditional hypotheses to learn independence among the variables in the model.
 The P-value of the chi2 test is the probability of observing the computed chi2 statistic, given the null hypothesis that X and Y are independent given Z.

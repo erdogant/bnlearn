@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.parameter_learning &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -176,10 +178,10 @@
            <div itemprop="articleBody">
              
   <section id="module-bnlearn.parameter_learning">
-<span id="bnlearn-parameter-learning"></span><h1>bnlearn.parameter_learning<a class="headerlink" href="#module-bnlearn.parameter_learning" title="Permalink to this heading"></a></h1>
+<span id="bnlearn-parameter-learning"></span><h1>bnlearn.parameter_learning<a class="headerlink" href="#module-bnlearn.parameter_learning" title="Link to this heading"></a></h1>
 <p>Parameter learning.</p>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading"></a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading"></a></h2>
 <p>Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
 To make sense of the given data, we can start by counting how often each state of the variable occurs.
 If the variable is dependent on the parents, the counts are done conditionally on the parents states,
@@ -194,10 +196,10 @@ i.e. for seperately for each parent configuration</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.parameter_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bdeu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.parameter_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bdeu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.parameter_learning.fit" title="Link to this definition"></a></dt>
 <dd><p>Learn the parameters given the DAG and data.</p>
 <section id="id1">
-<h2>Description<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h2>
+<h2>Description<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
 <dl>
 <dt>Maximum Likelihood Estimation</dt><dd><p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>,
 with which the variable states have occured. We observed x cloudy` among a total of <cite>all clouds</cite>,

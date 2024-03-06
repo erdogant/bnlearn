@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.structure_learning &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -175,40 +177,24 @@
            <div itemprop="articleBody">
              
   <section id="module-bnlearn.structure_learning">
-<span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Permalink to this heading"></a></h1>
+<span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Link to this heading"></a></h1>
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
 <dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
 <dl class="simple">
 <dt>To learn model structure (a DAG) from a data set, there are three broad techniques:</dt><dd><ol class="arabic simple">
-<li><dl class="simple">
-<dt>Score-based structure learning (BIC/BDeu/K2 score; exhaustive search, hill climb/tabu search)</dt><dd><ul class="simple">
-<li><p>exhaustivesearch</p></li>
-<li><p>hillclimbsearch</p></li>
-<li><p>chow-liu</p></li>
-<li><p>Tree-augmented Naive Bayes (tan)</p></li>
-<li><p>NaiveBayesian</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Constraint-based structure learning (PC)</dt><dd><ol class="loweralpha simple">
-<li><p>chi-square test</p></li>
-</ol>
-</dd>
-</dl>
-</li>
+<li><p>Score-based structure learning: using scoring functions as defined in scoretype and search strategy as defined in methodtype.</p></li>
+<li><p>Constraint-based structure learning (PC): Using statistics such as chi-square test for strength of edges prior the modeling.</p></li>
 <li><p>Hybrid structure learning (The combination of both techniques) (MMHC)</p></li>
 </ol>
 </dd>
 </dl>
 <p>Score-based Structure Learning.
-This approach construes model selection as an optimization task. It has two building blocks:
+This approach performes model selection as an optimization task. It has two building blocks:
 A scoring function sD:-&gt;R that maps models to a numerical score, based on how well they fit to a given data set D.
 A search strategy to traverse the search space of possible models M and select a model with optimal score.
 Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
