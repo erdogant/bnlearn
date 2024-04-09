@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
+<html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DataFrames &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
-      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
-
-  
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -114,6 +112,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#export-dag-bif">Export DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
 <li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
@@ -221,7 +220,27 @@
 <center>
         <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
 </center>
-<hr><hr>
+<hr></section>
+<section id="export-dag-bif">
+<h1>Export DAG/BIF<a class="headerlink" href="#export-dag-bif" title="Link to this heading"></a></h1>
+<p>The learned bayesian network can be exported in one of common bayes network formats, like BIF, hugin or XMLBIF by using the BIFwriter from pgmpy.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import packages</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pgmpy.readwrite</span> <span class="kn">import</span> <span class="n">BIFWriter</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Import dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="c1"># build model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Write to BIF</span>
+<span class="n">writer</span> <span class="o">=</span> <span class="n">BIFWriter</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">])</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">write_bif</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;model.bif&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

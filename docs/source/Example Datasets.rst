@@ -66,4 +66,27 @@ With the :func:`bnlearn.bnlearn.sampling` function a ``DataFrame`` can be create
 
 
 
+Export DAG/BIF
+^^^^^^^^^^^^^^^
+
+The learned bayesian network can be exported in one of common bayes network formats, like BIF, hugin or XMLBIF by using the BIFwriter from pgmpy.
+
+.. code-block:: python
+
+	# Import packages
+	import pandas as pd
+	from pgmpy.readwrite import BIFWriter
+	import bnlearn as bn
+
+	# Import dataset
+	df = bn.import_example('sprinkler')
+	# build model
+	model = bn.structure_learning.fit(df)
+	model = bn.parameter_learning.fit(model, df)
+
+	# Write to BIF
+	writer = BIFWriter(model['model'])
+	writer.write_bif(filename='model.bif')
+
+
 .. include:: add_bottom.add
