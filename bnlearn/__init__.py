@@ -38,7 +38,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.8.5'
+__version__ = '0.8.6'
 
 import pgmpy
 # Check version pgmpy
@@ -51,20 +51,21 @@ if not version.parse(matplotlib.__version__) >= version.parse("3.3.4"):
     raise ImportError('[bnlearn] >Error: Matplotlib version should be >= v3.3.4\nTry to: pip install -U matplotlib')
 
 import networkx as nx
-if not version.parse(nx.__version__) >= version.parse("2.7.1"):
+if version.parse(nx.__version__) < version.parse("2.7.1"):
     raise ImportError('[bnlearn] >Error: networkx version should be > 2.7.1\nTry to: pip install -U networkx')
 
 import numpy as np
-if not version.parse(np.__version__) >= version.parse("1.24.1"):
+if version.parse(np.__version__) < version.parse("1.24.1"):
     raise ImportError('[bnlearn] >Error: numpy version should be > 1.24.1\nTry to: pip install -U numpy')
 
 import pandas as pd
-if not version.parse(pd.__version__) <= version.parse("1.5.3"):
+if version.parse(pd.__version__) > version.parse("1.5.3"):
     raise ImportError('[bnlearn] >Error: pands version should be <= 1.5.3')
 
-import d3blocks as d3
-if not version.parse(d3.__version__) <= version.parse("1.4.9"):
-    raise ImportError('[bnlearn] >Error: d3blocks version should be >= 1.4.9')
+# This one is moved towards the interactive plot function because it is not required in the setup.
+# import d3blocks as d3
+# if version.parse(d3.__version__) < version.parse("1.4.9"):
+#     raise ImportError('[bnlearn] >Error: d3blocks version should be >= 1.4.9')
 
 # module level doc-string
 __doc__ = """

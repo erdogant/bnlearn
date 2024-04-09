@@ -18,7 +18,6 @@ setuptools.setup(
                        "matplotlib>=3.3.4",
                        "numpy>=1.24.1",
                        'pandas==1.5.3',
-                       'd3blocks>=1.4.9',
                        'tqdm',
                        'ismember',
                        'scikit-learn',

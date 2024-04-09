@@ -1173,11 +1173,16 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 # %% Plot interactive
 def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, verbose=3):
     # Try to import d3blocks
+    from packaging import version
     try:
         # Load library
         from d3blocks import D3Blocks
     except ModuleNotFoundError:
-        if verbose>=1: raise Exception('[bnlearn] >"d3blocks" library is not installed. Please pip install first: "pip install d3blocks"')
+        if verbose>=1: raise Exception('[bnlearn] >"d3blocks" library is not installed. Pip install first: "pip install d3blocks"')
+
+    import d3blocks as d3
+    if version.parse(d3.__version__) < version.parse("1.4.9"):
+        raise ImportError('[bnlearn] >Error: d3blocks version should be >= 1.4.9. Pip install to the latest version first: "pip install -U d3blocks"')
 
     if params_interactive['filepath'] is None: params_interactive['filepath'] = title.strip().replace(' ', '_') + '.html'
 
