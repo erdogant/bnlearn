@@ -1,3 +1,105 @@
+# %% compute causalities
+import bnlearn as bn
+# Load asia DAG
+df = bn.import_example('asia', verbose=0)
+# print(tabulate(df.head(), tablefmt="grid", headers="keys"))
+# print(df)
+
+# Structure learning
+model = bn.structure_learning.fit(df, verbose=0, scoretype='bic', methodtype='hc')
+model = bn.structure_learning.fit(df, verbose=0, scoretype='k2', methodtype='hc')
+
+# Plot the DAG
+bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+
+# Test for independence
+model = bn.independence_test(model, df, prune=False)
+
+# Plot the DAG
+bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+# Print the CPDs
+bn.print_CPD(model)
+# Comparison
+
+# Learn its parameters from data and perform the inference.
+model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+# Print the CPDs
+bn.print_CPD(model_with_CPD)
+
+# Nothing is changed for the DAG. Only the CPDs are estimated now.
+bn.compare_networks(model_with_CPD, model, verbose=0)
+
+# Make inference
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1}, verbose=3)
+
+# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0}, verbose=3)
+# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
+
+# pd.DataFrame(index=q4.variables, data=q4.values, columns=q4.variables)
+
+# edges = [('Cloudy', 'Sprinkler'),
+#          ('Cloudy', 'Rain'),
+#          ('Sprinkler', 'Wet_Grass'),
+#          ('Rain', 'Wet_Grass')]
+
+# # Make the actual Bayesian DAG
+# DAG = bn.make_DAG(edges)
+
+
+# %% Police shooting
+import bnlearn as bn
+from datazets import datazets
+df = datazets.get(url=r'https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/v2/fatal-police-shootings-data.csv', overwrite=True)
+del df['id']
+del df['name']
+del df['county']
+del df['state']
+del df['date']
+del df['agency_ids']
+del df['latitude']
+del df['longitude']
+del df['race_source']
+
+# dfhot, dfnum = bn.df2onehot(df, y_min=2)
+
+# Structure learning
+DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic') # hillclimbsearch
+
+# Constrained based
+# DAG = bn.structure_learning.fit(df, methodtype='cs')
+
+# Set class node (endpoint)
+df = df.dropna()
+DAG = bn.structure_learning.fit(df, methodtype='tan', class_node='threat_type')
+
+# Structure learning
+DAG = bn.independence_test(DAG, df, prune=True)
+# Plot
+G = bn.plot(DAG)
+G = bn.plot(DAG, interactive=True)
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df)
+# Make inference
+q1 = bn.inference.fit(model, variables=['threat_type'], evidence={'flee_status': 'foot'})
+q1 = bn.inference.fit(model, variables=['gender'], evidence={'threat_type': 'accident', 'armed_with': 'gun'})
+
+# No connection in the DAG, thus the evidence should not influence the outcome
+q1 = bn.inference.fit(model, variables=['body_camera'], evidence={'gender': 'male'})
+q1 = bn.inference.fit(model, variables=['body_camera'], evidence={'armed_with': 'gun'})
+
+print(q1)
+print(q1.df)
+# bn.print_CPD(model)
+
+# Create test dataset
+Xtest = bn.sampling(model, n=100)
+
+
+# %%
 import bnlearn as bn
 # Load asia DAG
 model = bn.import_DAG('asia')
@@ -5,6 +107,12 @@ model = bn.import_DAG('asia')
 G = bn.plot(model)
 
 Gi = bn.plot(model, interactive=True)
+
+bn.print_CPD(model)
+
+# Lets create an example dataset with 100 samples and make inferences on the entire dataset.
+df = bn.sampling(model, n=10000)
+
 
 # %% issue plot static vs dynamic is different
 import bnlearn as bn
@@ -68,6 +176,7 @@ model = bn.structure_learning.fit(Xy_train, methodtype='tan', class_node = 'Surv
 model = bn.parameter_learning.fit(model, Xy_train, methodtype='bayes', scoretype='bdeu')
 y_train_pred = bn.predict(model, Xy_train, variables = tarvar, verbose=4)
 
+
 # %% issue #84
 # Load library
 from pgmpy.factors.discrete import TabularCPD
@@ -92,7 +201,6 @@ DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
 bn.print_CPD(DAG, checkmodel=True)
 # Plot the DAG
 bn.plot(DAG)
-
 
 
 # %%
@@ -1168,7 +1276,15 @@ df = bn.import_example('asia', verbose=0)
 # print(df)
 
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0)
+model = bn.structure_learning.fit(df, verbose=0, scoretype='bic', methodtype='hc')
+model = bn.structure_learning.fit(df, verbose=0, scoretype='k2', methodtype='hc')
+
+# Plot the DAG
+bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+
+# Test for independence
+model = bn.independence_test(model, df, prune=False)
+
 # Plot the DAG
 bn.plot(model, verbose=0, interactive=True, node_color='#000000')
 # Print the CPDs
@@ -1176,17 +1292,22 @@ bn.print_CPD(model)
 # Comparison
 
 # Learn its parameters from data and perform the inference.
-DAG = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
 # Print the CPDs
-bn.print_CPD(DAG)
+bn.print_CPD(model_with_CPD)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-bn.compare_networks(DAG, model, verbose=0)
+bn.compare_networks(model_with_CPD, model, verbose=0)
 
 # Make inference
-q4 = bn.inference.fit(DAG, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1}, verbose=3)
+
+# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0}, verbose=3)
 # q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1}, verbose=3)
-# q4 = bn.inference.fit(DAGnew, variables=['bronc','lung'], evidence={'smoke':0, 'xray':0})
+q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
 
 # pd.DataFrame(index=q4.variables, data=q4.values, columns=q4.variables)
 
@@ -1251,7 +1372,7 @@ q2.name_to_no
 q2.no_to_name,
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('water', verbose=0)
+DAG = bn.import_DAG('asia', verbose=0)
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
