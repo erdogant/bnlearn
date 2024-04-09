@@ -56,15 +56,6 @@ Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` i
 With the :func:`bnlearn.bnlearn.sampling` function a ``DataFrame`` can be created for *n* samples.
 
 
-.. raw:: html
-
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
-
-
 
 Export DAG/BIF
 ^^^^^^^^^^^^^^^
