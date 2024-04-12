@@ -964,7 +964,7 @@ def plot(model,
          node_properties=None,
          edge_properties=None,
          params_interactive={'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
-         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True},
+         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'width': None, 'height': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spectral_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True},
          verbose=3):
     """Plot the learned stucture.
 
@@ -1050,7 +1050,7 @@ def plot(model,
     # Plot properties
     defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True}
+    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spectral_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 30, 'visible': True}
     params_static = {**defaults, **params_static}
 
     # DEPRECATED IN LATER VERSION
@@ -1074,6 +1074,15 @@ def plot(model,
     for key in node_properties.keys():
         if node_properties[key]['node_size'] is None:
             node_properties[key]['node_size']=node_size_default
+
+    # Add edges with weights based on independence test results
+    for edge, properties in edge_properties.items():
+        strength = properties.get("weight", 0)
+        G.add_edge(*edge, weight = strength)
+
+    # Update the dataframe with the weights
+    for (source, target), value in edge_properties.items():
+        model['adjmat'].loc[source, target] = value['weight']
 
     # Extract model if in dict
     if 'dict' in str(type(model)):
@@ -1110,7 +1119,7 @@ def plot(model,
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()):
             if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
             # positions for all nodes
-            G = nx.DiGraph(model['adjmat'])
+            # G = nx.DiGraph(model['adjmat'])
             pos = bnlearn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
         elif 'networkx' in str(type(bnmodel)):
             if verbose>=3: print('[bnlearn] >Plot based on networkx model')
