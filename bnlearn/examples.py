@@ -38,13 +38,16 @@ model = bn.structure_learning.fit(df, verbose=0, scoretype='bic', methodtype='hc
 model = bn.structure_learning.fit(df, verbose=0, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
+DAG = bn.plot(model, verbose=0, interactive=False)
 bn.plot(model, verbose=0, interactive=True, node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
+bn.plot(model, verbose=0, interactive=False, pos=DAG['pos'])
 bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
@@ -104,11 +107,17 @@ DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic') # hillclim
 df = df.dropna()
 DAG = bn.structure_learning.fit(df, methodtype='tan', class_node='threat_type')
 
-# Structure learning
-DAG = bn.independence_test(DAG, df, prune=True)
 # Plot
 G = bn.plot(DAG)
 G = bn.plot(DAG, interactive=True)
+
+# Structure learning
+DAG = bn.independence_test(DAG, df, prune=True)
+
+# Plot
+G = bn.plot(DAG)
+G = bn.plot(DAG, interactive=True)
+
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, df)
 # Make inference
