@@ -38,7 +38,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.8.7'
+__version__ = '0.8.8'
 
 import pgmpy
 # Check version pgmpy
@@ -58,9 +58,9 @@ import numpy as np
 if version.parse(np.__version__) < version.parse("1.24.1"):
     raise ImportError('[bnlearn] >Error: numpy version should be > 1.24.1\nTry to: pip install -U numpy')
 
-import pandas as pd
-if version.parse(pd.__version__) > version.parse("1.5.3"):
-    raise ImportError('[bnlearn] >Error: pands version should be <= 1.5.3')
+# import pandas as pd
+# if version.parse(pd.__version__) > version.parse("1.5.3"):
+#     raise ImportError('[bnlearn] >Error: pands version should be <= 1.5.3')
 
 # This one is moved towards the interactive plot function because it is not required in the setup.
 # import d3blocks as d3

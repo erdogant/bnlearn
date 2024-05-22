@@ -17,7 +17,7 @@ setuptools.setup(
                        "networkx>=2.7.1",
                        "matplotlib>=3.3.4",
                        "numpy>=1.24.1",
-                       'pandas==1.5.3',
+                       'pandas',
                        'tqdm',
                        'ismember',
                        'scikit-learn',
