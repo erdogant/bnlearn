@@ -1,3 +1,64 @@
+# %% issue #98
+import numpy as np
+import bnlearn as bn
+import pandas as pd
+
+# Original data
+data = {
+    "Engine Status": [0, 0, 0, 0, 0],
+    "Speed": [0.25, 0.21, 0.25, 0.21, 0.21],
+    "Status_Alpha": [0, 0, 0, 0, 0],
+    "Alpha_Temp": [170, 170, 170, 170, 170],
+    "Status_Beta": [0, 0, 0, 0, 0]
+}
+
+# Create DataFrame from original data
+df = pd.DataFrame(data)
+
+# Extend the dataset with 100 more random data points
+np.random.seed(0)  # For reproducibility
+
+# Generate random data
+new_data = {
+    "Engine Status": np.random.randint(0, 2, 100),  # Random integers 0 or 1
+    "Speed": np.round(np.random.uniform(0.15, 0.30, 100), 2),  # Random floats between 0.15 and 0.30
+    "Status_Alpha": np.random.randint(0, 2, 100),  # Random integers 0 or 1
+    "Alpha_Temp": np.random.randint(160, 180, 100),  # Random integers between 160 and 180
+    "Status_Beta": np.random.randint(0, 2, 100)  # Random integers 0 or 1
+}
+
+# Create new DataFrame
+new_df = pd.DataFrame(new_data)
+
+# Append new data to the original DataFrame
+df = pd.concat([df, new_df], ignore_index=True)
+
+continuous_columns = ['Engine Status', 'Speed', 'Status_Alpha', 'Alpha_Temp']
+edges = [('Engine Status', 'Speed'),
+         ('Status_Alpha', 'Alpha_Temp'),
+         ('Status_Beta', 'Status_Alpha'),
+         ('Engine Status', 'Status_Alpha')]
+
+DAG = bn.make_DAG(edges)
+
+# Discretize the continous columns
+df_disc = bn.discretize(df, edges, continuous_columns, max_iterations=1)
+
+# # Fit model based on DAG and discretize the continous columns
+# model = bn.parameter_learning.fit(DAG, df_disc)
+
+# Parameter learning
+model = bn.parameter_learning.fit(DAG, df)
+
+
+# Print CPDs
+# CPD = bn.print_CPD(model)
+bn.plot(model, interactive=False)
+
+bn.plot(model, interactive=True)
+
+
+
 # %% issue #93
 
 import bnlearn as bn
@@ -6,11 +67,12 @@ import bnlearn as bn
 df = bn.import_example(data='titanic')
 
 # Convert to onehot
-dfhot, dfnum = bn.df2onehot(df)
+_, dfnum = bn.df2onehot(df)
 
 # Structure learning
 # model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
 model = bn.structure_learning.fit(dfnum)
+
 # Plot
 G = bn.plot(model, interactive=False)
 
@@ -24,6 +86,9 @@ bn.plot(model, interactive=False, pos=G['pos'], params_static={'layout': 'spectr
 
 # Parameter learning
 model = bn.parameter_learning.fit(model, dfnum)
+
+# Plot
+G = bn.plot(model, interactive=True)
 
 
 # %% compute causalities
