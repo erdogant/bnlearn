@@ -1195,6 +1195,9 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
 
     if params_interactive['filepath'] is None: params_interactive['filepath'] = title.strip().replace(' ', '_') + '.html'
 
+    # Need to run this as this is also done in d3
+    nodelist = list(map(lambda x: x.encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), list(nodelist)))
+
     # Initialize
     d3 = D3Blocks()
 
