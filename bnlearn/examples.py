@@ -1,3 +1,190 @@
+import bnlearn as bn
+# Load example mixed dataset
+df = bn.import_example(data='sprinkler')
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+
+# Plot
+# bn.plot(model, params_static={'figsize': (5, 5), 'font_size': 8, 'arrowsize': 15, 'layout': 'spring_layout'}, node_size=1000)
+bn.plot(model)
+bn.plot(model, interactive=True)
+
+# Dot graph
+dotgraph = bn.plot_graphviz(model)
+dotgraph
+# Create pdf
+dotgraph.view(filename=r'c:/temp/dotgraph')
+
+# Compute edge strength with the chi_square test statistic
+model2 = bn.independence_test(model, df, test='chi_square', prune=True)
+bn.plot(model2)
+
+# Dot graph
+dotgraph = bn.plot_graphviz(model2)
+dotgraph.view(filename=r'c:/temp/dotgraph2')
+
+
+# %% Continous and mixed
+import bnlearn as bn
+
+# Load example mixed dataset
+df = bn.import_example(data='auto_mpg')
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='pc')
+
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df, prune=False)
+
+bn.plot(model)
+
+dotgraph = bn.plot_graphviz(model)
+dotgraph
+
+# Parameter learning
+model = bn.parameter_learning.fit(model, df)
+
+# Print the CPDs
+bn.print_CPD(model)
+
+# Make inference
+q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
+
+
+# %% Continous and mixed
+# https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/dowhy_causal_discovery_example.html
+
+import bnlearn as bn
+
+# Load example mixed dataset
+df = bn.import_example(data='auto_mpg')
+# df=df.iloc[:,0:5]
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
+
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df, prune=False)
+
+# Plot
+# bn.plot(model, params_static={'dpi': 100, 'figsize': (15, 10), 'font_size': 8, 'arrowsize': 15, 'arrowsize': 10, 'minscale': 1, 'maxscale': 5}, node_size=1000)
+bn.plot(model)
+bn.plot(model, interactive=True)
+
+
+dotgraph = bn.plot_graphviz(model)
+dotgraph
+# Create pdf
+dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_ICALiNGAM')
+
+# Parameter learning
+# model = bn.parameter_learning.fit(model, df)
+
+# %% with pvalue
+import bnlearn as bn
+
+# df = bn.import_example(data='auto_mpg')
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
+# Compute edge strength with the chi_square test statistic
+model2 = bn.independence_test(model, df, prune=False)
+
+bn.plot(model)
+dotgraph = bn.plot_graphviz(model)
+dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_pvalue')
+
+bn.plot(model2)
+dotgraph = bn.plot_graphviz(model2)
+dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_pvalue3')
+
+
+# %%
+import bnlearn as bn
+import pandas as pd
+from setgraphviz import setgraphviz
+from causallearn.search.FCMBased.lingam.utils import make_dot
+setgraphviz()
+
+# Load example mixed dataset
+# df = bn.import_example(data='auto_mpg')
+
+from causallearn.search.FCMBased import lingam
+# model = lingam.ICALiNGAM()
+model = lingam.DirectLiNGAM(random_state=2)
+model.fit(df)
+
+dotgraph=make_dot(model.adjacency_matrix_, labels=list(df.columns.values))
+dotgraph.view(filename=r'c:/temp/dotgraph_DirectLiNGAM')
+
+
+# %%
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
+                   delim_whitespace=True, header=None,
+                   names = ['mpg', 'cylinders', 'displacement',
+                            'horsepower', 'weight', 'acceleration',
+                            'model year', 'origin', 'car name'])
+df.dropna(inplace=True)
+df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+
+
+# %%
+import numpy as np
+import pandas as pd
+import lingam
+from lingam.utils import make_dot
+
+import bnlearn as bn
+df = bn.import_example(data='auto_mpg')
+labels = list(df.columns.values)
+
+
+# To run causal discovery, we create a DirectLiNGAM object and call the fit method.
+model = lingam.DirectLiNGAM(random_state=None)
+model.fit(df)
+
+# Using the causal_order_ properties, 
+# we can see the causal ordering as a result of the causal discovery.
+print(model.causal_order_)
+
+# Also, using the adjacency_matrix_ properties, 
+# we can see the adjacency matrix as a result of the causal discovery.
+print(model.adjacency_matrix_)
+
+make_dot(model.adjacency_matrix_, labels=labels)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # %% issue #98
 import numpy as np
 import bnlearn as bn
