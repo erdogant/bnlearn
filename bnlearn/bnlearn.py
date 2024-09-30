@@ -410,9 +410,9 @@ def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='su
     >>> source = ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain']
     >>> target = ['Sprinkler', 'Rain', 'Wet_Grass', 'Wet_Grass']
     >>> vec2adjmat(source, target)
-
-    >>> weight = [1, 2, 1, 3]
-    >>> vec2adjmat(source, target, weight=weight)
+    >>>
+    >>> weights = [1, 2, 1, 3]
+    >>> vec2adjmat(source, target, weights=weight)
 
     """
     if len(source) != len(target): raise ValueError('[d3graph] >Source and Target should have equal elements.')
@@ -480,6 +480,9 @@ def adjmat2vec(adjmat, min_weight=1):
 
     min_weight : float
         edges are returned with a minimum weight.
+    absolute: bool
+        True: Make all values absolute
+        False: Keep as is
 
     Returns
     -------
@@ -500,9 +503,17 @@ def adjmat2vec(adjmat, min_weight=1):
     # Set columns
     adjmat.columns = ['source', 'target', 'weight']
     # Remove self loops and no-connected edges
-    Iloc1 = adjmat['source']!=adjmat['target']
-    Iloc2 = adjmat['weight']>=min_weight
+    Iloc1 = adjmat['source'] != adjmat['target']
+
+    # Make all values absolute or not
+    Iloc2 = adjmat['weight'] >= min_weight
+
+    # Select
     Iloc = Iloc1 & Iloc2
+    # Remove edges that have exactly value: rem_weight
+    # if rem_weight is not None:
+        # Iloc[adjmat['weight']==rem_weight]=False
+
     # Take only connected nodes
     adjmat = adjmat.loc[Iloc, :]
     adjmat.reset_index(drop=True, inplace=True)
@@ -808,7 +819,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
 
 
 # %% Get node properties
-def get_node_properties(model, node_color='#1f456e', node_size=None, verbose=3):
+def get_node_properties(model, node_color='#ADD8E6', node_size=None, verbose=3):
     """Collect node properties.
 
     Parameters

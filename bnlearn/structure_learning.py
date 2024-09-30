@@ -15,6 +15,8 @@ import matplotlib.pyplot as plt
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.models import NaiveBayes
 
+import lingam
+
 import pgmpy
 from packaging import version
 if version.parse(pgmpy.__version__)>=version.parse("0.1.13"):
@@ -40,8 +42,10 @@ def fit(df,
         class_node=None,
         fixed_edges=None,
         return_all_dags=False,
+        params_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'},
         n_jobs=-1,
-        verbose=3):
+        verbose=3,
+        ):
     """Structure learning fit model.
 
     Search strategies for structure learning
@@ -52,7 +56,8 @@ def fit(df,
         2. Constraint-based structure learning (PC): Using statistics such as chi-square test for strength of edges prior the modeling.
         3. Hybrid structure learning (The combination of both techniques) (MMHC)
 
-    Score-based Structure Learning.
+    Score-based Structure Learning
+    ------------------------------
     This approach performes model selection as an optimization task. It has two building blocks:
     A scoring function sD:->R that maps models to a numerical score, based on how well they fit to a given data set D.
     A search strategy to traverse the search space of possible models M and select a model with optimal score.
@@ -63,6 +68,9 @@ def fit(df,
     variable counts. This adjustment involves using a value called "equivalent sample size" divided by the number of
     parent configurations with observed variable counts. The score-method evaluates how effectively a model can describe the provided dataset.
 
+    The Direct-LiNGAM method or also named 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. 
+    Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.
+
     Parameters
     ----------
     df : pd.DataFrame()
@@ -71,10 +79,12 @@ def fit(df,
         String Search strategy for structure_learning.
         'hc' or 'hillclimbsearch' (default)
         'ex' or 'exhaustivesearch'
-        'cs' or 'constraintsearch'
+        'pc' or 'cs' or 'constraintsearch'
         'cl' or 'chow-liu' (requires setting root_node parameter)
         'nb' or 'naivebayes' (requires <root_node>)
         'tan' (requires <root_node> and <class_node> parameter)
+        'direct-lingam' (for continuous and mixed datasets)
+        'ica-lingam' (for continuous and mixed datasets)
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
             * 'bic'
@@ -129,7 +139,13 @@ def fit(df,
     >>>
     >>> # plot ground truth
     >>> G = bn.plot(model)
+
+    Examples
+    --------
+    >>> # Sampling example
     >>>
+    >>> # Load DAG
+    >>> model = bn.import_DAG('asia')
     >>> # Sampling
     >>> df = bn.sampling(model, n=10000)
     >>>
@@ -141,15 +157,37 @@ def fit(df,
     >>>
     >>> # Plot based on structure learning of sampled data
     >>> bn.plot(model_sl, pos=G['pos'])
-    >>>
+
+    Examples
+    --------
     >>> # Compare networks and make plot
     >>> bn.compare_networks(model, model_sl, pos=G['pos'])
+
+    Examples
+    --------
+    >>> # Model mixed data sets (both discrete and continuous variables)
+    >>>
+    >>> # Load DAG
+    >>> df = bn.import_example(data='auto_mpg')
+    >>>
+    >>> # Structure learning of sampled dataset
+    >>> model = bn.structure_learning.fit(df, methodtype='direct-lingam')
+    >>>
+    >>> # Compute edge strength using chi-square independence test
+    >>> model = bn.independence_test(model_sl, df)
+    >>>
+    >>> # Plot based on structure learning of sampled data
+    >>> bn.plot(model_sl, pos=G['pos'])
 
     References
     ----------
         * [1] Scutari, Marco. An Empirical-Bayes Score for Discrete Bayesian Networks. Journal of Machine Learning Research, 2016, pp. 438–48
+        * [2] Shimizu et al, DirectLiNGAM: A direct method for learning a linear non-Gaussian structural equation model, https://arxiv.org/abs/1101.2489v3
 
     """
+    defaults_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'}
+    params_lingam = {**defaults_lingam, **params_lingam}
+
     out = []
     # Set config
     config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
@@ -197,7 +235,7 @@ def fit(df,
                                )
 
     # Constraint-based Structure Learning
-    if config['method']=='cs' or config['method']=='constraintsearch':
+    if config['method']=='cs' or config['method']=='constraintsearch' or config['method']=='pc':
         """Constraint-based Structure Learning
         A different, but quite straightforward approach to build a DAG from data is this:
         Identify independencies in the data set using hypothesis tests
@@ -209,6 +247,13 @@ def fit(df,
     if config['method']=='chow-liu' or config['method']=='tan':
         """TreeSearch based Structure Learning."""
         out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], n_jobs=config['n_jobs'], verbose=config['verbose'])
+
+    # LiNGAM-based Structure Learning
+    if config['method']=='direct-lingam' or config['method']=='ica-lingam':
+        """LiNGAM-direct Structure Learning."""
+        out = _lingam(df, config, n_jobs=config['n_jobs'], verbose=config['verbose'], **params_lingam)
+        # return
+        return out
 
     # Store
     out['model_edges'] = list(out['model'].edges())
@@ -224,7 +269,7 @@ def fit(df,
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
-    if not np.isin(config['method'], ['naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
+    if not np.isin(config['method'], ['ica-lingam', 'direct-lingam', 'naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'pc', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
         config['white_list'] = [config['white_list']]
@@ -308,7 +353,7 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
     model.fit(df, parent_node=root_node, estimator=estimator_type)
 
     # Store
-    out={}
+    out = {}
     out['model']=model
     # Return
     return(out)
@@ -381,8 +426,6 @@ def _constraintsearch(df, significance_level=0.05, n_jobs=-1, verbose=3):
         2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
         3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
 
-        The first two steps form the so-called PC algorithm, see [2], page 550. PDAGs are `DirectedGraph`s, that may contain both-way edges, to indicate that the orientation for the edge is not determined.
-
     """
     if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [constraintsearch]')
     out = {}
@@ -437,8 +480,8 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     edges or to limit the search.
 
     """
-    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
-    out={}
+    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
+    out = {}
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Set search algorithm
@@ -447,7 +490,7 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     # Compute best DAG
     if bw_list_method=='edges':
         if (black_list is not None) or (white_list is not None):
-            if verbose>=3: print('[bnlearn] >Filter edges based on black_list/white_list')
+            if verbose >= 3: print('[bnlearn] >Filter edges based on black_list/white_list')
         # best_model = model.estimate()
         best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, fixed_edges=fixed_edges, show_progress=False)
     else:
@@ -455,9 +498,9 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
         best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, fixed_edges=fixed_edges, show_progress=False)
 
     # Store
-    out['model']=best_model
+    out['model'] = best_model
     # Return
-    return(out)
+    return out
 
 
 # %% ExhaustiveSearch
@@ -490,11 +533,11 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
     None.
 
     """
-    if df.shape[1]>15 and verbose>=3:
+    if df.shape[1] > 15 and verbose >= 3:
         print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
-    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [exhaustivesearch]')
+    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [exhaustivesearch]')
 
-    out={}
+    out = {}
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Exhaustive search across all dags
@@ -502,12 +545,12 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
     # Compute best DAG
     best_model = model.estimate()
     # Store
-    out['model']=best_model
+    out['model'] = best_model
 
     # Compute all possible DAGs
     if return_all_dags:
-        out['scores']=[]
-        out['dag']=[]
+        out['scores'] = []
+        out['dag'] = []
         # print("\nAll DAGs by score:")
         for [score, dag] in reversed(model.all_scores()):
             out['scores'].append(score)
@@ -569,3 +612,74 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
 # %%
 def _is_independent(model, X, Y, Zs=[], significance_level=0.05):
     return model.test_conditional_independence(X, Y, Zs)[1] >= significance_level
+
+
+# %%
+def _lingam(df,
+            config,
+            n_jobs=-1,
+            verbose=3,
+            random_state=None,
+            prior_knowledge=None,
+            apply_prior_knowledge_softly=False,
+            measure='pwling',
+            ):
+    """Construct a DirectLiNGAM model
+
+    Description
+    -----------
+    The Direct-LiNGAM method or also named 'ica-lingam' or 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. 
+    This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable.
+    When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables.
+    Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.
+    Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.
+
+    Parameters
+    ----------
+    random_state : int, optional (default=None)
+        ``random_state`` is the seed used by the random number generator.
+    prior_knowledge : array-like, shape (n_features, n_features), optional (default=None)
+        Prior knowledge used for causal discovery, where ``n_features`` is the number of features.
+
+        The elements of prior knowledge matrix are defined as follows [1]_:
+
+        * ``0`` : :math:`x_i` does not have a directed path to :math:`x_j`
+        * ``1`` : :math:`x_i` has a directed path to :math:`x_j`
+        * ``-1`` : No prior knowledge is available to know if either of the two cases above (0 or 1) is true.
+    apply_prior_knowledge_softly : boolean, optional (default=False)
+        If True, apply prior knowledge softly.
+    measure : {'pwling', 'kernel', 'pwling_fast'}, optional (default='pwling')
+        Measure to evaluate independence: 'pwling' [2]_ or 'kernel' [1]_.
+        For fast execution with GPU, 'pwling_fast' can be used (culingam is required).
+    """
+    out = {}
+
+    # To run causal discovery, we create a DirectLiNGAM object and call the fit method.
+    if config['method'] == 'direct-lingam':
+        model = lingam.DirectLiNGAM(random_state=random_state, prior_knowledge=prior_knowledge, apply_prior_knowledge_softly=apply_prior_knowledge_softly, measure=measure)
+    elif config['method'] == 'ica-lingam':
+        model = lingam.ICALiNGAM(random_state=random_state)
+
+    # Fit
+    model.fit(df)
+
+    # Also, using the adjacency_matrix_ properties, we can see the adjacency matrix as a result of the causal discovery.
+    adjmat = pd.DataFrame(model.adjacency_matrix_.T, columns=df.columns.values, index=df.columns.values)
+    adjmat.index.name = 'source'
+    adjmat.columns.name = 'target'
+
+    # Compute edges
+    # out['model_edges'] = bnlearn.adjmat2vec(adjmat, min_weight=0, rem_weight=0, absolute=True)
+    out['model_edges'] = bnlearn.adjmat2vec(adjmat.abs()>0)
+    out['model_edges'] = list(zip(out['model_edges']['source'], out['model_edges']['target']))
+
+    # Using the causal_order_ properties,
+    # we can see the causal ordering as a result of the causal discovery.
+    out['model'] = model
+    out['adjmat'] = adjmat
+    out['causal_order'] = list(df.columns[model.causal_order_])
+    out['structure_scores'] = None
+    out['config'] = config
+
+    # Return
+    return out
