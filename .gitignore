@@ -6,9 +6,11 @@ __pycache__/
 bnlearn/.pylint.d/
 bnlearn/data/
 julia/
+bnlearn/RESOURCES/
 
 *.pkl
 .pypirc
+*.gv
 
 # C extensions
 *.so
