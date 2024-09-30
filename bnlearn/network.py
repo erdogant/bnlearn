@@ -382,13 +382,24 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     return(scores, adjmat_diff)
 
 # %% Make graph layout
-def graphlayout(G, pos, scale=1, layout='spring_layout', verbose=3):
+def graphlayout(G, pos, scale=1, layout='graphviz_layout', verbose=3):
     if pos is None:
         if layout is not None:
             try:
-                # Get the layout
-                layout_func = getattr(nx, layout)
-                pos = layout_func(G, scale=scale)
+                if layout=='graphviz_layout':
+                    from networkx.drawing.nx_pydot import graphviz_layout
+                    import copy
+                    # Add edges with weights based on independence test results
+                    # Set the edges weight to 1. Otherwise the graphviz_layout does not work good.
+                    G = copy.deepcopy(G)
+                    for edge in G.edges():
+                        G.add_edge(*edge, weight=1)
+                    # Compute positions
+                    pos = graphviz_layout(G, prog="dot")
+                else:
+                    # Get the layout
+                    layout_func = getattr(nx, layout)
+                    pos = layout_func(G, scale=scale)
             except:
                 if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The layout [spring_layout] is used instead.' %(layout))
                 pos = nx.spring_layout(G, scale=scale)
@@ -397,7 +408,7 @@ def graphlayout(G, pos, scale=1, layout='spring_layout', verbose=3):
     else:
         if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
 
-    return(pos)
+    return pos
 
 # %% Convert to pandas dataframe
 def is_DataFrame(data, verbose=0):
