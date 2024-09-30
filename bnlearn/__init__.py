@@ -8,6 +8,7 @@ from bnlearn.bnlearn import (
     to_undirected,
     compare_networks,
     plot,
+    plot_graphviz,
     adjmat2vec,
     adjmat2dict,
     vec2adjmat,

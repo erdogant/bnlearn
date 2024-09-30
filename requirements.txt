@@ -17,4 +17,6 @@ fsspec
 pypickle
 tabulate
 ipywidgets
+lingam
 datazets
+setgraphviz

@@ -27,6 +27,7 @@ from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.metrics import structure_score
 
+from setgraphviz import setgraphviz
 from ismember import ismember
 import datazets as dz
 import pypickle
