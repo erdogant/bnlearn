@@ -340,7 +340,7 @@ Plot the DAG
 
 .. code-block:: python
 
-    bnlearn.plot(DAG)
+    bn.plot(DAG)
 
 
 .. _fig-DAG-sprinkler:
