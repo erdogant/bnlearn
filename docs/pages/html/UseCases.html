@@ -210,7 +210,7 @@
 <span class="c1"># Compute edge strength with the chi_square test statistic</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dfnum</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">],</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
 
 <span class="c1"># Parameter learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dfnum</span><span class="p">)</span>
@@ -220,7 +220,8 @@
 <caption><span class="caption-text">Learned structure on the Titanic dataset.</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig_t1" src="_images/titanic_dag.png" /></p></td>
-<td><p><img alt="fig_t2" src="_images/titanic_dag_chi2.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig_t2" src="_images/titanic_dag_chi2.png" /></p></td>
 </tr>
 </tbody>
 </table>

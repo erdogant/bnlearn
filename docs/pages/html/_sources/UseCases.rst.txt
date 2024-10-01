@@ -23,7 +23,7 @@ In the following example we will learn the structure on the Titanic dataset.
 	# Compute edge strength with the chi_square test statistic
 	model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 	# Plot
-	bn.plot(model, interactive=False, pos=G['pos'])
+	G = bn.plot(model, interactive=False, pos=G['pos'], edge_labels='pvalue')
 
 	# Parameter learning
 	model = bn.parameter_learning.fit(model, dfnum)
@@ -35,9 +35,11 @@ In the following example we will learn the structure on the Titanic dataset.
 .. table:: Learned structure on the Titanic dataset.
    :align: center
 
-   +----------+----------+
-   | |fig_t1| | |fig_t2| |
-   +----------+----------+
+   +----------+
+   | |fig_t1| |
+   +----------+
+   | |fig_t2| |
+   +----------+
 
 At this point we can also start making inferences:
 
