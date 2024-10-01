@@ -7,22 +7,110 @@ model = bn.structure_learning.fit(df)
 
 # Plot
 # bn.plot(model, params_static={'figsize': (5, 5), 'font_size': 8, 'arrowsize': 15, 'layout': 'spring_layout'}, node_size=1000)
-bn.plot(model)
-bn.plot(model, interactive=True)
+bn.plot(model);
+bn.plot(model, edge_labels='pvalue');
+# bn.plot(model, interactive=True)
 
 # Dot graph
 dotgraph = bn.plot_graphviz(model)
 dotgraph
 # Create pdf
-dotgraph.view(filename=r'c:/temp/dotgraph')
+# dotgraph.view(filename=r'c:/temp/dotgraph')
 
 # Compute edge strength with the chi_square test statistic
-model2 = bn.independence_test(model, df, test='chi_square', prune=True)
+model2 = bn.independence_test(model, df, test='chi_square', prune=False)
 bn.plot(model2)
+bn.plot(model2, edge_labels='pvalue');
 
 # Dot graph
-dotgraph = bn.plot_graphviz(model2)
-dotgraph.view(filename=r'c:/temp/dotgraph2')
+dotgraph2 = bn.plot_graphviz(model2)
+dotgraph2
+dotgraph2 = bn.plot_graphviz(model2, edge_labels='pvalue')
+dotgraph2
+# dotgraph.view(filename=r'c:/temp/dotgraph2')
+
+# %%
+import numpy as np
+import pandas as pd
+from lingam.utils import make_dot
+# https://sites.google.com/view/sshimizu06/lingam
+# https://github.com/cdt15/lingam/blob/master/examples/DirectLiNGAM.ipynb
+
+# We create test data consisting of 6 variables.
+# This data sets is a great example of the contribution of different variables.
+# All viarables have the same size with n=1000 samples and have uniform distribution.
+# We will create dependencies between variables and then let the model figure out what hte original values were.
+
+# step 1: [x3] is initialized with uniform distribution.
+# step 2: [x0] and [x2] is created by multiplication with values of [x3] and making them thus dependend of [x3].
+# step 3: [x5] is created by multiplication with values of [x0]  and thus making it depended of [x0]
+# step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]
+
+#          x3
+#         /  \
+#       6      3
+#       /       \
+#     x2         x0
+#     / \      /  |  \
+#   -1   2    8   3    4
+#   x4   etc           x5
+# 
+
+# step 1
+x3 = np.random.uniform(size=1000)
+# step 2
+x0 = 3.0*x3 + np.random.uniform(size=1000)
+x2 = 6.0*x3 + np.random.uniform(size=1000)
+# step 3
+x5 = 4.0*x0 + np.random.uniform(size=1000)
+# step 4
+x1 = 3.0*x0 + 2.0*x2 + np.random.uniform(size=1000)
+x4 = 8.0*x0 - 1.0*x2 + np.random.uniform(size=1000)
+df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T ,columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
+df.head()
+
+m = np.array([[0.0, 0.0, 0.0, 3.0, 0.0, 0.0],
+              [3.0, 0.0, 2.0, 0.0, 0.0, 0.0],
+              [0.0, 0.0, 0.0, 6.0, 0.0, 0.0],
+              [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+              [8.0, 0.0,-1.0, 0.0, 0.0, 0.0],
+              [4.0, 0.0, 0.0, 0.0, 0.0, 0.0]])
+dot = make_dot(m)
+dot
+
+# To run Structure learning, we now can use the direct-lingam method for fitting.
+model = bn.structure_learning.fit(df, methodtype='direct-lingam')
+
+# When we no look at the output, we can see that the dependency values are very well recovered for the various variables.
+print(model['adjmat'])
+# target        x0        x1       x2   x3        x4       x5
+# source                                                     
+# x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
+# x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+# x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
+# x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000
+# x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+# x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+bn.plot(model)
+
+# Compute edge strength with the chi_square test statistic
+model = bn.independence_test(model, df, prune=False)
+print(model['adjmat'])
+# target        x0        x1       x2   x3        x4       x5
+# source                                                     
+# x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
+# x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+# x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
+# x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000
+# x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+# x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
+
+# Using the causal_order_ properties, we can see the causal ordering as a result of the causal discovery.
+print(model['causal_order'])
+# ['x3', 'x0', 'x5', 'x2', 'x1', 'x4']
+
+# We can draw a causal graph by utility funciton.
+bn.plot(model, edge_labels='pvalue')
 
 
 # %% Continous and mixed
@@ -62,7 +150,10 @@ df = bn.import_example(data='auto_mpg')
 # df=df.iloc[:,0:5]
 
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
+model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
+# model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
+bn.plot(model)
+bn.plot(model, edge_labels='pvalue');
 
 # Compute edge strength with the chi_square test statistic
 model = bn.independence_test(model, df, prune=False)
@@ -70,13 +161,17 @@ model = bn.independence_test(model, df, prune=False)
 # Plot
 # bn.plot(model, params_static={'dpi': 100, 'figsize': (15, 10), 'font_size': 8, 'arrowsize': 15, 'arrowsize': 10, 'minscale': 1, 'maxscale': 5}, node_size=1000)
 bn.plot(model)
-bn.plot(model, interactive=True)
+bn.plot(model, edge_labels='pvalue');
+# bn.plot(model, interactive=True)
 
 
 dotgraph = bn.plot_graphviz(model)
 dotgraph
 # Create pdf
 dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_ICALiNGAM')
+
+dotgraph2 = bn.plot_graphviz(model, edge_labels='pvalue')
+dotgraph2
 
 # Parameter learning
 # model = bn.parameter_learning.fit(model, df)
