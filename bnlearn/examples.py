@@ -1,5 +1,11 @@
 import bnlearn as bn
 # Load example mixed dataset
+df = bn.import_example(data='auto_mpg')
+
+
+# %%
+import bnlearn as bn
+# Load example mixed dataset
 df = bn.import_example(data='sprinkler')
 
 # Structure learning
@@ -110,6 +116,7 @@ print(model['causal_order'])
 # ['x3', 'x0', 'x5', 'x2', 'x1', 'x4']
 
 # We can draw a causal graph by utility funciton.
+bn.plot(model)
 bn.plot(model, edge_labels='pvalue')
 
 
@@ -122,12 +129,12 @@ df = bn.import_example(data='auto_mpg')
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='pc')
 
-# Compute edge strength with the chi_square test statistic
-model = bn.independence_test(model, df, prune=False)
+# Compute edge strength
+model = bn.independence_test(model, df)
 
-bn.plot(model)
+bn.plot(model, edge_labels='pvalue')
 
-dotgraph = bn.plot_graphviz(model)
+dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
 dotgraph
 
 # Parameter learning
