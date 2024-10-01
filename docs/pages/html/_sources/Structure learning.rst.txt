@@ -105,11 +105,10 @@ Lets determine the best possible structure for the sprinkler dataset.
     # 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1
     
     # Plot
-    bn.plot(model)
+    bn.plot(model, edge_labels='pvalue')
 
 
 .. |exh1| image:: ../figs/exhaustivesearch_example.png
-    :scale: 100%
 
 .. table:: Exhaustivesearch example
    :align: center
@@ -133,17 +132,26 @@ Lets examine the results using hte **alarm** example that contains 37 nodes.
     import bnlearn as bn
     # Load example
     df = bn.import_example('alarm')
+    
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    
     # Plot detected DAG
-    G = bn.plot(model)
+    G = bn.plot(model, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None)
+
+    # Create graphviz
+    dot = bn.plot_graphviz(model)
+
 
     # Compute edge strength using chi-square independence test
     model1 = bn.independence_test(model, df, alpha=0.05, prune=False)
-    bn.plot(model1, pos=G['pos'])
+
+    # Plot
+    bn.plot(model1, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
 
     # Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False
     print(tabulate(model1['independence_test'], headers="keys"))
+
     #    source        target        stat_test         p_value    chi_square    dof
     #--  ------------  ------------  -----------  ------------  ------------  -----
     # 0  LVFAILURE     HISTORY       True         0               7179.51         1
@@ -202,8 +210,11 @@ Lets examine the results using hte **alarm** example that contains 37 nodes.
 
     # Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
     model3 = bn.independence_test(model, df, alpha=0.05, prune=True)
-    bn.plot(model3, pos=G['pos'])
+    # plot
+    bn.plot(model3, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
     
+
+.. |hill0| image:: ../figs/Hillclimbsearch1_graphviz.png
 
 .. |hill1| image:: ../figs/Hillclimbsearch1.png
 
@@ -214,9 +225,15 @@ Lets examine the results using hte **alarm** example that contains 37 nodes.
 .. table:: Hillclimbsearch. (A) Detected DAG. (B) DAG with significance. (C) DAG pruned.
    :align: center
 
-   +---------+---------+---------+
-   | |hill1| | |hill2| | |hill3| |
-   +---------+---------+---------+
+   +---------+
+   | |hill0| |
+   +---------+
+   | |hill1| |
+   +---------+
+   | |hill2| |
+   +---------+
+   | |hill3| |
+   +---------+
 
 
 
@@ -331,6 +348,8 @@ Lets determine the best possible structure for the *asia* dataset.
     bn.plot(model2, pos=G['pos'])
     
 
+.. |tan0| image:: ../figs/tan0.png
+
 .. |tan1| image:: ../figs/tan1.png
 
 .. |tan2| image:: ../figs/tan2.png
@@ -340,9 +359,15 @@ Lets determine the best possible structure for the *asia* dataset.
 .. table:: Tree-augmented Naive Bayes. (A) Detected DAG. (B) DAG depicting significance. (C) DAG pruned.
    :align: center
 
-   +---------+---------+---------+
-   | |tan1|  | |tan2|  | |tan3|  |
-   +---------+---------+---------+
+   +---------+
+   | |tan0|  |
+   +---------+
+   | |tan1|  |
+   +---------+
+   | |tan2|  |
+   +---------+
+   | |tan3|  |
+   +---------+
 
 
 NaiveBayes
@@ -454,6 +479,8 @@ Lets determine the best possible structure for the *water* dataset.
     bn.plot(model, pos=G['pos'])
 
 
+.. |const0| image:: ../figs/const0.png
+
 .. |const1| image:: ../figs/const1.png
 
 .. |const2| image:: ../figs/const2.png
@@ -462,9 +489,13 @@ Lets determine the best possible structure for the *water* dataset.
 .. table:: Constraint-based. (A) Detected DAG. (B) DAG depicting significance.
    :align: center
 
-   +---------+---------+
-   | |const1|| |const2||
-   +---------+---------+
+   +---------+
+   | |const0||
+   +---------+
+   | |const1||
+   +---------+
+   | |const2||
+   +---------+
 
 
 

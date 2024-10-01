@@ -97,15 +97,50 @@ Note that all the results below can be interactive as the graph above. But for d
     bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
 
 
-Static plot
-=================
+Static plot (networkx)
+======================
 
 To create static plots simply set the ``interactive=False`` in all the above examples. The only difference is in ``params_static`` for which the dict contains more variables that adjust the figure properties.
 
 .. code-block:: python
 
     # Add parameters for the static plot
-    bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
+    # bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
+    bn.plot(model)
+
+
+.. |figIP7| image:: ../figs/asia_networkx.png
+
+.. table:: Plot with GraphViz
+   :align: center
+
+   +----------+
+   | |figIP7| |
+   +----------+
+
+
+
+Static plot (graphviz)
+======================
+
+By using graphviz we can plot DAGs that look very structured.
+
+.. code-block:: python
+
+    # Add parameters for the static plot
+    bn.plot_graphviz(model)
+
+
+.. |figIP6| image:: ../figs/asia_graphviz.png
+
+.. table:: Plot with GraphViz
+   :align: center
+
+   +----------+
+   | |figIP6| |
+   +----------+
+
+
 
 
 Comparison of two networks
@@ -156,10 +191,11 @@ In come cases you may derive two networks where you need to know the differences
 .. table:: Differences in het edges.
    :align: center
 
-   +----------+----------+
-   | |fig_cn3|| |fig_cn4||
-   +----------+----------+
-
+   +----------+
+   | |fig_cn3||
+   +----------+
+   | |fig_cn4||
+   +----------+
 
 Node properties
 =================

@@ -1,8 +1,9 @@
 Working with Continous data
 =========================================
-Learning Bayesian Networks from continuous data is an challanging task.
-There are different manner on how to work with continuous or hybrid datasets. Each manner has their own advantages and disadvantages.
-In ``bnlearn`` there are two automated approaches.
+Learning Bayesian Networks from continuous data is a challanging task.
+There are different manner on how to work with continuous and/or hybrid datasets. Each manner has their own advantages and disadvantages. 
+
+In ``bnlearn`` the following options are available to work with continuous datasets:
 
 * 1. Discretize continuous datasets manually using domain knowledge.
 * 2. Discretize continuous datasets using a principled Bayesian discretization method.
@@ -336,17 +337,6 @@ We will create dependencies between variables and then let the model figure out 
 	* step 2: [x0] and [x2] is created by multiplication with values of [x3] and making them thus dependend of [x3].
 	* step 3: [x5] is created by multiplication with values of [x0]  and thus making it depended of [x0]
 	* step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]
-
-.. code-block:: python
-
-		  x3
-		 /  \
-	       6      3
-	       /       \
-	     x2         x0
-	     / \      /  |  \
-	   -1   2    8   3    4
-	   x4   etc           x5
  
 
 .. |fig8a| image:: ../figs/fig_lingam_example_input.png
@@ -388,7 +378,7 @@ We will create dependencies between variables and then let the model figure out 
 	dot
 
 
-To run Structure learning, we now can use the direct-lingam method for fitting.
+Structure learning can be applied with the direct-lingam method for fitting.
 
 
 .. code-block:: python
@@ -435,7 +425,7 @@ To run Structure learning, we now can use the direct-lingam method for fitting.
    | |fig7a|  |
    +----------+
 
-This exmaple nicely demonstrates that we can capture the dependencies with the causal factors acurately.
+This example nicely demonstrates that we can capture the dependencies with the causal factors acurately.
 
 
 Direct-LiNGAM method

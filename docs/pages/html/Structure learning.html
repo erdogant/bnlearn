@@ -107,7 +107,8 @@
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-networkx">Static plot (networkx)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-graphviz">Static plot (graphviz)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
@@ -271,13 +272,13 @@ This search approach is only attractable for very small networks and prohibits e
 <span class="c1"># 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1</span>
 
 <span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-center" id="id1">
 <caption><span class="caption-text">Exhaustivesearch example</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="_images/exhaustivesearch_example.png"><img alt="exh1" src="_images/exhaustivesearch_example.png" style="width: 851.0px; height: 449.0px;" /></a></p></td>
+<tr class="row-odd"><td><p><img alt="exh1" src="_images/exhaustivesearch_example.png" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -291,17 +292,26 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;alarm&#39;</span><span class="p">)</span>
+
 <span class="c1"># Structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+
 <span class="c1"># Plot detected DAG</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">edge_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="c1"># Create graphviz</span>
+<span class="n">dot</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
 
 <span class="c1"># Compute edge strength using chi-square independence test</span>
 <span class="n">model1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">edge_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 
 <span class="c1"># Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">model1</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
+
 <span class="c1">#    source        target        stat_test         p_value    chi_square    dof</span>
 <span class="c1">#--  ------------  ------------  -----------  ------------  ------------  -----</span>
 <span class="c1"># 0  LVFAILURE     HISTORY       True         0               7179.51         1</span>
@@ -360,15 +370,20 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 
 <span class="c1"># Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges</span>
 <span class="n">model3</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model3</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="c1"># plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model3</span><span class="p">,</span> <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">edge_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <table class="docutils align-center" id="id2">
 <caption><span class="caption-text">Hillclimbsearch. (A) Detected DAG. (B) DAG with significance. (C) DAG pruned.</span><a class="headerlink" href="#id2" title="Link to this table"></a></caption>
 <tbody>
-<tr class="row-odd"><td><p><img alt="hill1" src="_images/Hillclimbsearch1.png" /></p></td>
-<td><p><img alt="hill2" src="_images/Hillclimbsearch2.png" /></p></td>
-<td><p><img alt="hill3" src="_images/Hillclimbsearch3.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="hill0" src="_images/Hillclimbsearch1_graphviz.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="hill1" src="_images/Hillclimbsearch1.png" /></p></td>
+</tr>
+<tr class="row-odd"><td><p><img alt="hill2" src="_images/Hillclimbsearch2.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="hill3" src="_images/Hillclimbsearch3.png" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -479,9 +494,13 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <table class="docutils align-center" id="id4">
 <caption><span class="caption-text">Tree-augmented Naive Bayes. (A) Detected DAG. (B) DAG depicting significance. (C) DAG pruned.</span><a class="headerlink" href="#id4" title="Link to this table"></a></caption>
 <tbody>
-<tr class="row-odd"><td><p><img alt="tan1" src="_images/tan1.png" /></p></td>
-<td><p><img alt="tan2" src="_images/tan2.png" /></p></td>
-<td><p><img alt="tan3" src="_images/tan3.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="tan0" src="_images/tan0.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="tan1" src="_images/tan1.png" /></p></td>
+</tr>
+<tr class="row-odd"><td><p><img alt="tan2" src="_images/tan2.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="tan3" src="_images/tan3.png" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -583,8 +602,11 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <table class="docutils align-center" id="id6">
 <caption><span class="caption-text">Constraint-based. (A) Detected DAG. (B) DAG depicting significance.</span><a class="headerlink" href="#id6" title="Link to this table"></a></caption>
 <tbody>
-<tr class="row-odd"><td><p><img alt="const1" src="_images/const1.png" /></p></td>
-<td><p><img alt="const2" src="_images/const2.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="const0" src="_images/const0.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="const1" src="_images/const1.png" /></p></td>
+</tr>
+<tr class="row-odd"><td><p><img alt="const2" src="_images/const2.png" /></p></td>
 </tr>
 </tbody>
 </table>

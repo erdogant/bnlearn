@@ -114,7 +114,7 @@ Let's bring in our dataset.
 
 .. figure:: ../figs/fig_sprinkler_sl.png
 
-  DAG of the prinkler data set.
+  DAG of the Sprinkler data set.
 
 
 Suppose we observed **N** "cloudy" occurences among a total of "all clouds", so we might guess that about "50%" of "cloudy" are "sprinkler" or so.

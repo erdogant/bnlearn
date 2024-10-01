@@ -117,7 +117,8 @@
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot">Static plot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-networkx">Static plot (networkx)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-graphviz">Static plot (graphviz)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
@@ -190,9 +191,9 @@
              
   <section id="working-with-continous-data">
 <h1>Working with Continous data<a class="headerlink" href="#working-with-continous-data" title="Link to this heading"></a></h1>
-<p>Learning Bayesian Networks from continuous data is an challanging task.
-There are different manner on how to work with continuous or hybrid datasets. Each manner has their own advantages and disadvantages.
-In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> there are two automated approaches.</p>
+<p>Learning Bayesian Networks from continuous data is a challanging task.
+There are different manner on how to work with continuous and/or hybrid datasets. Each manner has their own advantages and disadvantages.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> the following options are available to work with continuous datasets:</p>
 <ul class="simple">
 <li><ol class="arabic simple">
 <li><p>Discretize continuous datasets manually using domain knowledge.</p></li>
@@ -499,16 +500,6 @@ We will create dependencies between variables and then let the model figure out 
 <li><p>step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]</p></li>
 </ul>
 </div></blockquote>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>       <span class="n">x3</span>
-      <span class="o">/</span>  \
-    <span class="mi">6</span>      <span class="mi">3</span>
-    <span class="o">/</span>       \
-  <span class="n">x2</span>         <span class="n">x0</span>
-  <span class="o">/</span> \      <span class="o">/</span>  <span class="o">|</span>  \
-<span class="o">-</span><span class="mi">1</span>   <span class="mi">2</span>    <span class="mi">8</span>   <span class="mi">3</span>    <span class="mi">4</span>
-<span class="n">x4</span>   <span class="n">etc</span>           <span class="n">x5</span>
-</pre></div>
-</div>
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig8a" src="_images/fig_lingam_example_input.png" /></p></td>
@@ -542,7 +533,7 @@ We will create dependencies between variables and then let the model figure out 
 <span class="n">dot</span>
 </pre></div>
 </div>
-<p>To run Structure learning, we now can use the direct-lingam method for fitting.</p>
+<p>Structure learning can be applied with the direct-lingam method for fitting.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
 
 <span class="c1"># When we no look at the output, we can see that the dependency values are very well recovered for the various variables.</span>
@@ -583,7 +574,7 @@ We will create dependencies between variables and then let the model figure out 
 </tr>
 </tbody>
 </table>
-<p>This exmaple nicely demonstrates that we can capture the dependencies with the causal factors acurately.</p>
+<p>This example nicely demonstrates that we can capture the dependencies with the causal factors acurately.</p>
 </section>
 <section id="direct-lingam-method">
 <h2>Direct-LiNGAM method<a class="headerlink" href="#direct-lingam-method" title="Link to this heading"></a></h2>
