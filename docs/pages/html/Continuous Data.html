@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Advanced discretizing continous data &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+  <title>Working with Continous data &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,7 +17,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=441dd29d"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -84,11 +86,22 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Advanced discretizing continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#inference">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-learning">Structure learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inferences">Inferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#modelling-continuous-datasets">Modelling Continuous Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lingam-example">LiNGAM Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC method</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -165,7 +178,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Advanced discretizing continous data</li>
+      <li class="breadcrumb-item active">Working with Continous data</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Continuous Data.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -175,18 +188,81 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <p>Learning Bayesian Networks from continuous data is an challanging task.
-In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> this task is now accomplished by learning discrete bayesian networks from continuous data.</p>
-<p>In order to do this, I am using a Bayesian discretization method for continuous
-variables in Bayesian networks with quadratic complexity instead of the cubic
-complexity of other standard techniques. Empirical demonstrations show that the
-proposed method is superior to the established minimum description length algorithm.
-The method is described in the paper of Yi-Chun Chen et al.</p>
-<p>The underlying idea i that the implemented method now can perform structure learning by first discretizng the continuous
-variables and simultaneously learn Bayesian network structures.</p>
-<section id="advanced-discretizing-continous-data">
-<h1>Advanced discretizing continous data<a class="headerlink" href="#advanced-discretizing-continous-data" title="Link to this heading"></a></h1>
-<p>To demonstrate the usage of parameter learning on continuous data, I will use the well known <strong>auto mpg</strong> data set.</p>
+  <section id="working-with-continous-data">
+<h1>Working with Continous data<a class="headerlink" href="#working-with-continous-data" title="Link to this heading"></a></h1>
+<p>Learning Bayesian Networks from continuous data is an challanging task.
+There are different manner on how to work with continuous or hybrid datasets. Each manner has their own advantages and disadvantages.
+In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> there are two automated approaches.</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Discretize continuous datasets manually using domain knowledge.</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Discretize continuous datasets using a principled Bayesian discretization method.</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes a linear relationships.</p></li>
+</ol>
+</li>
+</ul>
+</section>
+<section id="discretize-continuous-datasets-manually">
+<h1>Discretize continuous datasets manually<a class="headerlink" href="#discretize-continuous-datasets-manually" title="Link to this heading"></a></h1>
+<p>Discretizing continuous datasets manually using domain knowledge involves dividing a continuous variable into a set of discrete intervals based on an understanding of the data’s context and the relationships between variables. This method allows for meaningful groupings of data points, which can simplify analysis and improve interpretability in models.</p>
+<p>By leveraging expertise in the subject matter, the intervals or thresholds can be chosen to reflect real-world significance, such as categorizing age into meaningful ranges (e.g., “freezing,” “warm,” “hot”). This approach contrasts with automatic binning methods (as depicted in approach 2), such as equal-width or equal-frequency binning, where intervals may not correspond to meaningful domain-specific boundaries.</p>
+<p>For instance, lets load the auto mpg data set and based on automotive standards, we can define horsepower categories:</p>
+<ul class="simple">
+<li><p>Low: Cars with horsepower less than 100 (typically small, fuel-efficient cars)</p></li>
+<li><p>Medium: Cars with horsepower between 100 and 150 (moderate performance cars)</p></li>
+<li><p>High: Cars with horsepower above 150 (high-performance vehicles)</p></li>
+</ul>
+<p>After all continuous variables are catagorized, the normal structure learning procedure can be applied.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load data set</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#       mpg  cylinders  displacement  ...  acceleration  model_year  origin</span>
+<span class="c1"># 0    18.0          8         307.0  ...          12.0          70       1</span>
+<span class="c1"># 1    15.0          8         350.0  ...          11.5          70       1</span>
+<span class="c1"># 2    18.0          8         318.0  ...          11.0          70       1</span>
+<span class="c1"># 3    16.0          8         304.0  ...          12.0          70       1</span>
+<span class="c1"># 4    17.0          8         302.0  ...          10.5          70       1</span>
+<span class="c1"># ..    ...        ...           ...  ...           ...         ...     ...</span>
+<span class="c1"># 387  27.0          4         140.0  ...          15.6          82       1</span>
+<span class="c1"># 388  44.0          4          97.0  ...          24.6          82       2</span>
+<span class="c1"># 389  32.0          4         135.0  ...          11.6          82       1</span>
+<span class="c1"># 390  28.0          4         120.0  ...          18.6          82       1</span>
+<span class="c1"># 391  31.0          4         119.0  ...          19.4          82       1</span>
+<span class="c1">#</span>
+<span class="c1"># [392 rows x 8 columns]</span>
+
+<span class="c1"># Define horsepower bins based on domain knowledge</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">]</span>
+
+<span class="c1"># Discretize horsepower using the defined bins</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">,</span> <span class="s1">&#39;horsepower_category&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="c1">#    horsepower horsepower_category</span>
+<span class="c1"># 0       130.0              medium</span>
+<span class="c1"># 1       165.0                high</span>
+<span class="c1"># 2       150.0              medium</span>
+<span class="c1"># 3       150.0              medium</span>
+<span class="c1"># 4       140.0              medium</span>
+</pre></div>
+</div>
+</section>
+<section id="discretize-continuous-datasets-automatically">
+<h1>Discretize continuous datasets automatically<a class="headerlink" href="#discretize-continuous-datasets-automatically" title="Link to this heading"></a></h1>
+<p>Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
+The method is implemented Yi-Chun Chen et al which demonstrates that the proposed method is superior to the established minimum description length algorithm. A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method. The underlying idea is that after applying this discritization method, structure learning approaches can then be applied. To demonstrate the usage of automatically discritizing continuous data, lets use the <strong>auto mpg</strong> dataset again.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
@@ -224,8 +300,17 @@ variables and simultaneously learn Bayesian network structures.</p>
 
 <span class="c1"># Create DAG based on edges</span>
 <span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="c1"># Plot the DAG</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Plot the DAG using graphviz</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
+<figure class="align-default" id="fig-auto-mpg-dag-edges">
+<img alt="_images/auto_mpg_DAG_edges.png" src="_images/auto_mpg_DAG_edges.png" />
+</figure>
 <p>We can now discretize the continuous columns as following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># A good habbit is to set the columns with continuous data as float</span>
 <span class="n">continuous_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">]</span>
@@ -251,9 +336,8 @@ variables and simultaneously learn Bayesian network structures.</p>
 </div>
 <p>At this point it is not different than any other discrete data set. We can specify the DAG together with the
 discrete data frame and fit a model using <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
-</section>
 <section id="structure-learning">
-<h1>Structure learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h1>
+<h2>Structure learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h2>
 <p>We will learn the structure on the continuous data. Note that the data is also discretezed on a set of edges which will
 likely introduce a bias in the learned structure.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
@@ -265,17 +349,26 @@ likely introduce a bias in the learned structure.</p>
 <span class="c1"># [bnlearn] &gt;Edge [weight &lt;-&gt; mpg] [P=0.999112] is excluded because it was not significant (P&lt;0.05) with [chi_square]</span>
 
 <span class="c1"># Make plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+
+<span class="c1"># Make plot with graphviz</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+
 <span class="c1"># Create interactive plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<figure class="align-default" id="fig-cont-2">
-<img alt="_images/fig_cont_2.png" src="_images/fig_cont_2.png" />
-</figure>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig2a" src="_images/fig2a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig2b" src="_images/fig2b.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe></section>
 <section id="parameter-learning">
-<h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Link to this heading"></a></h1>
+<h2>Parameter learning<a class="headerlink" href="#parameter-learning" title="Link to this heading"></a></h2>
 <p>Let’s continue with parameter learning on the continuous data set and see whether we can estimate the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model based on DAG and discretized continous columns</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
@@ -290,14 +383,23 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Make plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+
+<span class="c1"># Make plot graphviz</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+
 <span class="c1"># Create interactive plot.</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<figure class="align-default" id="fig-cont-1">
-<img alt="_images/fig_cont_1.png" src="_images/fig_cont_1.png" />
-</figure>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig3a" src="_images/fig_cont_1.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig3b" src="_images/fig_cont_1b.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe><p>There are various manners to deeper investigate the results such as looking at the CPDs.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_cpds</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">))</span>
@@ -340,8 +442,8 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
 </pre></div>
 </div>
 </section>
-<section id="inference">
-<h1>Inference<a class="headerlink" href="#inference" title="Link to this heading"></a></h1>
+<section id="inferences">
+<h2>Inferences<a class="headerlink" href="#inferences" title="Link to this heading"></a></h2>
 <p>Making inferences can be perfomred using the fitted model. Note that the evidence should be discretized for which we can
 use the <code class="docutils literal notranslate"><span class="pre">discretize_value</span></code> function.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">evidence</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize_value</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="mf">3000.0</span><span class="p">)}</span>
@@ -378,12 +480,238 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
 </tr>
 </tbody>
 </table>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
+</section>
+</section>
+<section id="modelling-continuous-datasets">
+<h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
+<section id="lingam-example">
+<h2>LiNGAM Example<a class="headerlink" href="#lingam-example" title="Link to this heading"></a></h2>
+<p>To demonstrate how the LiNGAM works, it is best to do it with a small toy example.</p>
+<p>We create test data consisting of 6 variables.
+This data sets is a great example of the contribution of different variables.
+All viarables have the same size with n=1000 samples and have uniform distribution.
+We will create dependencies between variables and then let the model figure out what hte original values were.</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li><p>Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
-Learning Discrete Bayesian Networks from Continuous Data arxiv 1512.02406</p></li>
+<div><ul class="simple">
+<li><p>step 1: [x3] is initialized with uniform distribution.</p></li>
+<li><p>step 2: [x0] and [x2] is created by multiplication with values of [x3] and making them thus dependend of [x3].</p></li>
+<li><p>step 3: [x5] is created by multiplication with values of [x0]  and thus making it depended of [x0]</p></li>
+<li><p>step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>       <span class="n">x3</span>
+      <span class="o">/</span>  \
+    <span class="mi">6</span>      <span class="mi">3</span>
+    <span class="o">/</span>       \
+  <span class="n">x2</span>         <span class="n">x0</span>
+  <span class="o">/</span> \      <span class="o">/</span>  <span class="o">|</span>  \
+<span class="o">-</span><span class="mi">1</span>   <span class="mi">2</span>    <span class="mi">8</span>   <span class="mi">3</span>    <span class="mi">4</span>
+<span class="n">x4</span>   <span class="n">etc</span>           <span class="n">x5</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig8a" src="_images/fig_lingam_example_input.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">lingam.utils</span> <span class="kn">import</span> <span class="n">make_dot</span>
+
+<span class="c1"># step 1</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># step 2</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="mf">6.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># step 3</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="c1"># step 4</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">])</span><span class="o">.</span><span class="n">T</span> <span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+              <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+<span class="n">dot</span> <span class="o">=</span> <span class="n">make_dot</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">dot</span>
+</pre></div>
+</div>
+<p>To run Structure learning, we now can use the direct-lingam method for fitting.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
+
+<span class="c1"># When we no look at the output, we can see that the dependency values are very well recovered for the various variables.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="c1"># target        x0        x1       x2   x3        x4       x5</span>
+<span class="c1"># source</span>
+<span class="c1"># x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624</span>
+<span class="c1"># x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+<span class="c1"># x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000</span>
+<span class="c1"># x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000</span>
+<span class="c1"># x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+<span class="c1"># x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Compute edge strength with the chi_square test statistic</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="c1"># target        x0        x1       x2   x3        x4       x5</span>
+<span class="c1"># source</span>
+<span class="c1"># x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624</span>
+<span class="c1"># x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+<span class="c1"># x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000</span>
+<span class="c1"># x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000</span>
+<span class="c1"># x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+<span class="c1"># x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+
+<span class="c1"># Using the causal_order_ properties, we can see the causal ordering as a result of the causal discovery.</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;causal_order&#39;</span><span class="p">])</span>
+<span class="c1"># [&#39;x3&#39;, &#39;x0&#39;, &#39;x5&#39;, &#39;x2&#39;, &#39;x1&#39;, &#39;x4&#39;]</span>
+
+<span class="c1"># We can draw a causal graph by utility funciton.</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig7a" src="_images/fig_lingam_example_1.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<p>This exmaple nicely demonstrates that we can capture the dependencies with the causal factors acurately.</p>
+</section>
+<section id="direct-lingam-method">
+<h2>Direct-LiNGAM method<a class="headerlink" href="#direct-lingam-method" title="Link to this heading"></a></h2>
+<p>The Direct-LiNGAM method ‘direct-lingam’ is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable. When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables. Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.</p>
+<p>Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.
+A disadvantage is that causal discovery of structure learning is the end-point when uing this method. It is not possible to perform parameter learning and inferences.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load data set</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">,</span> <span class="n">params_lingam</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Plot with graphviz</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+<span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_lingam_direct&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using the LINGAM method, the values on the edges describe the dependency using a multiplication factor of one variable to another. As an example, Origin -&gt; -10 -&gt; Displacement tells us Displacement has values that are factor -10 lower than origin.</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig4a" src="_images/fig_auto_mpg_lingam_a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig4b" src="_images/fig_auto_mpg_lingam_b.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ica-lingam-method">
+<h2>ICA-LiNGAM method<a class="headerlink" href="#ica-lingam-method" title="Link to this heading"></a></h2>
+<p>The ICA-LiNGAM method ‘ica-lingam’ is also from lingam and follows the same procedure.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load data set</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ica-lingam&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Plot with graphviz</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+<span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_lingam_ica&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig6a" src="_images/fig_auto_mpg_lingam_ica_a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig6b" src="_images/fig_auto_mpg_lingam_ica_b.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pc-method">
+<h2>PC method<a class="headerlink" href="#pc-method" title="Link to this heading"></a></h2>
+<p>A different, but quite straightforward approach to build a DAG from data is identifing independencies in the data set using hypothesis tests and then construct DAG (pattern) according to identified independencies (Conditional) Independence Tests. Independencies in the data can be identified using chi2 conditional independence tests.</p>
+<p>The Constraint-Based PC Algorithm (named after Peter and Clark, its inventors) is a popular method in causal inference and Bayesian network learning. It is a type of constraint-based algorithm, which uses conditional independence tests to build a causal graph from data. This algorithm is widely used to learn the structure of Bayesian networks and causal graphs by identifying relationships between variables.</p>
+<p>DAG (pattern) construction
+With a method for independence testing at hand, we can construct a DAG from the data set in three steps:</p>
+<blockquote>
+<div><ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Construct an undirected skeleton.</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Orient compelled edges to obtain partially directed acyclid graph.</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way.</p></li>
+</ol>
+</li>
+</ul>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load data set</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;pc&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot with graphviz</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+<span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_PC&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>PC PDAG construction is only guaranteed to work under the assumption that the identified set of independencies is <em>faithful</em>, i.e. there exists a DAG that exactly corresponds to it. Spurious dependencies in the data set can cause the reported independencies to violate faithfulness. It can happen that the estimated PDAG does not have any faithful completions (i.e. edge orientations that do not introduce new v-structures). In that case a warning is issued.</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig5a" src="_images/fig_auto_mpg_PC_a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig5b" src="_images/fig_auto_mpg_PC_b.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<blockquote>
+<div><p>1. Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
+<a class="reference external" href="https://arxiv.org/abs/1512.02406">Learning Discrete Bayesian Networks from Continuous Data</a></p>
+<ol class="arabic simple" start="2">
 <li><p>Julia 0.4 implementation:
 <a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p></li>
 </ol>
@@ -396,6 +724,7 @@ Learning Discrete Bayesian Networks from Continuous Data arxiv 1512.02406</p></l
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
+</section>
 </section>
 
 

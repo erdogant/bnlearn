@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.structure_learning &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,7 +17,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=441dd29d"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -84,10 +86,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Advanced discretizing continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -180,7 +182,7 @@
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_lingam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'apply_prior_knowledge_softly':</span> <span class="pre">False,</span> <span class="pre">'measure':</span> <span class="pre">'pwling',</span> <span class="pre">'prior_knowledge':</span> <span class="pre">None,</span> <span class="pre">'random_state':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
 <dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
@@ -192,8 +194,9 @@ The search space of DAGs is super-exponential in the number of variables and the
 </ol>
 </dd>
 </dl>
-<p>Score-based Structure Learning.
-This approach performes model selection as an optimization task. It has two building blocks:
+<section id="score-based-structure-learning">
+<h2>Score-based Structure Learning<a class="headerlink" href="#score-based-structure-learning" title="Link to this heading"></a></h2>
+<p>This approach performes model selection as an optimization task. It has two building blocks:
 A scoring function sD:-&gt;R that maps models to a numerical score, based on how well they fit to a given data set D.
 A search strategy to traverse the search space of possible models M and select a model with optimal score.
 Commonly used scoring functions to measure the fit between model and data are Bayesian Dirichlet scores such as BDeu or K2 and the Bayesian Information Criterion (BIC, also called MDL).
@@ -201,60 +204,128 @@ BDeu is dependent on an equivalent sample size.</p>
 <p>The BDs score is determined by adjusting certain settings based on the size of the dataset and the observed
 variable counts. This adjustment involves using a value called “equivalent sample size” divided by the number of
 parent configurations with observed variable counts. The score-method evaluates how effectively a model can describe the provided dataset.</p>
+<p>The Direct-LiNGAM method or also named ‘direct-lingam’ is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic.
+Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Input dataframe.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'hc'</em><em>)</em>) – String Search strategy for structure_learning.
+<dt class="field-odd">param df<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Input dataframe.</p>
+</dd>
+<dt class="field-even">type df<span class="colon">:</span></dt>
+<dd class="field-even"><p>pd.DataFrame()</p>
+</dd>
+<dt class="field-odd">param methodtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String Search strategy for structure_learning.
 ‘hc’ or ‘hillclimbsearch’ (default)
 ‘ex’ or ‘exhaustivesearch’
-‘cs’ or ‘constraintsearch’
+‘pc’ or ‘cs’ or ‘constraintsearch’
 ‘cl’ or ‘chow-liu’ (requires setting root_node parameter)
 ‘nb’ or ‘naivebayes’ (requires &lt;root_node&gt;)
-‘tan’ (requires &lt;root_node&gt; and &lt;class_node&gt; parameter)</p></li>
-<li><p><strong>scoretype</strong> (<em>str</em><em>, </em><em>(</em><em>default : 'bic'</em><em>)</em>) – <dl class="simple">
-<dt>Scoring function for the search spaces.</dt><dd><ul>
-<li><p>’bic’</p></li>
-<li><p>’k2’</p></li>
-<li><p>’bdeu’</p></li>
-<li><p>’bds’</p></li>
-<li><p>’aic’</p></li>
+‘tan’ (requires &lt;root_node&gt; and &lt;class_node&gt; parameter)
+‘direct-lingam’ (for continuous and mixed datasets)
+‘ica-lingam’ (for continuous and mixed datasets)</p>
+</dd>
+<dt class="field-even">type methodtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, (default : ‘hc’)</p>
+</dd>
+<dt class="field-odd">param scoretype<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>Scoring function for the search spaces.</dt><dd><ul class="simple">
+<li><p>‘bic’</p></li>
+<li><p>‘k2’</p></li>
+<li><p>‘bdeu’</p></li>
+<li><p>‘bds’</p></li>
+<li><p>‘aic’</p></li>
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>black_list</strong> (<em>List</em><em> or </em><em>None</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – List of edges are black listed.
-In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.</p></li>
-<li><p><strong>white_list</strong> (<em>List</em><em> or </em><em>None</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – List of edges are white listed.
+</dd>
+<dt class="field-even">type scoretype<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, (default : ‘bic’)</p>
+</dd>
+<dt class="field-odd">param black_list<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of edges are black listed.
+In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.</p>
+</dd>
+<dt class="field-even">type black_list<span class="colon">:</span></dt>
+<dd class="field-even"><p>List or None, (default : None)</p>
+</dd>
+<dt class="field-odd">param white_list<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of edges are white listed.
 In case of filtering on nodes, the search is limited to those edges. The resulting model will then only contain nodes that are in white_list.
-Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_method</cite></p></li>
-<li><p><strong>bw_list_method</strong> (<em>list</em><em> of </em><em>str</em><em> or </em><em>tuple</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – <dl class="simple">
-<dt>A list of edges can be passed as <cite>black_list</cite> or <cite>white_list</cite> to exclude or to limit the search.</dt><dd><ul>
-<li><p>’edges’ : [(‘A’, ‘B’), (‘C’,’D’), (…)] This option is limited to only methodtype=’hc’</p></li>
-<li><p>’nodes’ : [‘A’, ‘B’, …] Filter the dataframe based on the nodes for <cite>black_list</cite> or <cite>white_list</cite>. Filtering can be done for every methodtype/scoretype.</p></li>
+Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_method</cite></p>
+</dd>
+<dt class="field-even">type white_list<span class="colon">:</span></dt>
+<dd class="field-even"><p>List or None, (default : None)</p>
+</dd>
+<dt class="field-odd">param bw_list_method<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>A list of edges can be passed as <cite>black_list</cite> or <cite>white_list</cite> to exclude or to limit the search.</dt><dd><ul class="simple">
+<li><p>‘edges’ : [(‘A’, ‘B’), (‘C’,’D’), (…)] This option is limited to only methodtype=’hc’</p></li>
+<li><p>‘nodes’ : [‘A’, ‘B’, …] Filter the dataframe based on the nodes for <cite>black_list</cite> or <cite>white_list</cite>. Filtering can be done for every methodtype/scoretype.</p></li>
 </ul>
 </dd>
 </dl>
-</p></li>
-<li><p><strong>max_indegree</strong> (<em>int</em><em>, </em><em>(</em><em>default : None</em><em>)</em>) – If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>epsilon</strong> (<em>float</em><em> (</em><em>default: 1e-4</em><em>)</em>) – Defines the exit condition. If the improvement in score is less than <cite>epsilon</cite>, the learned model is returned. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em> (</em><em>default: 1e6</em><em>)</em>) – The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than <cite>max_iter</cite>. (only in case of methodtype=’hc’)</p></li>
-<li><p><strong>root_node</strong> (<em>String.</em><em> (</em><em>only in case</em><em> of </em><em>chow-liu</em><em>, </em><em>Tree-augmented Naive Bayes</em><em> (</em><em>TAN</em><em>)</em><em>)</em>) – The root node for treeSearch based methods.</p></li>
-<li><p><strong>class_node</strong> (<em>String</em>) – The class node is required for Tree-augmented Naive Bayes (TAN)</p></li>
-<li><p><strong>fixed_edges</strong> (<em>iterable</em><em>, </em><em>Only in case</em><em> of </em><em>HillClimbSearch.</em>) – A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.</p></li>
-<li><p><strong>return_all_dags</strong> (<em>Bool</em><em>, </em><em>(</em><em>default: False</em><em>)</em>) – Return all possible DAGs. Only in case methodtype=’exhaustivesearch’</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>(</em><em>default : 3</em><em>)</em>) – 0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace</p></li>
-</ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>‘model’ : pgmpy model
+<dt class="field-even">type bw_list_method<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of str or tuple, (default : None)</p>
+</dd>
+<dt class="field-odd">param max_indegree<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype=’hc’)</p>
+</dd>
+<dt class="field-even">type max_indegree<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, (default : None)</p>
+</dd>
+<dt class="field-odd">param epsilon<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Defines the exit condition. If the improvement in score is less than <cite>epsilon</cite>, the learned model is returned. (only in case of methodtype=’hc’)</p>
+</dd>
+<dt class="field-even">type epsilon<span class="colon">:</span></dt>
+<dd class="field-even"><p>float (default: 1e-4)</p>
+</dd>
+<dt class="field-odd">param max_iter<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than <cite>max_iter</cite>. (only in case of methodtype=’hc’)</p>
+</dd>
+<dt class="field-even">type max_iter<span class="colon">:</span></dt>
+<dd class="field-even"><p>int (default: 1e6)</p>
+</dd>
+<dt class="field-odd">param root_node<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The root node for treeSearch based methods.</p>
+</dd>
+<dt class="field-even">type root_node<span class="colon">:</span></dt>
+<dd class="field-even"><p>String. (only in case of chow-liu, Tree-augmented Naive Bayes (TAN))</p>
+</dd>
+<dt class="field-odd">param class_node<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The class node is required for Tree-augmented Naive Bayes (TAN)</p>
+</dd>
+<dt class="field-even">type class_node<span class="colon">:</span></dt>
+<dd class="field-even"><p>String</p>
+</dd>
+<dt class="field-odd">param fixed_edges<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.</p>
+</dd>
+<dt class="field-even">type fixed_edges<span class="colon">:</span></dt>
+<dd class="field-even"><p>iterable, Only in case of HillClimbSearch.</p>
+</dd>
+<dt class="field-odd">param return_all_dags<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Return all possible DAGs. Only in case methodtype=’exhaustivesearch’</p>
+</dd>
+<dt class="field-even">type return_all_dags<span class="colon">:</span></dt>
+<dd class="field-even"><p>Bool, (default: False)</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, (default : 3)</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>‘model’ : pgmpy model
 ‘model_edges’ : Edges
 ‘adjmat’ : Adjacency matrix
 ‘config’ : Configurations
 ‘structure_scores’ : Structure scores (the lower the better)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>dict with keys</p>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict with keys</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -266,7 +337,13 @@ Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_metho
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># plot ground truth</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling example</span>
 <span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
@@ -278,15 +355,35 @@ Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_metho
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot based on structure learning of sampled data</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compare networks and make plot</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compare networks and make plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Model mixed data sets (both discrete and continuous variables)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning of sampled dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute edge strength using chi-square independence test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot based on structure learning of sampled data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>
 <ul class="simple">
 <li><p>[1] Scutari, Marco. An Empirical-Bayes Score for Discrete Bayesian Networks. Journal of Machine Learning Research, 2016, pp. 438–48</p></li>
+<li><p>[2] Shimizu et al, DirectLiNGAM: A direct method for learning a linear non-Gaussian structural equation model, <a class="reference external" href="https://arxiv.org/abs/1101.2489v3">https://arxiv.org/abs/1101.2489v3</a></p></li>
 </ul>
+</section>
 </dd></dl>
 
 <hr>

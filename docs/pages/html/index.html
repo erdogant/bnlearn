@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BNLearn’s Documentation &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,7 +17,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=441dd29d"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -83,10 +85,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Advanced discretizing continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -279,11 +281,19 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Advanced discretizing continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#inferences">Inferences</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#lingam-example">LiNGAM Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#direct-lingam-method">Direct-LiNGAM method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#ica-lingam-method">ICA-LiNGAM method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC method</a></li>
 </ul>
 </li>
 </ul>
@@ -396,6 +406,7 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz"><code class="docutils literal notranslate"><span class="pre">plot_graphviz()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>

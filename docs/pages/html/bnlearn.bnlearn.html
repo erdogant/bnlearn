@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.bnlearn &mdash; bnlearn bnlearn documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,7 +17,7 @@
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="_static/documentation_options.js?v=441dd29d"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -84,10 +86,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Advanced discretizing continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#inference">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -148,6 +150,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.plot"><code class="docutils literal notranslate"><span class="pre">plot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.plot_graphviz"><code class="docutils literal notranslate"><span class="pre">plot_graphviz()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
@@ -228,6 +231,8 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>adjmat</strong> (<em>pd.DataFrame</em><em>(</em><em>)</em>) – Adjacency matrix.</p></li>
 <li><p><strong>min_weight</strong> (<em>float</em>) – edges are returned with a minimum weight.</p></li>
+<li><p><strong>absolute</strong> (<em>bool</em>) – True: Make all values absolute
+False: Keep as is</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -371,26 +376,34 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 1:</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create DAG and store in model</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_edge_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Adjust the properties</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_edge_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)][</span><span class="s1">&#39;weight&#39;</span><span class="p">]</span><span class="o">=</span><span class="mi">10</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">)][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">edge_properties</span><span class="o">=</span><span class="n">edge_properties</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 2:</span>
-<span class="gp">&gt;&gt;&gt; </span> <span class="c1"># Load asia DAG</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 2:</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load asia DAG</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning of sampled dataset</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute edge weights based on chi_square test statistic</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get the edge properties</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_edge_properties</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make adjustments</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edge_properties</span><span class="p">[(</span><span class="s1">&#39;tub&#39;</span><span class="p">,</span> <span class="s1">&#39;either&#39;</span><span class="p">)][</span><span class="s1">&#39;color&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;#8A0707&#39;</span>
+<span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edge_properties</span><span class="o">=</span><span class="n">edge_properties</span><span class="p">)</span>
 </pre></div>
@@ -399,7 +412,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.get_node_properties">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">get_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#1f456e'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_node_properties" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">get_node_properties</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#ADD8E6'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_node_properties" title="Link to this definition"></a></dt>
 <dd><p>Collect node properties.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -571,6 +584,12 @@ considered uncorrelated.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute arc strength</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span>      <span class="n">source</span>     <span class="n">target</span>  <span class="n">stat_test</span>       <span class="n">p_value</span>  <span class="n">chi_square</span>  <span class="n">dof</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">0</span>     <span class="n">Cloudy</span>  <span class="n">Sprinkler</span>       <span class="kc">True</span>  <span class="mf">8.383708e-53</span>  <span class="mf">233.906474</span>    <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">1</span>  <span class="n">Sprinkler</span>  <span class="n">Wet_Grass</span>       <span class="kc">True</span>  <span class="mf">1.196919e-23</span>  <span class="mf">100.478455</span>    <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">2</span>       <span class="n">Rain</span>     <span class="n">Cloudy</span>       <span class="kc">True</span>  <span class="mf">1.080606e-87</span>  <span class="mf">394.061629</span>    <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="mi">3</span>       <span class="n">Rain</span>  <span class="n">Wet_Grass</span>       <span class="kc">True</span>  <span class="mf">3.886511e-64</span>  <span class="mf">285.901702</span>    <span class="mi">1</span>
 </pre></div>
 </div>
 </section>
@@ -637,7 +656,7 @@ considered uncorrelated.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.plot">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn</span> <span class="pre">Directed</span> <span class="pre">Acyclic</span> <span class="pre">Graph</span> <span class="pre">(DAG)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'figsize':</span> <span class="pre">(1500,</span> <span class="pre">800),</span> <span class="pre">'filepath':</span> <span class="pre">None,</span> <span class="pre">'font_color':</span> <span class="pre">'node_color',</span> <span class="pre">'minmax_distance':</span> <span class="pre">[100,</span> <span class="pre">250],</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'show_slider':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">30,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'figsize':</span> <span class="pre">(15,</span> <span class="pre">10),</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">14,</span> <span class="pre">'height':</span> <span class="pre">None,</span> <span class="pre">'layout':</span> <span class="pre">'spring_layout',</span> <span class="pre">'maxscale':</span> <span class="pre">10,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'visible':</span> <span class="pre">True,</span> <span class="pre">'width':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn</span> <span class="pre">Directed</span> <span class="pre">Acyclic</span> <span class="pre">Graph</span> <span class="pre">(DAG)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'figsize':</span> <span class="pre">(1500,</span> <span class="pre">800),</span> <span class="pre">'filepath':</span> <span class="pre">None,</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'minmax_distance':</span> <span class="pre">[100,</span> <span class="pre">250],</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'show_slider':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">20,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'dpi':</span> <span class="pre">200,</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'figsize':</span> <span class="pre">(10,</span> <span class="pre">10),</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">10,</span> <span class="pre">'height':</span> <span class="pre">None,</span> <span class="pre">'layout':</span> <span class="pre">'graphviz_layout',</span> <span class="pre">'maxscale':</span> <span class="pre">10,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'visible':</span> <span class="pre">True,</span> <span class="pre">'width':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Link to this definition"></a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -657,11 +676,14 @@ node_properties = {‘node1’:{‘node_color’:’#8A0707’,’node_size’:1
 <div><p>’node2’:{‘node_color’:’#000000’,’node_size’:30}}</p>
 </div></blockquote>
 </p></li>
-<li><p><strong>edge_properties</strong> (<em>dict</em><em> (</em><em>default: None</em><em>)</em><em>.</em>) – Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
+<li><p><strong>edge_properties</strong> (<em>dict</em><em> (</em><em>default: None</em><em>)</em>) – Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
 edge_properties = bn.get_edge_properties(model)</p></li>
+<li><p><strong>edge_labels</strong> (<em>Bool</em><em> (</em><em>default: True</em><em>)</em>) – None: Do not show edge labels
+‘weight’: Show the input values in the array
+‘pvalue’: Show the edge pvalues (this requires doing the independence_test: model = bn.independence_test(model, df)</p></li>
 <li><p><strong>params_interactive</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating interactive plots.</p></li>
 <li><p><strong>params_static</strong> (<em>dict.</em>) – Dictionary containing various settings in case of creating static plots.
-layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectral_layout’, ‘pydot_layout’, ‘graphviz_layout’, ‘circular_layout’, ‘spring_layout’, ‘random_layout’, ‘bipartite_layout’, ‘multipartite_layout’,</p></li>
+layout: ‘graphviz_layout’, ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectral_layout’, ‘pydot_layout’, ‘circular_layout’, ‘spring_layout’, ‘random_layout’, ‘bipartite_layout’, ‘multipartite_layout’,</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace</p></li>
 </ul>
@@ -707,6 +729,75 @@ layout: ‘spring_layout’, ‘planar_layout’, ‘shell_layout’, ‘spectra
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">node_properties</span><span class="o">=</span><span class="n">node_properties</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.plot_graphviz">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot_graphviz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'detect_cycle':</span> <span class="pre">False,</span> <span class="pre">'ignore_shape':</span> <span class="pre">False,</span> <span class="pre">'path':</span> <span class="pre">None,</span> <span class="pre">'path_color':</span> <span class="pre">None,</span> <span class="pre">'prediction_coefs':</span> <span class="pre">None,</span> <span class="pre">'prediction_feature_importance':</span> <span class="pre">None,</span> <span class="pre">'prediction_feature_indices':</span> <span class="pre">None,</span> <span class="pre">'prediction_line_color':</span> <span class="pre">'red',</span> <span class="pre">'prediction_target_label':</span> <span class="pre">'Y(pred)'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot_graphviz" title="Link to this definition"></a></dt>
+<dd><p>Plot a causal or Bayesian network using Graphviz based on an adjacency matrix.</p>
+<p>This function visualizes the causal or Bayesian model structure in model[‘adjmat’] using the Graphviz library. The user can customize various aspects of the plot such as colors, path highlights, and edge labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>dict</em>) – A dictionary containing the network model.
+Must include an adjacency matrix under the key “adjmat” and when the independence_test is performed, the -log10(pvalues) will be shown on the edges to highlight the strength of the significant relationships between variables.</p></li>
+<li><p><strong>edge_labels</strong> (<em>Bool</em><em> (</em><em>default: True</em><em>)</em>) – None: Do not show edge labels
+‘weight’: Show the input values in the array
+‘pvalue’: Show the edge pvalues (this requires doing the independence_test: model = bn.independence_test(model, df)</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>A dictionary of parameters to control the visualization. Default values are provided,
+but users can modify specific parameters. The available options are:</p>
+<ul>
+<li><p><cite>prediction_feature_indices</cite> (list or None): The feature indices to be used in the
+prediction path, or <cite>None</cite> for no specific feature highlights.</p></li>
+<li><p><cite>prediction_target_label</cite> (str): Label for the prediction target node.</p></li>
+<li><p><cite>prediction_line_color</cite> (str): Color for the prediction path in the graph.</p></li>
+<li><p><cite>prediction_coefs</cite> (list or None): Coefficients for the prediction line (optional).</p></li>
+<li><p><cite>prediction_feature_importance</cite> (list or None): Feature importance values for features
+in the prediction path.</p></li>
+<li><p><cite>path</cite> (list or None): Specific path between nodes to highlight, or <cite>None</cite> to ignore.</p></li>
+<li><p><cite>path_color</cite> (str or None): Color of the path to highlight, or <cite>None</cite>.</p></li>
+<li><p><cite>detect_cycle</cite> (bool): If <cite>True</cite>, attempt to detect cycles in the graph.</p></li>
+<li><p><cite>ignore_shape</cite> (bool): If <cite>True</cite>, ignore the node shapes when plotting.</p></li>
+</ul>
+</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>dot_graph</strong> – A Graphviz <cite>Source</cite> object containing the DOT source code for the graph. This can be
+rendered or exported. Returns <cite>None</cite> if no edges are found in the adjacency matrix.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>graphviz.Source or None</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>This function depends on the <cite>graphviz</cite> and <cite>lingam.utils</cite> libraries.</p></li>
+<li><p>If the <cite>independence_test</cite> key is present in <cite>model</cite>, the graph’s edges are updated based on the p-values from the test, and edges are weighted accordingly.</p></li>
+<li><p>If the Graphviz executable is not set in the system environment, it will attempt to set it using the <cite>setgraphviz</cite> function.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example mixed dataset</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Structure learning</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Independence test</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Dot graph</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dotgraph</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create pdf</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;c:/temp/dotgraph&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -1088,10 +1179,9 @@ bn.topological_sort(DAG)</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">weight</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weight</span><span class="p">)</span>
 </pre></div>
 </div>
 </dd></dl>
