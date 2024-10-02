@@ -263,7 +263,11 @@ There are different manner on how to work with continuous and/or hybrid datasets
 <section id="discretize-continuous-datasets-automatically">
 <h1>Discretize continuous datasets automatically<a class="headerlink" href="#discretize-continuous-datasets-automatically" title="Link to this heading"></a></h1>
 <p>Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
-The method is implemented Yi-Chun Chen et al which demonstrates that the proposed method is superior to the established minimum description length algorithm. A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method. The underlying idea is that after applying this discritization method, structure learning approaches can then be applied. To demonstrate the usage of automatically discritizing continuous data, lets use the <strong>auto mpg</strong> dataset again.</p>
+The method is created by Yi-Chun Chen et al in Julia. The code is ported to Python and is now part of <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.
+Yi-Chun Chen demonstrates that his proposed method is superior to the established minimum description length algorithm.
+A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method.
+The underlying idea is that after applying this discritization method, structure learning approaches can then be applied.
+To demonstrate the usage of automatically discritizing continuous data, lets use the <strong>auto mpg</strong> dataset again.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
 
@@ -488,17 +492,19 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
 <section id="lingam-example">
 <h2>LiNGAM Example<a class="headerlink" href="#lingam-example" title="Link to this heading"></a></h2>
 <p>To demonstrate how the LiNGAM works, it is best to do it with a small toy example.</p>
-<p>We create test data consisting of 6 variables.
-This data sets is a great example of the contribution of different variables.
-All viarables have the same size with n=1000 samples and have uniform distribution.
-We will create dependencies between variables and then let the model figure out what hte original values were.</p>
+<p>Here’s the improved version of the text:</p>
+<p>Let’s create test data containing six variables.
+The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
+All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution.
+If the number of samples is much smaller, say in the tens, the method becomes less reliable due to insufficient information to determine causality.</p>
+<p>We will establish dependencies between variables and then allow the model to infer the original values.</p>
 <blockquote>
-<div><ul class="simple">
-<li><p>step 1: [x3] is initialized with uniform distribution.</p></li>
-<li><p>step 2: [x0] and [x2] is created by multiplication with values of [x3] and making them thus dependend of [x3].</p></li>
-<li><p>step 3: [x5] is created by multiplication with values of [x0]  and thus making it depended of [x0]</p></li>
-<li><p>step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]</p></li>
-</ul>
+<div><ol class="arabic simple">
+<li><p>Step 1: <code class="docutils literal notranslate"><span class="pre">x3</span></code> is the root node and is initialized with a uniform distribution.</p></li>
+<li><p>Step 2: <code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">x2</span></code> are created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x3</span></code>, making them dependent on <code class="docutils literal notranslate"><span class="pre">x3</span></code>.</p></li>
+<li><p>Step 3: <code class="docutils literal notranslate"><span class="pre">x5</span></code> is created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x0</span></code>, making it dependent on <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
+<li><p>Step 4: <code class="docutils literal notranslate"><span class="pre">x1</span></code> and <code class="docutils literal notranslate"><span class="pre">x4</span></code> are created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x0</span></code>, making them dependent on <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
+</ol>
 </div></blockquote>
 <table class="docutils align-center">
 <tbody>
@@ -510,16 +516,19 @@ We will create dependencies between variables and then let the model figure out 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">lingam.utils</span> <span class="kn">import</span> <span class="n">make_dot</span>
 
+<span class="c1"># Number of samples</span>
+<span class="n">n</span><span class="o">=</span><span class="mi">1000</span>
+
 <span class="c1"># step 1</span>
-<span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 <span class="c1"># step 2</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="mf">6.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="mf">6.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 <span class="c1"># step 3</span>
-<span class="n">x5</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 <span class="c1"># step 4</span>
-<span class="n">x1</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="n">x4</span> <span class="o">=</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">])</span><span class="o">.</span><span class="n">T</span> <span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">])</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 
@@ -537,6 +546,7 @@ We will create dependencies between variables and then let the model figure out 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
 
 <span class="c1"># When we no look at the output, we can see that the dependency values are very well recovered for the various variables.</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 <span class="c1"># target        x0        x1       x2   x3        x4       x5</span>
 <span class="c1"># source</span>
@@ -550,6 +560,7 @@ We will create dependencies between variables and then let the model figure out 
 
 <span class="c1"># Compute edge strength with the chi_square test statistic</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 <span class="c1"># target        x0        x1       x2   x3        x4       x5</span>
 <span class="c1"># source</span>
@@ -561,6 +572,7 @@ We will create dependencies between variables and then let the model figure out 
 <span class="c1"># x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
 
 <span class="c1"># Using the causal_order_ properties, we can see the causal ordering as a result of the causal discovery.</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;causal_order&#39;</span><span class="p">])</span>
 <span class="c1"># [&#39;x3&#39;, &#39;x0&#39;, &#39;x5&#39;, &#39;x2&#39;, &#39;x1&#39;, &#39;x4&#39;]</span>
 

@@ -72,7 +72,11 @@ Discretize continuous datasets automatically
 ============================================
 
 Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
-The method is implemented Yi-Chun Chen et al which demonstrates that the proposed method is superior to the established minimum description length algorithm. A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method. The underlying idea is that after applying this discritization method, structure learning approaches can then be applied. To demonstrate the usage of automatically discritizing continuous data, lets use the **auto mpg** dataset again.
+The method is created by Yi-Chun Chen et al in Julia. The code is ported to Python and is now part of ``bnlearn``.
+Yi-Chun Chen demonstrates that his proposed method is superior to the established minimum description length algorithm.
+A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method.
+The underlying idea is that after applying this discritization method, structure learning approaches can then be applied.
+To demonstrate the usage of automatically discritizing continuous data, lets use the **auto mpg** dataset again.
 
 
 
@@ -328,16 +332,20 @@ LiNGAM Example
 
 To demonstrate how the LiNGAM works, it is best to do it with a small toy example.
 
-We create test data consisting of 6 variables.
-This data sets is a great example of the contribution of different variables.
-All viarables have the same size with n=1000 samples and have uniform distribution.
-We will create dependencies between variables and then let the model figure out what hte original values were.
+Here's the improved version of the text:
 
-	* step 1: [x3] is initialized with uniform distribution.
-	* step 2: [x0] and [x2] is created by multiplication with values of [x3] and making them thus dependend of [x3].
-	* step 3: [x5] is created by multiplication with values of [x0]  and thus making it depended of [x0]
-	* step 4: [x1] and [x4] are created by multiplication with values of [x0] and thus making it depended of [x0]
- 
+Let's create test data containing six variables.
+The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
+All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution.
+If the number of samples is much smaller, say in the tens, the method becomes less reliable due to insufficient information to determine causality.
+
+We will establish dependencies between variables and then allow the model to infer the original values.
+
+	1. Step 1: ``x3`` is the root node and is initialized with a uniform distribution.
+	2. Step 2: ``x0`` and ``x2`` are created by multiplying with the values of ``x3``, making them dependent on ``x3``.
+	3. Step 3: ``x5`` is created by multiplying with the values of ``x0``, making it dependent on ``x0``.
+	4. Step 4: ``x1`` and ``x4`` are created by multiplying with the values of ``x0``, making them dependent on ``x0``.
+
 
 .. |fig8a| image:: ../figs/fig_lingam_example_input.png
 
@@ -355,16 +363,19 @@ We will create dependencies between variables and then let the model figure out 
 	import pandas as pd
 	from lingam.utils import make_dot
 
+	# Number of samples
+	n=1000
+
 	# step 1
-	x3 = np.random.uniform(size=1000)
+	x3 = np.random.uniform(size=n)
 	# step 2
-	x0 = 3.0*x3 + np.random.uniform(size=1000)
-	x2 = 6.0*x3 + np.random.uniform(size=1000)
+	x0 = 3.0*x3 + np.random.uniform(size=n)
+	x2 = 6.0*x3 + np.random.uniform(size=n)
 	# step 3
-	x5 = 4.0*x0 + np.random.uniform(size=1000)
+	x5 = 4.0*x0 + np.random.uniform(size=n)
 	# step 4
-	x1 = 3.0*x0 + 2.0*x2 + np.random.uniform(size=1000)
-	x4 = 8.0*x0 - 1.0*x2 + np.random.uniform(size=1000)
+	x1 = 3.0*x0 + 2.0*x2 + np.random.uniform(size=n)
+	x4 = 8.0*x0 - 1.0*x2 + np.random.uniform(size=n)
 	df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T ,columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
 	df.head()
 
@@ -386,6 +397,7 @@ Structure learning can be applied with the direct-lingam method for fitting.
 	model = bn.structure_learning.fit(df, methodtype='direct-lingam')
 
 	# When we no look at the output, we can see that the dependency values are very well recovered for the various variables.
+
 	print(model['adjmat'])
 	# target        x0        x1       x2   x3        x4       x5
 	# source                                                     
@@ -399,6 +411,7 @@ Structure learning can be applied with the direct-lingam method for fitting.
 
 	# Compute edge strength with the chi_square test statistic
 	model = bn.independence_test(model, df, prune=False)
+	
 	print(model['adjmat'])
 	# target        x0        x1       x2   x3        x4       x5
 	# source                                                     
@@ -410,6 +423,7 @@ Structure learning can be applied with the direct-lingam method for fitting.
 	# x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
 
 	# Using the causal_order_ properties, we can see the causal ordering as a result of the causal discovery.
+
 	print(model['causal_order'])
 	# ['x3', 'x0', 'x5', 'x2', 'x1', 'x4']
 
