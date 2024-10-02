@@ -36,6 +36,7 @@ dotgraph2
 # dotgraph.view(filename=r'c:/temp/dotgraph2')
 
 # %%
+import bnlearn as bn
 import numpy as np
 import pandas as pd
 from lingam.utils import make_dot
@@ -62,16 +63,17 @@ from lingam.utils import make_dot
 #   x4   etc           x5
 # 
 
+n = 1000
 # step 1
-x3 = np.random.uniform(size=1000)
+x3 = np.random.uniform(size=n)
 # step 2
-x0 = 3.0*x3 + np.random.uniform(size=1000)
-x2 = 6.0*x3 + np.random.uniform(size=1000)
+x0 = 3.0*x3 + np.random.uniform(size=n)
+x2 = 6.0*x3 + np.random.uniform(size=n)
 # step 3
-x5 = 4.0*x0 + np.random.uniform(size=1000)
+x5 = 4.0*x0 + np.random.uniform(size=n)
 # step 4
-x1 = 3.0*x0 + 2.0*x2 + np.random.uniform(size=1000)
-x4 = 8.0*x0 - 1.0*x2 + np.random.uniform(size=1000)
+x1 = 3.0*x0 + 2.0*x2 + np.random.uniform(size=n)
+x4 = 8.0*x0 - 1.0*x2 + np.random.uniform(size=n)
 df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T ,columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
 df.head()
 
@@ -97,7 +99,7 @@ print(model['adjmat'])
 # x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000
 # x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
 # x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
-bn.plot(model)
+G = bn.plot(model)
 
 # Compute edge strength with the chi_square test statistic
 model = bn.independence_test(model, df, prune=False)
@@ -116,8 +118,8 @@ print(model['causal_order'])
 # ['x3', 'x0', 'x5', 'x2', 'x1', 'x4']
 
 # We can draw a causal graph by utility funciton.
-bn.plot(model)
-bn.plot(model, edge_labels='pvalue')
+G = bn.plot(model, pos=G['pos'])
+bn.plot(model, edge_labels='pvalue', pos=G['pos'])
 
 
 # %% Continous and mixed
