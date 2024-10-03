@@ -1,7 +1,14 @@
 import bnlearn as bn
 # Load example mixed dataset
-df = bn.import_example(data='auto_mpg')
+df = bn.import_example(data='asia')
 
+# Structure learning
+model = bn.structure_learning.fit(df)
+
+model = bn.independence_test(model, df, test='chi_square', prune=False)
+
+bn.plot(model, edge_labels='pvalue', params_static={'figsize': (6, 6), 'font_size': 8, 'arrowsize': 15, 'layout': 'graphviz_layout'}, node_size=700)
+dotgraph = bn.plot_graphviz(model)
 
 # %%
 import bnlearn as bn
@@ -42,6 +49,14 @@ import pandas as pd
 from lingam.utils import make_dot
 # https://sites.google.com/view/sshimizu06/lingam
 # https://github.com/cdt15/lingam/blob/master/examples/DirectLiNGAM.ipynb
+# https://github.com/cdt15/lingam?tab=readme-ov-file
+# https://github.com/cdt15/lingam/tree/master/examples
+# https://sites.google.com/view/sshimizu06/lingam
+# https://speakerdeck.com/sshimizu2006/lingam-python-package?slide=15
+
+# https://causal-learn.readthedocs.io/en/latest/search_methods_index/index.html
+# https://medium.com/@tanakaryo/overview-of-causal-discovery-and-lingam-as-representative-method-0f0e8c36c339
+# https://www.pywhy.org/dowhy/v0.11.1/example_notebooks/dowhy_causal_discovery_example.html
 
 # We create test data consisting of 6 variables.
 # This data sets is a great example of the contribution of different variables.
@@ -147,6 +162,18 @@ bn.print_CPD(model)
 
 # Make inference
 q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
+
+
+# %% Get mpg dataset
+X = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
+                   delim_whitespace=True, header=None,
+                   names = ['mpg', 'cylinders', 'displacement',
+                            'horsepower', 'weight', 'acceleration',
+                            'model year', 'origin', 'car name'])
+X.dropna(inplace=True)
+X.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+print(X.shape)
+X.head()
 
 
 # %% Continous and mixed
