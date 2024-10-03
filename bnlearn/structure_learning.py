@@ -241,7 +241,7 @@ def fit(df,
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
         Independencies in the data can be identified using chi2 conditional independence tests."""
-        out = _constraintsearch(df, n_jobs=config['n_jobs'], verbose=config['verbose'])
+        out = _constraintsearch(df, n_jobs=config['n_jobs'], significance_level=0.05, ci_test='chi_square', verbose=config['verbose'])
 
     # TreeSearch-based Structure Learning
     if config['method']=='chow-liu' or config['method']=='tan':
@@ -403,7 +403,7 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 
 
 # %% Constraint-based Structure Learning
-def _constraintsearch(df, significance_level=0.05, n_jobs=-1, verbose=3):
+def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=-1, verbose=3):
     """Contrain search.
 
     PC PDAG construction is only guaranteed to work under the assumption that the
@@ -426,6 +426,18 @@ def _constraintsearch(df, significance_level=0.05, n_jobs=-1, verbose=3):
         2. Orient compelled edges to obtain partially directed acyclid graph (PDAG; I-equivalence class of DAGs) - `skeleton_to_pdag()`
         3. Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way - `pdag_to_dag()`
 
+    ci_test:
+        "chi_square"
+        "independence_match"
+        "pearsonr"
+        "g_sq"
+        "log_likelihood"
+        "freeman_tuckey"
+        "modified_log_likelihood"
+        "neyman"
+        "cressie_read"
+        "power_divergence"
+
     """
     if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [constraintsearch]')
     out = {}
@@ -433,7 +445,7 @@ def _constraintsearch(df, significance_level=0.05, n_jobs=-1, verbose=3):
     model = ConstraintBasedEstimator(df)
 
     # Estimate using chi2
-    skel, seperating_sets = model.build_skeleton(significance_level=significance_level)
+    skel, seperating_sets = model.build_skeleton(significance_level=significance_level, ci_test='chi_square')
 
     if verbose>=4: print("Undirected edges: ", skel.edges())
     pdag = model.skeleton_to_pdag(skel, seperating_sets)
