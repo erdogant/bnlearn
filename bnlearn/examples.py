@@ -1,14 +1,28 @@
+import matplotlib.pyplot as plt
 import bnlearn as bn
-# Load example mixed dataset
-df = bn.import_example(data='asia')
 
-# Structure learning
-model = bn.structure_learning.fit(df)
+# Load sprinkler dataset
+df = bn.import_example('alarm')
 
+# Learn the DAG in data using hillclimbsearch and BIC
+model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='bic')
+model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic')
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
+model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
+model = bn.structure_learning.fit(df, methodtype='cl', root_node='BP')
+model = bn.structure_learning.fit(df, methodtype='cl')
+model = bn.structure_learning.fit(df, methodtype='nb', root_node='BP')
+
+
+# Compute edge weights using ChiSquare independence test.
 model = bn.independence_test(model, df, test='chi_square', prune=False)
 
-bn.plot(model, edge_labels='pvalue', params_static={'figsize': (6, 6), 'font_size': 8, 'arrowsize': 15, 'layout': 'graphviz_layout'}, node_size=700)
-dotgraph = bn.plot_graphviz(model)
+# Plot the best DAG
+bn.plot(model, edge_labels='pvalue', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+
+# Plot using graphiviz
+dot = bn.plot_graphviz(model, edge_labels='pvalue')
+dot
 
 # %%
 import bnlearn as bn
@@ -135,7 +149,7 @@ print(model['causal_order'])
 # We can draw a causal graph by utility funciton.
 G = bn.plot(model, pos=G['pos'])
 bn.plot(model, edge_labels='pvalue', pos=G['pos'])
-
+bn.plot_graphviz(model)
 
 # %% Continous and mixed
 import bnlearn as bn
@@ -144,7 +158,7 @@ import bnlearn as bn
 df = bn.import_example(data='auto_mpg')
 
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='pc')
+model = bn.structure_learning.fit(df, methodtype='hc')
 
 # Compute edge strength
 model = bn.independence_test(model, df)
@@ -164,16 +178,79 @@ bn.print_CPD(model)
 q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
 
 
-# %% Get mpg dataset
-X = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
-                   delim_whitespace=True, header=None,
-                   names = ['mpg', 'cylinders', 'displacement',
-                            'horsepower', 'weight', 'acceleration',
-                            'model year', 'origin', 'car name'])
-X.dropna(inplace=True)
-X.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
-print(X.shape)
-X.head()
+# %% Get mpg dataset, and manually discritize dataset. Also use distfit for discritizing
+import pandas as pd
+import datazets as ds
+
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+                 delim_whitespace=True, header=None,
+                 names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+df.dropna(inplace=True)
+df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+print(df.shape)
+df.head()
+
+#     mpg  cylinders  displacement  horsepower  weight  acceleration
+# 0  18.0        8.0         307.0       130.0  3504.0          12.0
+# 1  15.0        8.0         350.0       165.0  3693.0          11.5
+# 2  18.0        8.0         318.0       150.0  3436.0          11.0
+# 3  16.0        8.0         304.0       150.0  3433.0          12.0
+# 4  17.0        8.0         302.0       140.0  3449.0          10.5
+
+
+# Define horsepower bins based on domain knowledge
+bins = [0, 100, 150, df['horsepower'].max()]
+
+# Discretize horsepower using the defined bins
+df['horsepower_category'] = pd.cut(df['horsepower'], bins=bins, labels=['low', 'medium', 'high'], include_lowest=True)
+
+print(df[['horsepower', 'horsepower_category']].head())
+#    horsepower horsepower_category
+# 0       130.0              medium
+# 1       165.0                high
+# 2       150.0              medium
+# 3       150.0              medium
+# 4       140.0              medium
+
+del df['horsepower']
+
+# Set the cylinder to integers
+df['cylinders'] = df['cylinders'].astype(int).astype(str)
+
+
+# pip install distfit
+# Import library
+from distfit import distfit
+
+cols = ['acceleration', 'mpg', 'displacement', 'weight']
+for col in cols:
+    # Initialize and set 95% CII
+    dist = distfit(alpha=0.05)
+    dist.fit_transform(df[col])
+
+    # Make plot
+    dist.plot()
+    plt.show()
+
+    bins = [df[col].min(), dist.model['CII_min_alpha'], dist.model['CII_max_alpha'], df[col].max()]
+    # Discretize acceleration using the defined bins
+    df[col + '_category'] = pd.cut(df[col], bins=bins, labels=['low', 'medium', 'high'], include_lowest=True)
+
+    del df[col]
+
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='ex')
+
+# Compute edge strength
+model = bn.independence_test(model, df)
+
+bn.plot(model, edge_labels='pvalue')
+
+dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
+dotgraph
+
 
 
 # %% Continous and mixed
@@ -181,18 +258,29 @@ X.head()
 
 import bnlearn as bn
 
+# Download dataset
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+                 delim_whitespace=True, header=None,
+                 names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+# Cleaning
+df.dropna(inplace=True)
+df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+
+
 # Load example mixed dataset
-df = bn.import_example(data='auto_mpg')
+# df = bn.import_example(data='auto_mpg')
+# del df['origin']
 # df=df.iloc[:,0:5]
 
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
 # model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
 bn.plot(model)
-bn.plot(model, edge_labels='pvalue');
+bn.plot(model, edge_labels='pvalue')
 
 # Compute edge strength with the chi_square test statistic
-model = bn.independence_test(model, df, prune=False)
+model = bn.independence_test(model, df, prune=True)
 
 # Plot
 # bn.plot(model, params_static={'dpi': 100, 'figsize': (15, 10), 'font_size': 8, 'arrowsize': 15, 'arrowsize': 10, 'minscale': 1, 'maxscale': 5}, node_size=1000)
