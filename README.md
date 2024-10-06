@@ -1,8 +1,6 @@
 
 <p align="center">
-  <a href="https://erdogant.github.io/bnlearn/">
-  <img src="https://github.com/erdogant/bnlearn/docs/figs/logo.png" width="400" />
-  </a>
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/logo.png.png" width="400" />
 </p>
 
 
