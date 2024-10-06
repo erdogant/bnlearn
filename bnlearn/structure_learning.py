@@ -54,7 +54,7 @@ def fit(df,
     To learn model structure (a DAG) from a data set, there are three broad techniques:
         1. Score-based structure learning: using scoring functions as defined in scoretype and search strategy as defined in methodtype.
         2. Constraint-based structure learning (PC): Using statistics such as chi-square test for strength of edges prior the modeling.
-        3. Hybrid structure learning (The combination of both techniques) (MMHC)
+        3. Hybrid structure learning (The combination of both techniques)
 
     Score-based Structure Learning
     ------------------------------
@@ -77,9 +77,9 @@ def fit(df,
         Input dataframe.
     methodtype : str, (default : 'hc')
         String Search strategy for structure_learning.
-        'hc' or 'hillclimbsearch' (default)
-        'ex' or 'exhaustivesearch'
         'pc' or 'cs' or 'constraintsearch'
+        'ex' or 'exhaustivesearch'
+        'hc' or 'hillclimbsearch' (default)
         'cl' or 'chow-liu' (requires setting root_node parameter)
         'nb' or 'naivebayes' (requires <root_node>)
         'tan' (requires <root_node> and <class_node> parameter)
