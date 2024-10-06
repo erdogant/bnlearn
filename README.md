@@ -1,6 +1,6 @@
 
 <p align="center">
-  <a href="https://erdogant.github.io/dicter/">
+  <a href="https://erdogant.github.io/bnlearn/">
   <img src="https://github.com/erdogant/bnlearn/blob/main/docs/figs/logo.png" width="400" />
   </a>
 </p>
