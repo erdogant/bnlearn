@@ -95,10 +95,10 @@ bn.predict()
 # Based on a DAG, you can sample the number of samples you want.
 bn.sampling()
 
-# Load well known examples to play arround with or load your own .bif file.
+# Load well-known examples to play around with or load your own .bif file.
 bn.import_DAG()
 
-# Load simple dataframe of sprinkler dataset.
+# Load simple data frame of sprinkler dataset.
 bn.import_example()
 
 # Compare 2 graphs
@@ -106,8 +106,9 @@ bn.compare_networks()
 
 # Plot graph
 bn.plot()
+bn.plot_graphviz()
 
-# To make the directed grapyh undirected
+# To make the directed graph undirected
 bn.to_undirected()
 
 # Convert to one-hot datamatrix
