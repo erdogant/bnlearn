@@ -5,6 +5,16 @@ BNLearn's Documentation
 
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
 
+.. |logo| image:: ../figs/logo.png
+
+.. table::
+   :align: center
+
+   +----------+
+   | |logo|   |
+   +----------+
+
+
 .. tip::
 	* `Guide in detecting causal relationships using Bayesian Structure Learning in Python. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
 	* `Guide in designing knowledge-driven models using Bayesian theorem. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_

@@ -191,7 +191,7 @@ The search space of DAGs is super-exponential in the number of variables and the
 <dt>To learn model structure (a DAG) from a data set, there are three broad techniques:</dt><dd><ol class="arabic simple">
 <li><p>Score-based structure learning: using scoring functions as defined in scoretype and search strategy as defined in methodtype.</p></li>
 <li><p>Constraint-based structure learning (PC): Using statistics such as chi-square test for strength of edges prior the modeling.</p></li>
-<li><p>Hybrid structure learning (The combination of both techniques) (MMHC)</p></li>
+<li><p>Hybrid structure learning (The combination of both techniques)</p></li>
 </ol>
 </dd>
 </dl>
@@ -216,9 +216,9 @@ Or in other words, the lingam-direct method allows you to model continuous and m
 </dd>
 <dt class="field-odd">param methodtype<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String Search strategy for structure_learning.
-‘hc’ or ‘hillclimbsearch’ (default)
-‘ex’ or ‘exhaustivesearch’
 ‘pc’ or ‘cs’ or ‘constraintsearch’
+‘ex’ or ‘exhaustivesearch’
+‘hc’ or ‘hillclimbsearch’ (default)
 ‘cl’ or ‘chow-liu’ (requires setting root_node parameter)
 ‘nb’ or ‘naivebayes’ (requires &lt;root_node&gt;)
 ‘tan’ (requires &lt;root_node&gt; and &lt;class_node&gt; parameter)

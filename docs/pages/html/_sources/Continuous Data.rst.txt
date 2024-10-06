@@ -15,7 +15,7 @@ Discretize continuous datasets manually
 
 Discretizing continuous datasets manually using domain knowledge involves dividing a continuous variable into a set of discrete intervals based on an understanding of the data's context and the relationships between variables. This method allows for meaningful groupings of data points, which can simplify analysis and improve interpretability in models. 
 
-By leveraging expertise in the subject matter, the intervals or thresholds can be chosen to reflect real-world significance, such as categorizing age into meaningful ranges (e.g., "freezing," "warm," "hot"). This approach contrasts with automatic binning methods (as depicted in approach 2), such as equal-width or equal-frequency binning, where intervals may not correspond to meaningful domain-specific boundaries.
+By leveraging expertise in the subject matter, the intervals or thresholds can be chosen to reflect real-world significance, such as categorizing weather conditions into meaningful ranges (e.g., "freezing," "warm," "hot"). This approach contrasts with automatic binning methods (as depicted in approach 2), such as equal-width or equal-frequency binning, where intervals may not correspond to meaningful domain-specific boundaries.
 
 For instance, lets load the auto mpg data set and based on automotive standards, we can define horsepower categories:
 
