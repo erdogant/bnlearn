@@ -259,13 +259,13 @@ dotgraph
 import bnlearn as bn
 
 # Download dataset
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
-                 delim_whitespace=True, header=None,
-                 names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+# df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+#                  delim_whitespace=True, header=None,
+#                  names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
 
-# Cleaning
-df.dropna(inplace=True)
-df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+# # Cleaning
+# df.dropna(inplace=True)
+# df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
 
 
 # Load example mixed dataset

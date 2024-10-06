@@ -327,14 +327,21 @@ use the ``discretize_value`` function.
 Modelling Continuous Datasets
 =========================================
 
-LiNGAM Example
+LiNGAM-based Methods
 *********************
 
-To demonstrate how the LiNGAM works, it is best to do it with a small toy example.
+Bnlearn includes LiNGAM-based methods which do the estimation of Linear, Non-Gaussian Acyclic Model from observed data. It assumes non-Gaussianity of the noise terms in the causal model.
+Various methods are developed and published for which Bnlearn includes two methods: ICA-based LiNGAM [1]_, DirectLiNGAM [2]_. The following three are not included VAR-LiNGAM [3]_, RCD [4]_, and CAM-UV [5]_.
 
-Here's the improved version of the text:
+.. [1] Shimizu, S., Hoyer, P. O., Hyvarinen, A., Kerminen, A., & Jordan, M. (2006). A linear non-Gaussian acyclic model for causal discovery. Journal of Machine Learning Research, 7(10).
+.. [2] Shimizu, S., Inazumi, T., Sogawa, Y., Hyvarinen, A., Kawahara, Y., Washio, T., ... & Bollen, K. (2011). DirectLiNGAM: A direct method for learning a linear non-Gaussian structural equation model. The Journal of Machine Learning Research, 12, 1225-1248.
+.. [3] Hyvarinen, A., Zhang, K., Shimizu, S., & Hoyer, P. O. (2010). Estimation of a structural vector autoregression model using non-gaussianity. Journal of Machine Learning Research, 11(5).
+.. [4] Maeda, T. N., & Shimizu, S. (2020, June). RCD: Repetitive causal discovery of linear non-Gaussian acyclic models with latent confounders. In International Conference on Artificial Intelligence and Statistics (pp. 735-745). PMLR.
+.. [5] Maeda, T. N., & Shimizu, S. (2021). Causal Additive Models with Unobserved Variables. UAI.
 
-Let's create test data containing six variables.
+
+To demonstrate how the LiNGAM works, it is best to do it with a small toy example. Let's create test data containing six variables.
+
 The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
 All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution.
 If the number of samples is much smaller, say in the tens, the method becomes less reliable due to insufficient information to determine causality.
@@ -457,12 +464,13 @@ A disadvantage is that causal discovery of structure learning is the end-point w
     
     # Load data set
     df = bn.import_example(data='auto_mpg')
+    del df['origin']
 
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
 
     # Compute edge strength
-    model = bn.independence_test(model, df)
+    model = bn.independence_test(model, df, prune=True)
 
     # Plot
     bn.plot(model)
@@ -500,12 +508,14 @@ The ICA-LiNGAM method 'ica-lingam' is also from lingam and follows the same proc
     
     # Load data set
     df = bn.import_example(data='auto_mpg')
+    del df['origin']
+
 
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='ica-lingam')
 
     # Compute edge strength
-    model = bn.independence_test(model, df)
+    model = bn.independence_test(model, df, prune=True)
 
     # Plot
     bn.plot(model)

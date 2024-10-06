@@ -531,6 +531,48 @@ What is the probability of lung-cancer or bronchitis, given that we know that pa
 The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51). 
 
 
+Use Case Continuous Datasets
+=============================
+
+Bnlearn includes the LiNGAM-based methods which can model datasets with continuous variables but also hybrid datasets.
+A disadvantage is that causal discovery of structure learning is the end-point when uing this method. It is not possible to perform parameter learning and inferences.
+In the following example we will load the auto mpg dataset and learn the structure:
+
+.. code-block:: python
+
+    # Import
+    import bnlearn as bn
+    
+    # Load data set
+    df = bn.import_example(data='auto_mpg')
+    del df['origin']
+
+    # Structure learning
+    model = bn.structure_learning.fit(df, methodtype='direct-lingam')
+
+    # Compute edge strength
+    model = bn.independence_test(model, df, prune=True)
+
+    # Plot
+    bn.plot(model)
+
+    # Plot with graphviz
+    dotgraph = bn.plot_graphviz(model)
+    dotgraph
+    dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
+
+
+.. |fig9a| image:: ../figs/fig_auto_mpg_lingam_a.png
+.. |fig9b| image:: ../figs/fig_auto_mpg_lingam_b.png
+
+.. table::
+   :align: center
+
+   +----------+
+   | |fig9a|  |
+   +----------+
+   | |fig9b|  |
+   +----------+
 
 
 .. include:: add_bottom.add

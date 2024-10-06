@@ -95,7 +95,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#modelling-continuous-datasets">Modelling Continuous Datasets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lingam-example">LiNGAM Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#pc-method">PC method</a><ul>
@@ -144,6 +144,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
 <ul>
@@ -489,12 +490,34 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
 </section>
 <section id="modelling-continuous-datasets">
 <h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
-<section id="lingam-example">
-<h2>LiNGAM Example<a class="headerlink" href="#lingam-example" title="Link to this heading"></a></h2>
-<p>To demonstrate how the LiNGAM works, it is best to do it with a small toy example.</p>
-<p>Here’s the improved version of the text:</p>
-<p>Let’s create test data containing six variables.
-The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
+<section id="lingam-based-methods">
+<h2>LiNGAM-based Methods<a class="headerlink" href="#lingam-based-methods" title="Link to this heading"></a></h2>
+<p>Bnlearn includes LiNGAM-based methods which do the estimation of Linear, Non-Gaussian Acyclic Model from observed data. It assumes non-Gaussianity of the noise terms in the causal model.
+Various methods are developed and published for which Bnlearn includes two methods: ICA-based LiNGAM <a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, DirectLiNGAM <a class="footnote-reference brackets" href="#id7" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The following three are not included VAR-LiNGAM <a class="footnote-reference brackets" href="#id8" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, RCD <a class="footnote-reference brackets" href="#id9" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, and CAM-UV <a class="footnote-reference brackets" href="#id10" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Shimizu, S., Hoyer, P. O., Hyvarinen, A., Kerminen, A., &amp; Jordan, M. (2006). A linear non-Gaussian acyclic model for causal discovery. Journal of Machine Learning Research, 7(10).</p>
+</aside>
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Shimizu, S., Inazumi, T., Sogawa, Y., Hyvarinen, A., Kawahara, Y., Washio, T., … &amp; Bollen, K. (2011). DirectLiNGAM: A direct method for learning a linear non-Gaussian structural equation model. The Journal of Machine Learning Research, 12, 1225-1248.</p>
+</aside>
+<aside class="footnote brackets" id="id8" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>Hyvarinen, A., Zhang, K., Shimizu, S., &amp; Hoyer, P. O. (2010). Estimation of a structural vector autoregression model using non-gaussianity. Journal of Machine Learning Research, 11(5).</p>
+</aside>
+<aside class="footnote brackets" id="id9" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">4</a><span class="fn-bracket">]</span></span>
+<p>Maeda, T. N., &amp; Shimizu, S. (2020, June). RCD: Repetitive causal discovery of linear non-Gaussian acyclic models with latent confounders. In International Conference on Artificial Intelligence and Statistics (pp. 735-745). PMLR.</p>
+</aside>
+<aside class="footnote brackets" id="id10" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">5</a><span class="fn-bracket">]</span></span>
+<p>Maeda, T. N., &amp; Shimizu, S. (2021). Causal Additive Models with Unobserved Variables. UAI.</p>
+</aside>
+</aside>
+<p>To demonstrate how the LiNGAM works, it is best to do it with a small toy example. Let’s create test data containing six variables.</p>
+<p>The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
 All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution.
 If the number of samples is much smaller, say in the tens, the method becomes less reliable due to insufficient information to determine causality.</p>
 <p>We will establish dependencies between variables and then allow the model to infer the original values.</p>
@@ -598,12 +621,13 @@ A disadvantage is that causal discovery of structure learning is the end-point w
 
 <span class="c1"># Load data set</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
 
 <span class="c1"># Structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">,</span> <span class="n">params_lingam</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 
 <span class="c1"># Compute edge strength</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -632,12 +656,14 @@ A disadvantage is that causal discovery of structure learning is the end-point w
 
 <span class="c1"># Load data set</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
+
 
 <span class="c1"># Structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ica-lingam&#39;</span><span class="p">)</span>
 
 <span class="c1"># Compute edge strength</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>

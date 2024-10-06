@@ -145,6 +145,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#make-inference-when-you-have-data">Make inference when you have data</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
 <ul>
@@ -843,6 +844,43 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
 </tbody>
 </table>
 <p>The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51).</p>
+</section>
+</section>
+<section id="use-case-continuous-datasets">
+<h1>Use Case Continuous Datasets<a class="headerlink" href="#use-case-continuous-datasets" title="Link to this heading"></a></h1>
+<p>Bnlearn includes the LiNGAM-based methods which can model datasets with continuous variables but also hybrid datasets.
+A disadvantage is that causal discovery of structure learning is the end-point when uing this method. It is not possible to perform parameter learning and inferences.
+In the following example we will load the auto mpg dataset and learn the structure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+
+<span class="c1"># Load data set</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Plot with graphviz</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+<span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_lingam_direct&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig9a" src="_images/fig_auto_mpg_lingam_a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig9b" src="_images/fig_auto_mpg_lingam_b.png" /></p></td>
+</tr>
+</tbody>
+</table>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -851,7 +889,6 @@ The model returns that the probability of bronchitis or bronc(1) is 0.68 when th
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
-</section>
 
 
            </div>
