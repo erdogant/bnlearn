@@ -29,6 +29,31 @@ edges = [
 
 continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
 
+# %%
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+                 delim_whitespace=True, header=None,
+                 names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+df.dropna(inplace=True)
+df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
+print(df.shape)
+df.head()
+
+
+edges = [
+    ("cylinders", "displacement"),
+    ("displacement", "weight"),
+    ("displacement", "horsepower"),
+    ("weight", "mpg"),
+    ("horsepower", "acceleration"),
+]
+
+continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
+
+
+# %%
+
+
 df_disc = bn.discretize(
     df,
     edges,
@@ -40,6 +65,7 @@ DAG = bn.make_DAG(edges)
 model_mle = bn.parameter_learning.fit(DAG, df_disc)
 # model_mle = bn.parameter_learning.fit(DAG, data_disc, methodtype="maximumlikelihood")
 
+bn.plot(model_mle)
 print(model_mle["model"].get_cpds("mpg"))
 
 # %%
