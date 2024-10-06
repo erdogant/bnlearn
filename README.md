@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/logo.png" width="400" />
+  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/logo.png" width="300" />
 </p>
 
 
