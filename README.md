@@ -124,22 +124,25 @@ bn.topological_sort()
 * sampling
 * comparing two networks
 * loading bif files
-* conversion of directed to undirected graphs
+* Conversion of directed to undirected graphs
 
 
 # 
 
 ### Method overview
-Learning a Bayesian network can be split into the underneath problems which are all implemented in this package for both discrete, continous and mixed data sets:
+Learning a Bayesian network can be split into the underneath problems which are all implemented in this package for both discrete, continuous and mixed data sets:
 
 * **Structure learning**: Given the data: Estimate a DAG that captures the dependencies between the variables.
    * There are multiple manners to perform structure learning.
+      * Constraintsearch or PC
       * Exhaustivesearch
       * Hillclimbsearch
       * NaiveBayes
       * TreeSearch
           * Chow-liu
           * Tree-augmented Naive Bayes (TAN)
+      * Direct-LiNGAM (for continuous and hybrid datasets)
+      * ICA-LiNGAM (for continuous and hybrid datasets)
 
 * **Parameter learning**: Given the data and DAG: Estimate the (conditional) probability distributions of the individual variables.
 * **Inference**: Given the learned model: Determine the exact probability values for your queries.
