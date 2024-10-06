@@ -873,7 +873,7 @@ def get_node_properties(model, node_color='#ADD8E6', node_size=None, verbose=3):
 
 
 # %% Get node properties
-def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=10, verbose=3):
+def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5, verbose=3):
     """Collect edge properties.
 
     Parameters
@@ -1137,7 +1137,7 @@ def plot(model,
          edge_properties=None,
          edge_labels='weight',
          params_interactive={'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': '#000000', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
-         params_static={'minscale': 1, 'maxscale': 10, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200},
+         params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200},
          verbose=3,
          ):
     """Plot the learned stucture.
@@ -1235,7 +1235,7 @@ def plot(model,
     # Plot properties
     defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 10, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200}
+    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200}
     params_static = {**defaults, **params_static}
 
     # DEPRECATED IN LATER VERSION
@@ -2029,7 +2029,7 @@ def _prune(model, test, alpha, verbose=3):
 
 
 # %% Normalize weights in range
-def _normalize_weights(weights, minscale=1, maxscale=10):
+def _normalize_weights(weights, minscale=1, maxscale=5):
     if len(weights.shape)==1:
         weights=weights.reshape(-1, 1)
 
