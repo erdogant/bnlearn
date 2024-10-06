@@ -43,6 +43,7 @@ def fit(df,
         fixed_edges=None,
         return_all_dags=False,
         params_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'},
+        params_pc = {'ci_test': 'chi_square', 'alpha': 0.05},
         n_jobs=-1,
         verbose=3,
         ):
@@ -77,14 +78,18 @@ def fit(df,
         Input dataframe.
     methodtype : str, (default : 'hc')
         String Search strategy for structure_learning.
+        # Constraintsearch
         'pc' or 'cs' or 'constraintsearch'
+        # Score-Based
         'ex' or 'exhaustivesearch'
         'hc' or 'hillclimbsearch' (default)
+        # Score-Based: Requires Root Node
         'cl' or 'chow-liu' (requires setting root_node parameter)
         'nb' or 'naivebayes' (requires <root_node>)
         'tan' (requires <root_node> and <class_node> parameter)
-        'direct-lingam' (for continuous and mixed datasets)
-        'ica-lingam' (for continuous and mixed datasets)
+        # Score-Based: For continuous and mixed datasets
+        'direct-lingam'
+        'ica-lingam'
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
             * 'bic'
@@ -116,7 +121,19 @@ def fit(df,
     fixed_edges: iterable, Only in case of HillClimbSearch.
         A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.
     return_all_dags : Bool, (default: False)
-        Return all possible DAGs. Only in case methodtype='exhaustivesearch'
+        True: Return all possible DAGs. Only in case methodtype='exhaustivesearch'
+        False: Do not return DAGs
+    params_lingam : dict: {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'}
+        prior_knowledge : array-like, shape (n_features, n_features), optional (default=None)
+            Prior knowledge used for causal discovery, where ``n_features`` is the number of features.
+        apply_prior_knowledge_softly : boolean, optional (default=False)
+            If True, apply prior knowledge softly.
+        measure : String: (default='pwling')
+            For fast execution with GPU, 'pwling_fast' can be used (culingam is required).
+            'pwling', 'kernel', 'pwling_fast'
+    params_pc : dict: {'ci_test': 'chi_square', 'alpha': 0.05}
+        * 'ci_test': 'chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence'
+        * 'alpha': 0.05
     verbose : int, (default : 3)
         0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
@@ -185,8 +202,12 @@ def fit(df,
         * [2] Shimizu et al, DirectLiNGAM: A direct method for learning a linear non-Gaussian structural equation model, https://arxiv.org/abs/1101.2489v3
 
     """
+    # Default LiNGAM
     defaults_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'}
     params_lingam = {**defaults_lingam, **params_lingam}
+    # Default PC
+    defaults_pc = {'ci_test': 'chi_square', 'alpha': 0.05}
+    params_pc = {**defaults_pc, **params_pc}
 
     out = []
     # Set config
@@ -240,8 +261,8 @@ def fit(df,
         A different, but quite straightforward approach to build a DAG from data is this:
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
-        Independencies in the data can be identified using chi2 conditional independence tests."""
-        out = _constraintsearch(df, n_jobs=config['n_jobs'], significance_level=0.05, ci_test='chi_square', verbose=config['verbose'])
+        Independencies in the data can be identified using chi_square conditional independence tests."""
+        out = _constraintsearch(df, n_jobs=config['n_jobs'], significance_level=params_pc['alpha'], ci_test=params_pc['ci_test'], verbose=config['verbose'])
 
     # TreeSearch-based Structure Learning
     if config['method']=='chow-liu' or config['method']=='tan':
@@ -413,10 +434,10 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
     estimated PDAG does not have any faithful completions (i.e. edge orientations
     that do not introduce new v-structures). In that case a warning is issued.
 
-    test_conditional_independence() returns a tripel (chi2, p_value, sufficient_data),
-    consisting in the computed chi2 test statistic, the p_value of the test, and a heuristig
+    test_conditional_independence() returns a tripel (chi_square, p_value, sufficient_data),
+    consisting in the computed chi_square test statistic, the p_value of the test, and a heuristig
     flag that indicates if the sample size was sufficient.
-    The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value),
+    The p_value is the probability of observing the computed chi_square statistic (or an even higher chi_square value),
     given the null hypothesis that X and Y are independent given Zs.
     This can be used to make independence judgements, at a given level of significance.
 
@@ -440,12 +461,13 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
 
     """
     if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [constraintsearch]')
+    if verbose>=3: print(f'[bnlearn] >Build skeleton with [{ci_test}] and alpha={significance_level}')
     out = {}
     # Set search algorithm
     model = ConstraintBasedEstimator(df)
 
-    # Estimate using chi2
-    skel, seperating_sets = model.build_skeleton(significance_level=significance_level, ci_test='chi_square')
+    # Estimate using chi_square
+    skel, seperating_sets = model.build_skeleton(significance_level=significance_level, ci_test=ci_test)
 
     if verbose>=4: print("Undirected edges: ", skel.edges())
     pdag = model.skeleton_to_pdag(skel, seperating_sets)
@@ -465,7 +487,7 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
     out['model'] = best_model
 
     if verbose>=4: print(best_model.edges())
-    return(out)
+    return out
 
 
 # %% hillclimbsearch
