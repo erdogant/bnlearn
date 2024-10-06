@@ -2,16 +2,42 @@ import matplotlib.pyplot as plt
 import bnlearn as bn
 
 # Load sprinkler dataset
-df = bn.import_example('alarm')
+df = bn.import_example('asia')
+
+
+cii_tests = ['chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence']
+
+for cii_test in cii_tests:
+    # Learn the DAG in data using hillclimbsearch and BIC
+    model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic', params_pc={'ci_test':cii_test,'alpha': 0.05}, verbose=3)
+    # model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'ci_test':'freeman_tuckey','alpha': 0.05})
+    
+    # Compute edge weights using ChiSquare independence test.
+    model = bn.independence_test(model, df, test='chi_square', prune=False)
+    
+    # Plot the best DAG
+    bn.plot(model, edge_labels='pvalue', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+    bn.plot(model)
+
+
+# Plot using graphiviz
+dot = bn.plot_graphviz(model, edge_labels='pvalue')
+dot
+
+# %%
+import matplotlib.pyplot as plt
+import bnlearn as bn
+
+# Load sprinkler dataset
+df = bn.import_example('asia')
 
 # Learn the DAG in data using hillclimbsearch and BIC
 model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='bic')
-model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic')
-model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
-model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
-model = bn.structure_learning.fit(df, methodtype='cl', root_node='BP')
-model = bn.structure_learning.fit(df, methodtype='cl')
-model = bn.structure_learning.fit(df, methodtype='nb', root_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='cl', root_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='cl')
+# model = bn.structure_learning.fit(df, methodtype='nb', root_node='BP')
 
 
 # Compute edge weights using ChiSquare independence test.
