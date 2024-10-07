@@ -300,9 +300,8 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 
 ### References
 * https://erdogant.github.io/bnlearn/
-* http://pgmpy.org
-* https://programtalk.com/python-examples/pgmpy.factors.discrete.TabularCPD/
 * http://www.bnlearn.com/bnrepository/
+* http://pgmpy.org
 
 
 ### Contributors
