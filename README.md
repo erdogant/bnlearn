@@ -4,7 +4,7 @@
 </p>
 
 
-# bnlearn - Library for Bayesian network learning and inference
+# bnlearn - Library for Causal Discovery using Bayesian Learning
 
 [![Python](https://img.shields.io/pypi/pyversions/bnlearn)](https://img.shields.io/pypi/pyversions/bnlearn)
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
