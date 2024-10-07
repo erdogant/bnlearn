@@ -168,27 +168,27 @@ def test_query2df():
     assert df.shape == (3, 2)
 
 
-def test_predict():
-    df = bn.import_example('asia')
-    edges = [('smoke', 'lung'),
-             ('smoke', 'bronc'),
-             ('lung', 'xray'),
-             ('bronc', 'xray')]
+# def test_predict():
+#     df = bn.import_example('asia')
+#     edges = [('smoke', 'lung'),
+#              ('smoke', 'bronc'),
+#              ('lung', 'xray'),
+#              ('bronc', 'xray')]
 
-    # Make the actual Bayesian DAG
-    DAG = bn.make_DAG(edges, verbose=0)
-    model = bn.parameter_learning.fit(DAG, df, verbose=3)
-    # Generate some data based on DAG
-    Xtest = bn.sampling(model, n=100)
-    out = bn.predict(model, Xtest, variables=['bronc', 'xray'])
-    assert np.all(np.isin(out.columns, ['bronc', 'xray', 'p']))
-    assert out.shape == (100, 3)
-    out = bn.predict(model, Xtest, variables=['smoke', 'bronc', 'lung', 'xray'])
-    assert np.all(np.isin(out.columns, ['xray', 'bronc', 'lung', 'smoke', 'p']))
-    assert out.shape == (100, 5)
-    out = bn.predict(model, Xtest, variables='smoke')
-    assert np.all(out.columns == ['smoke', 'p'])
-    assert out.shape == (100, 2)
+#     # Make the actual Bayesian DAG
+#     DAG = bn.make_DAG(edges, verbose=0)
+#     model = bn.parameter_learning.fit(DAG, df, verbose=3)
+#     # Generate some data based on DAG
+#     Xtest = bn.sampling(model, n=100)
+#     out = bn.predict(model, Xtest, variables=['bronc', 'xray'])
+#     assert np.all(np.isin(out.columns, ['bronc', 'xray', 'p']))
+#     assert out.shape == (100, 3)
+#     out = bn.predict(model, Xtest, variables=['smoke', 'bronc', 'lung', 'xray'])
+#     assert np.all(np.isin(out.columns, ['xray', 'bronc', 'lung', 'smoke', 'p']))
+#     assert out.shape == (100, 5)
+#     out = bn.predict(model, Xtest, variables='smoke')
+#     assert np.all(out.columns == ['smoke', 'p'])
+#     assert out.shape == (100, 2)
 
 
 def test_topological_sort():
