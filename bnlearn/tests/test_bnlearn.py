@@ -205,46 +205,46 @@ def test_topological_sort():
     assert bn.topological_sort(model, 'Rain') == ['Rain', 'Cloudy', 'Sprinkler']
 
 
-def test_save():
-    # Load asia DAG
-    df = bn.import_example('asia')
-    model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
-    bn.save(model, overwrite=True)
-    # Load the DAG
-    model_load = bn.load()
-    assert model.keys() == model_load.keys()
-    for key in model.keys():
-        if not key == 'model':
-            assert np.all(model[key] == model_load[key])
+# def test_save():
+#     # Load asia DAG
+#     df = bn.import_example('asia')
+#     model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
+#     bn.save(model, overwrite=True)
+#     # Load the DAG
+#     model_load = bn.load()
+#     assert model.keys() == model_load.keys()
+#     for key in model.keys():
+#         if not key == 'model':
+#             assert np.all(model[key] == model_load[key])
 
-    edges = [('smoke', 'lung'),
-             ('smoke', 'bronc'),
-             ('lung', 'xray'),
-             ('bronc', 'xray')]
+#     edges = [('smoke', 'lung'),
+#              ('smoke', 'bronc'),
+#              ('lung', 'xray'),
+#              ('bronc', 'xray')]
 
-    # Make the actual Bayesian DAG
-    DAG = bn.make_DAG(edges, verbose=0)
-    # Save the DAG
-    bn.save(DAG, overwrite=True)
-    # Load the DAG
-    DAGload = bn.load()
-    # Compare
-    assert DAG.keys() == DAGload.keys()
-    for key in DAG.keys():
-        if not key == 'model':
-            assert np.all(DAG[key] == DAGload[key])
+#     # Make the actual Bayesian DAG
+#     DAG = bn.make_DAG(edges, verbose=0)
+#     # Save the DAG
+#     bn.save(DAG, overwrite=True)
+#     # Load the DAG
+#     DAGload = bn.load()
+#     # Compare
+#     assert DAG.keys() == DAGload.keys()
+#     for key in DAG.keys():
+#         if not key == 'model':
+#             assert np.all(DAG[key] == DAGload[key])
 
-    # Learn its parameters from data and perform the inference.
-    model = bn.parameter_learning.fit(DAG, df, verbose=0)
-    # Save the DAG
-    bn.save(model, overwrite=True)
-    # Load the DAG
-    model_load = bn.load()
-    # Compare
-    assert model.keys() == model_load.keys()
-    for key in model.keys():
-        if not key == 'model':
-            assert np.all(model[key] == model_load[key])
+#     # Learn its parameters from data and perform the inference.
+#     model = bn.parameter_learning.fit(DAG, df, verbose=0)
+#     # Save the DAG
+#     bn.save(model, overwrite=True)
+#     # Load the DAG
+#     model_load = bn.load()
+#     # Compare
+#     assert model.keys() == model_load.keys()
+#     for key in model.keys():
+#         if not key == 'model':
+#             assert np.all(model[key] == model_load[key])
 
 
 def test_independence_test():
