@@ -1137,7 +1137,7 @@ def plot(model,
          edge_properties=None,
          edge_labels='weight',
          params_interactive={'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': '#000000', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
-         params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200},
+         params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
          verbose=3,
          ):
     """Plot the learned stucture.
@@ -1235,7 +1235,7 @@ def plot(model,
     # Plot properties
     defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'dpi': 200}
+    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
     params_static = {**defaults, **params_static}
 
     # DEPRECATED IN LATER VERSION
@@ -1327,6 +1327,7 @@ def plot(model,
                            pos,
                            edge_colors,
                            edge_weights,
+                           showplot=params_static['showplot'],
                            visible=params_static['visible'],
                            title=title,
                            dpi=params_static['dpi'],
@@ -1334,17 +1335,17 @@ def plot(model,
                            )
 
     # Store
-    out['fig']=fig
-    out['ax']=fig  # Should be removed in later releases
-    out['pos']=pos
-    out['G']=G
-    out['node_properties']=node_properties
-    out['edge_properties']=edge_properties
+    out['fig'] = fig
+    out['ax'] = fig  # Should be removed in later releases
+    out['pos'] = pos
+    out['G'] = G
+    out['node_properties'] = node_properties
+    out['edge_properties'] = edge_properties
     return out
 
 
 # %% Plot interactive
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, dpi=100, edge_labels='weight'):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_labels='weight'):
 
     # Initialize
     fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
@@ -1376,7 +1377,8 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # fig = plt.gca()
     # fig.set_axis_off()
     plt.title(title)
-    if visible: plt.show()
+    if showplot:
+        plt.show()
     # Return
     return fig
 

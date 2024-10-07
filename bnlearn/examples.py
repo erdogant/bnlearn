@@ -1,3 +1,26 @@
+# %% Issue #103
+
+import bnlearn as bn
+import matplotlib.pyplot as plt
+
+df = bn.import_example('sprinkler')
+model = bn.structure_learning.fit(df)
+
+# Figure is visible and created
+fig = bn.plot(model, params_static={'visible': True, 'showplot': True})
+
+# Figure is visible but not created
+fig = bn.plot(model, params_static={'visible': True, 'showplot': False})
+plt.show()
+
+# Figure is not visible but but created
+fig = bn.plot(model, params_static={'visible': False, 'showplot': True})
+
+# Figure is not visible but but created
+fig = bn.plot(model, params_static={'visible': False, 'showplot': False})
+plt.show()
+
+# %%
 import matplotlib.pyplot as plt
 import bnlearn as bn
 
