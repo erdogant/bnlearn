@@ -2,19 +2,9 @@
 import pandas as pd
 import bnlearn as bn
 
-df = pd.read_csv(
-    "bnlearn/tests/discretize/data/auto_mpg.csv",
-    dtype={
-        "mpg": "float64",
-        "cylinders": "int64",
-        "displacement": "float64",
-        "horsepower": "float64",
-        "weight": "float64",
-        "acceleration": "float64",
-        "model_year": "int64",
-        "origin": "int64",
-    },
-)
+#%%
+df = bn.import_example('auto_mpg')
+del df['origin']
 
 edges = [
     ("cylinders", "displacement"),
@@ -74,3 +64,5 @@ print("Weight categories: ", df_disc["weight"].dtype.categories)
 evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
 print(evidence)
 print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence, verbose=0))
+
+# %%
