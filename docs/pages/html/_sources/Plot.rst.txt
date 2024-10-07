@@ -10,26 +10,26 @@ Lets make some interactive and static examples.
 
 .. code-block:: bash
 
-	# Install the d3blocks library first if you want interactive plots
-	pip install d3blocks
+   # Install the d3blocks library first if you want interactive plots
+   pip install d3blocks
 
 
 .. code-block:: python
     
-	# Example of interactive plotting
-	import bnlearn as bn
+   # Example of interactive plotting
+   import bnlearn as bn
 
-	# Load example dataset
-	df = bn.import_example(data='asia')
+   # Load example dataset
+   df = bn.import_example(data='asia')
 
-	# Structure learning
-	model = bn.structure_learning.fit(df)
+   # Structure learning
+   model = bn.structure_learning.fit(df)
 
-	# Make interactive plot with default settings
-	bn.plot(model, interactive=True)
+   # Make interactive plot with default settings
+   bn.plot(model, interactive=True)
 
-	# Add more parameters for the interactive plot
-	bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
+   # Add more parameters for the interactive plot
+   bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
 
 
 
@@ -150,26 +150,26 @@ In come cases you may derive two networks where you need to know the differences
 
 .. code-block:: python
 
-	# Load asia DAG
-	model = bn.import_DAG('asia')
+   # Load asia DAG
+   model = bn.import_DAG('asia')
 
-	# plot ground truth
-	G = bn.plot(model)
-	
-	# Sampling
-	df = bn.sampling(model, n=10000)
-	
-	# Structure learning of sampled dataset
-	model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-	
-	# Compute edge strength with the chi_square test statistic
-	model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
-	
-	# Plot based on structure learning of sampled data
-	bn.plot(model_sl, pos=G['pos'])
-	
-	# Compare networks and make plot
-	bn.compare_networks(model, model_sl, pos=G['pos'])
+   # plot ground truth
+   G = bn.plot(model)
+   
+   # Sampling
+   df = bn.sampling(model, n=10000)
+   
+   # Structure learning of sampled dataset
+   model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+   
+   # Compute edge strength with the chi_square test statistic
+   model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
+   
+   # Plot based on structure learning of sampled data
+   bn.plot(model_sl, pos=G['pos'])
+   
+   # Compare networks and make plot
+   bn.compare_networks(model, model_sl, pos=G['pos'])
 
 
 .. |fig_cn1| image:: ../figs/fig2a_asia_groundtruth.png

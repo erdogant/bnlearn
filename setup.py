@@ -38,7 +38,7 @@ setuptools.setup(
      version=new_version,
      author="Erdogan Taskesen",
      author_email="erdogant@gmail.com",
-     description="Python package for learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.",
+     description="Python package for Causal Discovery by learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.",
      long_description=long_description,
      long_description_content_type="text/markdown",
      url="https://erdogant.github.io/bnlearn",

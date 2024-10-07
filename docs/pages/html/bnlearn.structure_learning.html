@@ -60,6 +60,13 @@
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-manually">Discretize manually</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-probability-density">Discretize Automatically: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-principled-bayesian">Discretize Automatically: Principled Bayesian</a></li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
@@ -87,8 +94,6 @@
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-manually">Discretize continuous datasets manually</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#discretize-continuous-datasets-automatically">Discretize continuous datasets automatically</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
@@ -184,7 +189,7 @@
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_lingam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'apply_prior_knowledge_softly':</span> <span class="pre">False,</span> <span class="pre">'measure':</span> <span class="pre">'pwling',</span> <span class="pre">'prior_knowledge':</span> <span class="pre">None,</span> <span class="pre">'random_state':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_lingam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'apply_prior_knowledge_softly':</span> <span class="pre">False,</span> <span class="pre">'measure':</span> <span class="pre">'pwling',</span> <span class="pre">'prior_knowledge':</span> <span class="pre">None,</span> <span class="pre">'random_state':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_pc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.05,</span> <span class="pre">'ci_test':</span> <span class="pre">'chi_square'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
 <dd><p>Structure learning fit model.</p>
 <p>Search strategies for structure learning
 The search space of DAGs is super-exponential in the number of variables and the above scoring functions allow for local maxima.</p>
@@ -217,14 +222,18 @@ Or in other words, the lingam-direct method allows you to model continuous and m
 </dd>
 <dt class="field-odd">param methodtype<span class="colon">:</span></dt>
 <dd class="field-odd"><p>String Search strategy for structure_learning.
+# Constraintsearch
 ‘pc’ or ‘cs’ or ‘constraintsearch’
+# Score-Based
 ‘ex’ or ‘exhaustivesearch’
 ‘hc’ or ‘hillclimbsearch’ (default)
+# Score-Based: Requires Root Node
 ‘cl’ or ‘chow-liu’ (requires setting root_node parameter)
 ‘nb’ or ‘naivebayes’ (requires &lt;root_node&gt;)
 ‘tan’ (requires &lt;root_node&gt; and &lt;class_node&gt; parameter)
-‘direct-lingam’ (for continuous and mixed datasets)
-‘ica-lingam’ (for continuous and mixed datasets)</p>
+# Score-Based: For continuous and mixed datasets
+‘direct-lingam’
+‘ica-lingam’</p>
 </dd>
 <dt class="field-even">type methodtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>str, (default : ‘hc’)</p>
@@ -308,10 +317,34 @@ Works only in case of methodtype=’hc’ See also paramter: <cite>bw_list_metho
 <dd class="field-even"><p>iterable, Only in case of HillClimbSearch.</p>
 </dd>
 <dt class="field-odd">param return_all_dags<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Return all possible DAGs. Only in case methodtype=’exhaustivesearch’</p>
+<dd class="field-odd"><p>True: Return all possible DAGs. Only in case methodtype=’exhaustivesearch’
+False: Do not return DAGs</p>
 </dd>
 <dt class="field-even">type return_all_dags<span class="colon">:</span></dt>
 <dd class="field-even"><p>Bool, (default: False)</p>
+</dd>
+<dt class="field-odd">param params_lingam<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>prior_knowledge<span class="classifier">array-like, shape (n_features, n_features), optional (default=None)</span></dt><dd><p>Prior knowledge used for causal discovery, where <code class="docutils literal notranslate"><span class="pre">n_features</span></code> is the number of features.</p>
+</dd>
+<dt>apply_prior_knowledge_softly<span class="classifier">boolean, optional (default=False)</span></dt><dd><p>If True, apply prior knowledge softly.</p>
+</dd>
+<dt>measure<span class="classifier">String: (default=’pwling’)</span></dt><dd><p>For fast execution with GPU, ‘pwling_fast’ can be used (culingam is required).
+‘pwling’, ‘kernel’, ‘pwling_fast’</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">type params_lingam<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict: {‘random_state’: None, ‘prior_knowledge’: None, ‘apply_prior_knowledge_softly’: False, ‘measure’: ‘pwling’}</p>
+</dd>
+<dt class="field-odd">param params_pc<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>‘ci_test’: ‘chi_square’, ‘pearsonr’, ‘g_sq’, ‘log_likelihood’, ‘freeman_tuckey’, ‘modified_log_likelihood’, ‘neyman’, ‘cressie_read’, ‘power_divergence’</p></li>
+<li><p>‘alpha’: 0.05</p></li>
+</ul>
+</dd>
+<dt class="field-even">type params_pc<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict: {‘ci_test’: ‘chi_square’, ‘alpha’: 0.05}</p>
 </dd>
 <dt class="field-odd">param verbose<span class="colon">:</span></dt>
 <dd class="field-odd"><p>0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace</p>

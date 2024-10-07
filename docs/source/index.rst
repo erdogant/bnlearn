@@ -68,6 +68,11 @@ Contents
 
    Installation
 
+.. toctree::
+  :maxdepth: 2
+  :caption: Discretizing
+
+  Discretizing
 
 .. toctree::
   :maxdepth: 2
