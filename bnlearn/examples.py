@@ -1,3 +1,36 @@
+import bnlearn as bn
+import pandas as pd
+
+# Example DataFrame
+df = pd.DataFrame({
+    'A': [0, 1, 0, 1, 0, 1],
+    'B': [1, 1, 0, 0, 1, 1],
+    'C': [0, 1, 0, 1, 0, 1],
+    'D': [1, 0, 1, 0, 1, 0],
+})
+
+model = bn.structure_learning.fit(df)
+
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges)
+DAG = bn.make_DAG(edges, methodtype='DBN')
+model = bn.parameter_learning.fit(DAG, df)
+
+# Print CPDs
+CPD = bn.print_CPD(model)
+
+bn.check_model(CPD)
+bn.check_model(model)
+
+bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+bn.plot(model, interactive=False)
+
+dot = bn.plot_graphviz(model)
+
+
 # %% Issue #103
 
 import bnlearn as bn

@@ -74,6 +74,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
         Strategy for parameter learning.
             * 'ml', 'maximumlikelihood': Learning CPDs using Maximum Likelihood Estimators.
             * 'bayes': Bayesian Parameter Estimation.
+            * 'DBN': DynamicBayesianNetwork
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
             * 'bdeu'
@@ -113,12 +114,20 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     adjmat = model['adjmat']
     independence_test = model.get('independence_test', None)
 
+    # Automatically set methodtype to DBN
+    if model['methodtype']=='DBN':
+        config['method'] = 'DBN'
+        if verbose>=3: print('[bnlearn] >Methodtype is set to DynamicBayesianNetwork (DBN)')
+
     if (scoretype=='dirichlet') and (smooth is None):
         raise Exception('[bnlearn] >dirichlet requires "smooth" to be not None')
 
     # Check whether all labels in the adjacency matrix are included from the dataframe
     # adjmat, model = _check_adjmat(model, df)
-    df = bnlearn._filter_df(adjmat, df, verbose=config['verbose'])
+    if config['method']=='DBN':
+        df = adjmat
+    else:
+        df = bnlearn._filter_df(adjmat, df, verbose=config['verbose'])
 
     if config['verbose']>=3: print('[bnlearn] >Parameter learning> Computing parameters using [%s]' %(config['method']))
     # Extract model
@@ -141,6 +150,12 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
         #  Learning CPDs using Bayesian Parameter Estimation
         model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth, n_jobs=config['n_jobs'])
         # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
+        for cpd in model.get_cpds():
+            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=3: print(cpd)
+    elif config['method']=='DBN':
+        #  Learning CPDs using Bayesian Parameter Estimation
+        model.fit(df, estimator='MLE')
         for cpd in model.get_cpds():
             if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
             if config['verbose']>=3: print(cpd)

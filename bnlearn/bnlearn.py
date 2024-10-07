@@ -22,7 +22,7 @@ from tqdm import tqdm
 from tabulate import tabulate
 from decimal import Decimal
 
-from pgmpy.models import BayesianNetwork, NaiveBayes
+from pgmpy.models import BayesianNetwork, NaiveBayes, DynamicBayesianNetwork, MarkovNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.metrics import structure_score
@@ -97,6 +97,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         * 'bayes': Bayesian model
         * 'nb' or 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
         * 'markov': Markov model
+        * 'DBN': DynamicBayesianNetwork
     checkmodel : bool
         Check the validity of the model. The default is True
     verbose : int, optional
@@ -118,11 +119,31 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     >>> DAG = bn.make_DAG(edges, methodtype='naivebayes')
     >>> fig = bn.plot(DAG)
 
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> DAG = bn.make_DAG(edges, methodtype='markov')
+    >>> fig = bn.plot(DAG)
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> DAG = bn.make_DAG(edges, methodtype='DBN')
+    >>> fig = bn.plot(DAG)
+    >>>
+    >>> # Set custom timeslice
+    >>> edges = [(('A', 0), ('B', 1)), (('A', 0), ('C', 0)), (('A', 0), ('D', 0))]
+    >>> DAG = bn.make_DAG(edges, methodtype='DBN')
+    >>> fig = bn.plot(DAG)
+
     """
     if (CPD is not None) and (not isinstance(CPD, list)):
-        CPD=[CPD]
+        CPD = [CPD]
 
-    if methodtype=='nb': methodtype='naivebayes'
+    if methodtype == 'nb': methodtype = 'naivebayes'
+    if methodtype == 'dbn': methodtype = 'DBN'
 
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
@@ -132,23 +153,35 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     elif ('pgmpy' in str(type(DAG))):
         # Extract methodtype from existing model.
         if ('bayesianmodel' in str(type(DAG)).lower()):
-            methodtype='bayes'
+            methodtype = 'bayes'
         elif ('naivebayes' in str(type(DAG)).lower()):
-            methodtype='naivebayes'
+            methodtype = 'naivebayes'
         if verbose>=3: print('[bnlearn] >No changes made to existing %s DAG.' %(methodtype))
-    elif isinstance(DAG, list) and methodtype=='naivebayes':
+    elif isinstance(DAG, list) and methodtype == 'naivebayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
-        edges=DAG
+        edges = DAG
         DAG = NaiveBayes()
         DAG.add_edges_from(edges)
         # modeel.add_nodes_from(DAG)
-    elif isinstance(DAG, list) and methodtype=='bayes':
+    elif isinstance(DAG, list) and methodtype == 'bayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
         DAG = BayesianNetwork(DAG)
-    elif isinstance(DAG, list) and methodtype=='markov':
-        from pgmpy.models import MarkovNetwork
+    elif isinstance(DAG, list) and methodtype == 'markov':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
         DAG = MarkovNetwork(DAG)
+    elif isinstance(DAG, list) and methodtype == 'DBN':
+        if verbose>=3: print('[bnlearn] >DynamicBayesianNetwork DAG created.')
+        # Make edges with time slice
+        if not has_valid_time_slice(DAG):
+            edges = convert_edges_with_time_slice(DAG)
+        else:
+            edges = DAG
+
+        DAG = DynamicBayesianNetwork()
+        # dbn.add_nodes_from(edges)
+        DAG.add_edges_from(edges)
+        # Print edges
+        # print("Edges in the DBN:", DAG.edges())
 
     if CPD is not None:
         for cpd in CPD:
@@ -166,6 +199,31 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     out['model_edges'] = DAG.edges()
     return out
 
+
+# %%
+def convert_edges_with_time_slice(edges, time_slice=0):
+    return [( (u, time_slice), (v, time_slice) ) for u, v in edges]
+
+def has_valid_time_slice(edges):
+    """ Example usage
+    edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    edgest = [(('A', 0), ('B', 0)), (('A', 0), ('C', 0)), (('A', 0), ('D', 0))]
+    
+    # Check edges
+    has_valid_time_slice(edges)
+
+    # Check edges
+    has_valid_time_slice(edgest)
+
+    """
+    for edge in edges:
+        u, v = edge
+        # Check if both ends of the edge are tuples of the form (node, time_slice)
+        if not (isinstance(u, tuple) and isinstance(v, tuple)):
+            return False
+        if not (isinstance(u[1], int) and isinstance(v[1], int)):
+            return False
+    return True
 
 # %% Print DAG
 def print_CPD(DAG, checkmodel=False, verbose=3):
@@ -1081,6 +1139,9 @@ def plot_graphviz(model,
     if model['adjmat'].sum().sum()==0:
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
         return None
+    if model['config']['method']=='DBN':
+        if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        return None
 
     # Import libraries
     from lingam.utils import make_dot
@@ -1207,7 +1268,7 @@ def plot(model,
     >>> fig = bn.plot(model, interactive=True)
     >>>
     >>> # plot interactive with various settings
-    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'figsize':(800, 600), 'bgcolor':'#0f0f0f0f'})
+    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'figsize':(800, 600), 'font_color': 'node_color', 'bgcolor':'#0f0f0f0f'})
     >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
@@ -1225,6 +1286,10 @@ def plot(model,
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
         return None
 
+    if model['config']['method']=='DBN' and interactive:
+        if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        return None
+
     if model.get('independence_test', None) is None and edge_labels=='pvalue':
         if verbose>=2: print('[bnlearn] >Edge labels with Pvalues can only be shown after executing: model=bn.independence_test(model, df)')
         edge_labels = None
@@ -1233,7 +1298,7 @@ def plot(model,
     model['adjmat'] = model['adjmat'].astype(float)
 
     # Plot properties
-    defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': 'node_color', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
+    defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': '#000000', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
     params_interactive = {**defaults, **params_interactive}
     defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
     params_static = {**defaults, **params_static}
