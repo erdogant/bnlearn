@@ -9,12 +9,12 @@ cii_tests = ['chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey
 
 for cii_test in cii_tests:
     # Learn the DAG in data using hillclimbsearch and BIC
-    model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic', params_pc={'ci_test':cii_test,'alpha': 0.05}, verbose=3)
+    model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic', params_pc={'ci_test': cii_test,'alpha': 0.05}, verbose=3)
     # model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'ci_test':'freeman_tuckey','alpha': 0.05})
-    
+
     # Compute edge weights using ChiSquare independence test.
     model = bn.independence_test(model, df, test='chi_square', prune=False)
-    
+
     # Plot the best DAG
     bn.plot(model, edge_labels='pvalue', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
     bn.plot(model)
@@ -182,9 +182,11 @@ import bnlearn as bn
 
 # Load example mixed dataset
 df = bn.import_example(data='auto_mpg')
+del df['origin']
 
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='hc')
+# model = bn.structure_learning.fit(df, methodtype='hc')
+model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'pearsonr': cii_test,'alpha': 0.05})
 
 # Compute edge strength
 model = bn.independence_test(model, df)
