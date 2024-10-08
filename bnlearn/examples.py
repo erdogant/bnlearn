@@ -1,3 +1,15 @@
+#%% Impute
+import bnlearn as bn
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+imputed_df1 = bn.impute(df, n_neighbors=3, weights="distance", string_columns=['car name'])
+imputed_df2 = bn.impute(df, n_neighbors=3, weights="distance")
+
+
+#%% Issue 100
 import bnlearn as bn
 import pandas as pd
 

@@ -26,6 +26,7 @@ from bnlearn.bnlearn import (
     load,
     check_model,
     structure_scores,
+    impute,
 )
 
 # Import function in new level
