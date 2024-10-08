@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Working with Continous data &mdash; bnlearn bnlearn documentation</title>
+  <title>Modelling Continuous Datasets &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
@@ -93,15 +93,11 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Working with Continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#modelling-continuous-datasets">Modelling Continuous Datasets</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modelling Continuous Datasets</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC method</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC method</a></li>
 </ul>
 </li>
 </ul>
@@ -127,6 +123,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
@@ -180,7 +177,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Working with Continous data</li>
+      <li class="breadcrumb-item active">Modelling Continuous Datasets</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Continuous Data.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -190,8 +187,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="working-with-continous-data">
-<h1>Working with Continous data<a class="headerlink" href="#working-with-continous-data" title="Link to this heading"></a></h1>
+  <section id="modelling-continuous-datasets">
+<h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
 <p>Learning Bayesian Networks from continuous data is a challanging task.
 There are different manner on how to work with continuous and/or hybrid datasets. Each manner has their own advantages and disadvantages.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> the following options are available to work with continuous datasets:</p>
@@ -213,9 +210,6 @@ There are different manner on how to work with continuous and/or hybrid datasets
 </ol>
 </li>
 </ul>
-</section>
-<section id="modelling-continuous-datasets">
-<h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
 <section id="lingam-based-methods">
 <h2>LiNGAM-based Methods<a class="headerlink" href="#lingam-based-methods" title="Link to this heading"></a></h2>
 <p>Bnlearn includes LiNGAM-based methods which do the estimation of Linear, Non-Gaussian Acyclic Model from observed data. It assumes non-Gaussianity of the noise terms in the causal model.
@@ -461,16 +455,6 @@ A disadvantage is that causal discovery of structure learning is the end-point w
 </tr>
 </tbody>
 </table>
-<section id="references">
-<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
-<blockquote>
-<div><p>1. Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
-<a class="reference external" href="https://arxiv.org/abs/1512.02406">Learning Discrete Bayesian Networks from Continuous Data</a></p>
-<ol class="arabic simple" start="2">
-<li><p>Julia 0.4 implementation:
-<a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p></li>
-</ol>
-</div></blockquote>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -479,7 +463,6 @@ A disadvantage is that causal discovery of structure learning is the end-point w
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
-</section>
 </section>
 
 

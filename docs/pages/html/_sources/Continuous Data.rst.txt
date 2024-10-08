@@ -1,4 +1,4 @@
-Working with Continous data
+Modelling Continuous Datasets
 =========================================
 Learning Bayesian Networks from continuous data is a challanging task.
 There are different manner on how to work with continuous and/or hybrid datasets. Each manner has their own advantages and disadvantages. 
@@ -11,8 +11,6 @@ In ``bnlearn`` the following options are available to work with continuous datas
 * 4. Model continuous and hybrid datasets in a semi-parametric approach that assumes a linear relationships.
 
 
-Modelling Continuous Datasets
-=========================================
 
 LiNGAM-based Methods
 *********************
@@ -279,20 +277,6 @@ PC PDAG construction is only guaranteed to work under the assumption that the id
    +----------+
 
 
-
-
-
-
-
-
-References
-----------
-
-    1. Yi-Chun Chen, Tim Allan Wheeler, Mykel John Kochenderfer (2015),
-    `Learning Discrete Bayesian Networks from Continuous Data <https://arxiv.org/abs/1512.02406>`_
-
-    2. Julia 0.4 implementation:
-       https://github.com/sisl/LearnDiscreteBayesNets.jl
        
 
 .. include:: add_bottom.add

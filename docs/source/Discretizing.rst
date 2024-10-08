@@ -166,7 +166,7 @@ Discretize Automatically: Principled Bayesian
 ==============================================
 
 Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
-The method is created by Yi-Chun Chen et al in Julia. The code is ported to Python and is now part of ``bnlearn``.
+The method is created by Yi-Chun Chen et al [1]_ in Julia [2]_. The code is ported to Python and is now part of ``bnlearn``.
 Yi-Chun Chen demonstrates that his proposed method is superior to the established minimum description length algorithm.
 
 A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method.
@@ -416,5 +416,14 @@ use the ``discretize_value`` function.
     +---------------------+------------+
     | mpg((28.9, 46.6])   |     0.1358 |
     +---------------------+------------+    
+
+
+References
+----------
+
+
+.. [1] Chen, Y.-C., Wheeler, T. A., & Kochenderfer, M. J. (2015). Learning discrete Bayesian networks from continuous data. arXiv. https://arxiv.org/abs/1512.02406
+
+.. [2] Julia 0.4 implementation. (n.d.). LearnDiscreteBayesNets.jl. https://github.com/sisl/LearnDiscreteBayesNets.jl
 
 .. include:: add_bottom.add

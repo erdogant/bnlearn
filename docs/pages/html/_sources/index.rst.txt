@@ -128,6 +128,7 @@ Contents
 
   independence_test
   Create DAG
+  impute
   Example Datasets
   whitelist_blacklist
   topological_sort

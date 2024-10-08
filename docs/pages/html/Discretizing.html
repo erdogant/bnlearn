@@ -68,7 +68,10 @@
 <li class="toctree-l1"><a class="reference internal" href="#discretize-automatically-principled-bayesian">Discretize Automatically: Principled Bayesian</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#structure-learning">Structure learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-learning">Parameter learning</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inferences">Inferences</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inferences">Inferences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -98,8 +101,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Working with Continous data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#modelling-continuous-datasets">Modelling Continuous Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -123,6 +125,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
@@ -333,7 +336,7 @@
 <section id="discretize-automatically-principled-bayesian">
 <h1>Discretize Automatically: Principled Bayesian<a class="headerlink" href="#discretize-automatically-principled-bayesian" title="Link to this heading"></a></h1>
 <p>Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
-The method is created by Yi-Chun Chen et al in Julia. The code is ported to Python and is now part of <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.
+The method is created by Yi-Chun Chen et al <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in Julia <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The code is ported to Python and is now part of <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.
 Yi-Chun Chen demonstrates that his proposed method is superior to the established minimum description length algorithm.</p>
 <p>A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method.
 The underlying idea is that after applying this discritization method, structure learning approaches can then be applied.
@@ -554,6 +557,18 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
 </tr>
 </tbody>
 </table>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Chen, Y.-C., Wheeler, T. A., &amp; Kochenderfer, M. J. (2015). Learning discrete Bayesian networks from continuous data. arXiv. <a class="reference external" href="https://arxiv.org/abs/1512.02406">https://arxiv.org/abs/1512.02406</a></p>
+</aside>
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Julia 0.4 implementation. (n.d.). LearnDiscreteBayesNets.jl. <a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p>
+</aside>
+</aside>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -562,6 +577,7 @@ use the <code class="docutils literal notranslate"><span class="pre">discretize_
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
+</section>
 </section>
 
 
