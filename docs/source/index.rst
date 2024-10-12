@@ -1,24 +1,43 @@
-
-
 BNLearn's Documentation
 =======================
 
 |python| |pypi| |docs| |LOC| |downloads_month| |downloads_total| |license| |forks| |open issues| |project status| |medium| |colab| |DOI| |donate|
 
-.. |logo| image:: ../figs/logo.png
+
+-----------------------------------
+
+.. |landscape| image:: ../figs/Landscape_Causal_Discovery_Bnlearn_for_python.png
 
 .. table::
    :align: center
 
-   +----------+
-   | |logo|   |
-   +----------+
+   +---------------+
+   | |landscape|   |
+   +---------------+
 
+-----------------------------------
+
+*Bnlearn* is for causal discovery using in Python!
+
+* Contains the most-wanted Bayesian pipelines for Causal Discovery
+* Simple and intuitive
+* Focus on structure learning, parameter learning and inference.
+
+
+-----------------------------------
+
+Support
+-----------
+Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.com/erdogant>`_! :) 
+
+-----------------------------------
 
 .. tip::
-	* `Guide in detecting causal relationships using Bayesian Structure Learning in Python. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-	* `Guide in designing knowledge-driven models using Bayesian theorem. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-	* `A Comparative Analysis of Libraries to Reveal Hidden Causality in Your Dataset. <https://towardsdatascience.com/the-power-of-bayesian-causal-inference-a-comparative-analysis-of-libraries-to-reveal-hidden-d91e8306e25e>`_
+	* `Detecting causal relationships using Bayesian Structure Learning in Python. <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
+	* `Designing knowledge-driven models using Bayesian theorem. <https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be>`_
+	* `Chat with Your Dataset using Bayesian Inferences. <https://towardsdatascience.com/chat-with-your-dataset-using-bayesian-inferences-bfd4dc7f8dcd>`_
+	* `The Power of Bayesian Causal Inference: A Comparative Analysis of Libraries to Reveal Hidden Causality in Your Dataset. <https://towardsdatascience.com/the-power-of-bayesian-causal-inference-a-comparative-analysis-of-libraries-to-reveal-hidden-d91e8306e25e>`_
+	* `Find the Best Boosting Model using Bayesian Hyperparameter Tuning but without Overfitting. <https://towardsdatascience.com/a-guide-to-find-the-best-boosting-model-using-bayesian-hyperparameter-tuning-but-without-c98b6a1ecac8>`_
 
 
 -----------------------------------
@@ -27,15 +46,6 @@ BNLearn's Documentation
 
    <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
 
-
------------------------------------
-
-*bnlearn* is for learning the graphical structure of Bayesian networks in Python! What benefits does bnlearn offer over other bayesian analysis implementations?
-
-* Build on top of the pgmpy library
-* Contains the most-wanted bayesian pipelines
-* Simple and intuitive
-* Focus on structure learning, parameter learning and inference.
 
 
 -----------------------------------
