@@ -115,7 +115,7 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     independence_test = model.get('independence_test', None)
 
     # Automatically set methodtype to DBN
-    if model['methodtype']=='DBN':
+    if str(model['config'].get('method')).lower()=='dbn':
         config['method'] = 'DBN'
         if verbose>=3: print('[bnlearn] >Methodtype is set to DynamicBayesianNetwork (DBN)')
 
