@@ -26,7 +26,6 @@ from bnlearn.bnlearn import (
     load,
     check_model,
     structure_scores,
-    impute,
 )
 
 # Import function in new level
@@ -36,6 +35,7 @@ import bnlearn.inference as inference
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
 from bnlearn.discretize.discretize import discretize, discretize_value
+from bnlearn.impute import knn_imputer, mice_imputer
 from packaging import version
 
 __author__ = 'Erdogan Tasksen'
