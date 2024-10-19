@@ -1,3 +1,37 @@
+# %% Issue 81
+# It implements MICE using the function mice_imputer function that performs Multiple Imputation by Chained Equations (MICE) on numeric columns while handling string/categorical columns.
+# The code is based on the already implemented code by Erdogan on imputation using knn.
+
+# Key features include:
+
+# Supports MICE imputation for numeric columns.
+# String/categorical columns are encoded before imputation and restored post-imputation.
+# Includes options to specify the imputation estimator, number of iterations (max_iter), and verbosity level for logging.
+# Numeric columns are auto-identified and converted for imputation where necessary.
+# This enhancement improves missing data handling and supports mixed-type datasets.
+
+# Key changes include:
+
+# Created a new file impute.py for imputation related functions
+# Moved the existing code for imputation and renamed it to knn_imputer
+# Implemented the MICE function
+# Updated the impute.rst file to include examples of both types of imputation
+
+import bnlearn as bn
+import pandas as pd
+import numpy as np
+from impute import knn_imputer, mice_imputer
+
+# Load the dataset
+# df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+# imputed_df1 = bn.knn_imputer(df, n_neighbors=3, weights="distance", string_columns=['car name'])
+# imputed_df2 = bn.knn_imputer(df, n_neighbors=3, weights="distance")
+
+df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
+knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+mice_imputer(df, max_iter=5, string_columns='city')
+
+
 # %%
 import bnlearn as bn
 # Load example mixed dataset
