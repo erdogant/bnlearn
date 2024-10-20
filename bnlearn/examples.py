@@ -1,3 +1,41 @@
+# %% Impute categorical values
+import bnlearn as bn
+import pandas as pd
+import numpy as np
+# from impute import knn_imputer, mice_imputer
+
+# Load the dataset
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+df.loc[1]=df.loc[0]
+df.loc[11]=df.loc[10]
+df.loc[50]=df.loc[20]
+
+index_nan = [0, 10, 20]
+carnames = df['car name'].loc[index_nan]
+
+df['car name'].loc[index_nan]=None
+df.isna().sum()
+
+# KNN imputer
+dfnew = bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns=['car name'])
+# Results
+np.all(dfnew['car name'].loc[index_nan].values==carnames.values)
+
+# MICE imputer
+dfnew = bn.mice_imputer(df, max_iter=5, string_columns='car name')
+# Results
+np.all(dfnew['car name'].loc[index_nan].values==carnames.values)
+
+
+
+df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
+# bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+# bn.mice_imputer(df, max_iter=5, string_columns='city')
+knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+mice_imputer(df, max_iter=5, string_columns='city')
+
+
 # %% Issue 81
 # It implements MICE using the function mice_imputer function that performs Multiple Imputation by Chained Equations (MICE) on numeric columns while handling string/categorical columns.
 # The code is based on the already implemented code by Erdogan on imputation using knn.
@@ -22,11 +60,6 @@ import pandas as pd
 import numpy as np
 from impute import knn_imputer, mice_imputer
 
-# Load the dataset
-# df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
-# imputed_df1 = bn.knn_imputer(df, n_neighbors=3, weights="distance", string_columns=['car name'])
-# imputed_df2 = bn.knn_imputer(df, n_neighbors=3, weights="distance")
-
 df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
 knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
 mice_imputer(df, max_iter=5, string_columns='city')
@@ -42,16 +75,6 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-
-#%% Impute: Issue 81
-import bnlearn as bn
-import pandas as pd
-
-# Load the dataset
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
-
-imputed_df1 = bn.impute(df, n_neighbors=3, weights="distance", string_columns=['car name'])
-imputed_df2 = bn.impute(df, n_neighbors=3, weights="distance")
 
 
 #%% Issue 100

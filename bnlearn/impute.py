@@ -7,7 +7,7 @@ from sklearn.impute import IterativeImputer
 
 
 # %% Impute
-def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, verbose=3):
+def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True, verbose=3):
     """Impute missing values.
 
     Impute missing values in a DataFrame using KNN imputation for numeric columns. String columns are not included in the encoding.
@@ -29,6 +29,9 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
         A list of column names or a single column name (string) that contains string/categorical data.
         These columns will be removed using LabelEncoder before imputation (default is None).
         ['car name', 'origin']
+    scaling : bool
+        True: standardize numerical variables before learning NN model to determine the missing category.
+        False: Use data as is.
     verbose : int, optional
         Level of verbosity to control printed messages during execution. Higher values give more detailed logs (default is 3).
 
@@ -55,30 +58,12 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
     >>> knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
          age   income          city
     0  25.0  50000.0      New York
-    1  26.0  60000.0      Los Angeles
+    1  25.0  60000.0      New York
     2  27.0  55000.0  Los Angeles
 
     """
-    # Convert string columns to categorical and then encode them
-    if string_columns is not None:
-        if isinstance(string_columns, str):
-            string_columns = [string_columns]
-        # Encode string columns if specified
-        for col in string_columns:
-            df[col] = df[col].astype('category')
-
-    # Convert the remaining numeric columns to float (if not already)
-    for col in df.columns:
-        try:
-            if (string_columns is None) or (not np.isin(col, string_columns)):
-                df[col] = df[col].astype(float)
-                if verbose>=4: print(f'[bnlearn] >float: {col}')
-        except:
-            if verbose>=4: print(f'[bnlearn] >Category forced: {col}')
-            if string_columns is None: string_columns = []
-            string_columns = string_columns + [col]
-            df[col] = df[col].astype(str)
-            df[col].fillna('None')
+    # Set columsn to categorical or float
+    df, string_columns = _typing(df, string_columns)
 
     # Initialize the KNN imputer
     imputer = KNNImputer(n_neighbors=n_neighbors, weights=weights, metric=metric)
@@ -96,13 +81,13 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
             df_imputed[col] = df[col]
 
     # Impute categorical columns with the most frequent value
-    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, n_neighbors)
+    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, scaling=scaling)
 
     # Return
     return df_imputed
 
 
-def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, verbose=3):
+def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=True, verbose=3):
     """Impute missing values using Multiple Imputation by Chained Equations (MICE).
 
     Impute missing values in a DataFrame using MICE imputation for numeric columns. String columns are not included in the encoding.
@@ -119,6 +104,9 @@ def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, verbose=3
         A list of column names or a single column name (string) that contains string/categorical data.
         These columns will be removed using LabelEncoder before imputation (default is None).
         ['car name', 'origin']
+    scaling : bool
+        True: standardize numerical variables before learning NN model to determine the missing category.
+        False: Use data as is.
     verbose : int, optional
         Level of verbosity to control printed messages during execution. Higher values give more detailed logs (default is 3).
 
@@ -146,30 +134,12 @@ def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, verbose=3
     >>> mice_imputer(df, max_iter=5, string_columns='city')
          age   income          city
     0  25.0  50000.0      New York
-    1  26.2  60000.0      Los Angeles
+    1  29.0  60000.0      Los Angeles
     2  27.0  55123.7  Los Angeles
 
     """
-    # Convert string columns to categorical and then encode them
-    if string_columns is not None:
-        if isinstance(string_columns, str):
-            string_columns = [string_columns]
-        # Encode string columns if specified
-        for col in string_columns:
-            df[col] = df[col].astype('category')
-
-    # Convert the remaining numeric columns to float (if not already)
-    for col in df.columns:
-        try:
-            if (string_columns is None) or (not np.isin(col, string_columns)):
-                df[col] = df[col].astype(float)
-                if verbose>=4: print(f'[bnlearn] >float: {col}')
-        except:
-            if verbose>=4: print(f'[bnlearn] >Category forced: {col}')
-            if string_columns is None: string_columns = []
-            string_columns = string_columns + [col]
-            df[col] = df[col].astype(str)
-            df[col].fillna('None')
+    # Set columsn to categorical or float
+    df, string_columns = _typing(df, string_columns)
 
     # Initialize the MICE imputer
     imputer = IterativeImputer(max_iter=max_iter, estimator=estimator, random_state=0)
@@ -181,14 +151,19 @@ def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, verbose=3
     # Create a new DataFrame for imputed numeric values
     df_imputed = pd.DataFrame(imputed_values, columns=numeric_cols)
 
+    # Add the original string columns back to the imputed DataFrame if any
+    if string_columns is not None:
+        for col in string_columns:
+            df_imputed[col] = df[col]
+
     # Impute categorical columns with the most frequent value
-    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, 3)
+    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, scaling=scaling)
 
     # Return
     return df_imputed
 
 
-def impute_catagorical_knn(df, string_columns, numeric_cols, n_neighbors):
+def impute_catagorical_knn(df, string_columns, numeric_cols, scaling=True):
     """
     Impute missing values in categorical columns using K-Nearest Neighbors (KNN) based on numeric columns.
 
@@ -202,6 +177,9 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, n_neighbors):
         List of column names in `df` that are numeric and will be used for distance calculation in KNN.
     n_neighbors : int
         The number of nearest neighbors to consider for imputation.
+    scaling : bool
+        True: standardize numerical variables before learning NN model to determine the missing category.
+        False: Use data as is.
 
     Returns
     -------
@@ -224,7 +202,7 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, n_neighbors):
     ...     'income': [50000, 60000, 65000, 7000],
     ...     'city': ['New York', np.nan, 'Los Angeles', 'San Francisco']
     ... })
-    >>> impute_catagorical_knn(df, string_columns=['city'], numeric_cols=['age', 'income'], n_neighbors=3)
+    >>> impute_catagorical_knn(df, string_columns=['city'], numeric_cols=['age', 'income'])
           age  income           city
     0   25   50000        New York
     1   25   60000        New York
@@ -232,18 +210,57 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, n_neighbors):
     3   29    7000  San Francisco
 
     """
+    if scaling:
+        from sklearn.preprocessing import StandardScaler
+        # Standardize the numeric columns ('age', 'income') for KNN
+        scaler = StandardScaler()
+        df_scaled = scaler.fit_transform(df[numeric_cols].copy())
+        df_scaled = pd.DataFrame(df_scaled, columns=numeric_cols)
+    else:
+        df_scaled = df[numeric_cols].copy()
+
     # Impute categorical columns with the most frequent value
     if string_columns is not None:
-        model = NearestNeighbors(n_neighbors=np.minimum(n_neighbors + 1, df.shape[0])).fit(df[numeric_cols])
+        # Learn NN model
+        model = NearestNeighbors(n_neighbors=np.minimum(20, df.shape[0])).fit(df_scaled)
         for col in string_columns:
             # Get all missing indexes
             missing_index = np.where(df[col].isna())[0]
             # For each missing catagory, find its nearest neighbors and impute the mode
             for row in missing_index:
-                distances, indices = model.kneighbors([df[numeric_cols].loc[row]])
-                most_frequent = df[col][indices[0]].mode()[0]
+                # Compute closest indices based on model.
+                distances, indices = model.kneighbors(df_scaled.loc[[row]])
+                # Remove indexes that have missing labels
+                indices = indices[~np.isin(indices, missing_index)]
+                # Get closest label
+                closest_label = df.loc[indices[0], col]
                 # Impute
-                df[col][missing_index] = most_frequent
+                df.loc[row, col] = closest_label
 
     # Return
     return df
+
+
+def _typing(df, string_columns, verbose=3):
+    # Convert string columns to categorical and then encode them
+    if string_columns is not None:
+        if isinstance(string_columns, str):
+            string_columns = [string_columns]
+        # Encode string columns if specified
+        for col in string_columns:
+            df[col] = df[col].astype('category')
+
+    # Convert the remaining numeric columns to float (if not already)
+    for col in df.columns:
+        try:
+            if (string_columns is None) or (not np.isin(col, string_columns)):
+                df[col] = df[col].astype(float)
+                if verbose>=4: print(f'[bnlearn] >float: {col}')
+        except:
+            if verbose>=4: print(f'[bnlearn] >Category forced: {col}')
+            if string_columns is None: string_columns = []
+            string_columns = string_columns + [col]
+            df[col] = df[col].astype(str)
+            df[col].fillna('None')
+
+    return df, string_columns
