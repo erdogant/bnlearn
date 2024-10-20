@@ -32,8 +32,8 @@ np.all(dfnew['car name'].loc[index_nan].values==carnames.values)
 df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
 # bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
 # bn.mice_imputer(df, max_iter=5, string_columns='city')
-knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
-mice_imputer(df, max_iter=5, string_columns='city')
+bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+bn.mice_imputer(df, max_iter=5, string_columns='city')
 
 
 # %% Issue 81
@@ -58,11 +58,11 @@ mice_imputer(df, max_iter=5, string_columns='city')
 import bnlearn as bn
 import pandas as pd
 import numpy as np
-from impute import knn_imputer, mice_imputer
+# from impute import knn_imputer, mice_imputer
 
 df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
-knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
-mice_imputer(df, max_iter=5, string_columns='city')
+bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+bn.mice_imputer(df, max_iter=5, string_columns='city')
 
 
 # %%
@@ -74,7 +74,6 @@ df = bn.import_example(data='sprinkler')
 model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
-
 
 
 #%% Issue 100
