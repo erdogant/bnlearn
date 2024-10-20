@@ -39,23 +39,6 @@ Score-based algorithm can be used with the following score functions:
    * a score equivalent Dirichlet posterior density (bdeu);
 
 
-
-Score-based algorithms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* ExhaustiveSearch (ex)
-* Hill Climbing (hc)
-
-Local discovery algorithms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* Chow-liu (cl)
-
-Bayesian network classifiers
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-* NaiveBayesian (nb)
-* Tree-augmented Naive Bayes (tan)
-
-
-
 Constraint-based structure learning algorithms
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
