@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
@@ -8,15 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Impute &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
 
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=441dd29d"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -115,7 +117,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Impute</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Impute</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#knn-imputer">KNN Imputer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mice-imputer">MICE Imputer</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
@@ -181,8 +187,50 @@
              
   <section id="impute">
 <h1>Impute<a class="headerlink" href="#impute" title="Link to this heading"></a></h1>
-<p>Impute missing values in a DataFrame using KNN imputation for numeric columns.
-String columns are not included in the encoding.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Bnlearn</span></code> library provides two different imputation methods. In both methods, categorical columns are excluded first, and missing numerical values are imputed using either the KNN or MICE approach. Once the numerical values are imputed, the resulting DataFrame is used to build a Nearest Neighbors (NN) model. Finally, missing categorical values are imputed using the 1-NN model based on the imputed numerical data.</p>
+<section id="knn-imputer">
+<h2>KNN Imputer<a class="headerlink" href="#knn-imputer" title="Link to this heading"></a></h2>
+<p>Impute missing values in a DataFrame using KNN imputation.
+Lets load a dataframe with missing values and perform the imputation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize libraries</span>
+<span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Load the dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original&#39;</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cylinders&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement&#39;</span><span class="p">,</span> <span class="s1">&#39;horsepower&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;model year&#39;</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="s1">&#39;car name&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create some identifical rows as test-case</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span>
+
+<span class="c1"># Set few rows to None</span>
+<span class="n">index_nan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+<span class="n">carnames</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+<span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># KNN imputer</span>
+<span class="n">dfnew</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">knn_imputer</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">string_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">])</span>
+<span class="c1"># Results</span>
+<span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dfnew</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">==</span><span class="n">carnames</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mice-imputer">
+<h2>MICE Imputer<a class="headerlink" href="#mice-imputer" title="Link to this heading"></a></h2>
+<p>Impute missing values in a DataFrame using MICE imputation.
+It implements MICE using the function mice_imputer function that performs Multiple Imputation by Chained Equations (MICE) on numeric columns while handling string/categorical columns.</p>
+<p>Key features include:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Supports MICE imputation for numeric columns.</p></li>
+<li><p>String/categorical columns are encoded before imputation and restored post-imputation.</p></li>
+<li><p>Includes options to specify the imputation estimator, number of iterations (max_iter), and verbosity level for logging.</p></li>
+<li><p>Numeric columns are auto-identified and converted for imputation where necessary.</p></li>
+<li><p>This enhancement improves missing data handling and supports mixed-type datasets.</p></li>
+</ul>
+</div></blockquote>
 <p>Lets load a dataframe with missing values and perform the imputation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize libraries</span>
 <span class="kn">import</span> <span class="nn">bnlearn</span> <span class="k">as</span> <span class="nn">bn</span>
@@ -191,8 +239,21 @@ String columns are not included in the encoding.</p>
 <span class="c1"># Load the dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original&#39;</span><span class="p">,</span> <span class="n">delim_whitespace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;cylinders&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement&#39;</span><span class="p">,</span> <span class="s1">&#39;horsepower&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;acceleration&#39;</span><span class="p">,</span> <span class="s1">&#39;model year&#39;</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="s1">&#39;car name&#39;</span><span class="p">])</span>
 
-<span class="n">imputed_df1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">impute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">,</span> <span class="n">string_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">])</span>
-<span class="n">imputed_df2</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">impute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s2">&quot;distance&quot;</span><span class="p">)</span>
+<span class="c1"># Create some identifical rows as test-case</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">50</span><span class="p">]</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span>
+
+<span class="c1"># Set few rows to None</span>
+<span class="n">index_nan</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+<span class="n">carnames</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+<span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+<span class="c1"># MICE imputer</span>
+<span class="n">dfnew</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">mice_imputer</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">string_columns</span><span class="o">=</span><span class="s1">&#39;car name&#39;</span><span class="p">)</span>
+<span class="c1"># Results</span>
+<span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dfnew</span><span class="p">[</span><span class="s1">&#39;car name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index_nan</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">==</span><span class="n">carnames</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 </pre></div>
 </div>
 <hr>
@@ -203,6 +264,7 @@ String columns are not included in the encoding.</p>
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
+</section>
 
 
            </div>

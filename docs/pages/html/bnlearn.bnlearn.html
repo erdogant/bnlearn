@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
@@ -8,15 +6,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>bnlearn.bnlearn &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
 
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=441dd29d"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=441dd29d"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -154,7 +156,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.has_valid_time_slice"><code class="docutils literal notranslate"><span class="pre">has_valid_time_slice()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.impute"><code class="docutils literal notranslate"><span class="pre">impute()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.independence_test"><code class="docutils literal notranslate"><span class="pre">independence_test()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.load"><code class="docutils literal notranslate"><span class="pre">load()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.make_DAG"><code class="docutils literal notranslate"><span class="pre">make_DAG()</span></code></a></li>
@@ -546,56 +547,6 @@ adjmat : Adjacency matrix</p>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bnlearn.bnlearn.impute">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">impute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uniform'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nan_euclidean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.impute" title="Link to this definition"></a></dt>
-<dd><p>Impute missing values.</p>
-<p>Impute missing values in a DataFrame using KNN imputation for numeric columns. String columns are not included in the encoding.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pandas.DataFrame</em>) – The input DataFrame containing both numeric and string columns.</p></li>
-<li><p><strong>n_neighbors</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of neighboring samples to use for imputation (default is 2).</p></li>
-<li><p><strong>weights</strong> (<em>str</em><em>, </em><em>optional</em>) – Weight function used in prediction. Possible values:
-- ‘uniform’ : uniform weights. All points in each neighborhood are weighted equally.
-- ‘distance’ : weight points by the inverse of their distance. in this case, closer neighbors of a query point will have a greater influence than neighbors which are further away.
-- callable : a user-defined function which accepts an array of distances, and returns an array of the same shape containing the weights.</p></li>
-<li><p><strong>metric</strong> (<em>default='nan_euclidean'</em>) – Distance metric for searching neighbors.</p></li>
-<li><p><strong>string_columns</strong> (<em>list</em><em> or </em><em>str</em><em>, </em><em>optional</em>) – A list of column names or a single column name (string) that contains string/categorical data.
-These columns will be removed using LabelEncoder before imputation (default is None).
-[‘car name’, ‘origin’]</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Level of verbosity to control printed messages during execution. Higher values give more detailed logs (default is 3).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A DataFrame with imputed values. Numeric columns will have missing values filled using KNN imputation,
-and original string columns (if any) will be retained.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pandas.DataFrame</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>String columns are encoded to numerical values using LabelEncoder for imputation and decoded back after the imputation process.</p></li>
-<li><p>The function automatically identifies numeric columns and handles conversion to appropriate data types if necessary.</p></li>
-<li><p>The <cite>verbose</cite> parameter allows controlling how much detail is printed out for tracking the progress of imputation.</p></li>
-</ul>
-<p class="rubric">Examples</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-<span class="gp">... </span>   <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">27</span><span class="p">],</span>
-<span class="gp">... </span>   <span class="s1">&#39;income&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">60000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
-<span class="gp">... </span>   <span class="s1">&#39;city&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;New York&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="s1">&#39;Los Angeles&#39;</span><span class="p">]</span>
-<span class="gp">... </span><span class="p">})</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">impute</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="s1">&#39;distance&#39;</span><span class="p">,</span> <span class="n">string_columns</span><span class="o">=</span><span class="s1">&#39;city&#39;</span><span class="p">)</span>
-<span class="go">     age   income          city</span>
-<span class="go">0  25.0  50000.0      New York</span>
-<span class="go">1  26.0  60000.0      New York</span>
-<span class="go">2  27.0  55000.0  Los Angeles</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py function">
