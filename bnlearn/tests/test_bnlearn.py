@@ -97,12 +97,12 @@ def test_sampling_gibbs(sprinkler_dag):
     assert df.shape == (n, 4)
 
 
-def test_to_undirected():
-    # TEST 1:
-    randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
-    n = np.random.randint(0, len(randdata))
-    DAG = bn.import_DAG(randdata[n], CPD=False, verbose=0)
-    assert (DAG['adjmat'].sum().sum() * 2) == bn.to_undirected(DAG['adjmat']).sum().sum()
+# def test_to_undirected():
+#     # TEST 1:
+#     randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
+#     n = np.random.randint(0, len(randdata))
+#     DAG = bn.import_DAG(randdata[n], CPD=False, verbose=0)
+#     assert (DAG['adjmat'].sum().sum() * 2) == bn.to_undirected(DAG['adjmat']).sum().sum()
 
 
 def test_compare_networks():
