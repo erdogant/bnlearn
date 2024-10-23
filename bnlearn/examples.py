@@ -2,8 +2,7 @@
 import bnlearn as bn
 model = bn.import_DAG('asia')
 G = bn.plot(model)
-
-
+bn.plot_graphviz(model)
 
 
 # %% Impute categorical values
