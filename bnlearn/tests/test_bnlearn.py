@@ -248,7 +248,7 @@ def test_topological_sort():
 
 
 def test_independence_test():
-    df = bn.import_example(data='asia')
+    df = bn.import_example(data='sprinkler')
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
     # Compute edge weights based on chi_square test statistic
