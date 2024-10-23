@@ -23,6 +23,7 @@ With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the m
    
    # Plot
    G = bn.plot(DAG)
+   bn.plot_graphviz(DAG)
 
 .. _fig-titanic:
 
@@ -148,6 +149,7 @@ From the ``bnlearn`` library, we'll need the :class:`~bnlearn.structure_learning
    import bnlearn as bn
     model = bn.structure_learning.fit(df)
     G = bn.plot(model)
+    dot = bn.plot_graphviz(DAG)
 
 
 .. |logo3| image:: ../figs/fig_sprinkler_sl.png
@@ -201,6 +203,7 @@ Lets learn the structure of a more complex data set and compare it to another on
     model_true = bn.import_DAG('asia')
     # plot ground truth
     G = bn.plot(model_true)
+    dot = bn.plot_graphviz(model_true)
 
 .. _fig2a_asia_groundtruth:
 
