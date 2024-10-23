@@ -40,7 +40,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.10.1'
+__version__ = '0.10.2'
 
 import pgmpy
 # Check version pgmpy
