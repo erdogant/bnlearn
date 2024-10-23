@@ -301,7 +301,7 @@ def test_edge_properties():
         assert model['methodtype'] == methodtype
 
     # Load asia DAG
-    df = bn.import_example(data='asia')
+    df = bn.import_example(data='sprinkler')
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
     edge_properties1 = bn.get_edge_properties(model)
