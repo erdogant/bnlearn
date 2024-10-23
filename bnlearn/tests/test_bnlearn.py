@@ -332,6 +332,6 @@ def test_structure_scores():
     bn.check_model(CPD)
     bn.check_model(model)
 
-    df = bn.import_example('asia')
+    df = bn.import_example('sprinkler')
     model = bn.structure_learning.fit(df)
     assert set([*model['structure_scores'].keys()]) ==  {'bdeu', 'bds', 'bic', 'k2'}
