@@ -1,3 +1,11 @@
+#%%
+import bnlearn as bn
+model = bn.import_DAG('asia')
+G = bn.plot(model)
+
+
+
+
 # %% Impute categorical values
 import bnlearn as bn
 import pandas as pd

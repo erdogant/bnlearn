@@ -1139,7 +1139,7 @@ def plot_graphviz(model,
     if model['adjmat'].sum().sum()==0:
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
         return None
-    if model['config']['method']=='DBN':
+    if model.get('config', {}).get('method') == 'DBN':
         if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
@@ -1286,7 +1286,7 @@ def plot(model,
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
         return None
 
-    if model['config']['method']=='DBN' and interactive:
+    if model.get('config', {}).get('method') == 'DBN' and interactive:
         if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
