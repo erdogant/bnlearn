@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bnlearn"
+dynamic = ["version"]
+authors = [{ name = "Erdogan Taskesen", email = "erdogant@gmail.com" },]
+description = "bnlearn is a Python package for Causal Discovery by learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods."
+readme = "README.md"
+requires-python = ">=3"
+license = { file = "LICENSE" }
+keywords = ["Python", ""]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "pgmpy>=0.1.18",
+    "networkx>=2.7.1",
+    "matplotlib>=3.3.4",
+    "numpy>=1.24.1",
+    "pandas",
+    "tqdm",
+    "ismember",
+    "scikit-learn",
+    "funcsigs",
+    "statsmodels",
+    "python-louvain",
+    "packaging",
+    "df2onehot",
+    "fsspec",
+    "pypickle",
+    "tabulate",
+    "ipywidgets",
+    "datazets",
+    "setgraphviz",
+    "lingam",
+]
+
+[project.urls]
+Homepage = "https://erdogant.github.io/bnlearn"
+Download = "https://github.com/erdogant/bnlearn/archive/{version}.tar.gz"
+
+[tool.setuptools]
+packages = ["bnlearn"]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+version = { attr = "bnlearn.__version__" }
