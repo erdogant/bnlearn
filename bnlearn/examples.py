@@ -350,11 +350,14 @@ q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year':
 
 # %% Get mpg dataset, and manually discritize dataset. Also use distfit for discritizing
 import pandas as pd
-import datazets as ds
+import matplotlib.pyplot as plt
+import bnlearn as bn
 
 df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
                  delim_whitespace=True, header=None,
                  names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+
+# df = bn.import_example(data='auto_mpg')
 
 df.dropna(inplace=True)
 df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
