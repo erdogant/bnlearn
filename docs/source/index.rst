@@ -152,6 +152,11 @@ Contents
   :caption: Examples
 
   Examples
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Use Cases
+
   UseCases
 
 

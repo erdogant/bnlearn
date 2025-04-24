@@ -1,183 +1,172 @@
-``bnlearn`` contains several examples within the library that can be used to practice with the functionalities of :func:`bnlearn.structure_learning`, :func:`bnlearn.parameter_learning` and :func:`bnlearn.inference`.
+Examples
+========
 
+``bnlearn`` contains several examples within the library that can be used to practice with the functionalities of :func:`bnlearn.structure_learning`, :func:`bnlearn.parameter_learning`, and :func:`bnlearn.inference`.
 
-Start with RAW data
-===================
+Working with Raw Data
+=====================
 
-Lets demonstrate by example how to process your own dataset containing mixed variables. I will demonstrate this by the titanic case. This dataset contains both continues as well as categorical variables and can easily imported using :func:`bnlearn.bnlearn.import_example`.
-With the function :func:`bnlearn.bnlearn.df2onehot` it can help to convert the mixed dataset towards a one-hot matrix. The settings are adjustable, but by default the unique non-zero values must be above 80% per variable, and the minimal number of samples must be at least 10 per variable.
-
+Let's demonstrate how to process a dataset containing mixed variables using the Titanic dataset as an example. This dataset contains both continuous and categorical variables and can be easily imported using :func:`bnlearn.bnlearn.import_example`.
+The function :func:`bnlearn.bnlearn.df2onehot` helps convert the mixed dataset into a one-hot matrix. By default, the unique non-zero values must be above 80% per variable, and the minimum number of samples must be at least 10 per variable.
 
 .. code-block:: python
 
-   import bnlearn as bn
-   # Load titanic dataset containing mixed variables
-
-   df_raw = bn.import_example(data='titanic')
-   
-   # Pre-processing of the input dataset
-   dfhot, dfnum = bn.df2onehot(df_raw)
-   
-   # Structure learning
-   DAG = bn.structure_learning.fit(dfnum)
-   
-   # Plot
-   G = bn.plot(DAG)
-   bn.plot_graphviz(DAG)
+    import bnlearn as bn
+    # Load Titanic dataset containing mixed variables
+    df_raw = bn.import_example(data='titanic')
+    
+    # Pre-process the input dataset
+    dfhot, dfnum = bn.df2onehot(df_raw)
+    
+    # Structure learning
+    DAG = bn.structure_learning.fit(dfnum)
+    
+    # Plot
+    G = bn.plot(DAG)
+    bn.plot_graphviz(DAG)
 
 .. _fig-titanic:
 
 .. figure:: ../figs/fig_titanic.png
 
-
-From this point we can learn the parameters using the DAG and input dataframe.
-
-.. code-block:: python
-
-   # Parameter learning
-   model = bn.parameter_learning.fit(DAG, dfnum)
-
-Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive).
+From this point, we can learn the parameters using the DAG and input dataframe:
 
 .. code-block:: python
 
-   # Print CPDs
-   CPDs = bn.print_CPD(model)
-   # Make inference
-   q = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
-   
-   print(q.df)
-   print(q._str())
-   
+    # Parameter learning
+    model = bn.parameter_learning.fit(DAG, dfnum)
+
+Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive):
+
+.. code-block:: python
+
+    # Print CPDs
+    CPDs = bn.print_CPD(model)
+    # Make inference
+    q = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
+    
+    print(q.df)
+    print(q._str())
 
 .. table::
 
-     +-------------+-----------------+
-     | Survived    |   phi(Survived) |
-     +=============+=================+
-     | Survived(0) |          0.3312 |
-     +-------------+-----------------+
-     | Survived(1) |          0.6688 |
-     +-------------+-----------------+
+    +-------------+-----------------+
+    | Survived    |   phi(Survived) |
+    +=============+=================+
+    | Survived(0) |          0.3312 |
+    +-------------+-----------------+
+    | Survived(1) |          0.6688 |
+    +-------------+-----------------+
 
+Structure Learning Example
+---------------------------
 
+.. _examples-structure-learning:
 
-Structure learning
-==================
+A different but straightforward approach to build a DAG from data is to identify independencies in the dataset using hypothesis tests, such as the chi-square test statistic. The p-value of the test and a heuristic flag indicate if the sample size was sufficient. The p-value is the probability of observing the computed chi-square statistic (or an even higher chi-square value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgments at a given significance level.
 
-A different, but quite straightforward approach to build a DAG from data is to identify independencies in the data set using hypothesis tests, such as chi2 test statistic. The p_value of the test, and a heuristic flag that indicates if the sample size was sufficient. The p_value is the probability of observing the computed chi2 statistic (or an even higher chi2 value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgements, at a given level of significance.
-
-
-Example (1)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-   
-   import bnlearn as bn
-   # Load dataframe
-   df = bn.import_example()
-   # Learn structure
-   model = bn.structure_learning.fit(df)
-   # adjacency matrix:
-   model['adjmat']
-
-   # print
-   print(model['adjmat'])
-
-
-Reading the table from left to right we see that Cloudy is connected to Sprinkler and also to Rain in a directed manner.
-Sprinkler is connect to Wet_grass.
-Rain is connected to Wet_grass.
-Wet_grass is connected to nothing.
-
-
-.. table::
-  
-  +-----------+--------+-----------+-------+-----------+
-  |           | Cloudy | Sprinkler | Rain  | Wet_Grass |
-  +===========+========+===========+=======+===========+
-  | Cloudy    | False  | True      | True  | False     |
-  +-----------+--------+-----------+-------+-----------+
-  | Sprinkler | False  | False     | False | True      |
-  +-----------+--------+-----------+-------+-----------+
-  | Rain      | False  | False     | False | True      |
-  +-----------+--------+-----------+-------+-----------+
-  | Wet_Grass | False  | False     | False | False     |
-  +-----------+--------+-----------+-------+-----------+
-
-
-
-Example (2)
-^^^^^^^^^^^
-
-For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the relationships and dependencies across the variables? Note that his data set is already pre-processed and no missing values are present.
-
-
-Let's bring in our dataset.
+Example 1: Basic Structure Learning
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-  import bnlearn as bn
-  df = bn.import_example()
-  df.head()
+    import bnlearn as bn
+    # Load dataframe
+    df = bn.import_example()
+    # Learn structure
+    model = bn.structure_learning.fit(df)
+    # Get adjacency matrix
+    model['adjmat']
 
+    # Print adjacency matrix
+    print(model['adjmat'])
+
+Reading the table from left to right:
+- Cloudy is connected to Sprinkler and Rain in a directed manner
+- Sprinkler is connected to Wet_grass
+- Rain is connected to Wet_grass
+- Wet_grass has no outgoing connections
 
 .. table::
 
-  +--------+-----------+------+-------------+
-  |Cloudy  | Sprinkler | Rain |  Wet_Grass  |
-  +========+===========+======+=============+
-  |    0   |      1    |  0   |      1      |
-  +--------+-----------+------+-------------+
-  |    1   |      1    |  1   |      1      |
-  +--------+-----------+------+-------------+
-  |    1   |      0    |  1   |      1      |
-  +--------+-----------+------+-------------+
-  |    ... |      ...  | ...  |     ...     |
-  +--------+-----------+------+-------------+
-  |    0   |      0    |  0   |      0      |
-  +--------+-----------+------+-------------+
-  |    1   |      0    |  0   |      0      |
-  +--------+-----------+------+-------------+
-  |    1   |      0    |  1   |      1      |
-  +--------+-----------+------+-------------+
+    +-----------+--------+-----------+-------+-----------+
+    |           | Cloudy | Sprinkler | Rain  | Wet_Grass |
+    +===========+========+===========+=======+===========+
+    | Cloudy    | False  | True      | True  | False     |
+    +-----------+--------+-----------+-------+-----------+
+    | Sprinkler | False  | False     | False | True      |
+    +-----------+--------+-----------+-------+-----------+
+    | Rain      | False  | False     | False | True      |
+    +-----------+--------+-----------+-------+-----------+
+    | Wet_Grass | False  | False     | False | False     |
+    +-----------+--------+-----------+-------+-----------+
 
-From the ``bnlearn`` library, we'll need the :class:`~bnlearn.structure_learning.fit` for this exercise:
+Example 2: Sprinkler Dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For this example, we will investigate the sprinkler dataset. This is a simple dataset with 4 variables, where each variable can contain values [1] or [0]. The question we can ask is: What are the relationships and dependencies across the variables? Note that this dataset is already pre-processed and contains no missing values.
+
+Let's load our dataset:
 
 .. code-block:: python
 
-   import bnlearn as bn
+    import bnlearn as bn
+    df = bn.import_example()
+    df.head()
+
+.. table::
+
+    +--------+-----------+------+-------------+
+    |Cloudy  | Sprinkler | Rain |  Wet_Grass  |
+    +========+===========+======+=============+
+    |    0   |      1    |  0   |      1      |
+    +--------+-----------+------+-------------+
+    |    1   |      1    |  1   |      1      |
+    +--------+-----------+------+-------------+
+    |    1   |      0    |  1   |      1      |
+    +--------+-----------+------+-------------+
+    |    ... |      ...  | ...  |     ...     |
+    +--------+-----------+------+-------------+
+    |    0   |      0    |  0   |      0      |
+    +--------+-----------+------+-------------+
+    |    1   |      0    |  0   |      0      |
+    +--------+-----------+------+-------------+
+    |    1   |      0    |  1   |      1      |
+    +--------+-----------+------+-------------+
+
+From the ``bnlearn`` library, we'll use the :class:`~bnlearn.structure_learning.fit` function:
+
+.. code-block:: python
+
+    import bnlearn as bn
     model = bn.structure_learning.fit(df)
     G = bn.plot(model)
     dot = bn.plot_graphviz(DAG)
 
-
 .. |logo3| image:: ../figs/fig_sprinkler_sl.png
     :scale: 60%
 
-.. table:: Learned structure on the Sprinkler data set.
-   :align: center
+.. table:: Learned structure on the Sprinkler dataset
+    :align: center
 
-   +---------+
-   | |logo3| |
-   +---------+
-   
-      
+    +---------+
+    | |logo3| |
+    +---------+
 
-We can specificy the method and scoring type. As described previously, some methods are more expensive to run then others. Make the decision on the number of variables, hardware in your machine, time you are willing to wait etc
+We can specify the method and scoring type. As described previously, some methods are more computationally expensive than others. Choose based on:
+- Number of variables
+- Available hardware
+- Time constraints
 
 **Method types:**
-
-* hillclimbsearch or hc (greedy local search if many more nodes are involved)
+* hillclimbsearch or hc (greedy local search for networks with many nodes)
 * exhaustivesearch or ex (exhaustive search for very small networks)
-* constraintsearch or cs (Constraint-based Structure Learning by first identifing independencies in the data set using hypothesis test, chi2)
+* constraintsearch or cs (Constraint-based Structure Learning using hypothesis tests)
 
 **Scoring types:**
-
-* bic
-* k2
-* bdeu
-
+* bic (Bayesian Information Criterion)
+* k2 (K2 score)
+* bdeu (Bayesian Dirichlet equivalent uniform)
 
 .. code-block:: python
 
@@ -189,19 +178,17 @@ We can specificy the method and scoring type. As described previously, some meth
     model_ex_k2   = bn.structure_learning.fit(df, methodtype='ex', scoretype='k2')
     model_ex_bdeu = bn.structure_learning.fit(df, methodtype='ex', scoretype='bdeu')
 
+Example 3: Asia Dataset
+^^^^^^^^^^^^^^^^^^^^^^^
 
-
-Example (3)
-^^^^^^^^^^^
-
-Lets learn the structure of a more complex data set and compare it to another one.
+Let's learn the structure of a more complex dataset and compare it to another one:
 
 .. code-block:: python
 
     import bnlearn as bn
-    # Load asia DAG
+    # Load Asia DAG
     model_true = bn.import_DAG('asia')
-    # plot ground truth
+    # Plot ground truth
     G = bn.plot(model_true)
     dot = bn.plot_graphviz(model_true)
 
@@ -209,12 +196,11 @@ Lets learn the structure of a more complex data set and compare it to another on
 
 .. figure:: ../figs/fig2a_asia_groundtruth.png
 
-  True DAG of the Asia data set.
+    True DAG of the Asia dataset.
 
-  
 .. code-block:: python
 
-    # Sampling
+    # Generate samples
     df = bn.sampling(model_true, n=10000)
     # Structure learning of sampled dataset
     model_learned = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
@@ -223,8 +209,7 @@ Lets learn the structure of a more complex data set and compare it to another on
 
 .. figure:: ../figs/fig2b_asia_structurelearning.png
 
-  Learned DAG based on data set.
-
+    Learned DAG based on dataset.
 
 .. code-block:: python
 
@@ -238,16 +223,17 @@ Lets learn the structure of a more complex data set and compare it to another on
 .. figure:: ../figs/fig2c_asia_comparion.png
 .. figure:: ../figs/fig2d_confmatrix.png
 
-  Comparison True vs. learned DAG.
+    Comparison of True vs. learned DAG.
 
+Parameter Learning Example
+---------------------------
 
-Parameter learning
-==================
+.. _examples-parameter-learning:
 
 Extracting adjacency matrix after Parameter learning:
 
 .. code-block:: python
-   
+
     import bnlearn as bn
     # Load dataframe
     df = bnlearn.import_example()

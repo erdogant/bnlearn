@@ -1,78 +1,78 @@
-Install from Pypi (pip)
-########################
+Installation
+============
 
-.. code-block:: python
+Install from PyPI (pip)
+-----------------------
+
+The simplest way to install bnlearn is using pip:
+
+.. code-block:: console
 
     pip install bnlearn
 
-   # Force install the latest version by using the -U (update) argument.
-   pip install -U bnlearn
+To force install the latest version, use the -U (update) argument:
 
+.. code-block:: console
 
-Install from github
-#####################################
+    pip install -U bnlearn
 
-.. code-block:: python
+Install from GitHub
+-------------------
+
+To install the latest development version directly from GitHub:
+
+.. code-block:: console
 
     pip install git+https://github.com/erdogant/bnlearn
 
+Create Environment
+------------------
 
-Create environment
-#####################
+For better dependency management, it's recommended to install ``bnlearn`` in an isolated Python environment using conda:
 
-
-If desired, install ``bnlearn`` from an isolated Python environment using conda:
-
-.. code-block:: python
+.. code-block:: console
 
     conda create -n env_bnlearn python=3.10
     conda activate env_bnlearn
-
 
 .. _installation step 1:
 
 .. figure:: ../figs/01_installation.png
 
-  Create environment.
+   Create a new conda environment.
 
-
-Notice the last line. You need to see that your environment is now set as ``bnlearn``. In my case it is as following:
+After activation, your command prompt should show the environment name. For example:
 
 .. code-block:: console
 
    (env_bnlearn) D:\>
 
-
 Uninstall
-###############
+---------
 
-If you want to remove your ``bnlearn`` installation with your environment, it can be as following:
+To remove the ``bnlearn`` installation and its environment:
 
 .. code-block:: console
 
-   # List all the active environments. bnlearn should be listed.
+   # List all active environments
    conda env list
 
    # Remove the bnlearn environment
    conda env remove --name env_bnlearn
 
-   # List all the active environments. *env_bnlearn* should be absent.
+   # Verify removal by listing environments again
    conda env list
 
+Validate Installation
+---------------------
 
-
-
-Validate
-#####################
-
-
-Lets checkout whether it works by a simple example. Start python in your console:
+To verify your installation, start Python in your console:
 
 .. code-block:: console
 
    python
 
-Run the following lines which should result in a figure:
+Then run the following code, which should generate a figure:
 
 .. code-block:: python
 
@@ -81,34 +81,30 @@ Run the following lines which should result in a figure:
    model = bn.structure_learning.fit(df)
    G = bn.plot(model)
 
-
 .. _installation step 4:
 
 .. figure:: ../figs/04_installation.png
 
+Troubleshooting Import Errors
+-----------------------------
 
-
-Import Error
-#####################
-
-If you are using jupyter notebook or colab, you can get a ``numpy`` error because by default, an older version of ``numpy`` is installed.
-
+If you're using Jupyter Notebook or Google Colab, you might encounter a NumPy version compatibility error:
 
 .. code-block:: python
-	
-	# Import
-	import bnlearn as bn
 
-	# The following error occurs
-	RuntimeError : Traceback (most recent call last)
-	RuntimeError: module compiled against API version 0x10 but this version of numpy is 0xf . Check the section C-API incompatibility at the Troubleshooting ImportError section at https://numpy.org/devdocs/user/troubleshooting-importerror.html#c-api-incompatibility for indications on how to solve this problem .
-	ImportError: numpy.core.multiarray failed to import
+    import bnlearn as bn
+    # Error message:
+    RuntimeError: module compiled against API version 0x10 but this version of numpy is 0xf
+    ImportError: numpy.core.multiarray failed to import
 
+This error occurs because ``bnlearn`` requires NumPy version 1.24.1 or higher. To resolve this:
 
-To fix this, you need an installation of *numpy version=>1.24.1* which is installed during the ``bnlearn`` installation.
-However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work. 
-Go to the menu and click **Runtime -> restart runtime**. Now again import bnlearn, and it should work.
-
+1. To fix this, you need an installation of *numpy version=>1.24.1* which is installed during the ``bnlearn`` installation.
+   However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work. 
+2. If using Colab or Jupyter Notebook:
+   - Go to the menu
+   - Click **Runtime -> Restart runtime**
+   - Re-import bnlearn
 
 
 .. include:: add_bottom.add

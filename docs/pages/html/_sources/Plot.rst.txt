@@ -1,181 +1,191 @@
-Interactive plot
-=================
+Plotting
+=========================================
 
-``bnlearn`` contains **interactive** and **static** plotting functionalities with :func:`bnlearn.bnlearn.plot` for which many network and figure properties can be adjusted, such as node colors and sizes. 
-To make interactive plots, it simply needs to set the ``interactive=True`` parameter in :func:`bnlearn.bnlearn.plot`. 
-The interactive plots are created using the ``D3Blocks`` library for which various input parameters can be specified. The static plots are created using matplotlib and networkx.
-Lets make some interactive and static examples. 
+``bnlearn`` provides both **interactive** and **static** plotting capabilities through the :func:`bnlearn.bnlearn.plot` function. These visualization tools allow for extensive customization of network and figure properties, including node colors, sizes, and layout configurations. Interactive plots are created using the ``D3Blocks`` library, while static plots utilize matplotlib and networkx.
 
-**Interactive plot examples**
+Interactive Plotting
+----------------------------------------
+
+Prerequisites
+^^^^^^^^^^^^^
+
+Before creating interactive plots, you need to install the ``d3blocks`` library:
 
 .. code-block:: bash
 
-   # Install the d3blocks library first if you want interactive plots
    pip install d3blocks
 
+Basic Usage
+^^^^^^^^^^^
+
+The simplest way to create an interactive plot is by setting ``interactive=True`` in the plot function:
 
 .. code-block:: python
     
-   # Example of interactive plotting
    import bnlearn as bn
 
    # Load example dataset
    df = bn.import_example(data='asia')
 
-   # Structure learning
+   # Learn the network structure
    model = bn.structure_learning.fit(df)
 
-   # Make interactive plot with default settings
+   # Create interactive plot with default settings
    bn.plot(model, interactive=True)
 
-   # Add more parameters for the interactive plot
-   bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
-
-
+   # Customize the interactive plot with specific parameters
+   bn.plot(model, 
+          interactive=True, 
+          params_interactive={
+              'height': '800px',
+              'width': '70%',
+              'layout': None,
+              'bgcolor': '#0f0f0f0f'
+          })
 
 .. raw:: html
 
    <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe>
 
+Customizing Node Properties
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**Create interactive plots with a specific node-color and node-sizes across the entire network.**
+You can customize the appearance of nodes in several ways:
 
-Note that all the results below can be interactive as the graph above. But for demonstration purposes I created a screenshot.
+1. **Uniform Node Properties**:
+   Apply the same color and size to all nodes in the network:
 
 .. code-block:: python
 
-   # Set the node color
+   # Set uniform node color
    bn.plot(model, interactive=True, node_color='#8A0707')
-   # Set the node color and node size
+   
+   # Set uniform node color and size
    bn.plot(model, interactive=True, node_color='#8A0707', node_size=25)
-
 
 .. |figIP1| image:: ../figs/_fig-plot_interactive_simple_color.png
 .. |figIP2| image:: ../figs/_fig-plot_interactive_simple_color_size.png
 
-.. table:: Plot with node-colors
+.. table:: Examples of uniform node customization
    :align: center
 
    +----------+----------+
    | |figIP1| | |figIP2| |
    +----------+----------+
 
-
-
-**Create interactive plots with user-defined node-colors and node-sizes.**
+2. **Individual Node Properties**:
+   Customize specific nodes with different colors and sizes:
 
 .. code-block:: python
 
-    # First retrieve node properties
+    # Retrieve current node properties
     node_properties = bn.get_node_properties(model)
 
-    # Make some changes
-    node_properties['xray']['node_color']='#8A0707'
-    node_properties['xray']['node_size']=50
-    node_properties['smoke']['node_color']='#000000'
-    node_properties['smoke']['node_size']=35
+    # Customize specific nodes
+    node_properties['xray']['node_color'] = '#8A0707'
+    node_properties['xray']['node_size'] = 50
+    node_properties['smoke']['node_color'] = '#000000'
+    node_properties['smoke']['node_size'] = 35
 
-    # Make plot with the specified node properties
+    # Create plot with customized node properties
     bn.plot(model, node_properties=node_properties, interactive=True)
-
 
 .. |figIP3| image:: ../figs/_fig-plot_interactive_user_colors.png
 
-.. table:: Plot with user defined node colors and node sizes.
+.. table:: Example of individual node customization
    :align: center
 
    +----------+
    | |figIP3| |
    +----------+
 
+Static Plotting
+----------------------------------------
 
+Networkx Static Plots
+^^^^^^^^^^^^^^^^^^^^^
 
-**The ``params_interactive`` parameter allows you to adjust more figure properties.**
-
-.. code-block:: python
-
-    bn.plot(model, interactive=True, params_interactive = {'height':'800px', 'width':'70%', 'layout':None, 'bgcolor':'#0f0f0f0f'})
-
-
-Static plot (networkx)
-======================
-
-To create static plots simply set the ``interactive=False`` in all the above examples. The only difference is in ``params_static`` for which the dict contains more variables that adjust the figure properties.
+Networkx provides a flexible way to create static network visualizations:
 
 .. code-block:: python
 
-    # Add parameters for the static plot
-    # bn.plot(model, interactive=False, params_static = {'width':15, 'height':8, 'font_size':14, 'font_family':'times new roman', 'alpha':0.8, 'node_shape':'o', 'facecolor':'white', 'font_color':'#000000'})
-    bn.plot(model)
-
+    # Create basic static plot
+    bn.plot(model, interactive=False)
+    
+    # Customize static plot with specific parameters
+    bn.plot(model, 
+           interactive=False, 
+           params_static={
+               'width': 15,
+               'height': 8,
+               'font_size': 14,
+               'font_family': 'times new roman',
+               'alpha': 0.8,
+               'node_shape': 'o',
+               'facecolor': 'white',
+               'font_color': '#000000'
+           })
 
 .. |figIP7| image:: ../figs/asia_networkx.png
 
-.. table:: Plot with GraphViz
+.. table:: Example of a networkx static plot
    :align: center
 
    +----------+
    | |figIP7| |
    +----------+
 
+Graphviz Static Plots
+^^^^^^^^^^^^^^^^^^^^^
 
-
-Static plot (graphviz)
-======================
-
-By using graphviz we can plot DAGs that look very structured.
+Graphviz provides a more structured and hierarchical visualization style:
 
 .. code-block:: python
 
-    # Add parameters for the static plot
+    # Create graphviz plot
     bn.plot_graphviz(model)
-
 
 .. |figIP6| image:: ../figs/asia_graphviz.png
 
-.. table:: Plot with GraphViz
+.. table:: Example of a graphviz static plot
    :align: center
 
    +----------+
    | |figIP6| |
    +----------+
 
+Network Comparison
+----------------------------------------
 
-
-
-Comparison of two networks
-==================================
-
-In come cases you may derive two networks where you need to know the differences. In the following example I will learn a network using structure learning and compare it to the ground truth.
+The library provides tools to compare different networks, which is particularly useful when comparing learned structures against ground truth or different learning methods:
 
 .. code-block:: python
 
-   # Load asia DAG
+   # Load ground truth network
    model = bn.import_DAG('asia')
 
-   # plot ground truth
+   # Plot ground truth
    G = bn.plot(model)
    
-   # Sampling
+   # Generate synthetic data
    df = bn.sampling(model, n=10000)
    
-   # Structure learning of sampled dataset
+   # Learn structure from data
    model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
    
-   # Compute edge strength with the chi_square test statistic
+   # Compute edge strengths
    model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
    
-   # Plot based on structure learning of sampled data
+   # Plot learned structure
    bn.plot(model_sl, pos=G['pos'])
    
-   # Compare networks and make plot
+   # Compare networks
    bn.compare_networks(model, model_sl, pos=G['pos'])
-
 
 .. |fig_cn1| image:: ../figs/fig2a_asia_groundtruth.png
 .. |fig_cn2| image:: ../figs/fig2b_asia_structurelearning.png
 
-.. table:: Asia ground truth network versus the learned network.
+.. table:: Comparison of ground truth and learned networks
    :align: center
 
    +----------+
@@ -184,11 +194,10 @@ In come cases you may derive two networks where you need to know the differences
    | |fig_cn2||
    +----------+
 
-
 .. |fig_cn3| image:: ../figs/fig2c_asia_comparion.png
 .. |fig_cn4| image:: ../figs/fig2d_confmatrix.png
 
-.. table:: Differences in het edges.
+.. table:: Detailed comparison showing edge differences
    :align: center
 
    +----------+
@@ -197,50 +206,46 @@ In come cases you may derive two networks where you need to know the differences
    | |fig_cn4||
    +----------+
 
-Node properties
-=================
+Advanced Customization
+----------------------------------------
 
-Edge properties can easily be changed using the :func:`bnlearn.bnlearn.get_node_properties` function.
-Note that these functionalities can be combined with the edge properties.
+Node Properties
+^^^^^^^^^^^^^^^
+
+Node properties can be customized using the :func:`bnlearn.bnlearn.get_node_properties` function:
 
 .. code-block:: python
 
     import bnlearn as bn
-    # Load asia DAG
+    # Load example data
     df = bn.import_example(data='asia')
-    # Structure learning of sampled dataset
+    # Learn structure
     model = bn.structure_learning.fit(df)
-    # plot static
-    G = bn.plot(model)
-    
-    # Set node properties
+    # Get current node properties
     node_properties = bn.get_node_properties(model)
 
-    # Make some changes
-    node_properties['xray']['node_color']='#8A0707'
-    node_properties['xray']['node_size']=2000
-    node_properties['smoke']['node_color']='#000000'
-    node_properties['smoke']['node_size']=2000
+    # Customize specific nodes
+    node_properties['xray']['node_color'] = '#8A0707'
+    node_properties['xray']['node_size'] = 2000
+    node_properties['smoke']['node_color'] = '#000000'
+    node_properties['smoke']['node_size'] = 2000
 
-    # Make plot with the specified node properties
+    # Create plot with customized nodes
     bn.plot(model, node_properties=node_properties, interactive=False)
-
 
 .. |figIP4| image:: ../figs/node_properties_1.png
 
-.. table:: Plot with user defined node properties.
+.. table:: Example of advanced node customization
    :align: center
 
    +----------+
    | |figIP4| |
    +----------+
 
+Edge Properties
+^^^^^^^^^^^^^^^
 
-Edge properties
-=================
-
-Edge properties can easily be changed using the :func:`bnlearn.bnlearn.get_edge_properties` function.
-Note that these functionalities can be combined with the node properties.
+Edge properties can be customized using the :func:`bnlearn.bnlearn.get_edge_properties` function. These customizations can be combined with node properties for comprehensive network visualization.
 
 .. code-block:: python
 
@@ -268,18 +273,13 @@ Note that these functionalities can be combined with the node properties.
     params_static={'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60}
     bn.plot(model, interactive=False, edge_properties=edge_properties, params_static=params_static)
 
-
-
 .. |figIP5| image:: ../figs/edge_properties_1.png
 
-.. table:: Plot with user defined edge properties.
+.. table:: Plot with user defined edge properties
    :align: center
 
    +----------+
    | |figIP5| |
    +----------+
-
-
-
 
 .. include:: add_bottom.add

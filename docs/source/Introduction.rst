@@ -22,7 +22,7 @@ The library supports parameter learning for *discrete* nodes using:
 * Conversion of directed to undirected graphs
 
 Structure Learning Algorithms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ``bnlearn`` contains **score-based**, **local discovery**, **Bayesian network**, and **constraint-based** structure learning algorithms for *discrete*, *fully observed* networks.
 
 **Score-based approaches consist of two main components**:
@@ -35,7 +35,7 @@ Score-based algorithms can be used with the following score functions for catego
    * Score equivalent Dirichlet posterior density (BDeu)
 
 Constraint-based Structure Learning Algorithms
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Constraint-based structure learning constructs a DAG by identifying independencies in the dataset using hypothesis tests, such as the chi-square test statistic.
 This approach relies on statistical tests and conditional hypotheses to learn independence among the variables in the model.

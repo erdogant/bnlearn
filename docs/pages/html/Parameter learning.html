@@ -51,19 +51,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html">Install from Pypi (pip)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#install-from-github">Install from github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-manually">Discretize manually</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-probability-density">Discretize Automatically: Probability Density</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-principled-bayesian">Discretize Automatically: Principled Bayesian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -77,12 +72,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#examples-parameter-learning">Examples Parameter learning</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#example-1">Example (1)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-2">Example (2)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Parameter learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#parameter-learning-examples">Parameter Learning Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-1-sprinkler-dataset">Example 1: Sprinkler Dataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-2-asia-dataset">Example 2: Asia Dataset</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
@@ -108,12 +105,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-networkx">Static plot (networkx)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-graphviz">Static plot (graphviz)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul>
@@ -131,12 +123,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Start with RAW data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
@@ -148,13 +142,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -185,47 +173,30 @@
              
   <section id="parameter-learning">
 <h1>Parameter learning<a class="headerlink" href="#parameter-learning" title="Link to this heading"></a></h1>
-<p>Parameter learning is the task to estimate the values of the conditional probability distributions (CPDs).
-To make sense of the given data, we can start by counting how often each state of the variable occurs.
-If the variable is dependent on the parents, the counts are done conditionally on the parents states,
-i.e. for seperately for each parent configuration.</p>
-<p>Currently, the library supports Parameter learning for <em>discrete</em> nodes:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>Maximum Likelihood Estimation</p></li>
+<p>Parameter learning is the task of estimating the values of Conditional Probability Distributions (CPDs). This process involves analyzing the frequency of variable states in the data. When variables are dependent on parent nodes, these counts are performed conditionally for each parent configuration.</p>
+<p>Currently, the library supports parameter learning for <em>discrete</em> nodes using two main approaches:</p>
+<ol class="arabic simple">
+<li><p>Maximum Likelihood Estimation (MLE)</p></li>
 <li><p>Bayesian Estimation</p></li>
-</ul>
-</div></blockquote>
-</section>
+</ol>
 <section id="maximum-likelihood-estimation">
-<h1>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading"></a></h1>
-<p>A natural estimate for the CPDs is to simply use the <em>relative frequencies</em>, with which the variable states have occured.</p>
-<p>While very straightforward, the ML estimator has the problem of <em>overfitting</em> to the data.
-If the observed data is not representative for the underlying distribution, ML estimations will be extremly far off.
-When estimating parameters for Bayesian networks, lack of data is a frequent problem.
-Even if the total sample size is very large, the fact that state counts are done conditionally for each parents configuration causes immense fragmentation.
-If a variable has 3 parents that can each take 10 states, then state counts will be done seperately for <cite>10^3 = 1000</cite> parents configurations.
-This makes MLE very fragile and unstable for learning Bayesian Network parameters.
-A way to mitigate MLE’s overfitting is <em>Bayesian Parameter Estimation</em>.</p>
+<h2>Maximum Likelihood Estimation<a class="headerlink" href="#maximum-likelihood-estimation" title="Link to this heading"></a></h2>
+<p>MLE estimates the parameters by maximizing the likelihood of the observed data. However, it can overfit the data, especially when dealing with small datasets.</p>
+<p>While very straightforward, the ML estimator has the problem of <em>overfitting</em> to the data. If the observed data is not representative for the underlying distribution, ML estimations will be extremely far off. When estimating parameters for Bayesian networks, lack of data is a frequent problem. Even if the total sample size is very large, the fact that state counts are done conditionally for each parents configuration causes immense fragmentation. If a variable has 3 parents that can each take 10 states, then state counts will be done separately for <cite>10^3 = 1000</cite> parents configurations. This makes MLE very fragile and unstable for learning Bayesian Network parameters. A way to mitigate MLE’s overfitting is <em>Bayesian Parameter Estimation</em>.</p>
 </section>
 <section id="bayesian-parameter-estimation">
-<h1>Bayesian Parameter Estimation<a class="headerlink" href="#bayesian-parameter-estimation" title="Link to this heading"></a></h1>
-<p>The Bayesian Parameter Estimator starts with already existing prior CPDs, that express our beliefs about the variables <em>before</em> the data was observed.
-Those “priors” are then updated, using the state counts from the observed data.</p>
-<p>One can think of the priors as consisting in <em>pseudo state counts</em>, that are added to the actual counts before normalization. Unless one wants to encode specific beliefs
-about the distributions of the variables, one commonly chooses uniform priors, i.e. ones that deem all states equiprobable.</p>
-<p>A very simple prior is the so-called <em>K2</em> prior, which simply adds “1” to the count of every single state.
-A somewhat more sensible choice of prior is <em>BDeu</em> (Bayesian Dirichlet equivalent uniform prior).
-For BDeu we need to specify an <em>equivalent sample size</em> “N” and then the pseudo-counts are the equivalent of having observed <cite>N</cite> uniform samples of each variable (and each parent configuration).</p>
+<h2>Bayesian Parameter Estimation<a class="headerlink" href="#bayesian-parameter-estimation" title="Link to this heading"></a></h2>
+<p>Bayesian Parameter Estimation incorporates prior beliefs about the distributions of variables. This helps prevent overfitting and provides more robust parameter estimates.</p>
+<p>One can think of the priors as consisting in <em>pseudo state counts</em>, that are added to the actual counts before normalization. Unless one wants to encode specific beliefs about the distributions of the variables, one commonly chooses uniform priors, i.e. ones that deem all states equiprobable.</p>
+<p>A very simple prior is the so-called <em>K2</em> prior, which simply adds “1” to the count of every single state. A somewhat more sensible choice of prior is <em>BDeu</em> (Bayesian Dirichlet equivalent uniform prior). For BDeu we need to specify an <em>equivalent sample size</em> “N” and then the pseudo-counts are the equivalent of having observed <cite>N</cite> uniform samples of each variable (and each parent configuration).</p>
 </section>
-<section id="examples-parameter-learning">
-<h1>Examples Parameter learning<a class="headerlink" href="#examples-parameter-learning" title="Link to this heading"></a></h1>
-<section id="example-1">
-<h2>Example (1)<a class="headerlink" href="#example-1" title="Link to this heading"></a></h2>
-<p>For this example, we will be investigating the sprinkler data set. This is a very simple data set with 4 variables and each variable can contain value [1] or [0].
-The question we can ask: What are the parameters for the DAG given a dataset? Note that his data set is already pre-processed and no missing values are present.
-We need both a directed acycle graph (DAG) and dataset with the same variables. The idea is to link the dataset with the DAG.</p>
-<p>Let’s bring in our dataset.</p>
+</section>
+<section id="parameter-learning-examples">
+<h1>Parameter Learning Examples<a class="headerlink" href="#parameter-learning-examples" title="Link to this heading"></a></h1>
+<section id="example-1-sprinkler-dataset">
+<h2>Example 1: Sprinkler Dataset<a class="headerlink" href="#example-1-sprinkler-dataset" title="Link to this heading"></a></h2>
+<p>For this example, we will be investigating the sprinkler dataset. This is a very simple dataset with 4 variables and each variable can contain value [1] or [0]. The question we can ask: What are the parameters for the DAG given a dataset? Note that this dataset is already pre-processed and no missing values are present. We need both a directed acyclic graph (DAG) and dataset with the same variables. The idea is to link the dataset with the DAG.</p>
+<p>Let’s bring in our dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -277,6 +248,7 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </tr>
 </tbody>
 </table>
+<p>Next, we import the DAG structure:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
@@ -317,21 +289,21 @@ We need both a directed acycle graph (DAG) and dataset with the same variables. 
 </tr>
 </tbody>
 </table>
+<p>Visualize the DAG:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
 <figure class="align-default" id="id1">
 <span id="fig-pl"></span><img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
 <figcaption>
-<p><span class="caption-text">DAG of the Sprinkler data set.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+<p><span class="caption-text">DAG of the Sprinkler dataset.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>Suppose we observed <strong>N</strong> “cloudy” occurences among a total of “all clouds”, so we might guess that about “50%” of “cloudy” are “sprinkler” or so.
-According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal. This is achieved when using the <em>relative frequencies</em>.
-From the <em>bnlearn</em> library, we’ll need the <a class="reference internal" href="bnlearn.parameter_learning.html#bnlearn.parameter_learning.fit" title="bnlearn.parameter_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> for this exercise:</p>
+<p>Suppose we observed <strong>N</strong> “cloudy” occurrences among a total of “all clouds”, so we might guess that about “50%” of “cloudy” are “sprinkler” or so. According to MLE, we should fill the CPDs in such a way, that P(data|model) is maximal. This is achieved when using the <em>relative frequencies</em>. From the <em>bnlearn</em> library, we’ll need the <a class="reference internal" href="bnlearn.parameter_learning.html#bnlearn.parameter_learning.fit" title="bnlearn.parameter_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> for this exercise:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG_update</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The learned CPDs are:</p>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
 <thead>
@@ -416,12 +388,11 @@ From the <em>bnlearn</em> library, we’ll need the <a class="reference internal
 </table>
 </dd>
 </dl>
-<p>Great! We have the probabilities! Lets check how much they differ from the truth.
-In general it can be seen that the estimated values are not very close at every point to the true values.
-The main reason is because the dataframe only contains 1000 samples.</p>
+<p>Great! We have the probabilities! Let’s check how much they differ from the truth. In general it can be seen that the estimated values are not very close at every point to the true values. The main reason is because the dataframe only contains 1000 samples.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG_true</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>True CPDs:</p>
 <dl>
 <dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
 <tbody>
@@ -498,20 +469,19 @@ The main reason is because the dataframe only contains 1000 samples.</p>
 </table>
 </dd>
 </dl>
-<p>Lets generate more samples and learn again the parameters. You will see that these results are much closer to the true values.</p>
+<p>Let’s generate more samples and learn again the parameters. You will see that these results are much closer to the true values.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
 <span class="n">DAG_update</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="example-2">
-<h2>Example (2)<a class="headerlink" href="#example-2" title="Link to this heading"></a></h2>
-<p>Lets try out a more complexer model. We need both a directed acycle graph (DAG) and dataset with the same variables.
-So again, the idea is to link the dataset with the DAG.</p>
-<p>Let’s bring in the <strong>asia</strong> dataset.</p>
+<section id="example-2-asia-dataset">
+<h2>Example 2: Asia Dataset<a class="headerlink" href="#example-2-asia-dataset" title="Link to this heading"></a></h2>
+<p>Let’s try out a more complex model. We need both a directed acyclic graph (DAG) and dataset with the same variables. So again, the idea is to link the dataset with the DAG.</p>
+<p>Let’s bring in the <strong>asia</strong> dataset:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span>
 
-<span class="c1"># Load asia data set</span>
+<span class="c1"># Load asia dataset</span>
 <span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 <span class="c1"># Plot</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
@@ -520,7 +490,7 @@ So again, the idea is to link the dataset with the DAG.</p>
 <figure class="align-default" id="id2">
 <img alt="_images/fig2a_asia_groundtruth.png" src="_images/fig2a_asia_groundtruth.png" />
 <figcaption>
-<p><span class="caption-text">DAG of the Asia data set.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+<p><span class="caption-text">DAG of the Asia dataset.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate samples</span>
@@ -685,8 +655,7 @@ So again, the idea is to link the dataset with the DAG.</p>
 </section>
 <section id="conditional-probability-distributions-cpd">
 <h1>Conditional Probability Distributions (CPD)<a class="headerlink" href="#conditional-probability-distributions-cpd" title="Link to this heading"></a></h1>
-<p>The <strong>Conditional Probabilistic Tables (CPTs)</strong> or Conditional Probability Distributions (CPD) quantitatively describe the statistical relationship between each node and its parents, and can be computed using Parameter learning as shown in the examples.
-In the following example I will show how to extract the CPDs from a model.</p>
+<p>The <strong>Conditional Probabilistic Tables (CPTs)</strong> or Conditional Probability Distributions (CPD) quantitatively describe the statistical relationship between each node and its parents, and can be computed using Parameter learning as shown in the examples. In the following example I will show how to extract the CPDs from a model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 

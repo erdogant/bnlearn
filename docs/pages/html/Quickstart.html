@@ -20,7 +20,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Install from Pypi (pip)" href="Installation.html" />
+    <link rel="next" title="Installation" href="Installation.html" />
     <link rel="prev" title="Introduction" href="Introduction.html" /> 
 </head>
 
@@ -48,26 +48,23 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation-short">Installation (short)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#quick-examples">Quick Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#quick-examples">Quick Examples</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html">Install from Pypi (pip)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#install-from-github">Install from github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-manually">Discretize manually</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-probability-density">Discretize Automatically: Probability Density</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-principled-bayesian">Discretize Automatically: Principled Bayesian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -82,9 +79,7 @@
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#examples-parameter-learning">Examples Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Inference</span></p>
@@ -108,12 +103,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-networkx">Static plot (networkx)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-graphviz">Static plot (graphviz)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul>
@@ -131,12 +121,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Start with RAW data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
@@ -148,13 +140,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -185,45 +171,56 @@
              
   <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h1>
-<section id="installation-short">
-<h2>Installation (short)<a class="headerlink" href="#installation-short" title="Link to this heading"></a></h2>
-<p>Installation of bnlearn is straightforward.
-It is advisable to create a new environment.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p id="quickstart-installation">Installing bnlearn is straightforward.
+It is recommended to create a new environment for the installation.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">conda create -n env_bnlearn python=3.8</span>
 <span class="go">conda activate env_bnlearn</span>
 <span class="go">pip install bnlearn</span>
 </pre></div>
 </div>
-</section>
 <section id="quick-examples">
-<h2>Quick Examples<a class="headerlink" href="#quick-examples" title="Link to this heading"></a></h2>
-<p>Let’s start by importing some data. We need a DAG and CPD.</p>
+<h3>Quick Examples<a class="headerlink" href="#quick-examples" title="Link to this heading"></a></h3>
+<p>Let’s start by importing some data. We need a DAG and CPD (Conditional Probability Distribution).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
+<span class="c1"># Import example dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 
+<span class="c1"># Learn the structure from data</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
+<span class="c1"># Perform independence tests</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 
+<span class="c1"># Visualize the network</span>
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Here’s another example demonstrating a complete workflow:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
+<span class="c1"># Import a predefined DAG (Sprinkler network)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
 
+<span class="c1"># Import example dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
 
+<span class="c1"># Generate samples from the model</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
+<span class="c1"># Perform inference</span>
 <span class="n">query</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
 
+<span class="c1"># Learn structure from data</span>
 <span class="n">model_sl</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
+<span class="c1"># Learn parameters</span>
 <span class="n">model_pl</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 
+<span class="c1"># Compare networks</span>
 <span class="n">scores</span><span class="p">,</span> <span class="n">adjmat</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -236,13 +233,14 @@ It is advisable to create a new environment.</p>
 </center>
 <hr></section>
 </section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="Introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Installation.html" class="btn btn-neutral float-right" title="Install from Pypi (pip)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

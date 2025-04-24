@@ -51,19 +51,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html">Install from Pypi (pip)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#install-from-github">Install from github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#create-environment">Create environment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#uninstall">Uninstall</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#validate">Validate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Installation.html#import-error">Import Error</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-manually">Discretize manually</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-probability-density">Discretize Automatically: Probability Density</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#discretize-automatically-principled-bayesian">Discretize Automatically: Principled Bayesian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
 <ul>
@@ -78,9 +73,7 @@
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#maximum-likelihood-estimation">Maximum Likelihood Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#bayesian-parameter-estimation">Bayesian Parameter Estimation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#examples-parameter-learning">Examples Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Inference</span></p>
@@ -92,10 +85,13 @@
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Modelling Continuous Datasets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#toy-example">Toy Example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC Method</a></li>
 </ul>
 </li>
 </ul>
@@ -110,12 +106,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html">Interactive plot</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-networkx">Static plot (networkx)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#static-plot-graphviz">Static plot (graphviz)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#comparison-of-two-networks">Comparison of two networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#node-properties">Node properties</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Plot.html#edge-properties">Edge properties</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
 <ul>
@@ -133,12 +124,14 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html">Start with RAW data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#structure-learning">Structure learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Examples.html#parameter-learning">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Use Case Titanic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-medical-domain">Use Case Medical domain</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
 <li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
@@ -150,13 +143,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Sponsor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#medium-blog">Medium Blog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#github">Github</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#colab-notebook">Colab Notebook</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#citing">Citing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#references">References</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Documentation.html#related-packages">Related Packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -187,31 +174,17 @@
              
   <section id="modelling-continuous-datasets">
 <h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
-<p>Learning Bayesian Networks from continuous data is a challanging task.
-There are different manner on how to work with continuous and/or hybrid datasets. Each manner has their own advantages and disadvantages.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> the following options are available to work with continuous datasets:</p>
-<ul class="simple">
-<li><ol class="arabic simple">
-<li><p>Discretize continuous datasets manually using domain knowledge.</p></li>
+<p>Learning Bayesian Networks from continuous data is a challenging task. There are different approaches to working with continuous and/or hybrid datasets, each with its own advantages and disadvantages.</p>
+<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, the following options are available to work with continuous datasets:</p>
+<ol class="arabic simple">
+<li><p>Discretize continuous datasets manually using domain knowledge</p></li>
+<li><p>Discretize continuous datasets using probability density fitting</p></li>
+<li><p>Discretize continuous datasets using a principled Bayesian discretization method</p></li>
+<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships</p></li>
 </ol>
-</li>
-<li><ol class="arabic simple" start="2">
-<li><p>Discretize continuous datasets using a probability density fitting.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="3">
-<li><p>Discretize continuous datasets using a principled Bayesian discretization method.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="4">
-<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes a linear relationships.</p></li>
-</ol>
-</li>
-</ul>
 <section id="lingam-based-methods">
 <h2>LiNGAM-based Methods<a class="headerlink" href="#lingam-based-methods" title="Link to this heading"></a></h2>
-<p>Bnlearn includes LiNGAM-based methods which do the estimation of Linear, Non-Gaussian Acyclic Model from observed data. It assumes non-Gaussianity of the noise terms in the causal model.
-Various methods are developed and published for which Bnlearn includes two methods: ICA-based LiNGAM <a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, DirectLiNGAM <a class="footnote-reference brackets" href="#id7" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The following three are not included VAR-LiNGAM <a class="footnote-reference brackets" href="#id8" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, RCD <a class="footnote-reference brackets" href="#id9" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, and CAM-UV <a class="footnote-reference brackets" href="#id10" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
+<p>Bnlearn includes LiNGAM-based methods which estimate Linear, Non-Gaussian Acyclic Models from observed data. These methods assume non-Gaussianity of the noise terms in the causal model. Various methods have been developed and published, of which Bnlearn includes two: ICA-based LiNGAM <a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and DirectLiNGAM <a class="footnote-reference brackets" href="#id7" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The following three methods are not included: VAR-LiNGAM <a class="footnote-reference brackets" href="#id8" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, RCD <a class="footnote-reference brackets" href="#id9" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, and CAM-UV <a class="footnote-reference brackets" href="#id10" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id6" role="doc-footnote">
 <span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
@@ -234,19 +207,16 @@ Various methods are developed and published for which Bnlearn includes two metho
 <p>Maeda, T. N., &amp; Shimizu, S. (2021). Causal Additive Models with Unobserved Variables. UAI.</p>
 </aside>
 </aside>
-<p>To demonstrate how the LiNGAM works, it is best to do it with a small toy example. Let’s create test data containing six variables.</p>
-<p>The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables.
-All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution.
-If the number of samples is much smaller, say in the tens, the method becomes less reliable due to insufficient information to determine causality.</p>
-<p>We will establish dependencies between variables and then allow the model to infer the original values.</p>
-<blockquote>
-<div><ol class="arabic simple">
+<section id="toy-example">
+<h3>Toy Example<a class="headerlink" href="#toy-example" title="Link to this heading"></a></h3>
+<p>To demonstrate how LiNGAM works, let’s create a small toy example with six variables. The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables. All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution. If the number of samples is much smaller (e.g., in the tens), the method becomes less reliable due to insufficient information to determine causality.</p>
+<p>We will establish dependencies between variables and then allow the model to infer the original values:</p>
+<ol class="arabic simple">
 <li><p>Step 1: <code class="docutils literal notranslate"><span class="pre">x3</span></code> is the root node and is initialized with a uniform distribution.</p></li>
 <li><p>Step 2: <code class="docutils literal notranslate"><span class="pre">x0</span></code> and <code class="docutils literal notranslate"><span class="pre">x2</span></code> are created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x3</span></code>, making them dependent on <code class="docutils literal notranslate"><span class="pre">x3</span></code>.</p></li>
 <li><p>Step 3: <code class="docutils literal notranslate"><span class="pre">x5</span></code> is created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x0</span></code>, making it dependent on <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
 <li><p>Step 4: <code class="docutils literal notranslate"><span class="pre">x1</span></code> and <code class="docutils literal notranslate"><span class="pre">x4</span></code> are created by multiplying with the values of <code class="docutils literal notranslate"><span class="pre">x0</span></code>, making them dependent on <code class="docutils literal notranslate"><span class="pre">x0</span></code>.</p></li>
 </ol>
-</div></blockquote>
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig8a" src="_images/fig_lingam_example_input.png" /></p></td>
@@ -258,36 +228,43 @@ If the number of samples is much smaller, say in the tens, the method becomes le
 <span class="kn">from</span><span class="w"> </span><span class="nn">lingam.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_dot</span>
 
 <span class="c1"># Number of samples</span>
-<span class="n">n</span><span class="o">=</span><span class="mi">1000</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>
 
-<span class="c1"># step 1</span>
+<span class="c1"># Step 1: Initialize root node</span>
 <span class="n">x3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="c1"># step 2</span>
-<span class="n">x0</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="n">x2</span> <span class="o">=</span> <span class="mf">6.0</span><span class="o">*</span><span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="c1"># step 3</span>
-<span class="n">x5</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="c1"># step 4</span>
-<span class="n">x1</span> <span class="o">=</span> <span class="mf">3.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">+</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="n">x4</span> <span class="o">=</span> <span class="mf">8.0</span><span class="o">*</span><span class="n">x0</span> <span class="o">-</span> <span class="mf">1.0</span><span class="o">*</span><span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">])</span><span class="o">.</span><span class="n">T</span> <span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">])</span>
+
+<span class="c1"># Step 2: Create dependent variables</span>
+<span class="n">x0</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x2</span> <span class="o">=</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">x3</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Step 3: Create further dependencies</span>
+<span class="n">x5</span> <span class="o">=</span> <span class="mf">4.0</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Step 4: Create final dependencies</span>
+<span class="n">x1</span> <span class="o">=</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">x4</span> <span class="o">=</span> <span class="mf">8.0</span> <span class="o">*</span> <span class="n">x0</span> <span class="o">-</span> <span class="mf">1.0</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Create DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x0</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">,</span> <span class="n">x5</span><span class="p">])</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                 <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="s1">&#39;x4&#39;</span><span class="p">,</span> <span class="s1">&#39;x5&#39;</span><span class="p">])</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 
+<span class="c1"># Define adjacency matrix</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-         <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-         <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-         <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
+             <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+             <span class="p">[</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]])</span>
 <span class="n">dot</span> <span class="o">=</span> <span class="n">make_dot</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 <span class="n">dot</span>
 </pre></div>
 </div>
-<p>Structure learning can be applied with the direct-lingam method for fitting.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
+<p>Structure learning can be applied with the direct-lingam method for fitting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit the model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
 
-<span class="c1"># When we no look at the output, we can see that the dependency values are very well recovered for the various variables.</span>
-
+<span class="c1"># Examine the output to see how well the dependency values are recovered</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
 <span class="c1"># target        x0        x1       x2   x3        x4       x5</span>
 <span class="c1"># source</span>
@@ -297,9 +274,11 @@ If the number of samples is much smaller, say in the tens, the method becomes le
 <span class="c1"># x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000</span>
 <span class="c1"># x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
 <span class="c1"># x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
+
+<span class="c1"># Visualize the model</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
-<span class="c1"># Compute edge strength with the chi_square test statistic</span>
+<span class="c1"># Compute edge strength with chi-square test statistic</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
@@ -312,12 +291,11 @@ If the number of samples is much smaller, say in the tens, the method becomes le
 <span class="c1"># x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
 <span class="c1"># x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000</span>
 
-<span class="c1"># Using the causal_order_ properties, we can see the causal ordering as a result of the causal discovery.</span>
-
+<span class="c1"># Examine the causal ordering</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;causal_order&#39;</span><span class="p">])</span>
 <span class="c1"># [&#39;x3&#39;, &#39;x0&#39;, &#39;x5&#39;, &#39;x2&#39;, &#39;x1&#39;, &#39;x4&#39;]</span>
 
-<span class="c1"># We can draw a causal graph by utility funciton.</span>
+<span class="c1"># Visualize the causal graph</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -327,36 +305,37 @@ If the number of samples is much smaller, say in the tens, the method becomes le
 </tr>
 </tbody>
 </table>
-<p>This example nicely demonstrates that we can capture the dependencies with the causal factors acurately.</p>
+<p>This example nicely demonstrates that we can accurately capture the dependencies with the causal factors.</p>
+</section>
 </section>
 <section id="direct-lingam-method">
-<h2>Direct-LiNGAM method<a class="headerlink" href="#direct-lingam-method" title="Link to this heading"></a></h2>
+<h2>Direct-LiNGAM Method<a class="headerlink" href="#direct-lingam-method" title="Link to this heading"></a></h2>
 <p>The Direct-LiNGAM method ‘direct-lingam’ is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable. When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables. Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.</p>
-<p>Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.
-A disadvantage is that causal discovery of structure learning is the end-point when uing this method. It is not possible to perform parameter learning and inferences.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<p>When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables. Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.</p>
+<p>In other words, the lingam-direct method allows you to model continuous and mixed datasets. A limitation is that causal discovery of structure learning is the endpoint when using this method. It is not possible to perform parameter learning and inferences.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
-<span class="c1"># Load data set</span>
+<span class="c1"># Load dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
 
-<span class="c1"># Structure learning</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">,</span> <span class="n">params_lingam</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
+<span class="c1"># Perform structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                                <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">,</span>
+                                <span class="n">params_lingam</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;random_state&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 
 <span class="c1"># Compute edge strength</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Plot</span>
+<span class="c1"># Create visualizations</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-<span class="c1"># Plot with graphviz</span>
 <span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">dotgraph</span>
 <span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_lingam_direct&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Using the LINGAM method, the values on the edges describe the dependency using a multiplication factor of one variable to another. As an example, Origin -&gt; -10 -&gt; Displacement tells us Displacement has values that are factor -10 lower than origin.</p>
+<p>Using the LINGAM method, the values on the edges describe the dependency using a multiplication factor of one variable to another. For example, Origin -&gt; -10 -&gt; Displacement tells us that Displacement has values that are a factor of -10 lower than origin.</p>
 <table class="docutils align-center">
 <tbody>
 <tr class="row-odd"><td><p><img alt="fig4a" src="_images/fig_auto_mpg_lingam_a.png" /></p></td>
@@ -367,26 +346,23 @@ A disadvantage is that causal discovery of structure learning is the end-point w
 </table>
 </section>
 <section id="ica-lingam-method">
-<h2>ICA-LiNGAM method<a class="headerlink" href="#ica-lingam-method" title="Link to this heading"></a></h2>
-<p>The ICA-LiNGAM method ‘ica-lingam’ is also from lingam and follows the same procedure.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<h2>ICA-LiNGAM Method<a class="headerlink" href="#ica-lingam-method" title="Link to this heading"></a></h2>
+<p>The ICA-LiNGAM method (‘ica-lingam’) is also from lingam and follows the same procedure.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
-<span class="c1"># Load data set</span>
+<span class="c1"># Load dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
 <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span>
 
-
-<span class="c1"># Structure learning</span>
+<span class="c1"># Perform structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ica-lingam&#39;</span><span class="p">)</span>
 
 <span class="c1"># Compute edge strength</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Plot</span>
+<span class="c1"># Create visualizations</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-<span class="c1"># Plot with graphviz</span>
 <span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">dotgraph</span>
 <span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_lingam_ica&#39;</span><span class="p">)</span>
@@ -402,44 +378,28 @@ A disadvantage is that causal discovery of structure learning is the end-point w
 </table>
 </section>
 <section id="pc-method">
-<h2>PC method<a class="headerlink" href="#pc-method" title="Link to this heading"></a></h2>
-<p>A different, but quite straightforward approach to build a DAG from data is identifing independencies in the data set using hypothesis tests and then construct DAG (pattern) according to identified independencies (Conditional) Independence Tests. Independencies in the data can be identified using chi2 conditional independence tests.</p>
-<p>The Constraint-Based PC Algorithm (named after Peter and Clark, its inventors) is a popular method in causal inference and Bayesian network learning. It is a type of constraint-based algorithm, which uses conditional independence tests to build a causal graph from data. This algorithm is widely used to learn the structure of Bayesian networks and causal graphs by identifying relationships between variables.</p>
-<p>DAG (pattern) construction</p>
-<dl class="simple">
-<dt>With a method for independence testing at hand, we can construct a DAG from the data set in three steps:</dt><dd><ul class="simple">
-<li><ol class="arabic simple">
-<li><p>Construct an undirected skeleton.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="2">
-<li><p>Orient compelled edges to obtain partially directed acyclid graph.</p></li>
-</ol>
-</li>
-<li><ol class="arabic simple" start="3">
-<li><p>Extend DAG pattern to a DAG by conservatively orienting the remaining edges in some way.</p></li>
-</ol>
-</li>
-</ul>
-</dd>
-</dl>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import</span>
+<h2>PC Method<a class="headerlink" href="#pc-method" title="Link to this heading"></a></h2>
+<p>A different, but quite straightforward approach to building a DAG from data is identifying independencies in the dataset using hypothesis tests and then constructing a DAG (pattern) according to the identified independencies (Conditional Independence Tests). Independencies in the data can be identified using chi2 conditional independence tests.</p>
+<p>The Constraint-Based PC Algorithm (named after Peter and Clark, its inventors) is a popular method in causal inference and Bayesian network learning. It is a type of constraint-based algorithm that uses conditional independence tests to build a causal graph from data. This algorithm is widely used to learn the structure of Bayesian networks and causal graphs by identifying relationships between variables.</p>
+<p>DAG (pattern) construction involves three steps:
+1. Construct an undirected skeleton
+2. Orient compelled edges to obtain a partially directed acyclic graph
+3. Extend the DAG pattern to a DAG by conservatively orienting the remaining edges</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
-<span class="c1"># Load data set</span>
+<span class="c1"># Load dataset</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
 
-<span class="c1"># Structure learning</span>
+<span class="c1"># Perform structure learning</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;pc&#39;</span><span class="p">)</span>
 
 <span class="c1"># Compute edge strength</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
-
-<span class="c1"># Plot with graphviz</span>
-<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">dotgraph</span>
 <span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_PC&#39;</span><span class="p">)</span>
 </pre></div>

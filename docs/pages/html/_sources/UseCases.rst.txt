@@ -1,8 +1,7 @@
+Titanic Dataset Analysis
+========================
 
-Use Case Titanic
-=======================
-
-In the following example we will learn the structure on the Titanic dataset.
+In this example, we will learn the structure of the Titanic dataset.
 
 .. code-block:: python
 
@@ -11,7 +10,7 @@ In the following example we will learn the structure on the Titanic dataset.
 	# Load example mixed dataset
 	df = bn.import_example(data='titanic')
 
-	# Convert to onehot
+	# Convert to one-hot encoding
 	dfhot, dfnum = bn.df2onehot(df)
 
 	# Structure learning
@@ -20,32 +19,31 @@ In the following example we will learn the structure on the Titanic dataset.
 	# Plot
 	G = bn.plot(model, interactive=False)
 
-	# Compute edge strength with the chi_square test statistic
+	# Compute edge strength with chi-square test statistic
 	model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
-	# Plot
+	# Plot with edge labels
 	G = bn.plot(model, interactive=False, pos=G['pos'], edge_labels='pvalue')
 
 	# Parameter learning
 	model = bn.parameter_learning.fit(model, dfnum)
 
-
 .. |fig_t1| image:: ../figs/titanic_dag.png
 .. |fig_t2| image:: ../figs/titanic_dag_chi2.png
 
-.. table:: Learned structure on the Titanic dataset.
-   :align: center
+.. table:: Learned structure on the Titanic dataset
+    :align: center
 
-   +----------+
-   | |fig_t1| |
-   +----------+
-   | |fig_t2| |
-   +----------+
+    +----------+
+    | |fig_t1| |
+    +----------+
+    | |fig_t2| |
+    +----------+
 
-At this point we can also start making inferences:
+Making Inferences:
 
 .. code-block:: python
 
-	# Make inference
+	# Make inference with evidence
 	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':True, 'Pclass':True})
 	print(query)
 
@@ -56,23 +54,13 @@ At this point we can also start making inferences:
 	# +----+------------+----------+
 	# |  1 |          1 | 0.444573 |
 	# +----+------------+----------+
-	# 
-	# +-------------+-----------------+
-	# | Survived    |   phi(Survived) |
-	# +=============+=================+
-	# | Survived(0) |          0.5554 |
-	# +-------------+-----------------+
-	# | Survived(1) |          0.4446 |
-	# +-------------+-----------------+
 
 	print(query.df)
-
 	#  Survived         p
-	#  0		0.555427
-	#  1		0.444573
+	#  0        0.555427
+	#  1        0.444573
 
-
-	# Another inference using only sex for evidence
+	# Another inference using only sex as evidence
 	query = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0})
 	print(query)
 	# +----+------------+----------+
@@ -85,10 +73,10 @@ At this point we can also start making inferences:
 
 	print(query.df)
 
-	# Print model
+	# Print model CPDs
 	CPDs = bn.print_CPD(model)
 
-	# All CPDs are now stored in the dict CPD which contain the CPD for each node.
+	# All CPDs are stored in the dict CPD which contains the CPD for each node
 	print(CPDs.keys())
 	# dict_keys(['Pclass', 'Survived', 'Embarked', 'Sex', 'SibSp', 'Parch'])
 
@@ -107,35 +95,29 @@ At this point we can also start making inferences:
 	# 10         1       2    0  0.500000
 	# 11         1       2    1  0.253731
 
-
-
-
-
-Use Case Medical domain
+Medical Domain Analysis
 =======================
 
-In this section I will describe the use-case to analyse patients treatment regarding shortness-of-breath (dyspnoea). In this context you may readily know some associatons from literature and/or experience, like smoking is related to dyspnoea. In this use-case I will demonstrate how to use your expert-knowledge in a bayesian model. Furthermore, the data set is small (few variables) and synthetic from Lauritzen and Spiegelhalter (1988), and is about lung diseases (tuberculosis, lung cancer or bronchitis) and visits to Asia.
+This section describes a use case for analyzing patient treatment regarding shortness-of-breath (dyspnea). The example demonstrates how to incorporate expert knowledge into a Bayesian model. The dataset is synthetic and based on Lauritzen and Spiegelhalter (1988), focusing on lung diseases (tuberculosis, lung cancer, or bronchitis) and visits to Asia.
 
 Description
-''''''''''''
+-----------
 
-Motivation
-	"*Shortness-of-breath (dyspnoea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnoea.*"
+Motivation:
+    "*Shortness-of-breath (dyspnea) may be due to tuberculosis, lung cancer or bronchitis, or none of them, or more than one of them. A recent visit to Asia increases the chances of tuberculosis, while smoking is known to be a risk factor for both lung cancer and bronchitis. The results of a single chest X-ray do not discriminate between lung cancer and tuberculosis, as neither does the presence or absence of dyspnea.*"
 
-Source
-	*Lauritzen S, Spiegelhalter D (1988). Local Computation with Probabilities on Graphical Structures and their Application to Expert Systems (with discussion). Journal of the Royal Statistical Society*
+Source:
+    *Lauritzen S, Spiegelhalter D (1988). Local Computation with Probabilities on Graphical Structures and their Application to Expert Systems (with discussion). Journal of the Royal Statistical Society*
 
+Importing Data
+--------------
 
-Import data
-''''''''''''
-
-The first step is to import the data set. If you have **unstructured** data, use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The **Examples** section contains examples how to import a raw data set followed by (basic) structering approaches (section: :ref:`Start with RAW data`). In my case I will load the data from ``bnlearn``, which is readily a **structured** dataset.
-
+The first step is to import the dataset. For unstructured data, use the ``df2onehot`` functionality :func:`bnlearn.bnlearn.df2onehot`. The **Examples** section contains examples of importing raw data followed by basic structuring approaches (section: :ref:`Working with Raw Data`). In this case, we'll load a structured dataset from ``bnlearn``.
 
 .. code-block:: python
 
     import bnlearn as bn
-    # Load dataset with 10.000 samples
+    # Load dataset with 10,000 samples
     df = bn.import_example('asia', n=10000)
     # Print to screen
     print(df)
@@ -154,23 +136,26 @@ The first step is to import the data set. If you have **unstructured** data, use
 |9999|       0 |       1 |      1 |      1 |     1 |        1 |      0 |      1 |
 +----+---------+---------+--------+--------+-------+----------+--------+--------+
 
-This data set contains 8 variables with discrete values, meaning that the variables have the state yes/no, true/false or 1/0 values. ``bnlearn`` can handle multiple catagories (also non-numerical, :ref:`Start with RAW data`). In this example we generate 10.000 samples (representing the patients). Note that the number of variables depends on the complexity of the data set (number of variables and the catagories per variable). If you want to get *feeling* of the performance of bayesian models, I would advice to play arround with various example data sets in ``bnlearn`` and determine when you can re-construct the entire DAG given the complexity of the data set. As an example, 1000 samples is sufficient for the **sprinkler** data set because there are only 4 variables, each with state yes/no. Some other data sets (such as **alarm**) are way more complicated and 1000 samples would not be sufficient.
+This dataset contains 8 variables with discrete values (yes/no, true/false, or 1/0). ``bnlearn`` can handle multiple categories, including non-numerical values (see :ref:`Working with Raw Data`). In this example, we generate 10,000 samples representing patients. The number of required samples depends on the dataset's complexity (number of variables and categories per variable). For example, 1,000 samples are sufficient for the **sprinkler** dataset (4 variables, binary states), while more complex datasets like **alarm** require more samples.
 
+Making Inferences with Data and Expert Knowledge
+------------------------------------------------
 
-Make inferences when you have data and know-how
-''''''''''''''''''''''''''''''''''''''''''''''''
+Expert knowledge can be incorporated into Bayesian models using Directed Acyclic Graphs. The DAG describes relationships between variables. Let's create a custom DAG and make inferences (:ref:`Inference`).
 
-Expert knowledge can be included in bayasian models by using graphs in the form of a Directed Acyclic Graphs (DAG, :ref:`Directed Acyclic Graphs`). The DAG describes the relationships between variables. Lets create a custom DAG, and make inferences :ref:`Inference`.
+Aim: Make inferences about shortness-of-breath (dyspnea) when:
+    1. You have measured data (imported as shown in :ref:`Import DAG/BIF`)
+    2. You have expert knowledge
 
-Aim: Make inferences about shortness-of-breath (dyspnoea) when:
-	1. You have measured data and imported: :ref:`Import data`.
-	2. You have know-how/expert knowledge.
-
-
-Create a custom Directed Acyclic Graph
+Creating a Custom Directed Acyclic Graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-My knowledge about *dyspnoea* is limited to: smoking is related to lung cancer, smoking is related to bronchitis, and if you have lung or bronchitus you may need an xray examination. Basically, I will create a simple DAG. Note that bayesian modeling is especially fun because you can make very complex DAGs. Note that the direction is very important. The first column is "from" or "source" and the second column "to" or "destination". Note, this is a **very simple model** that is designed for demonstration purposes only.
+Based on limited knowledge about dyspnea:
+- Smoking is related to lung cancer
+- Smoking is related to bronchitis
+- Lung conditions or bronchitis may require an X-ray examination
+
+This is a simple DAG for demonstration purposes. Note that the direction is crucial - the first column is the source ("from") and the second column is the destination ("to").
 
 .. code-block:: python
 
@@ -179,47 +164,46 @@ My knowledge about *dyspnoea* is limited to: smoking is related to lung cancer, 
              ('lung', 'xray'),
              ('bronc', 'xray')]
 
-
-Plot the Bayesian DAG.
+Plot the Bayesian DAG:
 
 .. code-block:: python
     
     # Create the DAG from the edges
     DAG = bn.make_DAG(edges)
 
-    # Plot and make sure the arrows are correct.
+    # Plot and verify the arrows are correct
     bn.plot(DAG)
 
 .. _fig_lung_simple_dag:
 
 .. figure:: ../figs/lung_simple_dag.png
 
+Computing Conditional Probability Distributions (CPDs)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Compute Conditional Probability Distributions (CPDs)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We now have:
+1. The dataset in our dataframe (df)
+2. The DAG based on expert knowledge
 
-At this point we have the data set in our dataframe (df), and we have the **DAG** based on your expert knowledge. The next step is to connect your brains (DAG) to the data set. We can do this with the function :func:`bnlearn.bnlearn.parameter_learning.fit` which will compute the CPDs. See section :ref:`Parameter learning` to learn more about conditional probability distributions (CPDs) and how parameters can be learned. In general; it is the task to estimate the values of the CPDs in the DAG based on the input data set. How cool is that!
-
-
-Parameter learning on the expert-DAG using the input data set.
+The next step is to connect the DAG to the dataset using :func:`bnlearn.bnlearn.parameter_learning.fit`, which computes the CPDs. See section :ref:`Parameter learning` for more details about CPDs and parameter learning.
 
 .. code-block:: python
 
-    # Check the current CPDs in the DAG.
+    # Check current CPDs in the DAG
     CPDs = bn.print_CPD(DAG)
     # [bnlearn] >No CPDs to print. Tip: use bn.plot(DAG) to make a plot.
-    # This is correct, we dit not yet specify any CPD.
+    # This is correct, as we haven't specified any CPDs yet
 
-    # Learn the parameters from data set. 
-    # As input we have the DAG without CPDs.
+    # Learn parameters from the dataset
     DAG = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
     # Print the CPDs
     CPDs = bn.print_CPD(DAG)
-    # At this point we have a DAG with the learned CPDs
+    # Now we have a DAG with learned CPDs
 
-
-The learned Conditional Probability Distributions are depicted in the tables below. As an example, the probability that a patient does **not** smoke is P(smoke=0)=0.49 whereas the probability of a patient smoking is P(smoke=1)=0.5. 
+The learned Conditional Probability Distributions are shown in the tables below. For example:
+- The probability that a patient does not smoke is P(smoke=0)=0.49
+- The probability that a patient smokes is P(smoke=1)=0.50
 
 CPD of smoke:
 
@@ -229,7 +213,7 @@ CPD of smoke:
 | smoke(1) | 0.504727 |
 +----------+----------+
 
-Slightly more complicated are the patients that smoke and have lung-cancer which is basically the intersection. The more edges towards a node the more complicated the CPD becomes. Luckily we have ``bnlearn`` to do the heavy lifting!
+The CPD becomes more complex for patients who smoke and have lung cancer (intersection). More edges to a node increase complexity, but ``bnlearn`` handles the computations.
 
 CPD of lung:
 
@@ -375,7 +359,7 @@ Steps to take
 Compute Directed Acyclic Graph from data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Import and process teh data set (:ref:`Import data`). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into ``bnlearn`` :func:`bnlearn.bnlearn.structure_learning.fit`. More about Directed Acyclic Graphs can be found in the section :ref:`Directed Acyclic Graphs`.
+Import and process teh data set (:ref:`Importing Data`). For this use-case we will compute the best performing DAG given the data set. You only need to provide the data set into ``bnlearn`` :func:`bnlearn.bnlearn.structure_learning.fit`. More about Directed Acyclic Graphs can be found in the section :ref:`Directed Acyclic Graphs`.
 
 .. code-block:: python
     
@@ -416,7 +400,7 @@ A comparison with our initial expert-DAG shows few differences in **red**. As an
 
 
 Make inference when you have data
-'''''''''''''''''''''''''''''''''''''''''
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In this scenario we the goal is to make inferences across variables given the data set.
 
@@ -425,7 +409,7 @@ Steps to take
 	2. Compute Directed Acyclic Graph (DAG)
 	3. Compute Conditional Probability Distributions (CPDs)
 
-The first step is to import and pre-process the data set as depicted in :ref:`Import data`. Then we compute the DAG by means of structure learning as depicted in :ref:`Compute Directed Acyclic Graph from data`. To make inferences, we first need to compute the CPDs which we can do with :func:`bnlearn.bnlearn.parameter_learning.fit`.
+The first step is to import and pre-process the data set as depicted in :ref:`Importing Data`. Then we compute the DAG by means of structure learning as depicted in :ref:`Compute Directed Acyclic Graph from data`. To make inferences, we first need to compute the CPDs which we can do with :func:`bnlearn.bnlearn.parameter_learning.fit`.
 
 .. code-block:: python
     
@@ -507,7 +491,6 @@ CPD of xray:
 
 From this point on we can start making inferences given the DAG and the CPDs. For demonstration purposes I will repeat question 4.
 
-
 **Question**
 
 What is the probability of lung-cancer or bronchitis, given that we know that patient does smoke but did **not** had xray?
@@ -529,7 +512,6 @@ What is the probability of lung-cancer or bronchitis, given that we know that pa
 +---------+----------+-------------------+
 
 The highest probability for the patient under these condition is that lung-cancer is true and bronchitus is true too (P=0.51). 
-
 
 Use Case Continuous Datasets
 =============================
@@ -561,7 +543,6 @@ In the following example we will load the auto mpg dataset and learn the structu
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
 
-
 .. |fig9a| image:: ../figs/fig_auto_mpg_lingam_a.png
 .. |fig9b| image:: ../figs/fig_auto_mpg_lingam_b.png
 
@@ -573,6 +554,5 @@ In the following example we will load the auto mpg dataset and learn the structu
    +----------+
    | |fig9b|  |
    +----------+
-
 
 .. include:: add_bottom.add

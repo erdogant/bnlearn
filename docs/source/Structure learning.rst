@@ -4,18 +4,18 @@ Causation means that one (independent) variable causes the other (dependent) var
 
 *If two random variables X and Y are statistically dependent (X/Y), then either (a) X causes Y, (b) Y causes X, or (c ) there exists a third variable Z that causes both X and Y. Further, X and Y become independent given Z, i.e., X⊥Y∣Z.*
 
-This definition is incorporated in Bayesian graphical models (a.k.a. Bayesian networks, Bayesian belief networks, Bayes Net, causal probabilistic networks, and Influence diagrams). A lot of names for the same technique. To determine causality, we can use Bayesian networks (BN). Let’s start with the graph and visualize the statistical dependencies between the three variables described by Reichenbach (X, Y, Z) (see figure below).
+This definition is incorporated in Bayesian graphical models (a.k.a. Bayesian networks, Bayesian belief networks, Bayes Net, causal probabilistic networks, and Influence diagrams). A lot of names for the same technique. To determine causality, we can use Bayesian networks (BN). Let's start with the graph and visualize the statistical dependencies between the three variables described by Reichenbach (X, Y, Z) (see figure below).
 Nodes correspond to variables (X, Y, Z) and the directed edges (arrows) indicate dependency relationships or conditional distributions.
 
 **But how can we tell what causes what?**
-The conceptual idea to determine the direction of causality, thus which node influences which node, is by holding a node constant and then observe the effect. As an example, let’s take DAG (a) in Figure 2, which describes that Z is caused by X, and Y is caused by Z. If we now keep Z constant there should not be a change in Y if this model is true. Every Bayesian network can be described by these four graphs, and with probability theory (see the section below) we can glue the parts together.
+The conceptual idea to determine the direction of causality, thus which node influences which node, is by holding a node constant and then observe the effect. As an example, let's take DAG (a) in Figure 2, which describes that Z is caused by X, and Y is caused by Z. If we now keep Z constant there should not be a change in Y if this model is true. Every Bayesian network can be described by these four graphs, and with probability theory (see the section below) we can glue the parts together.
 It should be noted that a Bayesian network is a Directed Acyclic Graph (DAG) and DAGs are causal. This means that the edges in the graph are directed and there is no (feedback) loop (acyclic).
 
 .. _fig-DAGs:
 
 .. figure:: ../figs/DAGs.png
-*DAGs encode conditional independencies. (a, b, c) are Equivalence classes. (a, b) Cascade, (c ) Common parent, and (d) is a special class with V-structure.*
 
+   DAGs encode conditional independencies. (a, b, c) are Equivalence classes. (a, b) Cascade, (c ) Common parent, and (d) is a special class with V-structure.
 
 Probability theory
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -31,7 +31,7 @@ Finally, the marginal probability describes the probability of the new evidence 
 
 .. figure:: ../figs/bayes_eq.png
 
-
+   Bayes' Theorem equation.
 
 Structure learning
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -121,7 +121,7 @@ Lets determine the best possible structure for the sprinkler dataset.
 Hillclimbsearch
 ===================
 
-*Hillclimbsearch* is a heuristic search approach that can be used if more nodes are used. HillClimbSearch implements a greedy local search that starts from the DAG “start” (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
+*Hillclimbsearch* is a heuristic search approach that can be used if more nodes are used. HillClimbSearch implements a greedy local search that starts from the DAG "start" (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
 With *Hillclimbsearch* we can determine the best DAG for multiple nodes. 
 
 Lets examine the results using hte **alarm** example that contains 37 nodes.

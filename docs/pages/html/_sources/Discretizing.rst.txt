@@ -1,39 +1,38 @@
 Discretizing
 =========================================
 
-In ``bnlearn`` the following options are available to work with continuous datasets:
+In ``bnlearn``, the following options are available to work with continuous datasets:
 
-* 1. Discretize continuous datasets manually using domain knowledge.
-* 2. Discretize continuous datasets using a probability density fitting.
-* 3. Discretize continuous datasets using a principled Bayesian discretization method.
-* 4. Model continuous and hybrid datasets in a semi-parametric approach that assumes a linear relationships.
+* 1. Discretize continuous datasets manually using domain knowledge
+* 2. Discretize continuous datasets using probability density fitting
+* 3. Discretize continuous datasets using a principled Bayesian discretization method
+* 4. Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships
 
-
-Discretize manually
+Manual Discretization
 =========================================
 
-Discretizing continuous datasets manually using domain knowledge involves dividing a continuous variable into a set of discrete intervals based on an understanding of the data's context and the relationships between variables. This method allows for meaningful groupings of data points, which can simplify analysis and improve interpretability in models. 
+Discretizing continuous datasets manually using domain knowledge involves dividing a continuous variable into a set of discrete intervals based on an understanding of the data's context and the relationships between variables. This method allows for meaningful groupings of data points, which can simplify analysis and improve interpretability in models.
 
 By leveraging expertise in the subject matter, the intervals or thresholds can be chosen to reflect real-world significance, such as categorizing weather conditions into meaningful ranges (e.g., "freezing," "warm," "hot"). This approach contrasts with automatic binning methods (as depicted in approach 2), such as equal-width or equal-frequency binning, where intervals may not correspond to meaningful domain-specific boundaries.
 
-For instance, lets load the auto mpg data set and based on automotive standards, we can define horsepower categories:
+For instance, let's load the auto mpg dataset and, based on automotive standards, define horsepower categories:
 
 * Low: Cars with horsepower less than 100 (typically small, fuel-efficient cars)
 * Medium: Cars with horsepower between 100 and 150 (moderate performance cars)
 * High: Cars with horsepower above 150 (high-performance vehicles)
 
-After all continuous variables are catagorized, the normal structure learning procedure can be applied.
-
+After all continuous variables are categorized, the normal structure learning procedure can be applied.
 
 .. code-block:: python
 
-    # Import
+    # Import libraries
     import bnlearn as bn
+    import pandas as pd
     
-    # Load data set
+    # Load dataset
     df = bn.import_example(data='auto_mpg')
 
-    # Print
+    # Print dataset overview
     print(df)
     #       mpg  cylinders  displacement  ...  acceleration  model_year  origin
     # 0    18.0          8         307.0  ...          12.0          70       1
@@ -57,6 +56,7 @@ After all continuous variables are catagorized, the normal structure learning pr
     # Discretize horsepower using the defined bins
     df['horsepower_category'] = pd.cut(df['horsepower'], bins=bins, labels=labels, include_lowest=True)
 
+    # Print the results
     print(df[['horsepower', 'horsepower_category']].head())
     #    horsepower horsepower_category
     # 0       130.0              medium
@@ -65,40 +65,41 @@ After all continuous variables are catagorized, the normal structure learning pr
     # 3       150.0              medium
     # 4       140.0              medium
 
+Automatic Discretization: Probability Density
+=============================================
 
+In contrast to manual discretization, we can also automatically determine the best binning per variable. However, such approaches require extra attention compared to manual binning methods, where intervals may not correspond to meaningful domain-specific boundaries. To automatically create more meaningful bins than simple equal-width or equal-frequency binning, we can determine the distribution that best fits the signal and then use the 95% confidence interval to create low, medium, and high categories.
 
-Discretize Automatically: Probability Density
-==============================================
-
-In contradiction to manual discretizing variables, we can also automatically determine the best binning per variable. However, such approaches require extra attention in contrast with manual binning methods, where intervals may not correspond to meaningful domain-specific boundaries. To automatically create more meaningful bins than simple equal-width or equal-frequency binning, we can determine the distribution that best fits the signal and then use the 95% confidence interval to create low, medium, and high categories.
-
-In addition, it is always wise to also have a visual inspection of the distribution plots with the threshold that is determined for the binning. In such a manner you can decide whether the low-end, medium, and high-end is a meaningful threshold. As an example, if we take acceleration and perform this approach, we find a low-end of 8 seconds to ~11 seconds which will represent the fast cars. On the high end are the slow cars with an acceleration of 20 seconds to 24 seconds. The remaining cars fall in the category normal. This seems very plausible so we can continue with these categories. See the code block below.
-
+It is always wise to have a visual inspection of the distribution plots with the thresholds determined for the binning. This way, you can decide whether the low-end, medium, and high-end thresholds are meaningful. For example, if we take acceleration and perform this approach, we find a low-end of 8 seconds to ~11 seconds which represents the fast cars. On the high end are the slow cars with an acceleration of 20 seconds to 24 seconds. The remaining cars fall in the category "normal." This seems very plausible, so we can continue with these categories. See the code block below.
 
 .. code-block:: python
 
-    # Import library
+    # Import required libraries
     from distfit import distfit
+    import matplotlib.pyplot as plt
 
+    # Initialize and set 95% confidence interval
+    dist = distfit(alpha=0.05)
 
-.. code-block:: python
+    # Fit and transform the data
+    dist.fit_transform(df['acceleration'])
 
-   # Initialize and set 95% CII
-   dist = distfit(alpha=0.05)
+    # Create visualization
+    dist.plot()
+    plt.show()
 
-   # Fit Transform
-   dist.fit_transform(df['acceleration'])
-
-   # Make plot
-   dist.plot()
-   plt.show()
-   bins = [df['acceleration'].min(), dist.model['CII_min_alpha'], dist.model['CII_max_alpha'], df['acceleration'].max()]
+    # Define bins based on distribution
+    bins = [df['acceleration'].min(), 
+            dist.model['CII_min_alpha'], 
+            dist.model['CII_max_alpha'], 
+            df['acceleration'].max()]
    
-   # Discretize acceleration using the defined bins
-   df['acceleration_category'] = pd.cut(df['acceleration'], bins=bins, labels=['fast', 'normal', 'slow'], include_lowest=True)
-   del df['acceleration']
-
-
+    # Discretize acceleration using the defined bins
+    df['acceleration_category'] = pd.cut(df['acceleration'], 
+                                       bins=bins, 
+                                       labels=['fast', 'normal', 'slow'], 
+                                       include_lowest=True)
+    del df['acceleration']
 
 .. |figd1a| image:: ../figs/dist1.png
 
@@ -109,46 +110,50 @@ In addition, it is always wise to also have a visual inspection of the distribut
    | |figd1a|  |
    +-----------+
 
-In case there are multiple continuous variables, we can also automate the distribution fitting:
-
+For multiple continuous variables, we can automate the distribution fitting:
 
 .. code-block:: python
 
-   # For all remaining columns, the same approach can be performed:
-   cols = ['mpg', 'displacement', 'weight']
+    # Process all remaining columns
+    cols = ['mpg', 'displacement', 'weight']
 
-   # Do for every variable
-   for col in cols:
-       # Initialize and set 95% CII
-       dist = distfit(alpha=0.05)
-       dist.fit_transform(df[col])
+    # Apply distribution fitting to each variable
+    for col in cols:
+        # Initialize and set 95% confidence interval
+        dist = distfit(alpha=0.05)
+        dist.fit_transform(df[col])
 
-       # Make plot
-       dist.plot()
-       plt.show()
-       bins = [df[col].min(), dist.model['CII_min_alpha'], dist.model['CII_max_alpha'], df[col].max()]
+        # Create visualization
+        dist.plot()
+        plt.show()
+        
+        # Define bins based on distribution
+        bins = [df[col].min(), 
+                dist.model['CII_min_alpha'], 
+                dist.model['CII_max_alpha'], 
+                df[col].max()]
 
-       # Discretize acceleration using the defined bins
-       df[col + '_category'] = pd.cut(df[col], bins=bins, labels=['low', 'medium', 'high'], include_lowest=True)
-       del df[col]
-
+        # Discretize using the defined bins
+        df[col + '_category'] = pd.cut(df[col], 
+                                     bins=bins, 
+                                     labels=['low', 'medium', 'high'], 
+                                     include_lowest=True)
+        del df[col]
 
 After all continuous variables are categorized, the causal discovery approach for structure learning can be applied.
 
 .. code-block:: python
 
-   # Structure learning
-   model = bn.structure_learning.fit(df, methodtype='hc')
+    # Perform structure learning
+    model = bn.structure_learning.fit(df, methodtype='hc')
 
-   # Compute edge strength
-   model = bn.independence_test(model, df)
+    # Compute edge strength
+    model = bn.independence_test(model, df)
 
-   # Make plot and put the -log10(pvalues) on the edges
-   bn.plot(model, edge_labels='pvalue')
-
-   dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
-   dotgraph
-
+    # Create visualizations
+    bn.plot(model, edge_labels='pvalue')
+    dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
+    dotgraph
 
 .. |figd2a| image:: ../figs/auto_mpg_distfit.png
 
@@ -159,32 +164,23 @@ After all continuous variables are categorized, the causal discovery approach fo
    | |figd2a|  |
    +-----------+
 
+Automatic Discretization: Principled Bayesian
+=============================================
 
+Automatic discretization of datasets can be accomplished using a principled Bayesian discretization method. This method was created by Yi-Chun Chen et al. [1]_ in Julia [2]_. The code has been ported to Python and is now part of ``bnlearn``. Yi-Chun Chen demonstrates that this proposed method is superior to the established minimum description length algorithm.
 
-
-Discretize Automatically: Principled Bayesian
-==============================================
-
-Automatic discritizing datasets is accomplished by using a principled Bayesian discretization method.
-The method is created by Yi-Chun Chen et al [1]_ in Julia [2]_. The code is ported to Python and is now part of ``bnlearn``.
-Yi-Chun Chen demonstrates that his proposed method is superior to the established minimum description length algorithm.
-
-A disadvantage of this approach is that you need to pre-define the edges before you can apply the discritization method.
-The underlying idea is that after applying this discritization method, structure learning approaches can then be applied.
-To demonstrate the usage of automatically discritizing continuous data, lets use the **auto mpg** dataset again.
-
-
+A limitation of this approach is that you need to pre-define the edges before applying the discretization method. The underlying idea is that after applying this discretization method, structure learning approaches can then be applied. To demonstrate the usage of automatic discretization for continuous data, let's use the **auto mpg** dataset again.
 
 .. code-block:: python
 
-    # Import
+    # Import libraries
     import bnlearn as bn
     
-    # Load data set
+    # Load dataset
     df = bn.import_example(data='auto_mpg')
-    # Print
+    
+    # Print dataset overview
     print(df)
-
     #       mpg  cylinders  displacement  ...  acceleration  model_year  origin
     # 0    18.0          8         307.0  ...          12.0          70       1
     # 1    15.0          8         350.0  ...          11.5          70       1
@@ -215,29 +211,26 @@ To demonstrate the usage of automatically discritizing continuous data, lets use
     # Create DAG based on edges
     DAG = bn.make_DAG(edges)
 
-    # Plot the DAG
+    # Create visualizations
     bn.plot(DAG)
-
-    # Plot the DAG using graphviz
     bn.plot_graphviz(DAG)
-
 
 .. _fig_auto_mpg_DAG_edges:
 
 .. figure:: ../figs/auto_mpg_DAG_edges.png
 
-
-
-We can now discretize the continuous columns as following:
+We can now discretize the continuous columns as follows:
 
 .. code-block:: python
 
-    # A good habbit is to set the columns with continuous data as float
+    # Set continuous columns as float
     continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
 
-    # Discretize the continous columns by specifying
+    # Discretize the continuous columns
     df_discrete = bn.discretize(df, edges, continuous_columns, max_iterations=1)
 
+    # Print results
+    print(df_discrete)
     #                 mpg  cylinders  ... model_year origin
     # 0     (17.65, 21.3]          8  ...         70      1
     # 1    (8.624, 15.25]          8  ...         70      1
@@ -253,34 +246,27 @@ We can now discretize the continuous columns as following:
     # 
     # [392 rows x 8 columns]
 
-At this point it is not different than any other discrete data set. We can specify the DAG together with the
-discrete data frame and fit a model using ``bnlearn``.
+At this point, the dataset is no different from any other discrete dataset. We can specify the DAG together with the discrete dataframe and fit a model using ``bnlearn``.
 
-
-Structure learning
+Structure Learning
 *******************
 
-We will learn the structure on the discretezed continuous data. Note that the data is also discretezed on a set of edges which may introduce a bias in the learned structure.
+We will learn the structure on the discretized continuous data. Note that the data is also discretized on a set of edges, which may introduce a bias in the learned structure.
 
 .. code-block:: python
 
     # Learn the structure
     model = bn.structure_learning.fit(df_discrete, methodtype='hc', scoretype='bic')
 
-    # Independence test
+    # Perform independence test
     model = bn.independence_test(model, df, prune=True)
     # [bnlearn] >Compute edge strength with [chi_square]
     # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
 
-    # Make plot
+    # Create visualizations
     bn.plot(model, edge_labels='pvalue')
-
-    # Make plot with graphviz
     bn.plot_graphviz(model, edge_labels='pvalue')
-
-    # Create interactive plot
     bn.plot(model, interactive=True)
-
 
 .. |fig2a| image:: ../figs/fig2a.png
 .. |fig2b| image:: ../figs/fig2b.png
@@ -294,45 +280,34 @@ We will learn the structure on the discretezed continuous data. Note that the da
    | |fig2b|  |
    +----------+
 
-
 .. raw:: html
 
    <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe>
 
-
-Parameter learning
+Parameter Learning
 ******************
 
-Let's continue with parameter learning on the continuous data set and see whether we can estimate the CPDs.
-
+Let's continue with parameter learning on the continuous dataset and see whether we can estimate the CPDs.
 
 .. code-block:: python
 
-    # Fit model based on DAG and discretized continous columns
+    # Fit model based on DAG and discretized continuous columns
     model = bn.parameter_learning.fit(DAG, df_discrete)
     
-    # Use MLE method
+    # Alternative: Use MLE method
     # model_mle = bn.parameter_learning.fit(DAG, df_discrete, methodtype="maximumlikelihood")
 
-
-After fitting the model on the DAG and data frame, we can perform the independence test to remove any spurious edges and
-create a plot. In this case, the tooltips will contain the CPDs as these are computed with parameter learning.
+After fitting the model on the DAG and dataframe, we can perform the independence test to remove any spurious edges and create a plot. In this case, the tooltips will contain the CPDs as these are computed with parameter learning.
 
 .. code-block:: python
 
-    # Independence test
+    # Perform independence test
     model = bn.independence_test(model, df, prune=True)
 
-    # Make plot
+    # Create visualizations
     bn.plot(model, edge_labels='pvalue')
-
-    # Make plot graphviz
     bn.plot_graphviz(model, edge_labels='pvalue')
-
-    # Create interactive plot.
     bn.plot(model, interactive=True)
-
-
 
 .. |fig3a| image:: ../figs/fig_cont_1.png
 .. |fig3b| image:: ../figs/fig_cont_1b.png
@@ -346,15 +321,11 @@ create a plot. In this case, the tooltips will contain the CPDs as these are com
    | |fig3b|  |
    +----------+
 
-
-
-
 .. raw:: html
 
    <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
 
-
-There are various manners to deeper investigate the results such as looking at the CPDs.
+There are various ways to investigate the results further, such as examining the CPDs.
 
 .. code-block:: python
 
@@ -381,22 +352,23 @@ There are various manners to deeper investigate the results such as looking at t
 
 .. code-block:: python
 
+    # Print weight categories
     print("Weight categories: ", df_disc["weight"].dtype.categories)
     # Weight categories:  IntervalIndex([(1577.73, 2217.0], (2217.0, 2959.5], (2959.5, 3657.5], (3657.5, 5140.0]], dtype='interval[float64, right]')
-    
 
-Inferences
-**********
+Making Inferences
+*****************
 
-Making inferences can be perfomred using the fitted model. Note that the evidence should be discretized for which we can 
-use the ``discretize_value`` function.
+Making inferences can be performed using the fitted model. Note that the evidence should be discretized, for which we can use the ``discretize_value`` function.
 
 .. code-block:: python
 
+    # Discretize evidence
     evidence = {"weight": bn.discretize_value(df_discrete["weight"], 3000.0)}
     print(evidence)
     # {'weight': Interval(2959.5, 3657.5, closed='right')}
 
+    # Perform inference
     print(bn.inference.fit(model, variables=["mpg"], evidence=evidence, verbose=0))
 
 .. table::
@@ -415,12 +387,10 @@ use the ``discretize_value`` function.
     | mpg((25.65, 28.9])  |     0.1327 |
     +---------------------+------------+
     | mpg((28.9, 46.6])   |     0.1358 |
-    +---------------------+------------+    
-
+    +---------------------+------------+
 
 References
 ----------
-
 
 .. [1] Chen, Y.-C., Wheeler, T. A., & Kochenderfer, M. J. (2015). Learning discrete Bayesian networks from continuous data. arXiv. https://arxiv.org/abs/1512.02406
 
