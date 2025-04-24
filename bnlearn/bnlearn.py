@@ -33,18 +33,6 @@ import datazets as dz
 import pypickle
 import bnlearn
 
-# import logging
-# # Ensuring a minimum width of 12
-# NAME_WIDTH = max(len(__name__), 12)
-# logger = logging.getLogger('')
-# [logger.removeHandler(handler) for handler in logger.handlers[:]]
-# logging.basicConfig(
-#     format=f"%(asctime)s [%(name)-{NAME_WIDTH}s]> %(levelname)-8s> %(message)s",
-#     datefmt="%d-%m-%y %H:%M:%S",
-#     level=logging.INFO)
-# logger = logging.getLogger(__name__)
-
-
 # %%  Convert adjmat to bayesian model
 def to_bayesiannetwork(model, verbose=3):
     """Convert adjacency matrix to BayesianNetwork.
