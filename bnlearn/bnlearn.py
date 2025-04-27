@@ -757,7 +757,7 @@ def query2df(query, variables=None, groupby=None, verbose=3):
 
     # Print table to screen
     if verbose>=3:
-        print('[bnlearn] >Data is stored in [query.df]')
+        print('[bnlearn] >Output is stored in Dataframe [query.df]')
         print(tabulate(df, tablefmt="grid", headers="keys"))
 
     return df
