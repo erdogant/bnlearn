@@ -7,6 +7,7 @@ bnlearn/.pylint.d/
 bnlearn/data/
 julia/
 bnlearn/RESOURCES/
+blogs/
 
 *.pkl
 .pypirc
