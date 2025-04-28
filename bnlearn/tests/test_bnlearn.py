@@ -8,14 +8,6 @@ from pgmpy.factors.discrete import TabularCPD
 import numpy as np
 import pandas as pd
 
-
-# def test_load_examples():
-#     shapes = [(10000, 37), (10000, 223), (10000, 8), (10000, 11), (10000, 32), (352, 3)]
-#     for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofswords']):
-#         df = bn.import_example(data=data)
-#         assert not df.empty
-
-
 def test_QUERY():
     # Load example DataFrame
     df = bn.import_example('titanic')

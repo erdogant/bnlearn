@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-from bnlearn.discretize.discretize import _bayes_net_graph, discretize_value
+from bnlearn.discretize import _bayes_net_graph, discretize_value
 import bnlearn as bn
 
 def test_discritize():

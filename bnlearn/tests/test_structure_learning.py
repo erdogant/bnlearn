@@ -6,7 +6,6 @@ from pgmpy.estimators import TreeSearch
 from pgmpy.models import BayesianNetwork
 from pgmpy.inference import VariableElimination
 
-
 @pytest.fixture
 def sprinkler():
     return bn.import_example()

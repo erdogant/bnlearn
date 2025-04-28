@@ -6,7 +6,7 @@ import pytest
 import numpy as np
 import pandas as pd
 
-from ...discretize.learn_discrete_bayes_net import (
+from bnlearn.learn_discrete_bayes_net import (
     bn_discretizer_free_number_rep,
     bn_discretizer_iteration_converge,
     bn_discretizer_p_data_model,

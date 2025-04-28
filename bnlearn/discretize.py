@@ -10,7 +10,8 @@
 
 from typing import Tuple, List
 import pandas as pd
-from .learn_discrete_bayes_net import discretize_all
+# from .learn_discrete_bayes_net import discretize_all
+import bnlearn
 
 
 def discretize(
@@ -46,7 +47,7 @@ def discretize(
     graph = _bayes_net_graph(nodes, edges)
     continuous_index = [nodes.index(c) for c in continuous_columns]
 
-    data_disc, continuous_edges = discretize_all(
+    data_disc, continuous_edges = bnlearn.discretize_all(
         data,
         graph,
         continuous_index,
@@ -63,7 +64,7 @@ def discretize(
         interval_index = pd.IntervalIndex.from_breaks(breaks)
         dtype = pd.CategoricalDtype(interval_index, ordered=True)
 
-        # TODO Let discretize_all return values starting from zero instead of from one
+        # TODO Let bnlearn.discretize_all return values starting from zero instead of from one
         data_disc[col] = pd.Categorical.from_codes(data_disc[col] - 1, dtype=dtype)
 
     return data_disc
