@@ -1,11 +1,12 @@
 """Inference is same as asking conditional probability questions to the models.
-"""
+
 # ------------------------------------
 # Name        : inference.py
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ------------------------------------
+"""
 
 
 # %% Libraries

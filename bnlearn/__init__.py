@@ -35,7 +35,7 @@ import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
-from bnlearn.discretize.discretize import discretize, discretize_value
+from bnlearn.discretize import discretize, discretize_value
 from bnlearn.impute import knn_imputer, mice_imputer
 from packaging import version
 
