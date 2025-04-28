@@ -3,7 +3,7 @@ import pandas as pd
 import bnlearn as bn
 
 #%%
-df = bn.import_example('auto_mpg')
+df = bn.import_example(data='auto_mpg')
 del df['origin']
 
 edges = [
@@ -42,8 +42,6 @@ continuous_columns = ["mpg", "displacement", "horsepower", "weight", "accelerati
 
 
 # %%
-
-
 df_disc = bn.discretize(
     df,
     edges,
@@ -59,7 +57,6 @@ bn.plot(model_mle)
 print(model_mle["model"].get_cpds("mpg"))
 
 # %%
-
 print("Weight categories: ", df_disc["weight"].dtype.categories)
 evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
 print(evidence)

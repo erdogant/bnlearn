@@ -1632,7 +1632,7 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
             df = None
 
     else:
-        df = dz.get(data, url, sep, n=n, verbose=0)
+        df = dz.get(data, url=url, sep=sep, n=n, verbose=0)
 
     return df
 
