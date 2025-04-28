@@ -20,3 +20,4 @@ ipywidgets
 lingam
 datazets
 setgraphviz
+pyarrow<20.0.0  # This is needed for pandas but the latest version results in a bug which can not import __version__
