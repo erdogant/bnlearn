@@ -1,3 +1,31 @@
+# %% 
+import bnlearn as bn
+# Load example DataFrame
+df_as = bn.import_example('titanic')
+dfhot, dfnum = bn.df2onehot(df_as)
+
+# Train model
+model_as = bn.structure_learning.fit(df_as, methodtype='hc', scoretype='bic')
+model_as_p = bn.parameter_learning.fit(model_as, df_as, methodtype='bayes')
+
+# Do the inference
+variables=['Sex', 'Parch', 'Embarked']
+evidence={'Survived':0, 'Pclass':1}
+query = bn.inference.fit(model_as_p, variables=variables, evidence=evidence, to_df=True, plot=True)
+# print(query.text)
+
+# print(query)
+# print(query.df)
+# bn.query2df(query)
+# bn.query2df(query, variables=['Sex'])
+
+
+query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':1}, plot=True)
+query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':0, 'Pclass':1}, plot=True)
+query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0, 'Pclass':1}, plot=True)
+query = bn.inference.fit(model_as_p, variables=['Parch', 'Sex', 'Survived'], evidence={'Embarked': 'S', 'Pclass': 1}, plot=True)
+
+
 #%%
 import bnlearn as bn
 model = bn.import_DAG('asia')
@@ -79,6 +107,7 @@ df = bn.import_example(data='sprinkler')
 
 # Structure learning
 model = bn.structure_learning.fit(df)
+
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
@@ -1141,15 +1170,17 @@ dfhot, dfnum = bn.df2onehot(df_as)
 model_as = bn.structure_learning.fit(dfnum, methodtype='hc', scoretype='bic')
 model_as_p = bn.parameter_learning.fit(model_as, dfnum, methodtype='bayes')
 # Do the inference
-query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch'], evidence={'Survived':0, 'Pclass':1}, to_df=True)
+query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'Embarked'], evidence={'Survived':0, 'Pclass':1}, to_df=True, plot=True)
+print(query.text)
+
 print(query)
 print(query.df)
 bn.query2df(query)
 bn.query2df(query, variables=['Sex'])
 
 
-query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':0, 'Pclass':1})
-query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0, 'Pclass':1})
+query = bn.inference.fit(model_as_p, variables=['Sex'], evidence={'Survived':0, 'Pclass':1}, plot=True)
+query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0, 'Pclass':1}, plot=False)
 
 
 # %% Issue 57
