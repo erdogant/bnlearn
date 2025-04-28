@@ -35,8 +35,10 @@ import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
-from bnlearn.discretize import discretize, discretize_value
 from bnlearn.impute import knn_imputer, mice_imputer
+from bnlearn.discretize import discretize, discretize_value
+from bnlearn.learn_discrete_bayes_net import discretize_all
+
 from packaging import version
 
 __author__ = 'Erdogan Tasksen'
