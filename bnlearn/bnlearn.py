@@ -1058,6 +1058,7 @@ def plot_graphviz(model,
                             'path_color': None,
                             'detect_cycle': False,
                             'ignore_shape': False},
+                  verify_certificate=True,
                   verbose=3):
     """Plot a causal or Bayesian network using Graphviz based on an adjacency matrix.
 
@@ -1088,6 +1089,9 @@ def plot_graphviz(model,
         - `detect_cycle` (bool): If `True`, attempt to detect cycles in the graph.
         - `ignore_shape` (bool): If `True`, ignore the node shapes when plotting.
 
+    verify_certificate : bool (default: True)
+        True: Verify the certificates
+        False: Do not verify
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -1138,7 +1142,7 @@ def plot_graphviz(model,
     from graphviz import Source
 
     # Set Graphviz path to envoirement if required.
-    GraphvizPath = setgraphviz(verbose=verbose)
+    GraphvizPath = setgraphviz(verify_certificate=verify_certificate, verbose=verbose)
     if GraphvizPath is None:
         if verbose>=1:print('Graphviz is not found in path and can therefore cause an error in producint the dot image.')
 
