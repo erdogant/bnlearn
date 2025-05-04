@@ -131,6 +131,7 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.inference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.inference.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.inference.summarize_inference"><code class="docutils literal notranslate"><span class="pre">summarize_inference()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
@@ -169,9 +170,15 @@
   <section id="module-bnlearn.inference">
 <span id="bnlearn-inference"></span><h1>bnlearn.inference<a class="headerlink" href="#module-bnlearn.inference" title="Link to this heading"></a></h1>
 <p>Inference is same as asking conditional probability questions to the models.</p>
+<p># ————————————
+# Name        : inference.py
+# Author      : E.Taskesen
+# Contact     : <a class="reference external" href="mailto:erdogant&#37;&#52;&#48;gmail&#46;com">erdogant<span>&#64;</span>gmail<span>&#46;</span>com</a>
+# Licence     : See licences
+# ————————————</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.inference.fit">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.inference.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elimination_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'greedy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.inference.fit" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.inference.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evidence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_df</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elimination_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'greedy'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">joint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.inference.fit" title="Link to this definition"></a></dt>
 <dd><p>Inference using using Variable Elimination.</p>
 <p>The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
 But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
@@ -197,7 +204,7 @@ involving X and marginalize over them, thus allowing us to work on much smaller 
 </dd>
 </dl>
 </p></li>
-<li><p><strong>to_df</strong> (<em>Bool</em><em>, </em><em>(</em><em>default is True</em><em>)</em>) – The output is converted in the dataframe [query.df]. Enabling this function may heavily impact the processing speed.</p></li>
+<li><p><strong>to_df</strong> (<em>Bool</em><em>, </em><em>(</em><em>default is True</em><em>)</em>) – The output is converted in the dataframe [query.df]. Enabling this function may impact the processing speed.</p></li>
 <li><p><strong>elimination_order</strong> (<em>str</em><em> or </em><em>list</em><em> (</em><em>default='greedy'</em><em>)</em>) – Order in which to eliminate the variables in the algorithm. If list is provided,
 should contain all variables in the model except the ones in <cite>variables</cite>. str options
 are: <cite>greedy</cite>, <cite>WeightedMinFill</cite>, <cite>MinNeighbors</cite>, <cite>MinWeight</cite>, <cite>MinFill</cite>. Please
@@ -206,6 +213,7 @@ for details.</p></li>
 <li><p><strong>joint</strong> (<em>boolean</em><em> (</em><em>default: True</em><em>)</em>) – If True, returns a Joint Distribution over <cite>variables</cite>.
 If False, returns a dict of distributions over each of the <cite>variables</cite>.</p></li>
 <li><p><strong>groupby</strong> (<em>list</em><em> of </em><em>strings</em><em> (</em><em>default: None</em><em>)</em>) – The query is grouped on the variable name by taking the maximum P value for each catagory.</p></li>
+<li><p><strong>plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, display a bar plot.</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
 0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
 </ul>
@@ -232,6 +240,30 @@ If False, returns a dict of distributions over each of the <cite>variables</cite
 <span class="gp">&gt;&gt;&gt;</span>
 </pre></div>
 </div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.inference.summarize_inference">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.inference.</span></span><span class="sig-name descname"><span class="pre">summarize_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evidence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.inference.summarize_inference" title="Link to this definition"></a></dt>
+<dd><p>Summarize inference results based on a Bayesian Network inference output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>variables</strong> (<em>list</em><em> of </em><em>str</em>) – Variables being queried (e.g., [‘Machine failure’] or multiple).</p></li>
+<li><p><strong>evidence</strong> (<em>dict</em>) – Evidence variables and their fixed values (e.g., {‘Torque [Nm]_category’: ‘high’}).</p></li>
+<li><p><strong>query</strong> (<em>Object from inference.fit</em><em>(</em><em>)</em>) – Inference output containing the queried variables and probability ‘p’ in a Dataframe (query.df)</p></li>
+<li><p><strong>plot</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, display a bar plot.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
+0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A textual summary.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <hr>
