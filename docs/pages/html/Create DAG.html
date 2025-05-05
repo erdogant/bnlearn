@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Generate Synthetic Data</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
@@ -103,11 +103,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Directed Acyclic Graphs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#building-a-causal-dag">Building a causal DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#the-causal-dag-as-a-generative-representation-of-joint-probability">The causal DAG as a generative representation of joint probability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#specifying-the-probability-distributions-on-your-own">Specifying the probability distributions on your own</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inference-on-the-causal-generative-model">Inference on the causal generative model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-a-dag-auto-generated-cpts">Build a DAG (Auto generated CPTs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-a-dag-manual-cpts">Build a DAG (Manual CPTs)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
@@ -172,23 +169,20 @@
              
   <section id="directed-acyclic-graphs">
 <h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Link to this heading"></a></h1>
-<p>This example is to better understand the importance and working of a Directed Acyclic Graph. The underneath topics are going to be explained:</p>
-<section id="overview">
-<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>This section describes how to design your Directed Acyclic Graphs (DAGs), and how to assign <strong>Conditional Probability Distributions (CPDs)</strong>.</p>
 <ul class="simple">
-<li><p>Building a DAG</p></li>
-<li><p>plotting a DAG</p></li>
-<li><p>Specifying your own probability distributions</p></li>
-<li><p>Estimating parameters of CPDs</p></li>
+<li><p>Build a DAG (Auto generated CPTs)</p></li>
+<li><p>Build a DAG (Manual CPTs)</p></li>
 <li><p>Inference on the causal generative model</p></li>
 </ul>
-</section>
-<section id="building-a-causal-dag">
-<h2>Building a causal DAG<a class="headerlink" href="#building-a-causal-dag" title="Link to this heading"></a></h2>
-<p>If you readily know (or you have domain knowledge) of the relationships between variables, we can setup the (causal) relationships between the variables with a directed graph (DAG).
-Each node corresponds to a variable and each edge represents conditional dependencies between pairs of variables.
-In bnlearn, we can graphically represent the relationships between variables. To demonstrate this I will create the simple Sprinkler example by hand.</p>
-<p>First we need to define the one-to-one relationships (edges) between the variables. Here we make the edges:</p>
+<section id="build-a-dag-auto-generated-cpts">
+<h2>Build a DAG (Auto generated CPTs)<a class="headerlink" href="#build-a-dag-auto-generated-cpts" title="Link to this heading"></a></h2>
+<p>If you already know the relationships between variables—either through prior knowledge or domain expertise—you can define the (causal) dependencies directly using a <strong>Directed Acyclic Graph (DAG)</strong>.</p>
+<p>In a DAG:
+- Each <strong>node</strong> represents a variable.
+- Each <strong>directed edge</strong> represents a direct dependency (often causal) from one variable to another.</p>
+<p>In <cite>bnlearn</cite>, we can explicitly construct and visualize these relationships. Below, we demonstrate this with the classic <strong>Sprinkler</strong> example.
+First, we define the directed relationships between the variables by specifying the <strong>edges</strong>:</p>
 <ul class="simple">
 <li><p>Cloudy    -&gt; Sprinkler</p></li>
 <li><p>Cloudy    -&gt; Rain</p></li>
@@ -196,7 +190,7 @@ In bnlearn, we can graphically represent the relationships between variables. To
 <li><p>Rain      -&gt; Wet_Grass</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
 <span class="c1"># Define the network structure</span>
 <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
@@ -204,101 +198,175 @@ In bnlearn, we can graphically represent the relationships between variables. To
          <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
          <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
 
-<span class="c1"># Make the actual Bayesian DAG</span>
-<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Lets make the plot. Note that the plot can be differently orientiated if you re-make the plot.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
-</pre></div>
-</div>
-<figure class="align-default" id="id1">
-<span id="fig-sprinkler"></span><img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
-<figcaption>
-<p><span class="caption-text">Causal DAG.</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-<p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.</p>
-</section>
-<section id="the-causal-dag-as-a-generative-representation-of-joint-probability">
-<h2>The causal DAG as a generative representation of joint probability<a class="headerlink" href="#the-causal-dag-as-a-generative-representation-of-joint-probability" title="Link to this heading"></a></h2>
-<p>Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="c1"># Make the Bayesian DAG. The CPTs are auto-generated.</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
 
-<span class="c1"># [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
+<span class="c1"># Plot the DAG</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Print the CPD</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>There are no CPDs attached to the DAG yet. Therefore there is nothing to show.</p>
+<figure class="align-default" id="fig-sprinkler">
+<img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
+</figure>
+<p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.
+When using <cite>bnlearn.make_DAG</cite>, the Conditional Probability Tables (CPTs), also known as Conditional Probability Distributions (CPDs), are <strong>automatically generated</strong> for all nodes if not explicitly provided.</p>
+<dl class="simple">
+<dt>These default CPTs assume:</dt><dd><ul class="simple">
+<li><p>A <strong>uniform probability distribution</strong>, meaning that all outcomes are equally likely.</p></li>
+<li><p>A <strong>default cardinality (variable_card) of 2</strong>, meaning that each node two has two states, [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<p>You can override these defaults by explicitly specifying custom CPTs using <code class="docutils literal notranslate"><span class="pre">TabularCPD</span></code> from <code class="docutils literal notranslate"><span class="pre">pgmpy</span></code>.
+Alternatively, you can generate them using <code class="docutils literal notranslate"><span class="pre">bnlearn.generate_cpt()</span></code> for greater control over cardinality and probability values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Generate Placeholder CPTs</span>
+<span class="n">CPD</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">build_cpts_from_structure</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Adjust the Probability Table(s) accordingly</span>
+<span class="n">CPD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Create the DAG and add the probabiilty tables (CPD)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="n">CPD</span><span class="p">)</span>
+
+<span class="c1"># Print the CPD</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+
+<span class="p">[</span><span class="n">bnlearn</span><span class="p">]</span> <span class="o">&gt;</span><span class="n">Variable</span> <span class="n">Elimination</span><span class="o">.</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>    <span class="o">|</span>   <span class="n">Wet_Grass</span> <span class="o">|</span>        <span class="n">p</span> <span class="o">|</span>
+<span class="o">+====+=============+==========+</span>
+<span class="o">|</span>  <span class="mi">0</span> <span class="o">|</span>           <span class="mi">0</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span>           <span class="mi">1</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span>           <span class="mi">2</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+
+<span class="n">Summary</span> <span class="k">for</span> <span class="n">variables</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="n">Given</span> <span class="n">evidence</span><span class="p">:</span> <span class="n">Rain</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Sprinkler</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Cloudy</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">Wet_Grass</span> <span class="n">outcomes</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">0</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">2</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can have more controle per node and the variable_card and probabilities as following.
+Note that if you change the <cite>variable_card</cite>, it must also match with the child nodes, otherwise it will return a cardinality error!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Get parent nodes from the edges</span>
+<span class="n">parents</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+<span class="c1"># Create the CPT for each node. When changing the variable_card, it should match the cardinality!</span>
+<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_sprinkler</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_wetgrass</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Create the DAG with custom CPTs. The order of the CPTs does not matter.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wetgrass</span><span class="p">,</span> <span class="n">cpt_cloudy</span><span class="p">])</span>
+
+<span class="c1"># The causal DAG as a generative representation of joint probability</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
 </section>
-<section id="specifying-the-probability-distributions-on-your-own">
-<h2>Specifying the probability distributions on your own<a class="headerlink" href="#specifying-the-probability-distributions-on-your-own" title="Link to this heading"></a></h2>
-<p>Each factor is a conditional probability distribution (CPD). In the discrete case the CPD is sometimes called a conditional probability table (CPT).
-Though we can factorize over any DAG and get a set of CPDs, when we factorize along a DAG we consider to be a representation of causality, we call each CPD a causal Markov kernel (CMK).
-The factorization that provides a set of CMKs is the most useful factorization because CMKs correspond to independent causal mechanisms we assume to be invariant across data sets.
-Here again, the term CPD is more often used than CMK.</p>
+<section id="build-a-dag-manual-cpts">
+<h2>Build a DAG (Manual CPTs)<a class="headerlink" href="#build-a-dag-manual-cpts" title="Link to this heading"></a></h2>
+<p>Each factor in a Bayesian network is a conditional probability distribution (CPD), often referred to as a conditional probability table (CPT) in the discrete case.
+While CPDs can be derived from any directed acyclic graph (DAG), if the DAG represents causal relationships,
+the resulting CPDs are better interpreted as <em>causal Markov kernels</em> (CMKs).
+This causal factorization is particularly valuable because each CMK reflects an independent causal mechanism—assumed to remain stable across different datasets.
+Despite this distinction, the term CPD is still more commonly used than CMK.</p>
 <p>For each node we can specify the probability distributions as following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Import the library</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.factors.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">TabularCPD</span>
 
-<span class="c1"># Cloudy</span>
-<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">]])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cpt_cloudy</span><span class="p">)</span>
-</pre></div>
-</div>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td><p>Cloudy(0)</p></td>
-<td><p>0.3</p></td>
-</tr>
-<tr class="row-even"><td><p>Cloudy(1)</p></td>
-<td><p>0.7</p></td>
-</tr>
-</tbody>
-</table>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sprinkler</span>
+<span class="c1"># Cloudy has no parents</span>
+<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]])</span>
+
+<span class="c1"># Sprinkler | Cloudy (Cloudy has 3 values)</span>
 <span class="n">cpt_sprinkler</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
-                                   <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]],</span>
-                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cpt_sprinkler</span><span class="p">)</span>
+                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>  <span class="c1"># Sprinkler=0</span>
+                                   <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]],</span> <span class="c1"># Sprinkler=1</span>
+                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
-<span class="c1"># Rain</span>
+<span class="c1"># Rain | Cloudy (Cloudy has 3 values)</span>
 <span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                      <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
-                              <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span>
-                      <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">cpt_rain</span><span class="p">)</span>
+                      <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>  <span class="c1"># Rain=0</span>
+                              <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span> <span class="c1"># Rain=1</span>
+                      <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
 
-<span class="c1"># Wet Grass</span>
-<span class="n">cpt_wet_grass</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
-                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
-                                   <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]],</span>
-                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span>
-                           <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="c1"># Wet_Grass | Sprinkler, Rain (both binary)</span>
+<span class="n">cpt_wetgrass</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>  <span class="c1"># Wet_Grass=0</span>
+                                  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]],</span> <span class="c1"># Wet_Grass=1</span>
+                          <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_sprinkler</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_rain</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">cpt_wet_grass</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Now need to connect the DAG with CPDs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_cloudy</span><span class="p">,</span> <span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wet_grass</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>Nice work! You created a directed acyclic graph with probability tables connected to it.
-To further examine the CPDs, print the DAG as following:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bnlearn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="inference-on-the-causal-generative-model">
-<h2>Inference on the causal generative model<a class="headerlink" href="#inference-on-the-causal-generative-model" title="Link to this heading"></a></h2>
-<p>This is an great basis to make inferences or update your this model with new data (parameter learning).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_cloudy</span><span class="p">)</span>
+<span class="c1"># +-----------+-----+</span>
+<span class="c1"># | Cloudy(0) | 0.3 |</span>
+<span class="c1"># +-----------+-----+</span>
+<span class="c1"># | Cloudy(1) | 0.7 |</span>
+<span class="c1"># +-----------+-----+</span>
+
+<span class="c1"># Now need to connect the edges with CPDs.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_cloudy</span><span class="p">,</span> <span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wet_grass</span><span class="p">])</span>
+
+<span class="c1"># The causal DAG as a generative representation of joint probability</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
 <hr>
-<center>
-        <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-</center>
-<hr><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->

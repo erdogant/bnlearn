@@ -120,7 +120,7 @@ Contents
 
 .. toctree::
   :maxdepth: 2
-  :caption: Generate Synthetic Data
+  :caption: Synthetic Data
 
   Sampling
 

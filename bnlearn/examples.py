@@ -1,3 +1,76 @@
+import bnlearn as bn
+from pgmpy.factors.discrete import TabularCPD
+
+# Define the structure
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Define CPTs manually with consistent evidence_card
+
+# Cloudy has no parents
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=3,
+                        values=[[0.2], [0.3], [0.5]])
+
+# Sprinkler | Cloudy (Cloudy has 3 values)
+cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                           values=[[0.9, 0.6, 0.1],  # Sprinkler=0
+                                   [0.1, 0.4, 0.9]], # Sprinkler=1
+                           evidence=['Cloudy'], evidence_card=[3])
+
+# Rain | Cloudy (Cloudy has 3 values)
+cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                      values=[[0.8, 0.5, 0.2],  # Rain=0
+                              [0.2, 0.5, 0.8]], # Rain=1
+                      evidence=['Cloudy'], evidence_card=[3])
+
+# Wet_Grass | Sprinkler, Rain (both binary)
+cpt_wetgrass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                          values=[[1.0, 0.1, 0.1, 0.01],  # Wet_Grass=0
+                                  [0.0, 0.9, 0.9, 0.99]], # Wet_Grass=1
+                          evidence=['Sprinkler', 'Rain'], evidence_card=[2, 2])
+
+
+# Add CPTs to model
+model = bn.make_DAG(edges, CPD=[cpt_sprinkler, cpt_rain, cpt_wetgrass, cpt_cloudy])
+
+# Make inferences
+q = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
+
+
+#%%
+# Import the library
+import bnlearn as bn
+
+# Define the network structure
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+ 
+# Get parent nodes from the edges
+parents = bn.get_parents(edges)
+print(parents)
+
+# For each parent node we need to define the CPT
+cpt_cloudy = bn.generate_cpt('Cloudy', parents.get('Cloudy'), variable_card=2)
+cpt_sprinkler = bn.generate_cpt('Sprinkler', parents.get('Sprinkler'), variable_card=2)
+cpt_rain = bn.generate_cpt('Rain', parents.get('Rain'), variable_card=2)
+cpt_wetgrass = bn.generate_cpt('Wet_Grass', parents.get('Wet_Grass'), variable_card=2)
+
+# Create the DAG with custom CPTs. The order of the CPTs does not matter.
+model = bn.make_DAG(edges, CPD=[cpt_sprinkler, cpt_rain, cpt_wetgrass, cpt_cloudy])
+# model = bn.make_DAG(edges, CPD=None)
+
+G = bn.plot(model)
+
+# Print the CPD
+d = bn.print_CPD(model)
+
+# Make inferences
+q = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
+
 #%%
 import bnlearn as bn
 
@@ -19,6 +92,7 @@ DAG = bn.make_DAG(edges, methodtype='naivebayes')
 # [bnlearn] >Error: Invalid structure for NaiveBayes model.
 # [bnlearn] >All nodes must have the same parent (the class variable).
 # [bnlearn] >Use methodtype='bayes' instead if you have a more complex dependency structure.
+
 
 #%%
 
@@ -78,6 +152,9 @@ CPD = bn.build_cpts_from_structure(edges, variable_card=2)
 DAG = bn.make_DAG(edges, CPD=CPD)
 bn.plot(DAG)
 
+q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
+
+
 # Import the library
 # Cloudy
 cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
@@ -109,7 +186,6 @@ DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
 
 
 d_cpts = bn.print_CPD(DAG)
-
 
 q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 

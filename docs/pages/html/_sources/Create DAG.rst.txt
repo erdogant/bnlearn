@@ -1,25 +1,23 @@
 Directed Acyclic Graphs
 ========================
 
-This example is to better understand the importance and working of a Directed Acyclic Graph. The underneath topics are going to be explained:
+This section describes how to design your Directed Acyclic Graphs (DAGs), and how to assign **Conditional Probability Distributions (CPDs)**. 
 
-Overview
-''''''''
-
-* Building a DAG
-* plotting a DAG
-* Specifying your own probability distributions
-* Estimating parameters of CPDs
+* Build a DAG (Auto generated CPTs)
+* Build a DAG (Manual CPTs)
 * Inference on the causal generative model
 
 
-Building a causal DAG
-'''''''''''''''''''''
-If you readily know (or you have domain knowledge) of the relationships between variables, we can setup the (causal) relationships between the variables with a directed graph (DAG). 
-Each node corresponds to a variable and each edge represents conditional dependencies between pairs of variables.
-In bnlearn, we can graphically represent the relationships between variables. To demonstrate this I will create the simple Sprinkler example by hand.
+Build a DAG (Auto generated CPTs)
+'''''''''''''''''''''''''''''''''''
+If you already know the relationships between variables—either through prior knowledge or domain expertise—you can define the (causal) dependencies directly using a **Directed Acyclic Graph (DAG)**.
 
-First we need to define the one-to-one relationships (edges) between the variables. Here we make the edges:
+In a DAG:
+- Each **node** represents a variable.
+- Each **directed edge** represents a direct dependency (often causal) from one variable to another.
+
+In `bnlearn`, we can explicitly construct and visualize these relationships. Below, we demonstrate this with the classic **Sprinkler** example.
+First, we define the directed relationships between the variables by specifying the **edges**:
 
 * Cloudy    -> Sprinkler
 * Cloudy    -> Rain
@@ -30,7 +28,7 @@ First we need to define the one-to-one relationships (edges) between the variabl
 .. code-block:: python
 
    # Import the library
-   import bnlearn
+   import bnlearn as bn
 
    # Define the network structure
    edges = [('Cloudy', 'Sprinkler'),
@@ -38,128 +36,184 @@ First we need to define the one-to-one relationships (edges) between the variabl
             ('Sprinkler', 'Wet_Grass'),
             ('Rain', 'Wet_Grass')]
 
-   # Make the actual Bayesian DAG
-   DAG = bnlearn.make_DAG(edges)
+   # Make the Bayesian DAG. The CPTs are auto-generated.
+   DAG = bn.make_DAG(edges, methodtype='bayes')
 
-
-Lets make the plot. Note that the plot can be differently orientiated if you re-make the plot.
-
-.. code-block:: python
+   # Plot the DAG
+   bn.plot(DAG)
    
-   bnlearn.plot(DAG)
+   # Print the CPD
+   d = bn.print_CPD(DAG)
 
 
 .. _fig-sprinkler:
 
 .. figure:: ../figs/fig_sprinkler_sl.png
 
-  Causal DAG.
 
 We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.
+When using `bnlearn.make_DAG`, the Conditional Probability Tables (CPTs), also known as Conditional Probability Distributions (CPDs), are **automatically generated** for all nodes if not explicitly provided.
 
+These default CPTs assume:
+    - A **uniform probability distribution**, meaning that all outcomes are equally likely.
+    - A **default cardinality (variable_card) of 2**, meaning that each node two has two states, [0, 1].
 
-The causal DAG as a generative representation of joint probability
-''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-
-Any DAG (causal or otherwise) that we might specify for this data represents a factorization of the joint probability distribution of the variables.
+You can override these defaults by explicitly specifying custom CPTs using ``TabularCPD`` from ``pgmpy``.
+Alternatively, you can generate them using ``bnlearn.generate_cpt()`` for greater control over cardinality and probability values.
 
 .. code-block:: python
-   
-   bnlearn.print_CPD(DAG)
 
-   # [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.
+    # Import the library
+    import bnlearn as bn
+    
+    # Define the network structure
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+    
+    # Generate Placeholder CPTs
+    CPD = bn.build_cpts_from_structure(edges, variable_card=3)
+    
+    # Adjust the Probability Table(s) accordingly
+    CPD[0].values
+    
+    # Create the DAG and add the probabiilty tables (CPD)
+    model = bn.make_DAG(edges, CPD=CPD)
+    
+    # Print the CPD
+    d = bn.print_CPD(model)
+    
+    # Make inferences
+    q = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 
 
-There are no CPDs attached to the DAG yet. Therefore there is nothing to show.
+    [bnlearn] >Variable Elimination.
+    +----+-------------+----------+
+    |    |   Wet_Grass |        p |
+    +====+=============+==========+
+    |  0 |           0 | 0.333333 |
+    +----+-------------+----------+
+    |  1 |           1 | 0.333333 |
+    +----+-------------+----------+
+    |  2 |           2 | 0.333333 |
+    +----+-------------+----------+
+    
+    Summary for variables: ['Wet_Grass']
+    Given evidence: Rain=1, Sprinkler=0, Cloudy=1
+    
+    Wet_Grass outcomes:
+    - Wet_Grass: 0 (33.3%)
+    - Wet_Grass: 1 (33.3%)
+    - Wet_Grass: 2 (33.3%)
 
 
-Specifying the probability distributions on your own
+We can have more controle per node and the variable_card and probabilities as following.
+Note that if you change the `variable_card`, it must also match with the child nodes, otherwise it will return a cardinality error!
+
+.. code-block:: python
+    
+    # Import the library
+    import bnlearn as bn
+    
+    # Define the network structure
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+     
+    # Get parent nodes from the edges
+    parents = bn.get_parents(edges)
+    
+    print(parents)
+    {'Sprinkler': ['Cloudy'],
+     'Rain': ['Cloudy'],
+     'Wet_Grass': ['Sprinkler', 'Rain'],
+     'Cloudy': []}
+      
+    # Create the CPT for each node. When changing the variable_card, it should match the cardinality!
+    cpt_cloudy = bn.generate_cpt('Cloudy', parents.get('Cloudy'), variable_card=2)
+    cpt_sprinkler = bn.generate_cpt('Sprinkler', parents.get('Sprinkler'), variable_card=2)
+    cpt_rain = bn.generate_cpt('Rain', parents.get('Rain'), variable_card=2)
+    cpt_wetgrass = bn.generate_cpt('Wet_Grass', parents.get('Wet_Grass'), variable_card=2)
+    
+    # Create the DAG with custom CPTs. The order of the CPTs does not matter.
+    model = bn.make_DAG(edges, CPD=[cpt_sprinkler, cpt_rain, cpt_wetgrass, cpt_cloudy])
+    
+    # The causal DAG as a generative representation of joint probability
+    d = bn.print_CPD(model)
+    
+    # Make inferences
+    q = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
+
+
+Build a DAG (Manual CPTs)
 ''''''''''''''''''''''''''''''''''''''''''''''''''''
 
-Each factor is a conditional probability distribution (CPD). In the discrete case the CPD is sometimes called a conditional probability table (CPT).
-Though we can factorize over any DAG and get a set of CPDs, when we factorize along a DAG we consider to be a representation of causality, we call each CPD a causal Markov kernel (CMK).
-The factorization that provides a set of CMKs is the most useful factorization because CMKs correspond to independent causal mechanisms we assume to be invariant across data sets. 
-Here again, the term CPD is more often used than CMK.
+Each factor in a Bayesian network is a conditional probability distribution (CPD), often referred to as a conditional probability table (CPT) in the discrete case.
+While CPDs can be derived from any directed acyclic graph (DAG), if the DAG represents causal relationships,
+the resulting CPDs are better interpreted as *causal Markov kernels* (CMKs).
+This causal factorization is particularly valuable because each CMK reflects an independent causal mechanism—assumed to remain stable across different datasets.
+Despite this distinction, the term CPD is still more commonly used than CMK.
+
 
 For each node we can specify the probability distributions as following:
 
-.. code-block:: python
-
-   # Import the library
-   from pgmpy.factors.discrete import TabularCPD
-
-   # Cloudy
-   cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
-   print(cpt_cloudy)
-
-
-.. table::
-
-   +-----------+-----+
-   | Cloudy(0) | 0.3 |
-   +-----------+-----+
-   | Cloudy(1) | 0.7 |
-   +-----------+-----+
-
 
 .. code-block:: python
-
-   # Sprinkler
-   cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
-                              values=[[0.5, 0.9], 
-			              [0.5, 0.1]],
-                              evidence=['Cloudy'], evidence_card=[2])
-   print(cpt_sprinkler)
-
-   # Rain
-   cpt_rain = TabularCPD(variable='Rain', variable_card=2,
-                         values=[[0.8, 0.2],
-			         [0.2, 0.8]],
-                         evidence=['Cloudy'], evidence_card=[2])
-   print(cpt_rain)
-
-   # Wet Grass
-   cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
-                              values=[[1, 0.1, 0.1, 0.01],
-                                      [0, 0.9, 0.9, 0.99]],
-                              evidence=['Sprinkler', 'Rain'],
-                              evidence_card=[2, 2])
-   print(cpt_wet_grass)
-
-Now need to connect the DAG with CPDs.
-
-.. code-block:: python
-
-   DAG = bnlearn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
-
-
-
-Nice work! You created a directed acyclic graph with probability tables connected to it.
-To further examine the CPDs, print the DAG as following:
-
-.. code-block:: python
-
-   bnlearn.print_CPD(DAG)
-
-
-Inference on the causal generative model
-''''''''''''''''''''''''''''''''''''''''
-
-This is an great basis to make inferences or update your this model with new data (parameter learning).
-
-.. code-block:: python
-   
-   q1 = bnlearn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
-
-
-
-.. raw:: html
-
-	<hr>
-	<center>
-		<script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>
-	</center>
-	<hr>
+    
+    # Import the library
+    import bnlearn as bn
+    
+    # Define the network structure
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+      
+    # Import the library
+    from pgmpy.factors.discrete import TabularCPD
+     
+    # Cloudy has no parents
+    cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=3,
+                            values=[[0.2], [0.3], [0.5]])
+    
+    # Sprinkler | Cloudy (Cloudy has 3 values)
+    cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                               values=[[0.9, 0.6, 0.1],  # Sprinkler=0
+                                       [0.1, 0.4, 0.9]], # Sprinkler=1
+                               evidence=['Cloudy'], evidence_card=[3])
+    
+    # Rain | Cloudy (Cloudy has 3 values)
+    cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                          values=[[0.8, 0.5, 0.2],  # Rain=0
+                                  [0.2, 0.5, 0.8]], # Rain=1
+                          evidence=['Cloudy'], evidence_card=[3])
+    
+    # Wet_Grass | Sprinkler, Rain (both binary)
+    cpt_wetgrass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                              values=[[1.0, 0.1, 0.1, 0.01],  # Wet_Grass=0
+                                      [0.0, 0.9, 0.9, 0.99]], # Wet_Grass=1
+                              evidence=['Sprinkler', 'Rain'], evidence_card=[2, 2])
+    
+    print(cpt_sprinkler)
+    print(cpt_rain)
+    print(cpt_wet_grass)
+    print(cpt_cloudy)
+    # +-----------+-----+
+    # | Cloudy(0) | 0.3 |
+    # +-----------+-----+
+    # | Cloudy(1) | 0.7 |
+    # +-----------+-----+
+    
+    # Now need to connect the edges with CPDs. 
+    model = bn.make_DAG(edges, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+    
+    # The causal DAG as a generative representation of joint probability
+    d = bn.print_CPD(model)
+     
+    # Make inferences
+    q = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 
 
 

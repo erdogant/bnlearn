@@ -33,10 +33,12 @@ Lets load the Sprinkler data set and make some inferences.
 What is the probability of *wet grass* given that it *Rains*, and the *sprinkler* is off and its *cloudy*: P(wet grass | rain=1, sprinkler=0, cloudy=1)?
 
 .. code-block:: python
+
+   # Import library
+   import bnlearn as bn
    
-   import bnlearn
-   model = bnlearn.import_DAG('sprinkler')
-   q1 = bnlearn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
+   model = bn.import_DAG('sprinkler')
+   q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
 
 The probability having wet grass is 0.9 and not-wet-gras is 0.1.
@@ -57,7 +59,7 @@ What is the probability of wet grass given and Rain given that the *Sprinkler* i
 
 .. code-block:: python
    
-   q2 = bnlearn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
+   q2 = bn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
 
 The highest probability is that in these condition, there is wet grass and no rain (P=0.63)
@@ -83,14 +85,17 @@ P(lung | smoker=1, xray=0)
 
 .. code-block:: python
 
+   # Import library
+   import bnlearn as bn
+
    # Lets create the dataset
-   model = bnlearn.import_DAG('asia')
+   model = bn.import_DAG('asia')
 
 Lets make the inference:
 
 .. code-block:: python
 
-   q1 = bnlearn.inference.fit(model, variables=['lung'], evidence={'xray':0, 'smoke':1})
+   q1 = bn.inference.fit(model, variables=['lung'], evidence={'xray':0, 'smoke':1})
 
   +---------+-------------+
   | lung    |   phi(lung) |

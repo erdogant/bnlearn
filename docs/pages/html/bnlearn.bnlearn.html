@@ -90,7 +90,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Generate Synthetic Data</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
@@ -133,14 +133,17 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.bnlearn</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.build_cpts_from_structure"><code class="docutils literal notranslate"><span class="pre">build_cpts_from_structure()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.check_model"><code class="docutils literal notranslate"><span class="pre">check_model()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.compare_networks"><code class="docutils literal notranslate"><span class="pre">compare_networks()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.compute_logp"><code class="docutils literal notranslate"><span class="pre">compute_logp()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.convert_edges_with_time_slice"><code class="docutils literal notranslate"><span class="pre">convert_edges_with_time_slice()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.dag2adjmat"><code class="docutils literal notranslate"><span class="pre">dag2adjmat()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.df2onehot"><code class="docutils literal notranslate"><span class="pre">df2onehot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.generate_cpt"><code class="docutils literal notranslate"><span class="pre">generate_cpt()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_edge_properties"><code class="docutils literal notranslate"><span class="pre">get_edge_properties()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_node_properties"><code class="docutils literal notranslate"><span class="pre">get_node_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.get_parents"><code class="docutils literal notranslate"><span class="pre">get_parents()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.has_valid_time_slice"><code class="docutils literal notranslate"><span class="pre">has_valid_time_slice()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
@@ -151,8 +154,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.plot_graphviz"><code class="docutils literal notranslate"><span class="pre">plot_graphviz()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.probs_rulebook"><code class="docutils literal notranslate"><span class="pre">probs_rulebook()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.sampling"><code class="docutils literal notranslate"><span class="pre">sampling()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.structure_scores"><code class="docutils literal notranslate"><span class="pre">structure_scores()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.bnlearn.to_bayesiannetwork"><code class="docutils literal notranslate"><span class="pre">to_bayesiannetwork()</span></code></a></li>
@@ -245,6 +248,41 @@ False: Keep as is</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.build_cpts_from_structure">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">build_cpts_from_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_card</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rulebook</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.build_cpts_from_structure" title="Link to this definition"></a></dt>
+<dd><p>Automatically generates placeholder CPTs for all nodes in a network structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>list</em><em> of </em><em>tuple</em>) – A list of (parent, child) edges defining the structure of the network.</p></li>
+<li><p><strong>variable_card</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of values each variable can take (default is 2).</p></li>
+<li><p><strong>rulebook</strong> (<em>dict</em><em>, </em><em>optional</em>) – A dictionary of {node: callable} functions returning probabilities.
+Each function must return either a float (binary) or a list of probabilities summing to 1.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level (default is 3).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of TabularCPD objects representing the conditional probability tables for each node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of TabularCPD</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">build_cpts_from_structure</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># [&lt;TabularCPD for Cloudy&gt;, &lt;TabularCPD for Sprinkler&gt;, &lt;TabularCPD for Rain&gt;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create DAG with default CPD values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="n">CPD</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.check_model">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">check_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.check_model" title="Link to this definition"></a></dt>
 <dd><p>Check if the CPDs associated with the nodes are consistent.</p>
@@ -295,7 +333,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.convert_edges_with_time_slice">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">convert_edges_with_time_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.convert_edges_with_time_slice" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">convert_edges_with_time_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.convert_edges_with_time_slice" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -320,7 +358,7 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Extract edges from model and store in adjacency matrix</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">adjmat</span><span class="o">=</span><span class="n">bn</span><span class="o">.</span><span class="n">dag2adjmat</span><span class="p">(</span><span class="n">DAG</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">])</span>
 </pre></div>
@@ -349,6 +387,70 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.generate_cpt">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">generate_cpt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_card</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rulebook</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.generate_cpt" title="Link to this definition"></a></dt>
+<dd><p>Generate a TabularCPD object for a given node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<em>str</em>) – The name of the node.</p></li>
+<li><p><strong>parents</strong> (<em>list</em><em> of </em><em>str</em>) – List of parent nodes.</p></li>
+<li><p><strong>variable_card</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of possible values the node can take (default is 2).</p></li>
+<li><p><strong>rulebook</strong> (<em>dict</em><em>, </em><em>optional</em>) – Dictionary of {node: callable} to generate conditional probabilities.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Verbosity level (default is 3). If &gt;= 3, prints the CPT.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pgmpy TabularCPD object representing the CPT for the node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>TabularCPD</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parents</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># {&#39;Rain&#39;: [&#39;Cloudy&#39;], &#39;Sprinkler&#39;: [&#39;Cloudy&#39;], &#39;Cloudy&#39;: []}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate the CPTs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpt_Rain</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpt_Sprinkler</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create DAG with default CPD values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_Rain</span><span class="p">,</span> <span class="n">cpt_Sprinkler</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example with DBN</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">convert_edges_with_time_slice</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get parents</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parents</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># {(&#39;Rain&#39;, 0): [(&#39;Cloudy&#39;, 0)], (&#39;Sprinkler&#39;, 0): [(&#39;Cloudy&#39;, 0)], (&#39;Cloudy&#39;, 0): []}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Generate the CPTs</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpt_Rain</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">((</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpt_Sprinkler</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">((</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cpt_Cloudy</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">((</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">((</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Create DAG with default CPD values</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_Rain</span><span class="p">,</span> <span class="n">cpt_Sprinkler</span><span class="p">,</span> <span class="n">cpt_Cloudy</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -452,9 +554,35 @@ adjmat_diff : Adjacency matrix depicting the differences between the two input m
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.get_parents">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">get_parents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.get_parents" title="Link to this definition"></a></dt>
+<dd><p>Build a dictionary mapping each node to its list of parents based on edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>edges</strong> (<em>list</em><em> of </em><em>tuple</em>) – A list of (parent, child) tuples defining the DAG structure.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary mapping each node to its list of parents. Nodes with no parents are included with an empty list.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># {&#39;Rain&#39;: [&#39;Cloudy&#39;], &#39;Sprinkler&#39;: [&#39;Cloudy&#39;], &#39;Cloudy&#39;: []}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.has_valid_time_slice">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">has_valid_time_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">edges</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.has_valid_time_slice" title="Link to this definition"></a></dt>
-<dd><p>Example usage
+<dd><p>Example usage.
 edges = [(‘A’, ‘B’), (‘A’, ‘C’), (‘A’, ‘D’)]
 edgest = [((‘A’, 0), (‘B’, 0)), ((‘A’, 0), (‘C’, 0)), ((‘A’, 0), (‘D’, 0))]</p>
 <p># Check edges
@@ -670,6 +798,14 @@ considered uncorrelated.</p>
 <p class="rubric">Examples</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CPD</span> <span class="o">=</span> <span class="n">build_cpts_from_structure</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="n">CPD</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;naivebayes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">),</span> <span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;markov&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
 </pre></div>
@@ -690,7 +826,7 @@ considered uncorrelated.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.plot">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn</span> <span class="pre">Directed</span> <span class="pre">Acyclic</span> <span class="pre">Graph</span> <span class="pre">(DAG)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'figsize':</span> <span class="pre">(1500,</span> <span class="pre">800),</span> <span class="pre">'filepath':</span> <span class="pre">None,</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'minmax_distance':</span> <span class="pre">[100,</span> <span class="pre">250],</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'show_slider':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">20,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'dpi':</span> <span class="pre">200,</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'figsize':</span> <span class="pre">(10,</span> <span class="pre">10),</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">10,</span> <span class="pre">'height':</span> <span class="pre">None,</span> <span class="pre">'layout':</span> <span class="pre">'graphviz_layout',</span> <span class="pre">'maxscale':</span> <span class="pre">5,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'showplot':</span> <span class="pre">True,</span> <span class="pre">'visible':</span> <span class="pre">True,</span> <span class="pre">'width':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bnlearn</span> <span class="pre">Directed</span> <span class="pre">Acyclic</span> <span class="pre">Graph</span> <span class="pre">(DAG)'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'weight'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_interactive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'bgcolor':</span> <span class="pre">'#ffffff',</span> <span class="pre">'figsize':</span> <span class="pre">(1500,</span> <span class="pre">800),</span> <span class="pre">'filepath':</span> <span class="pre">None,</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'minmax_distance':</span> <span class="pre">[100,</span> <span class="pre">250],</span> <span class="pre">'notebook':</span> <span class="pre">False,</span> <span class="pre">'show_slider':</span> <span class="pre">True}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_static</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.8,</span> <span class="pre">'arrowsize':</span> <span class="pre">20,</span> <span class="pre">'arrowstyle':</span> <span class="pre">'-|&gt;',</span> <span class="pre">'dpi':</span> <span class="pre">200,</span> <span class="pre">'edge_alpha':</span> <span class="pre">0.8,</span> <span class="pre">'facecolor':</span> <span class="pre">'white',</span> <span class="pre">'figsize':</span> <span class="pre">(10,</span> <span class="pre">10),</span> <span class="pre">'font_color':</span> <span class="pre">'#000000',</span> <span class="pre">'font_family':</span> <span class="pre">'sans-serif',</span> <span class="pre">'font_size':</span> <span class="pre">10,</span> <span class="pre">'height':</span> <span class="pre">None,</span> <span class="pre">'layout':</span> <span class="pre">'spring_layout',</span> <span class="pre">'maxscale':</span> <span class="pre">5,</span> <span class="pre">'minscale':</span> <span class="pre">1,</span> <span class="pre">'node_shape':</span> <span class="pre">'o',</span> <span class="pre">'showplot':</span> <span class="pre">True,</span> <span class="pre">'visible':</span> <span class="pre">True,</span> <span class="pre">'width':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.plot" title="Link to this definition"></a></dt>
 <dd><p>Plot the learned stucture.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -971,6 +1107,40 @@ None : Returns all Probabilities</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="bnlearn.bnlearn.probs_rulebook">
+<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">probs_rulebook</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rulebook</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variable_card</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_combos</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.probs_rulebook" title="Link to this definition"></a></dt>
+<dd><p>Generate probability values for a node using a rulebook.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> (<em>str</em>) – The node name.</p></li>
+<li><p><strong>rulebook</strong> (<em>dict</em>) – A dictionary mapping node names to callable functions that return probabilities.</p></li>
+<li><p><strong>variable_card</strong> (<em>int</em>) – Number of possible values the node can take.</p></li>
+<li><p><strong>all_combos</strong> (<em>list</em><em> of </em><em>tuple</em>) – All possible combinations of parent values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 2D list where each sublist contains probabilities for a node state across all parent configurations.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of list</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the rule function does not return a float or a list of correct length.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1">#</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">rule</span><span class="p">(</span><span class="n">c</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">probs_rulebook</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="n">rule</span><span class="p">},</span> <span class="mi">3</span><span class="p">,</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># [[0.7, 0.2], [0.2, 0.5], [0.1, 0.3]]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.bnlearn.query2df">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">query2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.query2df" title="Link to this definition"></a></dt>
 <dd><p>Convert query from inference model to a dataframe.</p>
@@ -989,60 +1159,6 @@ None : Returns all Probabilities</p>
 <dd class="field-odd"><p>pd.DataFrame()</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="bnlearn.bnlearn.sampling">
-<span class="sig-prename descclassname"><span class="pre">bnlearn.bnlearn.</span></span><span class="sig-name descname"><span class="pre">sampling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DAG</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bayes'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.bnlearn.sampling" title="Link to this definition"></a></dt>
-<dd><p>Generate sample(s) using the joint distribution of the network.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>DAG</strong> (<em>dict</em>) – Contains model and the adjmat of the DAG.</p></li>
-<li><p><strong>methodtype</strong> (<em>str</em><em> (</em><em>default: 'bayes'</em><em>)</em>) – <ul>
-<li><p>‘bayes’: Forward sampling using Bayesian.</p></li>
-<li><p>’gibbs’ : Gibbs sampling.</p></li>
-</ul>
-</p></li>
-<li><p><strong>n</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples to generate. The default is 1000.</p></li>
-<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em>) – Print progress to screen. The default is 3.
-0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>df</strong> – Dataframe containing sampled data from the input DAG model.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame().</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 1</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import library</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load DAG with model</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Example 2:</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load example dataset</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
-<span class="gp">&gt;&gt;&gt; </span>        <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
-<span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Make the actual Bayesian DAG</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Fit model</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Sampling using gibbs</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;gibbs&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</pre></div>
-</div>
 </dd></dl>
 
 <dl class="py function">

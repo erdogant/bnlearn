@@ -89,7 +89,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Generate Synthetic Data</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
@@ -315,7 +315,7 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Generate Synthetic Data</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
@@ -338,11 +338,8 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#building-a-causal-dag">Building a causal DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#the-causal-dag-as-a-generative-representation-of-joint-probability">The causal DAG as a generative representation of joint probability</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#specifying-the-probability-distributions-on-your-own">Specifying the probability distributions on your own</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#inference-on-the-causal-generative-model">Inference on the causal generative model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#build-a-dag-auto-generated-cpts">Build a DAG (Auto generated CPTs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Create%20DAG.html#build-a-dag-manual-cpts">Build a DAG (Manual CPTs)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a><ul>
@@ -414,14 +411,17 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2dict"><code class="docutils literal notranslate"><span class="pre">adjmat2dict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2vec"><code class="docutils literal notranslate"><span class="pre">adjmat2vec()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.build_cpts_from_structure"><code class="docutils literal notranslate"><span class="pre">build_cpts_from_structure()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.check_model"><code class="docutils literal notranslate"><span class="pre">check_model()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.compare_networks"><code class="docutils literal notranslate"><span class="pre">compare_networks()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.compute_logp"><code class="docutils literal notranslate"><span class="pre">compute_logp()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.convert_edges_with_time_slice"><code class="docutils literal notranslate"><span class="pre">convert_edges_with_time_slice()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.dag2adjmat"><code class="docutils literal notranslate"><span class="pre">dag2adjmat()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot"><code class="docutils literal notranslate"><span class="pre">df2onehot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.generate_cpt"><code class="docutils literal notranslate"><span class="pre">generate_cpt()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_edge_properties"><code class="docutils literal notranslate"><span class="pre">get_edge_properties()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_node_properties"><code class="docutils literal notranslate"><span class="pre">get_node_properties()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.get_parents"><code class="docutils literal notranslate"><span class="pre">get_parents()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.has_valid_time_slice"><code class="docutils literal notranslate"><span class="pre">has_valid_time_slice()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG"><code class="docutils literal notranslate"><span class="pre">import_DAG()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example"><code class="docutils literal notranslate"><span class="pre">import_example()</span></code></a></li>
@@ -432,8 +432,8 @@ Report bugs, issues and feature extensions at <a class="reference external" href
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz"><code class="docutils literal notranslate"><span class="pre">plot_graphviz()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.print_CPD"><code class="docutils literal notranslate"><span class="pre">print_CPD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.probs_rulebook"><code class="docutils literal notranslate"><span class="pre">probs_rulebook()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.query2df"><code class="docutils literal notranslate"><span class="pre">query2df()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.sampling"><code class="docutils literal notranslate"><span class="pre">sampling()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.save"><code class="docutils literal notranslate"><span class="pre">save()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.structure_scores"><code class="docutils literal notranslate"><span class="pre">structure_scores()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.to_bayesiannetwork"><code class="docutils literal notranslate"><span class="pre">to_bayesiannetwork()</span></code></a></li>

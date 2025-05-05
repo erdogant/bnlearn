@@ -95,7 +95,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Generate Synthetic Data</span></p>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
@@ -197,9 +197,11 @@ thus allowing us to work on much smaller factors.</p>
 <h2>Example (1)<a class="headerlink" href="#example-1" title="Link to this heading"></a></h2>
 <p>Lets load the Sprinkler data set and make some inferences.</p>
 <p>What is the probability of <em>wet grass</em> given that it <em>Rains</em>, and the <em>sprinkler</em> is off and its <em>cloudy</em>: P(wet grass | rain=1, sprinkler=0, cloudy=1)?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
-<span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The probability having wet grass is 0.9 and not-wet-gras is 0.1.</p>
@@ -224,7 +226,7 @@ thus allowing us to work on much smaller factors.</p>
 <section id="example-2">
 <h2>Example (2)<a class="headerlink" href="#example-2" title="Link to this heading"></a></h2>
 <p>What is the probability of wet grass given and Rain given that the <em>Sprinkler</em> is on?</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q2</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q2</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>The highest probability is that in these condition, there is wet grass and no rain (P=0.63)</p>
@@ -261,12 +263,15 @@ thus allowing us to work on much smaller factors.</p>
 <h2>Example (3)<a class="headerlink" href="#example-3" title="Link to this heading"></a></h2>
 <p>Given our model, what is the probability on lung cancer given that the person is a smoker and xray is negative?
 P(lung | smoker=1, xray=0)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets create the dataset</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Lets create the dataset</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Lets make the inference:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">q1</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lung&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xray&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;smoke&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="n">q1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lung&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;xray&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;smoke&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
 
 <span class="o">+---------+-------------+</span>
 <span class="o">|</span> <span class="n">lung</span>    <span class="o">|</span>   <span class="n">phi</span><span class="p">(</span><span class="n">lung</span><span class="p">)</span> <span class="o">|</span>
