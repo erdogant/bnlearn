@@ -139,12 +139,18 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     >>> fig = bn.plot(DAG)
 
     """
+    if methodtype is None:
+        if verbose>=2: print(f'[bnlearn] >Warning: methodtype can not be empty.')
+        return None
+
     # Set names to lower
     if methodtype == 'nb': methodtype = 'naivebayes'
     if methodtype == 'dbn': methodtype = 'DBN'
+
     # Automatically generate placeholder values for the CPTs
     if CPD is None and isinstance(DAG, list):
         CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype)
+
     # Make list if required
     if (CPD is not None) and (not isinstance(CPD, list)):
         CPD = [CPD]
@@ -163,24 +169,34 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         if verbose>=3: print('[bnlearn] >No changes made to existing %s DAG.' %(methodtype))
     elif isinstance(DAG, list) and methodtype == 'naivebayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
-        edges = DAG
-        DAG = NaiveBayes()
-        DAG.add_edges_from(edges)
-        DAG.add_nodes_from(CPD)
-        for cpd in CPD: DAG.add_cpds(cpd)
+        try:
+            edges = DAG
+            DAG = NaiveBayes()
+            DAG.add_edges_from(edges)
+            # DAG.add_nodes_from(CPD)
+            for cpd in CPD: DAG.add_cpds(cpd)
+        except ValueError as e:
+            if verbose>=1: print(f"[bnlearn] >Error: {e}")
+            if "Model can only have edges outgoing from:" in str(e) and verbose>=1:
+                print("[bnlearn] >Error: Invalid structure for NaiveBayes model.")
+                print("[bnlearn] >All nodes must have the same parent (the class variable).")
+                print("[bnlearn] >Use methodtype='bayes' instead if you have a more complex dependency structure.")
+                return None
     elif isinstance(DAG, list) and methodtype == 'bayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
         edges = DAG
         DAG = BayesianNetwork()
         DAG.add_edges_from(edges)
-        DAG.add_nodes_from(CPD)
+        # DAG.add_nodes_from(CPD)
         for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'markov':
-        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
+        if verbose>=3: print(f'[bnlearn] >[{methodtype}] DAG created.')
+        if verbose>=3: print(f'[bnlearn] >[{methodtype}] is not supported to store the CPTs in the model.')
         edges = DAG
+        # DAG = MarkovNetwork(DAG)
         DAG = MarkovNetwork()
         DAG.add_edges_from(edges)
-        DAG.add_nodes_from(CPD)
+        # DAG.add_nodes_from(CPD)
         # for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'DBN':
         if verbose>=3: print('[bnlearn] >DynamicBayesianNetwork (DBN) DAG created.')
@@ -192,16 +208,10 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
         DAG = DBN()
         DAG.add_edges_from(edges)
-        # DAG.add_nodes_from(CPD)
-        # DAG.add_cpds(CPD)
         for cpd in CPD: DAG.add_cpds(cpd)
-
-        # Print edges
-        # print("Edges in the DBN:", DAG.edges())
 
     if CPD is not None:
         for cpd in CPD:
-            # DAG.add_cpds(cpd)
             if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Update Probabilities] >[Node {cpd.variable}]')
         # Check model
         if checkmodel:
