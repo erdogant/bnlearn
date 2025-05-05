@@ -2390,26 +2390,6 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
         print(cpt)
 
     return cpt
-    # n_parents = len(parents)
-    # parent_card = [variable_card] * n_parents
-    # all_combos = list(product(range(variable_card), repeat=n_parents))
-    # n_combos = len(all_combos)
-
-    # if rulebook and node in rulebook:
-    #     probs = probs_rulebook(node, rulebook, variable_card, all_combos)
-    # else:
-    #     probs = [[1 / variable_card] * n_combos for _ in range(variable_card)]
-
-    # cpt = TabularCPD(variable=node,
-    #                  variable_card=variable_card,
-    #                  values=probs,
-    #                  evidence=parents if parents else None,
-    #                  evidence_card=parent_card if parents else None)
-
-    # if verbose >= 3:
-    #     print(f'[bnlearn] >CPT for {node}:')
-    #     print(f'{cpt}')
-    # return cpt
 
 
 def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, verbose=3):
