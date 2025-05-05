@@ -110,8 +110,9 @@ def fit(model,
 
     try:
         model_infer = VariableElimination(model)
-    except:
-        raise Exception('[bnlearn] >Error: Input model does not contain learned CPDs. hint: did you run parameter_learning.fit()?')
+    except ValueError as e:
+        raise Exception(f'[bnlearn] >Error: {e}')
+        # Input model does not contain learned CPDs. hint: did you run parameter_learning.fit()?
 
     # Computing the probability P(class | evidence)
     query = model_infer.query(variables=variables, evidence=evidence, elimination_order=elimination_order, joint=joint, show_progress=(verbose>=3))
