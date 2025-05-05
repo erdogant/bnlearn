@@ -12,12 +12,21 @@ requires-python = ">=3"
 license = { file = "LICENSE" }
 keywords = ["Python", ""]
 classifiers = [
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Causal Learning",
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
 dependencies = [
-    "pgmpy==0.1.26",
+    "pgmpy==0.1.25",
     "networkx>=2.7.1",
     "matplotlib>=3.3.4",
     "numpy>=1.24.1",
