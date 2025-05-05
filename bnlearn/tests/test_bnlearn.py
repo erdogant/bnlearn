@@ -10,6 +10,42 @@ import pandas as pd
 from pgmpy.factors.discrete import TabularCPD
 
 
+# def assert_cpd_equal(cpd1, cpd2):
+#     assert cpd1.variable == cpd2.variable, "Variable names do not match."
+#     assert cpd1.variable_card == cpd2.variable_card, "Variable cardinalities do not match."
+#     assert cpd1.get_evidence() == cpd2.get_evidence(), "Evidence variables do not match."
+#     assert cpd1.cardinality == cpd2.cardinality, "Cardinalities do not match."
+
+#     # Compare values
+#     import numpy as np
+#     np.testing.assert_array_almost_equal(
+#         cpd1.get_values(),
+#         cpd2.get_values(),
+#         decimal=6,
+#         err_msg="CPD values are not equal."
+#     )
+
+#     # Compare state names (optional but useful)
+#     assert cpd1.state_names == cpd2.state_names, "State names do not match."
+
+#     print("✅ CPDs are equal.")
+
+# def test_cpd_to_df_to_cpd():
+#     cpd = TabularCPD(
+#         variable='Sprinkler', variable_card=2,
+#         values=[[0.6, 0.1, 0.2], [0.4, 0.9, 0.8]],
+#         evidence=['Cloudy'], evidence_card=[3],
+#         state_names={
+#             'Sprinkler': ['Off', 'On'],
+#             'Cloudy': ['Sunny', 'Cloudy', 'Overcast']
+#         }
+#     )
+
+#     df = bn.cpd_to_dataframe(cpd)
+#     cpd_restored = bn.dataframe_to_cpd(df)
+#     assert_cpd_equal(cpd, cpd_restored)
+
+
 def test_get_parents():
     edges = [('A', 'B'), ('A', 'C'), ('B', 'D')]
     expected = {'B': ['A'], 'C': ['A'], 'D': ['B'], 'A': []}
