@@ -10,8 +10,7 @@ Gi = bn.plot(model, interactive=True)
 bn.print_CPD(model)
 
 # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
-df = bn.sampling(model, n=10000)
-
+df = bn.sampling(model, n=100)
 
 # %% 
 import bnlearn as bn

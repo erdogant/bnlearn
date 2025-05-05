@@ -10,7 +10,7 @@ from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 
 # %% Sampling from model
 def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
-    """Generate sample(s) using the joint distribution of the network.
+    """Generate synthetic data using the joint distribution of the network.
 
     Parameters
     ----------
