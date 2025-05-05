@@ -1,3 +1,83 @@
+#%%
+
+
+# %% Example from sphinx
+# Import the library
+import bnlearn as bn
+
+
+edges = [
+    ('Cloudy', 'Sprinkler'),
+    ('Cloudy', 'Rain'),
+    ('Sprinkler', 'Wet_Grass'),
+    ('Rain', 'Wet_Grass'),
+]
+
+edges = [
+    ('Process Temperature', 'Machine Failure'),
+    ('Torque', 'Machine Failure'),
+    ('Torque', 'Overstrain Failure (OSF)'),
+    ('ToolWear', 'Overstrain Failure (OSF)'),
+    ('Air Temperature', 'Process Temperature'),
+    ('Overstrain Failure (OSF)', 'Machine Failure'),
+]
+
+
+# Genreate Placeholder CPDs
+CPD = bn.build_cpts_from_structure(edges, variable_card=4)
+# Create DAG with default CPD values
+DAG = bn.make_DAG(edges, CPD=CPD)
+bn.plot(DAG)
+
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+parents = bn.get_parents(edges)
+# {'B': ['A'], 'C': ['A'], 'D': ['A'], 'A': []}
+cpt_A = bn.generate_cpt('A', parents.get('A'), variable_card=2)
+cpt_B = bn.generate_cpt('B', parents.get('B'), variable_card=3)
+cpt_C = bn.generate_cpt('C', parents.get('C'), variable_card=4)
+cpt_D = bn.generate_cpt('D', parents.get('D'), variable_card=2)
+# Create DAG with default CPD values
+DAG = bn.make_DAG(edges, CPD=[cpt_A, cpt_B, cpt_C, cpt_D])
+
+bn.print_CPD(DAG)
+
+# Import the library
+# Cloudy
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
+print(cpt_cloudy)
+
+# Sprinkler
+cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                           values=[[0.5, 0.9],
+                                   [0.5, 0.1]],
+                           evidence=['Cloudy'], evidence_card=[2])
+print(cpt_sprinkler)
+
+# Rain
+cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                      values=[[0.8, 0.2],
+                              [0.2, 0.8]],
+                      evidence=['Cloudy'], evidence_card=[2])
+print(cpt_rain)
+
+# Wet Grass
+cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                           values=[[1, 0.1, 0.1, 0.01],
+                                   [0, 0.9, 0.9, 0.99]],
+                           evidence=['Sprinkler', 'Rain'],
+                           evidence_card=[2, 2])
+print(cpt_wet_grass)
+
+DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+
+
+bn.print_CPD(DAG)
+
+
+q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
+
+
+#%%
 import bnlearn as bn
 
 # Load asia DAG
