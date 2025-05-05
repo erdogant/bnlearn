@@ -24,7 +24,8 @@ from decimal import Decimal
 from itertools import product
 from collections import defaultdict
 
-from pgmpy.models import BayesianNetwork, NaiveBayes, DynamicBayesianNetwork, MarkovNetwork
+from pgmpy.models import BayesianNetwork, NaiveBayes, MarkovNetwork
+from pgmpy.models import DynamicBayesianNetwork as DBN
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.metrics import structure_score
 
@@ -114,6 +115,14 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     --------
     >>> import bnlearn as bn
     >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    >>> CPD = build_cpts_from_structure(DAG, variable_card=3)
+    >>> DAG = bn.make_DAG(edges, CPD=CPD, methodtype='naivebayes')
+    >>> fig = bn.plot(DAG)
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     >>> DAG = bn.make_DAG(edges, methodtype='markov')
     >>> fig = bn.plot(DAG)
 
@@ -130,11 +139,15 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     >>> fig = bn.plot(DAG)
 
     """
-    if (CPD is not None) and (not isinstance(CPD, list)):
-        CPD = [CPD]
-
+    # Set names to lower
     if methodtype == 'nb': methodtype = 'naivebayes'
     if methodtype == 'dbn': methodtype = 'DBN'
+    # Automatically generate placeholder values for the CPTs
+    if CPD is None and isinstance(DAG, list):
+        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype)
+    # Make list if required
+    if (CPD is not None) and (not isinstance(CPD, list)):
+        CPD = [CPD]
 
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
@@ -153,30 +166,42 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         edges = DAG
         DAG = NaiveBayes()
         DAG.add_edges_from(edges)
-        # modeel.add_nodes_from(DAG)
+        DAG.add_nodes_from(CPD)
+        for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'bayes':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
-        DAG = BayesianNetwork(DAG)
+        edges = DAG
+        DAG = BayesianNetwork()
+        DAG.add_edges_from(edges)
+        DAG.add_nodes_from(CPD)
+        for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'markov':
         if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
-        DAG = MarkovNetwork(DAG)
+        edges = DAG
+        DAG = MarkovNetwork()
+        DAG.add_edges_from(edges)
+        DAG.add_nodes_from(CPD)
+        # for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'DBN':
-        if verbose>=3: print('[bnlearn] >DynamicBayesianNetwork DAG created.')
+        if verbose>=3: print('[bnlearn] >DynamicBayesianNetwork (DBN) DAG created.')
         # Make edges with time slice
         if not has_valid_time_slice(DAG):
-            edges = convert_edges_with_time_slice(DAG)
+            edges = convert_edges_with_time_slice(DAG, verbose=verbose)
         else:
             edges = DAG
 
-        DAG = DynamicBayesianNetwork()
-        # dbn.add_nodes_from(edges)
+        DAG = DBN()
         DAG.add_edges_from(edges)
+        # DAG.add_nodes_from(CPD)
+        # DAG.add_cpds(CPD)
+        for cpd in CPD: DAG.add_cpds(cpd)
+
         # Print edges
         # print("Edges in the DBN:", DAG.edges())
 
     if CPD is not None:
         for cpd in CPD:
-            DAG.add_cpds(cpd)
+            # DAG.add_cpds(cpd)
             if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Update Probabilities] >[Node {cpd.variable}]')
         # Check model
         if checkmodel:
@@ -192,14 +217,15 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
 
 # %%
-def convert_edges_with_time_slice(edges, time_slice=0):
+def convert_edges_with_time_slice(edges, time_slice=0, verbose=3):
+    if verbose>=3: print(f'[bnlearn]> Converting edges to time slice.')
     return [( (u, time_slice), (v, time_slice) ) for u, v in edges]
 
 def has_valid_time_slice(edges):
-    """ Example usage
+    """ Example usage.
     edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     edgest = [(('A', 0), ('B', 0)), (('A', 0), ('C', 0)), (('A', 0), ('D', 0))]
-    
+
     # Check edges
     has_valid_time_slice(edges)
 
@@ -320,14 +346,21 @@ def check_model(DAG, verbose=3):
     None.
 
     """
-    if isinstance(DAG, dict): DAG = DAG.get('model', None)
-    if DAG is not None:
+    # Get the model
+    if isinstance(DAG, dict):
+        DAG = DAG.get('model', None)
+
+    # Not all models do have get_cpds function
+    if DAG is not None and hasattr(DAG, 'get_cpds'):
         for cpd in DAG.get_cpds():
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
                 if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
             else:
                 if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >OK')
         # if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
+    elif 'markovnetwork' in str(type(DAG)).lower():
+        pass
+        # if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >Unknown')
     else:
         if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
 
@@ -2254,7 +2287,7 @@ def probs_rulebook(node, rulebook, variable_card, all_combos):
         elif isinstance(out, (list, tuple)) and len(out) == variable_card:
             row = list(out)
         else:
-            raise ValueError(f"Rule for '{node}' must return float or list of len {variable_card}")
+            raise ValueError(f"[bnlearn] >Rule for '{node}' must return float or list of len {variable_card}")
         raw_probs.append(row)
     probs = list(map(list, zip(*raw_probs)))
     return probs
@@ -2299,7 +2332,30 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
     >>> DAG = bn.make_DAG(edges, CPD=[cpt_Rain, cpt_Sprinkler])
     >>> bn.plot(DAG)
 
+    Examples
+    --------
+    >>> # Example with DBN
+    >>> #
+    >>> # Import library
+    >>> import bnlearn as bn
+    >>> #
+    >>> edges = [('Cloudy', 'Rain'), ('Cloudy', 'Sprinkler')]
+    >>> edges = convert_edges_with_time_slice(edges)
+    >>> #
+    >>> # Get parents
+    >>> parents = bn.get_parents(edges)
+    >>> # {('Rain', 0): [('Cloudy', 0)], ('Sprinkler', 0): [('Cloudy', 0)], ('Cloudy', 0): []}
+    >>> #
+    >>> # Generate the CPTs
+    >>> cpt_Rain = bn.generate_cpt(('Rain', 0), parents.get(('Rain', 0)), variable_card=2)
+    >>> cpt_Rain = bn.generate_cpt(('Sprinkler', 0), parents.get(('Sprinkler', 0)), variable_card=2)
+    >>> #
+    >>> # Create DAG with default CPD values
+    >>> DAG = bn.make_DAG(edges, CPD=[cpt_Rain, cpt_Sprinkler])
+    >>> bn.plot(DAG)
+
     """
+    parents = parents or []
     n_parents = len(parents)
     parent_card = [variable_card] * n_parents
     all_combos = list(product(range(variable_card), repeat=n_parents))
@@ -2317,12 +2373,33 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
                      evidence_card=parent_card if parents else None)
 
     if verbose >= 3:
-        print(f'CPT for {node}:')
+        print(f'[bnlearn] >CPT for {node}:')
         print(cpt)
+
     return cpt
+    # n_parents = len(parents)
+    # parent_card = [variable_card] * n_parents
+    # all_combos = list(product(range(variable_card), repeat=n_parents))
+    # n_combos = len(all_combos)
+
+    # if rulebook and node in rulebook:
+    #     probs = probs_rulebook(node, rulebook, variable_card, all_combos)
+    # else:
+    #     probs = [[1 / variable_card] * n_combos for _ in range(variable_card)]
+
+    # cpt = TabularCPD(variable=node,
+    #                  variable_card=variable_card,
+    #                  values=probs,
+    #                  evidence=parents if parents else None,
+    #                  evidence_card=parent_card if parents else None)
+
+    # if verbose >= 3:
+    #     print(f'[bnlearn] >CPT for {node}:')
+    #     print(f'{cpt}')
+    # return cpt
 
 
-def build_cpts_from_structure(edges, variable_card=2, rulebook=None, verbose=3):
+def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, verbose=3):
     """
     Automatically generates placeholder CPTs for all nodes in a network structure.
 
@@ -2354,7 +2431,12 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, verbose=3):
     >>> # Create DAG with default CPD values
     >>> DAG = bn.make_DAG(edges, CPD=CPD)
     >>> bn.plot(DAG)
+
     """
+    if verbose>=3: print('[bnlearn]> Auto generate placeholders for the CPTs.')
+    # Convert edges with time for DBN
+    if methodtype=='DBN' and not has_valid_time_slice(edges):
+        edges = convert_edges_with_time_slice(edges, verbose=verbose)
 
     cpts = []
     parents_map = get_parents(edges)

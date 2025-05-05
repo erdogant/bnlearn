@@ -29,6 +29,7 @@ from bnlearn.bnlearn import (
     get_parents,
     generate_cpt,
     build_cpts_from_structure,
+    convert_edges_with_time_slice,
 )
 
 # Import function in new level

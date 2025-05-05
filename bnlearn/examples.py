@@ -1,5 +1,21 @@
 #%%
 
+import bnlearn as bn
+
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+# edges = bn.convert_edges_with_time_slice(edges)
+
+DAG = bn.make_DAG(edges, CPD=None, methodtype='DBN')
+
+DAG = bn.make_DAG(edges, CPD=None, methodtype='markov')
+
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+DAG = bn.make_DAG(edges, CPD=None)
+DAG = bn.make_DAG(edges, CPD=None, methodtype='naivebayes')
+DAG = bn.make_DAG(edges, CPD=None, methodtype='bayes')
+
+
+
 
 # %% Example from sphinx
 # Import the library
@@ -23,8 +39,8 @@ edges = [
 ]
 
 
-# Genreate Placeholder CPDs
-CPD = bn.build_cpts_from_structure(edges, variable_card=4)
+# Genrate Placeholder CPDs
+CPD = bn.build_cpts_from_structure(edges, variable_card=2)
 # Create DAG with default CPD values
 DAG = bn.make_DAG(edges, CPD=CPD)
 bn.plot(DAG)
@@ -40,6 +56,8 @@ cpt_D = bn.generate_cpt('D', parents.get('D'), variable_card=2)
 DAG = bn.make_DAG(edges, CPD=[cpt_A, cpt_B, cpt_C, cpt_D])
 
 bn.print_CPD(DAG)
+bn.plot(DAG)
+
 
 # Import the library
 # Cloudy
