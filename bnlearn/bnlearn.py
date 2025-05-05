@@ -2351,7 +2351,7 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
     >>> import bnlearn as bn
     >>> #
     >>> edges = [('Cloudy', 'Rain'), ('Cloudy', 'Sprinkler')]
-    >>> edges = convert_edges_with_time_slice(edges)
+    >>> edges = bn.convert_edges_with_time_slice(edges)
     >>> #
     >>> # Get parents
     >>> parents = bn.get_parents(edges)
@@ -2359,10 +2359,12 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
     >>> #
     >>> # Generate the CPTs
     >>> cpt_Rain = bn.generate_cpt(('Rain', 0), parents.get(('Rain', 0)), variable_card=2)
-    >>> cpt_Rain = bn.generate_cpt(('Sprinkler', 0), parents.get(('Sprinkler', 0)), variable_card=2)
+    >>> cpt_Sprinkler = bn.generate_cpt(('Sprinkler', 0), parents.get(('Sprinkler', 0)), variable_card=2)
+    >>> cpt_Cloudy = bn.generate_cpt(('Cloudy', 0), parents.get(('Cloudy', 0)), variable_card=2)
     >>> #
     >>> # Create DAG with default CPD values
-    >>> DAG = bn.make_DAG(edges, CPD=[cpt_Rain, cpt_Sprinkler])
+    >>> DAG = bn.make_DAG(edges, CPD=None)
+    >>> DAG = bn.make_DAG(edges, CPD=[cpt_Rain, cpt_Sprinkler, cpt_Cloudy])
     >>> bn.plot(DAG)
 
     """
