@@ -28,7 +28,7 @@ def test_discritize():
     # Discretize the continous columns by specifying
     df_discrete = bn.discretize(df, edges, continuous_columns, max_iterations=1)
     # Check size
-    assert df.shape== (392, 8)
+    assert df.shape == (392, 8)
 
 def test_bayes_net_graph():
     nodes = [
