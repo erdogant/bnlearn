@@ -7,6 +7,38 @@ import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np
 import pandas as pd
+from pgmpy.factors.discrete import TabularCPD
+
+
+def test_get_parents():
+    edges = [('A', 'B'), ('A', 'C'), ('B', 'D')]
+    expected = {'B': ['A'], 'C': ['A'], 'D': ['B'], 'A': []}
+    result = bn.get_parents(edges)
+    assert result == expected
+
+def test_generate_cpt_no_parents():
+    cpt = bn.generate_cpt('X', parents=[], variable_card=2, verbose=0)
+    assert isinstance(cpt, TabularCPD)
+    assert cpt.variable == 'X'
+    assert cpt.variable_card == 2
+    np.testing.assert_array_almost_equal(cpt.values, [[0.5], [0.5]])
+
+def test_generate_cpt_with_parents_uniform():
+    cpt = bn.generate_cpt('Y', parents=['X'], variable_card=3, verbose=0)
+    assert cpt.variable_card == 3
+    expected = [[1/3]*3 for _ in range(3)]
+    np.testing.assert_array_almost_equal(cpt.values, expected)
+
+def test_generate_cpt_with_rulebook_binary():
+    rulebook = {'Z': lambda x: 0.9 if x == 1 else 0.2}
+    cpt = bn.generate_cpt('Z', parents=['X'], variable_card=2, rulebook=rulebook, verbose=0)
+    np.testing.assert_array_almost_equal(cpt.values, [[0.8, 0.1], [0.2, 0.9]])
+
+def test_build_cpts_from_structure():
+    edges = [('A', 'B'), ('A', 'C')]
+    cpts = bn.build_cpts_from_structure(edges, variable_card=2, verbose=0)
+    assert len(cpts) == 3
+    assert all(isinstance(cpt, TabularCPD) for cpt in cpts)
 
 def test_QUERY():
     # Load example DataFrame

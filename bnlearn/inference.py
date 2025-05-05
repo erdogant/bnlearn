@@ -6,15 +6,13 @@
 # Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ------------------------------------
+
 """
-
-
 # %% Libraries
 import matplotlib.pyplot as plt
 from pgmpy.inference import VariableElimination
-import bnlearn
 import numpy as np
-import pandas as pd
+import bnlearn
 
 
 # %% Exact inference using Variable Elimination

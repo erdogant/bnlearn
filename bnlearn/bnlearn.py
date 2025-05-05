@@ -21,6 +21,8 @@ from pathlib import Path
 from tqdm import tqdm
 from tabulate import tabulate
 from decimal import Decimal
+from itertools import product
+from collections import defaultdict
 
 from pgmpy.models import BayesianNetwork, NaiveBayes, DynamicBayesianNetwork, MarkovNetwork
 from pgmpy.factors.discrete import TabularCPD
@@ -2172,6 +2174,198 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
                     show_message=False
     # Return
     return scores
+
+
+#%%
+def get_parents(edges):
+    """
+    Build a dictionary mapping each node to its list of parents based on edges.
+
+    Parameters
+    ----------
+    edges : list of tuple
+        A list of (parent, child) tuples defining the DAG structure.
+
+    Returns
+    -------
+    dict
+        A dictionary mapping each node to its list of parents. Nodes with no parents are included with an empty list.
+
+    Examples
+    --------
+    >>> # Import library
+    >>> import bnlearn as bn
+    >>> #
+    >>> edges = [('Cloudy', 'Rain'), ('Cloudy', 'Sprinkler')]
+    >>> bn.get_parents(edges)
+    >>> # {'Rain': ['Cloudy'], 'Sprinkler': ['Cloudy'], 'Cloudy': []}
+
+    """
+    parent_dict = defaultdict(list)
+    all_nodes = set()
+    for parent, child in edges:
+        parent_dict[child].append(parent)
+        all_nodes.update([parent, child])
+    for node in all_nodes:
+        parent_dict.setdefault(node, [])
+    return dict(parent_dict)
+
+
+def probs_rulebook(node, rulebook, variable_card, all_combos):
+    """
+    Generate probability values for a node using a rulebook.
+
+    Parameters
+    ----------
+    node : str
+        The node name.
+    rulebook : dict
+        A dictionary mapping node names to callable functions that return probabilities.
+    variable_card : int
+        Number of possible values the node can take.
+    all_combos : list of tuple
+        All possible combinations of parent values.
+
+    Returns
+    -------
+    list of list
+        A 2D list where each sublist contains probabilities for a node state across all parent configurations.
+
+    Raises
+    ------
+    ValueError
+        If the rule function does not return a float or a list of correct length.
+
+    Examples
+    --------
+    >>> # Import library
+    >>> import bnlearn as bn
+    >>> #
+    >>> def rule(c): return [0.7, 0.2, 0.1] if c == 0 else [0.2, 0.5, 0.3]
+    >>> bn.probs_rulebook('Sprinkler', {'Sprinkler': rule}, 3, [(0,), (1,)])
+    >>> # [[0.7, 0.2], [0.2, 0.5], [0.1, 0.3]]
+
+    """
+    rule_func = rulebook[node]
+    raw_probs = []
+    for combo in all_combos:
+        out = rule_func(*combo)
+        if isinstance(out, (float, int)):
+            row = [1 - out, out]
+        elif isinstance(out, (list, tuple)) and len(out) == variable_card:
+            row = list(out)
+        else:
+            raise ValueError(f"Rule for '{node}' must return float or list of len {variable_card}")
+        raw_probs.append(row)
+    probs = list(map(list, zip(*raw_probs)))
+    return probs
+
+
+def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
+    """
+    Generate a TabularCPD object for a given node.
+
+    Parameters
+    ----------
+    node : str
+        The name of the node.
+    parents : list of str
+        List of parent nodes.
+    variable_card : int, optional
+        Number of possible values the node can take (default is 2).
+    rulebook : dict, optional
+        Dictionary of {node: callable} to generate conditional probabilities.
+    verbose : int, optional
+        Verbosity level (default is 3). If >= 3, prints the CPT.
+
+    Returns
+    -------
+    TabularCPD
+        A pgmpy TabularCPD object representing the CPT for the node.
+
+    Examples
+    --------
+    >>> # Import library
+    >>> import bnlearn as bn
+    >>> #
+    >>> edges = [('Cloudy', 'Rain'), ('Cloudy', 'Sprinkler')]
+    >>> parents = bn.get_parents(edges)
+    >>> # {'Rain': ['Cloudy'], 'Sprinkler': ['Cloudy'], 'Cloudy': []}
+    >>> #
+    >>> # Generate the CPTs
+    >>> cpt_Rain = bn.generate_cpt('Rain', parents.get('Rain'), variable_card=2)
+    >>> cpt_Sprinkler = bn.generate_cpt('Sprinkler', parents.get('Sprinkler'), variable_card=4)
+    >>> #
+    >>> # Create DAG with default CPD values
+    >>> DAG = bn.make_DAG(edges, CPD=[cpt_Rain, cpt_Sprinkler])
+    >>> bn.plot(DAG)
+
+    """
+    n_parents = len(parents)
+    parent_card = [variable_card] * n_parents
+    all_combos = list(product(range(variable_card), repeat=n_parents))
+    n_combos = len(all_combos)
+
+    if rulebook and node in rulebook:
+        probs = probs_rulebook(node, rulebook, variable_card, all_combos)
+    else:
+        probs = [[1 / variable_card] * n_combos for _ in range(variable_card)]
+
+    cpt = TabularCPD(variable=node,
+                     variable_card=variable_card,
+                     values=probs,
+                     evidence=parents if parents else None,
+                     evidence_card=parent_card if parents else None)
+
+    if verbose >= 3:
+        print(f'CPT for {node}:')
+        print(cpt)
+    return cpt
+
+
+def build_cpts_from_structure(edges, variable_card=2, rulebook=None, verbose=3):
+    """
+    Automatically generates placeholder CPTs for all nodes in a network structure.
+
+    Parameters
+    ----------
+    edges : list of tuple
+        A list of (parent, child) edges defining the structure of the network.
+    variable_card : int, optional
+        The number of values each variable can take (default is 2).
+    rulebook : dict, optional
+        A dictionary of {node: callable} functions returning probabilities.
+        Each function must return either a float (binary) or a list of probabilities summing to 1.
+    verbose : int, optional
+        Verbosity level (default is 3).
+
+    Returns
+    -------
+    list of TabularCPD
+        A list of TabularCPD objects representing the conditional probability tables for each node.
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> edges = [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain')]
+    >>> #
+    >>> CPD = bn.build_cpts_from_structure(edges)
+    >>> # [<TabularCPD for Cloudy>, <TabularCPD for Sprinkler>, <TabularCPD for Rain>]
+    >>> #
+    >>> # Create DAG with default CPD values
+    >>> DAG = bn.make_DAG(edges, CPD=CPD)
+    >>> bn.plot(DAG)
+    """
+
+    cpts = []
+    parents_map = get_parents(edges)
+
+    for node, parents in parents_map.items():
+        cpt = generate_cpt(node, parents, variable_card=variable_card, rulebook=rulebook, verbose=verbose)
+        cpts.append(cpt)
+
+    return cpts
+
 
 # %%
 # def set_logger(verbose: [str, int] = 'info'):

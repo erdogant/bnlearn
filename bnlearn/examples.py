@@ -590,36 +590,6 @@ make_dot(model.adjacency_matrix_, labels=labels)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # %% issue #98
 import numpy as np
 import bnlearn as bn
