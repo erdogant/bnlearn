@@ -26,6 +26,9 @@ from bnlearn.bnlearn import (
     check_model,
     structure_scores,
     compute_logp,
+    get_parents,
+    generate_cpt,
+    build_cpts_from_structure,
 )
 
 # Import function in new level
