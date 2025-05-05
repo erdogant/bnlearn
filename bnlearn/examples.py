@@ -1,18 +1,60 @@
 #%%
+import bnlearn as bn
+
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# edges = [('Cloudy', 'Sprinkler'),
+#          ('Cloudy', 'Rain'),
+#          ('Cloudy', 'Wet_Grass')]
+
+# Make the actual Bayesian DAG
+DAG = bn.make_DAG(edges, methodtype='naivebayes')
+
+# Describe the error:
+# [bnlearn] >naivebayes DAG created.
+# [bnlearn] >Error: Model can only have edges outgoing from: Cloudy
+# [bnlearn] >Error: Invalid structure for NaiveBayes model.
+# [bnlearn] >All nodes must have the same parent (the class variable).
+# [bnlearn] >Use methodtype='bayes' instead if you have a more complex dependency structure.
+
+#%%
 
 import bnlearn as bn
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
-# edges = bn.convert_edges_with_time_slice(edges)
+model = bn.make_DAG(edges, CPD=None, methodtype='naivebayes')
+d = bn.print_CPD(model)
 
-DAG = bn.make_DAG(edges, CPD=None, methodtype='DBN')
-
-DAG = bn.make_DAG(edges, CPD=None, methodtype='markov')
+model = bn.make_DAG(edges, CPD=None, methodtype=None)
+model = bn.make_DAG(edges, CPD=None, methodtype='markov')
+bn.plot(model)
+bn.print_CPD(model)
 
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
-DAG = bn.make_DAG(edges, CPD=None)
-DAG = bn.make_DAG(edges, CPD=None, methodtype='naivebayes')
-DAG = bn.make_DAG(edges, CPD=None, methodtype='bayes')
+model = bn.make_DAG(edges, CPD=None)
+model = bn.make_DAG(edges, CPD=None, methodtype='naivebayes')
+model = bn.make_DAG(edges, CPD=None, methodtype='bayes')
+model = bn.make_DAG(edges, CPD=None, methodtype='DBN')
+
+#%%
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+parents = bn.get_parents(edges)
+# {'B': ['A'], 'C': ['A'], 'D': ['A'], 'A': []}
+
+cpt_A = bn.generate_cpt('A', parents.get('A'), variable_card=2)
+cpt_B = bn.generate_cpt('B', parents.get('B'), variable_card=3)
+cpt_C = bn.generate_cpt('C', parents.get('C'), variable_card=4)
+cpt_D = bn.generate_cpt('D', parents.get('D'), variable_card=2)
+
+# Create DAG with default CPD values
+DAG = bn.make_DAG(edges, CPD=[cpt_A, cpt_B, cpt_C, cpt_D])
+
+#  Print cpds
+bn.print_CPD(DAG)
+bn.plot(DAG)
 
 
 
@@ -20,6 +62,7 @@ DAG = bn.make_DAG(edges, CPD=None, methodtype='bayes')
 # %% Example from sphinx
 # Import the library
 import bnlearn as bn
+from pgmpy.factors.discrete import TabularCPD
 
 
 edges = [
@@ -29,35 +72,11 @@ edges = [
     ('Rain', 'Wet_Grass'),
 ]
 
-edges = [
-    ('Process Temperature', 'Machine Failure'),
-    ('Torque', 'Machine Failure'),
-    ('Torque', 'Overstrain Failure (OSF)'),
-    ('ToolWear', 'Overstrain Failure (OSF)'),
-    ('Air Temperature', 'Process Temperature'),
-    ('Overstrain Failure (OSF)', 'Machine Failure'),
-]
-
-
 # Genrate Placeholder CPDs
 CPD = bn.build_cpts_from_structure(edges, variable_card=2)
 # Create DAG with default CPD values
 DAG = bn.make_DAG(edges, CPD=CPD)
 bn.plot(DAG)
-
-edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
-parents = bn.get_parents(edges)
-# {'B': ['A'], 'C': ['A'], 'D': ['A'], 'A': []}
-cpt_A = bn.generate_cpt('A', parents.get('A'), variable_card=2)
-cpt_B = bn.generate_cpt('B', parents.get('B'), variable_card=3)
-cpt_C = bn.generate_cpt('C', parents.get('C'), variable_card=4)
-cpt_D = bn.generate_cpt('D', parents.get('D'), variable_card=2)
-# Create DAG with default CPD values
-DAG = bn.make_DAG(edges, CPD=[cpt_A, cpt_B, cpt_C, cpt_D])
-
-bn.print_CPD(DAG)
-bn.plot(DAG)
-
 
 # Import the library
 # Cloudy
@@ -89,7 +108,7 @@ print(cpt_wet_grass)
 DAG = bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
 
 
-bn.print_CPD(DAG)
+d_cpts = bn.print_CPD(DAG)
 
 
 q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
