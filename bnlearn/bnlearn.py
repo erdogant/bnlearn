@@ -1675,8 +1675,8 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
         try:
             DAG = import_DAG(data, verbose=2)
             df = bnlearn.sampling(DAG, n=n, verbose=2)
-        except:
-            print('[bnlearn] >Error: Loading data not possible!')
+        except ValueError as e:
+            print(f'[bnlearn] >Error: Loading data not possible! - {e}')
             df = None
 
     else:
@@ -2206,14 +2206,21 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
         if verbose>=2: print('[bnlearn] >Warning: Structure scoring could not be computed. Method [%s] not supported.' %(method))
         return scores
 
+    if model is not None and np.all(np.isin(model.nodes, df.columns)):
+        cols = list(model.nodes)
+        df = copy.deepcopy(df[cols])
+    else:
+        if verbose>=1: print(f'[bnlearn] >Error: Nodes in model and Dataframe does not match: {set(list(model.nodes))-set(df.columns)}')
+
     # Compute structure scores
     if model is not None:
         for s in scoring_method:
             try:
                 scores[s] = structure_score(model, df, scoring_method=s)
-            except:
+            except ValueError as e:
                 if verbose>=2 and show_message:
-                    print('[bnlearn] >WARNING> Skipping computing structure score for [%s].' %(s))
+                    print(f'[bnlearn] >WARNING> {e}')
+                    print(f'[bnlearn] >WARNING> Can not compute [{s}] score. <skip>')
                     show_message=False
     # Return
     return scores
