@@ -177,7 +177,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     if CPD is not None:
         for cpd in CPD:
             DAG.add_cpds(cpd)
-            if verbose>=3: print('[bnlearn] >Add CPD: %s' %(cpd.variable))
+            if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Update Probabilities] >[Node {cpd.variable}]')
         # Check model
         if checkmodel:
             check_model(DAG, verbose=verbose)
@@ -268,17 +268,15 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
 
-    # Print CPDs
-    # if config['method']=='ml' or config['method']=='maximumlikelihood':
     try:
         if ('markovnetwork' in str(type(DAG)).lower()):
             if verbose>=3: print('[bnlearn] >Converting markovnetwork to Bayesian model')
-            DAG=DAG.to_bayesian_model()
+            DAG = DAG.to_bayesian_model()
 
-        if 'MaximumLikelihood' in str(type(DAG)):
+        if 'maximumlikelihood' in str(type(DAG)).lower():
             # print CPDs using Maximum Likelihood Estimators
             for node in DAG.state_names:
-                print(DAG.estimate_cpd(node))
+                if verbose>=3: print(DAG.estimate_cpd(node))
         elif ('bayesiannetwork' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
             # print CPDs using Bayesian Parameter Estimation
             if len(DAG.get_cpds())==0:
@@ -322,12 +320,13 @@ def check_model(DAG, verbose=3):
     None.
 
     """
-    if verbose>=3: print('[bnlearn] >Check whether CPDs sum up to one.')
     if isinstance(DAG, dict): DAG = DAG.get('model', None)
     if DAG is not None:
         for cpd in DAG.get_cpds():
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
-                if verbose>=3: print('[bnlearn] >CPD [%s] does not add up to 1 but is: %s' %(cpd.variable, cpd.values.sum(axis=0)))
+                if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
+            else:
+                if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >OK')
         # if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
     else:
         if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
