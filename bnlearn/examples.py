@@ -1,3 +1,18 @@
+import bnlearn as bn
+
+# Load asia DAG
+model = bn.import_DAG('asia')
+# plot ground truth
+G = bn.plot(model)
+
+Gi = bn.plot(model, interactive=True)
+
+bn.print_CPD(model)
+
+# Lets create an example dataset with 100 samples and make inferences on the entire dataset.
+df = bn.sampling(model, n=10000)
+
+
 # %% 
 import bnlearn as bn
 # Load example DataFrame

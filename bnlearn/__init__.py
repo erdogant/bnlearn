@@ -4,7 +4,6 @@ from bnlearn.bnlearn import (
     print_CPD,
     import_DAG,
     import_example,
-    sampling,
     to_undirected,
     compare_networks,
     plot,
@@ -33,6 +32,7 @@ from bnlearn.bnlearn import (
 import bnlearn.structure_learning as structure_learning
 import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
+import bnlearn.sampling as sampling
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
 from bnlearn.impute import knn_imputer, mice_imputer
