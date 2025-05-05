@@ -149,7 +149,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
     # Automatically generate placeholder values for the CPTs
     if CPD is None and isinstance(DAG, list):
-        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype)
+        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, verbose=verbose)
 
     # Make list if required
     if (CPD is not None) and (not isinstance(CPD, list)):
