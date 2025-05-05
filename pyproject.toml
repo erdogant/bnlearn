@@ -34,10 +34,10 @@ dependencies = [
     "pypickle",
     "tabulate",
     "ipywidgets",
-    "datazets",
+    "datazets>=1.1.2",
     "setgraphviz>=1.0.2",
     "lingam",
-    "pyarrow<20.0.0",  # This is needed for pandas but the latest version results in a bug which can not import __version__
+    "pyarrow<20.0.0",  # This is needed for pandas because the latest version results in a bug which can not import __version__
 ]
 
 [project.urls]
