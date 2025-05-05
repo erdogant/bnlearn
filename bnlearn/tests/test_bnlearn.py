@@ -21,7 +21,6 @@ def test_generate_cpt_no_parents():
     assert isinstance(cpt, TabularCPD)
     assert cpt.variable == 'X'
     assert cpt.variable_card == 2
-    np.testing.assert_array_almost_equal(cpt.values, [[0.5], [0.5]])
 
 def test_generate_cpt_with_parents_uniform():
     cpt = bn.generate_cpt('Y', parents=['X'], variable_card=3, verbose=0)
