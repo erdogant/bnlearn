@@ -30,6 +30,8 @@ from bnlearn.bnlearn import (
     generate_cpt,
     build_cpts_from_structure,
     convert_edges_with_time_slice,
+    # cpd_to_dataframe,
+    # dataframe_to_cpd,
 )
 
 # Import function in new level
