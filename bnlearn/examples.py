@@ -1,4 +1,33 @@
 import bnlearn as bn
+
+# Load dataset
+df = bn.import_example('predictive_maintenance')
+
+# Get discrete columns
+cols = ['Type', 'Machine failure', 'TWF', 'HDF', 'PWF', 'OSF', 'RNF']
+df = df[cols]
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+# [bnlearn] >Computing best DAG using [hc]
+# [bnlearn] >Set scoring type at [bds]
+# [bnlearn] >Compute structure scores for model comparison (higher is better).
+
+# Compute edge weights using ChiSquare independence test.
+model = bn.independence_test(model, df, test='chi_square', prune=True)
+
+# Plot the best DAG
+# bn.plot(model, edge_labels='pvalue', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+
+# dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
+# dotgraph
+
+# Store to pdf
+
+model = bn.parameter_learning.fit(model, df, methodtype='bayes')
+
+#%%
+import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 
 # Define the structure
@@ -332,12 +361,13 @@ df = pd.DataFrame({
 })
 
 model = bn.structure_learning.fit(df)
-
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
 
 
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(edges)
+model = bn.parameter_learning.fit(DAG, df)
+
 DAG = bn.make_DAG(edges, methodtype='DBN')
 model = bn.parameter_learning.fit(DAG, df)
 
@@ -865,7 +895,7 @@ G = bn.plot(model, interactive=False)
 model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 
 # Plot
-bn.plot(model, interactive=False, pos=G['pos'], params_static={'layout': 'spectral_layout'})
+G = bn.plot(model, interactive=False, pos=G['pos'], params_static={'layout': 'spectral_layout'})
 # 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'graphviz_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
 # bn.plot(model, interactive=True, pos=G['pos'])
 
