@@ -319,9 +319,9 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
                 return
             for cpd in DAG.get_cpds():
-                CPDs[cpd.variable] = query2df(cpd, verbose=verbose)
+                CPDs[cpd.variable] = query2df(cpd, verbose=0)
                 if verbose>=3:
-                    print("CPD of {variable}:".format(variable=cpd.variable))
+                    print("[bnlearn] >[Conditional Probability Table (CPT)] >[Node {variable}]:".format(variable=cpd.variable))
                     print(cpd)
             if ('bayesiannetwork' in str(type(DAG)).lower()):
                 if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
@@ -396,7 +396,7 @@ def dag2adjmat(model, verbose=3):
     --------
     >>> import bnlearn as bn
     >>> # Load DAG
-    >>> DAG = bn.import_DAG('Sprinkler')
+    >>> DAG = bn.import_DAG('sprinkler')
     >>> # Extract edges from model and store in adjacency matrix
     >>> adjmat=bn.dag2adjmat(DAG['model'])
 
