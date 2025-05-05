@@ -767,7 +767,9 @@ def query2df(query, variables=None, groupby=None, verbose=3):
         Dataframe with inferences.
 
     """
-    if ((groupby is not None) and np.any(np.isin(groupby, variables))):
+    if groupby is None:
+        pass
+    elif ((groupby is not None) and np.any(np.isin(groupby, variables))):
         # Needs to be set to true.
         groupby = list(np.array(groupby)[np.isin(groupby, variables)])
     else:
