@@ -13,6 +13,8 @@ import matplotlib.pyplot as plt
 from pgmpy.inference import VariableElimination
 import numpy as np
 import bnlearn
+import warnings
+warnings.filterwarnings("ignore")
 
 
 # %% Exact inference using Variable Elimination
@@ -182,7 +184,8 @@ def summarize_inference(variables, evidence, query, plot=False, verbose=3):
             percentages = (grouped / total) * 100
 
             plt.figure(figsize=(8, 4))
-            bars = plt.barh(percentages.index.astype(str), percentages.values, color='#4a90e2', edgecolor='black')
+            labels = [f'state_{x}' for x in percentages.index]
+            bars = plt.barh(labels, percentages.values, color='#4a90e2', edgecolor='black')
             plt.xlabel('Percentage (%)', fontsize=12)
             plt.title(f'Inference Summary: {var}\n{evidence_txt}', fontsize=12)
             plt.grid(axis='x', linestyle='--', alpha=0.7)

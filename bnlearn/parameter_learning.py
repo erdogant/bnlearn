@@ -22,6 +22,7 @@ Currently, the library supports parameter learning for *discrete* nodes:
 # %% Libraries
 from pgmpy.estimators import BayesianEstimator
 import bnlearn
+import copy
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -114,20 +115,19 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     adjmat = model['adjmat']
     independence_test = model.get('independence_test', None)
 
-    # Automatically set methodtype to DBN
-    if model.get('config', {}).get('method') == 'DBN':
-        config['method'] = 'DBN'
-        if verbose>=3: print('[bnlearn] >Methodtype is set to DynamicBayesianNetwork (DBN)')
-
     if (scoretype=='dirichlet') and (smooth is None):
         raise Exception('[bnlearn] >dirichlet requires "smooth" to be not None')
 
+    # Automatically set methodtype
+    if model.get('config', {}).get('method') == 'DBN' or model.get('methodtype', {}) == 'DBN':
+        config['method'] = 'DBN'
+        if verbose>=3: print('[bnlearn] >Methodtype is set to DynamicBayesianNetwork (DBN)')
+
     # Check whether all labels in the adjacency matrix are included from the dataframe
-    # adjmat, model = _check_adjmat(model, df)
     if config['method']=='DBN':
         df = adjmat
     else:
-        df = bnlearn._filter_df(adjmat, df, verbose=config['verbose'])
+        df = bnlearn._filter_df(adjmat, copy.deepcopy(df), verbose=config['verbose'])
 
     if config['verbose']>=3: print('[bnlearn] >Parameter learning> Computing parameters using [%s]' %(config['method']))
     # Extract model
@@ -170,4 +170,5 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     out['model_edges'] = list(model.edges())
     out['structure_scores'] = bnlearn.structure_scores(out, df, verbose=verbose)
     out['independence_test'] = independence_test
+    # Return
     return out
