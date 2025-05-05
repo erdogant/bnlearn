@@ -40,6 +40,48 @@ def test_build_cpts_from_structure():
     assert len(cpts) == 3
     assert all(isinstance(cpt, TabularCPD) for cpt in cpts)
 
+def test_make_DAG_methods():
+    edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+    # Check empty methodtype
+    DAG = bn.make_DAG(edges, CPD=None, methodtype=None)
+    assert DAG is None
+
+    DAG = bn.make_DAG(edges, CPD=None, methodtype='naivebayes')
+    assert DAG['adjmat'].shape==(4, 4)
+    assert len(DAG['model'].get_cpds())==4
+    assert len(DAG['model_edges'])==3
+    G = bn.plot(DAG)
+    assert set(G)==set(['fig', 'ax', 'pos', 'G', 'node_properties', 'edge_properties'])
+    d_table = bn.print_CPD(DAG)
+    set(d_table.keys())==set(DAG['model'].nodes)
+
+    DAG = bn.make_DAG(edges, CPD=None, methodtype='bayes')
+    assert DAG['adjmat'].shape==(4, 4)
+    assert len(DAG['model'].get_cpds())==4
+    assert len(DAG['model_edges'])==3
+    G = bn.plot(DAG)
+    assert set(G)==set(['fig', 'ax', 'pos', 'G', 'node_properties', 'edge_properties'])
+    d_table = bn.print_CPD(DAG)
+    set(d_table.keys())==set(DAG['model'].nodes)
+
+    DAG = bn.make_DAG(edges, CPD=None, methodtype='DBN')
+    assert DAG['adjmat'].shape==(8, 8)
+    assert len(DAG['model'].get_cpds())==4
+    assert len(DAG['model_edges'])==6
+    G = bn.plot(DAG)
+    assert set(G)==set(['fig', 'ax', 'pos', 'G', 'node_properties', 'edge_properties'])
+    d_table = bn.print_CPD(DAG)
+    set(d_table.keys())==set(DAG['model'].nodes)
+
+    DAG = bn.make_DAG(edges, CPD=None, methodtype='markov')
+    assert DAG['adjmat'].shape==(4, 4)
+    assert len(DAG['model_edges'])==3
+    G = bn.plot(DAG)
+    assert set(G)==set(['fig', 'ax', 'pos', 'G', 'node_properties', 'edge_properties'])
+    d_table = bn.print_CPD(DAG)
+    set(d_table.keys())==set(DAG['model'].nodes)
+
+
 def test_QUERY():
     # Load example DataFrame
     df = bn.import_example('titanic')
