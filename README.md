@@ -58,7 +58,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [Inference](https://erdogant.github.io/bnlearn/pages/html/Inference.html#examples-inference) | ```bn.inference.fit()``` |
 | [Make predictions](https://erdogant.github.io/bnlearn/pages/html/Predict.html) | ```bn.predict()``` |
 | [Generate Synthetic Data](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | ```bn.sampling()``` |
-| [Compute Edge Strength](https://erdogant.github.io/bnlearn/pages/html/independence_test.html) | ```bn.independence_test(model, df, test='chi_square', prune=True)``` |
+| [Compute Edge Strength](https://erdogant.github.io/bnlearn/pages/html/independence_test.html) | ```bn.independence_test()``` |
 | **Key Functions** | |
 | [Imputations](https://erdogant.github.io/bnlearn/pages/html/impute.html#) | ```bn.knn_imputer()``` |
 | [Discretizing](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html#) | ```bn.discretize()``` |
