@@ -1,8 +1,3 @@
-
-<p align="center">
-  <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/logo.png" width="300" />
-</p>
-
 # Bnlearn - Causal Discovery using Bayesian Learning
 
 [![Python](https://img.shields.io/pypi/pyversions/bnlearn)](https://img.shields.io/pypi/pyversions/bnlearn)
