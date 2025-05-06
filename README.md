@@ -22,8 +22,8 @@
 <div>
 
 <a href="https://erdogant.github.io/bnlearn/"><img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/logo.png" width="175" align="left" /></a>
-``bnlearn`` is Python package for causal discovery by learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods.
-Because probabilistic graphical models can be difficult in usage, Bnlearn for python (this package) is build on the <a href="https://github.com/pgmpy/pgmpy">pgmpy</a> package and contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information. **⭐️ Star it if you like it ⭐️**
+``bnlearn`` is Python package for causal discovery by learning the graphical structure of Bayesian networks, parameter learning, inference, and sampling methods.
+Because probabilistic graphical models can be difficult to use, ``Bnlearn`` contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information. **⭐️ Star it if you like it ⭐️**
 </div>
 
 ---
