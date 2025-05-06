@@ -1,5 +1,3 @@
-# Bnlearn - Causal Discovery using Bayesian Learning
-
 [![Python](https://img.shields.io/pypi/pyversions/bnlearn)](https://img.shields.io/pypi/pyversions/bnlearn)
 [![PyPI Version](https://img.shields.io/pypi/v/bnlearn)](https://pypi.org/project/bnlearn/)
 ![GitHub Repo stars](https://img.shields.io/github/stars/erdogant/bnlearn)
