@@ -144,7 +144,6 @@ Cloudy  Sprinkler  Rain  Wet_Grass
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_sprinkler_sl.png" width="600" />
 </p>
 
-* Choosing various methodtypes and scoringtypes:
 
 ```python
 
@@ -196,10 +195,6 @@ Setting up and maintaining bnlearn has been possible thanks to users and contrib
   <img src="https://contrib.rocks/image?repo=erdogant/bnlearn" />
   </a>
 </p>
-
-
-### Citation
-Please cite ``bnlearn`` in your publications if this is useful for your research. See column right for citation information.
 
 ### Maintainer
 * Erdogan Taskesen, github: [erdogant](https://github.com/erdogant)
