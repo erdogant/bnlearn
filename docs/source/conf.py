@@ -31,7 +31,7 @@ add_includes_to_rst_files(top=False, bottom=True)
 # embed_in_rst(currpath, 'pdf', '.pdf', "Additional Information", 'Additional_Information.rst')
 ########################################################################################
 # Import notebooks in HTML format
-# convert_ipynb_to_html(currpath, 'notebooks', '.ipynb')
+# convert_ipynb_to_html(currpath, 'notebooks', ext='.ipynb')
 # embed_in_rst(currpath, 'notebooks', '.html', "Notebook", 'notebook.rst')
 ########################################################################################
 

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Independence test &mdash; bnlearn bnlearn documentation</title>
+  <title>Notebook &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
@@ -20,8 +20,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Directed Acyclic Graphs" href="Create%20DAG.html" />
-    <link rel="prev" title="Plotting" href="Plot.html" /> 
+    <link rel="next" title="Documentation" href="Documentation.html" />
+    <link rel="prev" title="bnlearn.bnlearn" href="bnlearn.bnlearn.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -100,8 +100,8 @@
 <li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Independence test</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
@@ -133,8 +133,8 @@
 <li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Notebook Examples</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebook.html">Notebook</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Notebook</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
@@ -157,9 +157,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Independence test</li>
+      <li class="breadcrumb-item active">Notebook</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/independence_test.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/notebook.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -167,51 +167,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="independence-test">
-<h1>Independence test<a class="headerlink" href="#independence-test" title="Link to this heading"></a></h1>
-<p>The goal of the independence test is to compute the edge strength using a statistical test of independence based using the model structure (DAG) and the data. For the pairs in the DAG (either by structure learning or user-defined), an statistical test is performed. Any two variables are associated if the test’s p-value &lt; significance_level.</p>
-<p>Lets compute the DAG for <strong>asia data set</strong> and examine the edge strength.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
-
-<span class="c1"># Load example data set</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
-
-<span class="c1"># Structure learning of sampled dataset</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-
-<span class="c1"># Plot without independence test</span>
-<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
-<span class="c1"># Compute edge strength with chi square test</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">&#39;chi_square&#39;</span><span class="p">)</span>
-
-<span class="c1"># Show the results of the independence test</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">])</span>
-
-<span class="c1">#    source  target  stat_test        p_value   chi_square  dof</span>
-<span class="c1"># 0     tub  either       True   0.000000e+00  1509.729663    1</span>
-<span class="c1"># 1   smoke    lung       True   8.542258e-81   362.378980    1</span>
-<span class="c1"># 2    lung  either       True   0.000000e+00  8340.061758    1</span>
-<span class="c1"># 3   bronc    dysp       True   0.000000e+00  4619.926593    1</span>
-<span class="c1"># 4   bronc   smoke       True  1.075377e-197   899.817192    1</span>
-<span class="c1"># 5  either    xray       True   0.000000e+00  5455.522990    1</span>
-<span class="c1"># 6  either    dysp       True   8.726744e-73   325.601286    1</span>
-
-<span class="c1"># The results from the independence test are automatically used in the plot.</span>
-<span class="c1"># We will use the same layout as in the previous plot to make the comparison easier.</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-<table class="docutils align-center" id="id1">
-<caption><span class="caption-text">Independence test</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
-<tbody>
-<tr class="row-odd"><td><p><img alt="K1" src="_images/asia_no_indeptest.png" /></p></td>
-<td><p><img alt="K2" src="_images/asia_with_indeptest.png" /></p></td>
-</tr>
-</tbody>
-</table>
-<hr>
+  <section id="notebook">
+<span id="code-directive"></span><h1>Notebook<a class="headerlink" href="#notebook" title="Link to this heading"></a></h1>
+<p><strong>bnlearn_playground_police_shooting</strong></p>
+<iframe src="_static/notebooks/bnlearn_playground_police_shooting.html" height="900px" width="750px", frameBorder="0"></iframe><p><strong>bnlearn_synthetic_data</strong></p>
+<iframe src="_static/notebooks/bnlearn_synthetic_data.html" height="900px" width="750px", frameBorder="0"></iframe><p><strong>inferences_on_salary_dataset</strong></p>
+<iframe src="_static/notebooks/inferences_on_salary_dataset.html" height="900px" width="750px", frameBorder="0"></iframe><hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
         <!-- Show an image ad -->
@@ -224,8 +185,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Plot.html" class="btn btn-neutral float-left" title="Plotting" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Create%20DAG.html" class="btn btn-neutral float-right" title="Directed Acyclic Graphs" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="bnlearn.bnlearn.html" class="btn btn-neutral float-left" title="bnlearn.bnlearn" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Documentation.html" class="btn btn-neutral float-right" title="Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

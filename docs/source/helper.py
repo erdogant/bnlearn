@@ -2,6 +2,7 @@ import os
 from glob import glob
 import numpy as np
 
+
 # %% Download rst file
 def download_file(url_rst, filename):
     try:
@@ -12,6 +13,7 @@ def download_file(url_rst, filename):
         urlretrieve(url_rst, filename)
     except:
         print('Downloading %s failed.' %(url_rst))
+
 
 # %% Include ADD to rst files
 def add_includes_to_rst_files(top=True, bottom=True):
@@ -42,15 +44,18 @@ def add_includes_to_rst_files(top=True, bottom=True):
                     file.truncate()
                     file.write(contents)
 
+
 # %% ADD TO REST
 def adds_in_rst(filehandle):
+    filehandle.write(".. include:: add_bottom.add")
     # Write carbon adds
-    filehandle.write("\n\n.. raw:: html\n")
-    filehandle.write("\n   <hr>")
-    filehandle.write("\n   <center>")
-    filehandle.write('\n     <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>')
-    filehandle.write("\n   </center>")
-    filehandle.write("\n   <hr>")
+    # filehandle.write("\n\n.. raw:: html\n")
+    # filehandle.write("\n   <hr>")
+    # filehandle.write("\n   <center>")
+    # filehandle.write('\n     <script async type="text/javascript" src="//cdn.carbonads.com/carbon.js?serve=CEADP27U&placement=erdogantgithubio" id="_carbonads_js"></script>')
+    # filehandle.write("\n   </center>")
+    # filehandle.write("\n   <hr>")
+
 
 # %% SCAN DIRECTORY
 def scan_directory(currpath, directory, ext):
@@ -59,6 +64,7 @@ def scan_directory(currpath, directory, ext):
     files_in_dir = np.array(os.listdir(path_to_files))
     Iloc = np.array(list(map(lambda x: x[-len(ext):]==ext, files_in_dir)))
     return files_in_dir[Iloc]
+
 
 # %% EMBED PDF IN RST
 def embed_in_rst(currpath, directory, ext, title, file_rst):
@@ -92,6 +98,7 @@ def embed_in_rst(currpath, directory, ext, title, file_rst):
     except:
         print('ERROR IN EMBEDDING IT IN RST.')
 
+
 # %% CONVERT NOTEBOOKS TO HTML
 def convert_ipynb_to_html(currpath, directory, ext):
     try:
@@ -101,6 +108,7 @@ def convert_ipynb_to_html(currpath, directory, ext):
         for fname in files_in_dir:
             path_to_file = os.path.join('_static/', directory, fname)
             print('[%s] converting to HTML' %(path_to_file))
-            os.system('jupyter nbconvert --to html ' + path_to_file)
+            # os.system('jupyter nbconvert --to html ' + path_to_file)
+            os.system("jupyter nbconvert " + os.path.join(currpath, path_to_file) + " --to html")
     except:
         print('ERROR IN CONVERTING NOTEBOOK TO HTML.')

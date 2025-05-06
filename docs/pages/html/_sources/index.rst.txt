@@ -179,6 +179,13 @@ Contents
 
 
 .. toctree::
+  :maxdepth: 2
+  :caption: Notebook Examples
+
+  notebook
+
+
+.. toctree::
   :maxdepth: 1
   :caption: Documentation
 

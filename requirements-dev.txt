@@ -7,4 +7,4 @@ pytest
 irelease
 sphinxcontrib-fulltoc
 tabulate
-#nbconvert # jupyter nbconvert --to html notebook.ipynb
+nbconvert # jupyter nbconvert --to html notebook.ipynb

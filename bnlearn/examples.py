@@ -23,8 +23,8 @@ model = bn.independence_test(model, df, test='chi_square', prune=True)
 # dotgraph
 
 # Store to pdf
-
 model = bn.parameter_learning.fit(model, df, methodtype='bayes')
+
 
 #%%
 import bnlearn as bn
