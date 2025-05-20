@@ -1948,7 +1948,7 @@ def save(model, filepath='bnlearn_model.pkl', overwrite=False, verbose=3):
     # storedata = {}
     # storedata['model'] = model
     # Save
-    status = pypickle.save(filepath, model, overwrite=overwrite, verbose=verbose)
+    status = pypickle.save(filepath, model, overwrite=overwrite, verbose=convert_verbose_to_new(verbose))
     # return
     return status
 
@@ -1974,9 +1974,11 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
     if filepath[-4:]!='.pkl':
         filepath = filepath + '.pkl'
     filepath = str(Path(filepath).absolute())
+
     # Load
-    model = pypickle.load(filepath, verbose=verbose, validate=['builtins'])
-    # Store in self.
+    model = pypickle.load(filepath, verbose=convert_verbose_to_new(verbose), validate=['builtins'])
+
+    # Store in self
     if model is not None:
         return model
     else:
@@ -2446,6 +2448,28 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
         cpts.append(cpt)
 
     return cpts
+
+
+#%%
+def convert_verbose_to_new(verbose):
+    """Convert old verbosity to the new."""
+    # In case the new verbosity is used, convert to the old one.
+    if verbose is None: verbose=0
+    if not isinstance(verbose, str) and verbose<10:
+        status_map = {
+            'None': 'silent',
+            0: 'silent',
+            6: 'silent',
+            1: 'critical',
+            2: 'warning',
+            3: 'info',
+            4: 'debug',
+            5: 'debug'}
+        if verbose>=2: print('[XXX] WARNING use the standardized verbose status. The status [1-6] will be deprecated in future versions.')
+        return status_map.get(verbose, 0)
+    else:
+        return verbose
+
 
 #%%
 # def cpd_to_dataframe(cpd):
