@@ -1975,7 +1975,7 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
         filepath = filepath + '.pkl'
     filepath = str(Path(filepath).absolute())
     # Load
-    model = pypickle.load(filepath, verbose=verbose)
+    model = pypickle.load(filepath, verbose=verbose, validate=['builtins'])
     # Store in self.
     if model is not None:
         return model
