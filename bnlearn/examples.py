@@ -1,3 +1,20 @@
+# %%
+# Saving and loading
+import bnlearn as bn
+
+# Load example mixed dataset
+df = bn.import_example(data='sprinkler')
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+model = bn.independence_test(model, df, test='chi_square', prune=True)
+model = bn.parameter_learning.fit(model, df)
+
+filepath = 'model_bnlearn.pkl'
+bn.save(model, filepath)
+bn.load(filepath)
+
+#%%
 import bnlearn as bn
 
 # Load dataset

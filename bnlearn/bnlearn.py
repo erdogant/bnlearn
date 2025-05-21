@@ -1976,7 +1976,8 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
     filepath = str(Path(filepath).absolute())
 
     # Load
-    model = pypickle.load(filepath, verbose=convert_verbose_to_new(verbose), validate=['builtins'])
+    # mods = pypickle.validate_modules(filepath)
+    model = pypickle.load(filepath, verbose=convert_verbose_to_new(verbose), validate=['builtins.int'])
 
     # Store in self
     if model is not None:
@@ -2465,7 +2466,7 @@ def convert_verbose_to_new(verbose):
             3: 'info',
             4: 'debug',
             5: 'debug'}
-        if verbose>=2: print('[XXX] WARNING use the standardized verbose status. The status [1-6] will be deprecated in future versions.')
+        # if verbose>=2: print('[bnlearn] WARNING use the standardized verbose status. The status [1-6] will be deprecated in future versions.')
         return status_map.get(verbose, 0)
     else:
         return verbose
