@@ -43,7 +43,7 @@ dependencies = [
     "tabulate",
     "ipywidgets",
     "datazets>=1.1.2",
-    "setgraphviz>=1.0.2",
+    "setgraphviz>=1.0.3",
     "lingam",
     "pyarrow<20.0.0",  # This is needed for pandas because the latest version results in a bug which can not import __version__
 ]
