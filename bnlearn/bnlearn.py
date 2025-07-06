@@ -212,7 +212,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
     if CPD is not None:
         for cpd in CPD:
-            if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Update Probabilities] >[Node {cpd.variable}]')
+            if verbose>=3: print(f'[bnlearn] >[CPD > Update  ] >[Node {cpd.variable}]')
         # Check model
         if checkmodel:
             check_model(DAG, verbose=verbose)
@@ -321,7 +321,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
             for cpd in DAG.get_cpds():
                 CPDs[cpd.variable] = query2df(cpd, verbose=0)
                 if verbose>=3:
-                    print("[bnlearn] >[Conditional Probability Table (CPT)] >[Node {variable}]:".format(variable=cpd.variable))
+                    print("[bnlearn] >[CPD] >[Node {variable}]:".format(variable=cpd.variable))
                     print(cpd)
             if ('bayesiannetwork' in str(type(DAG)).lower()):
                 if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
@@ -364,13 +364,13 @@ def check_model(DAG, verbose=3):
     if DAG is not None and hasattr(DAG, 'get_cpds'):
         for cpd in DAG.get_cpds():
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
-                if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
+                if verbose>=3: print(f'[bnlearn] >[CPD > Validate] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
             else:
-                if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >[Node {cpd.variable}] >OK')
+                if verbose>=3: print(f'[bnlearn] >[CPD > Validate] >[Node {cpd.variable}] >OK')
         # if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
     elif 'markovnetwork' in str(type(DAG)).lower():
         pass
-        # if verbose>=3: print(f'[bnlearn] >[Conditional Probability Table (CPT)] >[Check Probabilities] >Unknown')
+        # if verbose>=3: print(f'[bnlearn] >[CPD] >[Check Probabilities] >Unknown')
     else:
         if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
 
