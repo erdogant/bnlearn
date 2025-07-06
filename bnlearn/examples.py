@@ -1,3 +1,64 @@
+import bnlearn as bn
+
+
+# Define the causal dependencies based on your expert/domain knowledge.
+# Left is the source, and right is the target node.
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+
+# Create the DAG
+model = bn.make_DAG(edges)
+
+# Plot the DAG
+# bn.plot(model)
+# 
+# q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler':0})
+# print(q1.df)
+
+#%%
+
+# Import the library
+from pgmpy.factors.discrete import TabularCPD
+
+# Cloudy
+cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.3], [0.7]])
+print(cpt_cloudy)
+
+cpt_rain = TabularCPD(variable='Rain', variable_card=2,
+                      values=[[0.8, 0.2],
+                              [0.2, 0.8]],
+                      evidence=['Cloudy'], evidence_card=[2])
+print(cpt_rain)
+
+cpt_sprinkler = TabularCPD(variable='Sprinkler', variable_card=2,
+                           values=[[0.5, 0.9],
+                                   [0.5, 0.1]],
+                           evidence=['Cloudy'], evidence_card=[2])
+print(cpt_sprinkler)
+
+
+cpt_wet_grass = TabularCPD(variable='Wet_Grass', variable_card=2,
+                           values=[[1, 0.1, 0.1, 0.01],
+                                   [0, 0.9, 0.9, 0.99]],
+                           evidence=['Sprinkler', 'Rain'],
+                           evidence_card=[2, 2])
+print(cpt_wet_grass)
+
+# Update DAG with the CPTs
+model = bn.make_DAG(edges)
+model = bn.make_DAG(model)
+model = bn.make_DAG(edges, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+model = bn.make_DAG(model, CPD=[cpt_cloudy, cpt_sprinkler, cpt_rain, cpt_wet_grass])
+
+# Print the CPTs
+bn.print_CPD(model)
+
+q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler':0})
+print(q1.df)
+
 # %%
 # Saving and loading
 import bnlearn as bn
