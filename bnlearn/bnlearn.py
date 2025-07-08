@@ -147,16 +147,20 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     if methodtype == 'nb': methodtype = 'naivebayes'
     if methodtype == 'dbn': methodtype = 'DBN'
 
-    # Automatically generate placeholder values for the CPTs
-    if CPD is None and isinstance(DAG, list):
+    if isinstance(DAG, list) and CPD is None:
+        # Automatically generate placeholder values for the CPTs
         CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, verbose=verbose)
+    elif isinstance(DAG, dict) and CPD is not None:
+        # Extract the DAG from the model
+        if verbose>=3: print('[bnlearn] >Update current DAG with custom CPD.')
+        DAG = list(DAG.get('model_edges'))
+    elif isinstance(DAG, dict):
+        # Extract the entire model
+        DAG = DAG.get('model', None)
 
     # Make list if required
     if (CPD is not None) and (not isinstance(CPD, list)):
         CPD = [CPD]
-
-    if isinstance(DAG, dict):
-        DAG = DAG.get('model', None)
 
     if (not isinstance(DAG, list)) and ('pgmpy' not in str(type(DAG))):
         raise Exception("[bnlearn] >Error: Input DAG should be a list. in the form [('A','B'), ('B','C')] or a <pgmpy.models.BayesianNetwork>")
