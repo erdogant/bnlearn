@@ -1,3 +1,12 @@
+#%%
+import bnlearn as bn
+edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
+CPD = bn.build_cpts_from_structure(edges, variable_card=3)
+DAG = bn.make_DAG(edges, CPD=CPD, methodtype='naivebayes')
+fig = bn.plot(DAG)
+
+#%%
+
 import bnlearn as bn
 
 
@@ -11,6 +20,11 @@ edges = [('Cloudy', 'Sprinkler'),
 
 # Create the DAG
 model = bn.make_DAG(edges)
+
+DAG = model['model']
+CPDs = {}
+for cpd in DAG.get_cpds():
+    CPDs[cpd.variable] = bn.query2df(cpd, verbose=0)['p']
 
 # Plot the DAG
 # bn.plot(model)
