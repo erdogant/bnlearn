@@ -26,10 +26,6 @@
 Because probabilistic graphical models can be difficult to use, ``Bnlearn`` contains the most-wanted pipelines. Navigate to [API documentations](https://erdogant.github.io/bnlearn/) for more detailed information. **⭐️ Star it if you like it ⭐️**
 </div>
 
-### Star history
-
-[![Star History Chart](https://api.star-history.com/svg?repos=erdogant/bnlearn&type=Date)](https://www.star-history.com/#erdogant/bnlearn&Date)
-
 ---
 
 ### Key Pipelines
@@ -190,6 +186,11 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 ```
 
 <hr>
+
+
+### Star history
+
+[![Star History Chart](https://api.star-history.com/svg?repos=erdogant/bnlearn&type=Date)](https://www.star-history.com/#erdogant/bnlearn&Date)
 
 ### Contributors
 Setting up and maintaining bnlearn has been possible thanks to users and contributors. Thanks to:
