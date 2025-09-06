@@ -193,7 +193,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 [![Star History Chart](https://api.star-history.com/svg?repos=erdogant/bnlearn&type=Date)](https://www.star-history.com/#erdogant/bnlearn&Date)
 
 ### Contributors
-Setting up and maintaining bnlearn has been possible thanks to users and contributors. Thanks to:
+Thank the contributors!
 
 <p align="left">
   <a href="https://github.com/erdogant/bnlearn/graphs/contributors">
