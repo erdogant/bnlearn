@@ -42,7 +42,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 
 ### Resources and Links
 - **Example Notebooks:** [Examples](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#google-colab-notebooks)
-- **Blog Posts:** [Medium](https://erdogant.medium.com/)
+- **Blog Posts:** [Medium](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog-posts)
 - **Documentation:** [Website](https://erdogant.github.io/bnlearn)
 - **Bug Reports and Feature Requests:** [GitHub Issues](https://github.com/erdogant/bnlearn/issues)
 
