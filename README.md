@@ -28,15 +28,15 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 
 ---
 
-### Key Pipelines
+### Key Features
 
-| Feature | Description |
-|--------|-------------|
-| [**Causal Discovery / Structure Learning**](https://erdogant.github.io/bnlearn/pages/html/Structure%20learning.html) | Learn the model structure from data or with expert knowledge. |
-| [**Parameter Learning**](https://erdogant.github.io/bnlearn/pages/html/Parameter%20learning.html) | Estimate model parameters (e.g., conditional probability distributions) from observed data. |
-| [**Causal Inference**](https://pgmpy.org/examples/Causal%20Inference.html) | Compute interventional and counterfactual distributions using do-calculus. |
-| [**Generate Synthetic Data**](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | Generate synthetic data. |
-| [**Discretize Data**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Discretize continuous datasets. |
+| Feature | Description | Medium | Gumroad/Podcast |
+|--------|-------------|---|---|
+| [**Causal Discovery / Structure Learning**](https://erdogant.github.io/bnlearn/pages/html/Structure%20learning.html) | Learn the model structure from data or with expert knowledge. |---|---|
+| [**Parameter Learning**](https://erdogant.github.io/bnlearn/pages/html/Parameter%20learning.html) | Estimate model parameters (e.g., conditional probability distributions) from observed data. |---|---|
+| [**Causal Inference**](https://pgmpy.org/examples/Causal%20Inference.html) | Compute interventional and counterfactual distributions using do-calculus. |---|---|
+| [**Generate Synthetic Data**](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | Generate synthetic data. |---|---|
+| [**Discretize Data**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Discretize continuous datasets. |---|---|
 
 ---
 
