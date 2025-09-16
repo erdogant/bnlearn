@@ -9,19 +9,17 @@ authors = [{ name = "Erdogan Taskesen", email = "erdogant@gmail.com" },]
 description = "bnlearn is a Python package for Causal Discovery by learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods."
 readme = "README.md"
 requires-python = ">=3"
-license = { file = "LICENSE" }
-keywords = ["Python", ""]
+license = "MIT"
+keywords = ["Python", "causal discovery", "causal learning"]
 classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
     "Intended Audience :: Education",
     "Intended Audience :: Science/Research",
     "Operating System :: Unix",
     "Operating System :: Microsoft :: Windows",
     "Operating System :: MacOS",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Scientific/Engineering :: Bio-Informatics",
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
 ]
 
 dependencies = [
