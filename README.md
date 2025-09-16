@@ -28,21 +28,21 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 
 ---
 
-### Key Pipelines
+### Key Features
 
-| Feature | Description |
-|--------|-------------|
-| [**Causal Discovery / Structure Learning**](https://erdogant.github.io/bnlearn/pages/html/Structure%20learning.html) | Learn the model structure from data or with expert knowledge. |
-| [**Parameter Learning**](https://erdogant.github.io/bnlearn/pages/html/Parameter%20learning.html) | Estimate model parameters (e.g., conditional probability distributions) from observed data. |
-| [**Causal Inference**](https://pgmpy.org/examples/Causal%20Inference.html) | Compute interventional and counterfactual distributions using do-calculus. |
-| [**Generate Synthetic Data**](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | Generate synthetic data. |
-| [**Discretize Data**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Discretize continuous datasets. |
+| Feature | Description | Medium | Gumroad/Podcast |
+|--------|-------------|---|---|
+| [**Causal Discovery / Structure Learning**](https://erdogant.github.io/bnlearn/pages/html/Structure%20learning.html) | Learn the model structure from data or with expert knowledge. |---|---|
+| [**Parameter Learning**](https://erdogant.github.io/bnlearn/pages/html/Parameter%20learning.html) | Estimate model parameters (e.g., conditional probability distributions) from observed data. |---|---|
+| [**Causal Inference**](https://pgmpy.org/examples/Causal%20Inference.html) | Compute interventional and counterfactual distributions using do-calculus. |---|---|
+| [**Generate Synthetic Data**](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | Generate synthetic data. |---|---|
+| [**Discretize Data**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Discretize continuous datasets. |---|---|
 
 ---
 
 ### Resources and Links
 - **Example Notebooks:** [Examples](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#google-colab-notebooks)
-- **Blog Posts:** [Medium](https://erdogant.medium.com/)
+- **Blog Posts:** [Medium](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog-posts)
 - **Documentation:** [Website](https://erdogant.github.io/bnlearn)
 - **Bug Reports and Feature Requests:** [GitHub Issues](https://github.com/erdogant/bnlearn/issues)
 
@@ -187,8 +187,13 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 
 <hr>
 
+
+### Star history
+
+[![Star History Chart](https://api.star-history.com/svg?repos=erdogant/bnlearn&type=Date)](https://www.star-history.com/#erdogant/bnlearn&Date)
+
 ### Contributors
-Setting up and maintaining bnlearn has been possible thanks to users and contributors. Thanks to:
+Thank the contributors!
 
 <p align="left">
   <a href="https://github.com/erdogant/bnlearn/graphs/contributors">
