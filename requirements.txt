@@ -1,4 +1,4 @@
-pgmpy==0.1.25
+pgmpy==0.1.25 # This is needed because above this version all kinds of third party google and LLM stuff is imported that we do not need.
 networkx>=2.7.1
 matplotlib>=3.3.4
 numpy>=1.24.1
