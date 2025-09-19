@@ -14,9 +14,9 @@ Medium Blog Posts
 .. _doc-blog-posts:
 
 .. note::
-	* `Guide in Detecting Causal Relationships using Bayesian Structure Learning in Python <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-	* `Guide in Designing Knowledge-Driven Models using Bayesian Theorem <https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5>`_
-	* `A Comparative Analysis of Libraries to Reveal Hidden Causality in Your Dataset <https://towardsdatascience.com/the-power-of-bayesian-causal-inference-a-comparative-analysis-of-libraries-to-reveal-hidden-d91e8306e25e>`_
+	* `The Starters Guide to Causal Structure Learning with Bayesian Methods in Python. <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
+	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
+	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
 
 GitHub Repository
 -----------------
