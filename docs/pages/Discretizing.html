@@ -1,0 +1,605 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Discretizing &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=441dd29d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Causation" href="Structure%20learning.html" />
+    <link rel="prev" title="Installation" href="Installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Discretizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-learning">Structure Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-learning">Parameter Learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-inferences">Making Inferences</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Notebook Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Notebook</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Discretizing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Discretizing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="discretizing">
+<h1>Discretizing<a class="headerlink" href="#discretizing" title="Link to this heading"></a></h1>
+<p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, the following options are available to work with continuous datasets:</p>
+<ul class="simple">
+<li><ol class="arabic simple">
+<li><p>Discretize continuous datasets manually using domain knowledge</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="2">
+<li><p>Discretize continuous datasets using probability density fitting</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="3">
+<li><p>Discretize continuous datasets using a principled Bayesian discretization method</p></li>
+</ol>
+</li>
+<li><ol class="arabic simple" start="4">
+<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships</p></li>
+</ol>
+</li>
+</ul>
+</section>
+<section id="manual-discretization">
+<h1>Manual Discretization<a class="headerlink" href="#manual-discretization" title="Link to this heading"></a></h1>
+<p>Discretizing continuous datasets manually using domain knowledge involves dividing a continuous variable into a set of discrete intervals based on an understanding of the data’s context and the relationships between variables. This method allows for meaningful groupings of data points, which can simplify analysis and improve interpretability in models.</p>
+<p>By leveraging expertise in the subject matter, the intervals or thresholds can be chosen to reflect real-world significance, such as categorizing weather conditions into meaningful ranges (e.g., “freezing,” “warm,” “hot”). This approach contrasts with automatic binning methods (as depicted in approach 2), such as equal-width or equal-frequency binning, where intervals may not correspond to meaningful domain-specific boundaries.</p>
+<p>For instance, let’s load the auto mpg dataset and, based on automotive standards, define horsepower categories:</p>
+<ul class="simple">
+<li><p>Low: Cars with horsepower less than 100 (typically small, fuel-efficient cars)</p></li>
+<li><p>Medium: Cars with horsepower between 100 and 150 (moderate performance cars)</p></li>
+<li><p>High: Cars with horsepower above 150 (high-performance vehicles)</p></li>
+</ul>
+<p>After all continuous variables are categorized, the normal structure learning procedure can be applied.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Load dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print dataset overview</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#       mpg  cylinders  displacement  ...  acceleration  model_year  origin</span>
+<span class="c1"># 0    18.0          8         307.0  ...          12.0          70       1</span>
+<span class="c1"># 1    15.0          8         350.0  ...          11.5          70       1</span>
+<span class="c1"># 2    18.0          8         318.0  ...          11.0          70       1</span>
+<span class="c1"># 3    16.0          8         304.0  ...          12.0          70       1</span>
+<span class="c1"># 4    17.0          8         302.0  ...          10.5          70       1</span>
+<span class="c1"># ..    ...        ...           ...  ...           ...         ...     ...</span>
+<span class="c1"># 387  27.0          4         140.0  ...          15.6          82       1</span>
+<span class="c1"># 388  44.0          4          97.0  ...          24.6          82       2</span>
+<span class="c1"># 389  32.0          4         135.0  ...          11.6          82       1</span>
+<span class="c1"># 390  28.0          4         120.0  ...          18.6          82       1</span>
+<span class="c1"># 391  31.0          4         119.0  ...          19.4          82       1</span>
+<span class="c1">#</span>
+<span class="c1"># [392 rows x 8 columns]</span>
+
+<span class="c1"># Define horsepower bins based on domain knowledge</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">]</span>
+
+<span class="c1"># Discretize horsepower using the defined bins</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Print the results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;horsepower&#39;</span><span class="p">,</span> <span class="s1">&#39;horsepower_category&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="c1">#    horsepower horsepower_category</span>
+<span class="c1"># 0       130.0              medium</span>
+<span class="c1"># 1       165.0                high</span>
+<span class="c1"># 2       150.0              medium</span>
+<span class="c1"># 3       150.0              medium</span>
+<span class="c1"># 4       140.0              medium</span>
+</pre></div>
+</div>
+</section>
+<section id="automatic-discretization-probability-density">
+<h1>Automatic Discretization: Probability Density<a class="headerlink" href="#automatic-discretization-probability-density" title="Link to this heading"></a></h1>
+<p>In contrast to manual discretization, we can also automatically determine the best binning per variable. However, such approaches require extra attention compared to manual binning methods, where intervals may not correspond to meaningful domain-specific boundaries. To automatically create more meaningful bins than simple equal-width or equal-frequency binning, we can determine the distribution that best fits the signal and then use the 95% confidence interval to create low, medium, and high categories.</p>
+<p>It is always wise to have a visual inspection of the distribution plots with the thresholds determined for the binning. This way, you can decide whether the low-end, medium, and high-end thresholds are meaningful. For example, if we take acceleration and perform this approach, we find a low-end of 8 seconds to ~11 seconds which represents the fast cars. On the high end are the slow cars with an acceleration of 20 seconds to 24 seconds. The remaining cars fall in the category “normal.” This seems very plausible, so we can continue with these categories. See the code block below.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import required libraries</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">distfit</span><span class="w"> </span><span class="kn">import</span> <span class="n">distfit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="c1"># Initialize and set 95% confidence interval</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">distfit</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+<span class="c1"># Fit and transform the data</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">])</span>
+
+<span class="c1"># Create visualization</span>
+<span class="n">dist</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Define bins based on distribution</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;CII_min_alpha&#39;</span><span class="p">],</span>
+        <span class="n">dist</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;CII_max_alpha&#39;</span><span class="p">],</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+
+<span class="c1"># Discretize acceleration using the defined bins</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">],</span>
+                                   <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                                   <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fast&#39;</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">,</span> <span class="s1">&#39;slow&#39;</span><span class="p">],</span>
+                                   <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;acceleration&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="figd1a" src="_images/dist1.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<p>For multiple continuous variables, we can automate the distribution fitting:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Process all remaining columns</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mpg&#39;</span><span class="p">,</span> <span class="s1">&#39;displacement&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">]</span>
+
+<span class="c1"># Apply distribution fitting to each variable</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+    <span class="c1"># Initialize and set 95% confidence interval</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">distfit</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">dist</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">])</span>
+
+    <span class="c1"># Create visualization</span>
+    <span class="n">dist</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1"># Define bins based on distribution</span>
+    <span class="n">bins</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;CII_min_alpha&#39;</span><span class="p">],</span>
+            <span class="n">dist</span><span class="o">.</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;CII_max_alpha&#39;</span><span class="p">],</span>
+            <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+
+    <span class="c1"># Discretize using the defined bins</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">col</span> <span class="o">+</span> <span class="s1">&#39;_category&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">],</span>
+                                 <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span>
+                                 <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;low&#39;</span><span class="p">,</span> <span class="s1">&#39;medium&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">],</span>
+                                 <span class="n">include_lowest</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>After all continuous variables are categorized, the causal discovery approach for structure learning can be applied.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Perform structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">)</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="figd2a" src="_images/auto_mpg_distfit.png" /></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="automatic-discretization-principled-bayesian">
+<h1>Automatic Discretization: Principled Bayesian<a class="headerlink" href="#automatic-discretization-principled-bayesian" title="Link to this heading"></a></h1>
+<p>Automatic discretization of datasets can be accomplished using a principled Bayesian discretization method. This method was created by Yi-Chun Chen et al. <a class="footnote-reference brackets" href="#id3" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> in Julia <a class="footnote-reference brackets" href="#id4" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The code has been ported to Python and is now part of <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>. Yi-Chun Chen demonstrates that this proposed method is superior to the established minimum description length algorithm.</p>
+<p>A limitation of this approach is that you need to pre-define the edges before applying the discretization method. The underlying idea is that after applying this discretization method, structure learning approaches can then be applied. To demonstrate the usage of automatic discretization for continuous data, let’s use the <strong>auto mpg</strong> dataset again.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Load dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Print dataset overview</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#       mpg  cylinders  displacement  ...  acceleration  model_year  origin</span>
+<span class="c1"># 0    18.0          8         307.0  ...          12.0          70       1</span>
+<span class="c1"># 1    15.0          8         350.0  ...          11.5          70       1</span>
+<span class="c1"># 2    18.0          8         318.0  ...          11.0          70       1</span>
+<span class="c1"># 3    16.0          8         304.0  ...          12.0          70       1</span>
+<span class="c1"># 4    17.0          8         302.0  ...          10.5          70       1</span>
+<span class="c1"># ..    ...        ...           ...  ...           ...         ...     ...</span>
+<span class="c1"># 387  27.0          4         140.0  ...          15.6          82       1</span>
+<span class="c1"># 388  44.0          4          97.0  ...          24.6          82       2</span>
+<span class="c1"># 389  32.0          4         135.0  ...          11.6          82       1</span>
+<span class="c1"># 390  28.0          4         120.0  ...          18.6          82       1</span>
+<span class="c1"># 391  31.0          4         119.0  ...          19.4          82       1</span>
+<span class="c1">#</span>
+<span class="c1"># [392 rows x 8 columns]</span>
+
+<span class="c1"># Define the edges</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;cylinders&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;mpg&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;model_year&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="c1"># Create DAG based on edges</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-auto-mpg-dag-edges">
+<img alt="_images/auto_mpg_DAG_edges.png" src="_images/auto_mpg_DAG_edges.png" />
+</figure>
+<p>We can now discretize the continuous columns as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set continuous columns as float</span>
+<span class="n">continuous_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">,</span> <span class="s2">&quot;displacement&quot;</span><span class="p">,</span> <span class="s2">&quot;horsepower&quot;</span><span class="p">,</span> <span class="s2">&quot;weight&quot;</span><span class="p">,</span> <span class="s2">&quot;acceleration&quot;</span><span class="p">]</span>
+
+<span class="c1"># Discretize the continuous columns</span>
+<span class="n">df_discrete</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">continuous_columns</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Print results</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">)</span>
+<span class="c1">#                 mpg  cylinders  ... model_year origin</span>
+<span class="c1"># 0     (17.65, 21.3]          8  ...         70      1</span>
+<span class="c1"># 1    (8.624, 15.25]          8  ...         70      1</span>
+<span class="c1"># 2     (17.65, 21.3]          8  ...         70      1</span>
+<span class="c1"># 3    (15.25, 17.65]          8  ...         70      1</span>
+<span class="c1"># 4    (15.25, 17.65]          8  ...         70      1</span>
+<span class="c1"># ..              ...        ...  ...        ...    ...</span>
+<span class="c1"># 387   (25.65, 28.9]          4  ...         82      1</span>
+<span class="c1"># 388    (28.9, 46.6]          4  ...         82      2</span>
+<span class="c1"># 389    (28.9, 46.6]          4  ...         82      1</span>
+<span class="c1"># 390   (25.65, 28.9]          4  ...         82      1</span>
+<span class="c1"># 391    (28.9, 46.6]          4  ...         82      1</span>
+<span class="c1">#</span>
+<span class="c1"># [392 rows x 8 columns]</span>
+</pre></div>
+</div>
+<p>At this point, the dataset is no different from any other discrete dataset. We can specify the DAG together with the discrete dataframe and fit a model using <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>.</p>
+<section id="structure-learning">
+<h2>Structure Learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h2>
+<p>We will learn the structure on the discretized continuous data. Note that the data is also discretized on a set of edges, which may introduce a bias in the learned structure.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Learn the structure</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+
+<span class="c1"># Perform independence test</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># [bnlearn] &gt;Compute edge strength with [chi_square]</span>
+<span class="c1"># [bnlearn] &gt;Edge [weight &lt;-&gt; mpg] [P=0.999112] is excluded because it was not significant (P&lt;0.05) with [chi_square]</span>
+
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig2a" src="_images/fig2a.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig2b" src="_images/fig2b.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe></section>
+<section id="parameter-learning">
+<h2>Parameter Learning<a class="headerlink" href="#parameter-learning" title="Link to this heading"></a></h2>
+<p>Let’s continue with parameter learning on the continuous dataset and see whether we can estimate the CPDs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fit model based on DAG and discretized continuous columns</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df_discrete</span><span class="p">)</span>
+
+<span class="c1"># Alternative: Use MLE method</span>
+<span class="c1"># model_mle = bn.parameter_learning.fit(DAG, df_discrete, methodtype=&quot;maximumlikelihood&quot;)</span>
+</pre></div>
+</div>
+<p>After fitting the model on the DAG and dataframe, we can perform the independence test to remove any spurious edges and create a plot. In this case, the tooltips will contain the CPDs as these are computed with parameter learning.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Perform independence test</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><img alt="fig3a" src="_images/fig_cont_1.png" /></p></td>
+</tr>
+<tr class="row-even"><td><p><img alt="fig3b" src="_images/fig_cont_1b.png" /></p></td>
+</tr>
+</tbody>
+</table>
+<iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe><p>There are various ways to investigate the results further, such as examining the CPDs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_cpds</span><span class="p">(</span><span class="s2">&quot;mpg&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>weight</p></td>
+<td><p>…</p></td>
+<td><p>weight((3657.5, 5140.0])</p></td>
+</tr>
+<tr class="row-even"><td><p>mpg((8.624, 15.25])</p></td>
+<td><p>…</p></td>
+<td><p>0.29931972789115646</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((15.25, 17.65])</p></td>
+<td><p>…</p></td>
+<td><p>0.19727891156462582</p></td>
+</tr>
+<tr class="row-even"><td><p>mpg((17.65, 21.3])</p></td>
+<td><p>…</p></td>
+<td><p>0.13313896987366375</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((21.3, 25.65])</p></td>
+<td><p>…</p></td>
+<td><p>0.12439261418853255</p></td>
+</tr>
+<tr class="row-even"><td><p>mpg((25.65, 28.9])</p></td>
+<td><p>…</p></td>
+<td><p>0.12439261418853255</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((28.9, 46.6])</p></td>
+<td><p>…</p></td>
+<td><p>0.12147716229348882</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print weight categories</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Weight categories: &quot;</span><span class="p">,</span> <span class="n">df_disc</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">categories</span><span class="p">)</span>
+<span class="c1"># Weight categories:  IntervalIndex([(1577.73, 2217.0], (2217.0, 2959.5], (2959.5, 3657.5], (3657.5, 5140.0]], dtype=&#39;interval[float64, right]&#39;)</span>
+</pre></div>
+</div>
+</section>
+<section id="making-inferences">
+<h2>Making Inferences<a class="headerlink" href="#making-inferences" title="Link to this heading"></a></h2>
+<p>Making inferences can be performed using the fitted model. Note that the evidence should be discretized, for which we can use the <code class="docutils literal notranslate"><span class="pre">discretize_value</span></code> function.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Discretize evidence</span>
+<span class="n">evidence</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="n">bn</span><span class="o">.</span><span class="n">discretize_value</span><span class="p">(</span><span class="n">df_discrete</span><span class="p">[</span><span class="s2">&quot;weight&quot;</span><span class="p">],</span> <span class="mf">3000.0</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">evidence</span><span class="p">)</span>
+<span class="c1"># {&#39;weight&#39;: Interval(2959.5, 3657.5, closed=&#39;right&#39;)}</span>
+
+<span class="c1"># Perform inference</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mpg&quot;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="n">evidence</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>mpg</p></th>
+<th class="head"><p>phi(mpg)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>mpg((8.624, 15.25])</p></td>
+<td><p>0.1510</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((15.25, 17.65])</p></td>
+<td><p>0.1601</p></td>
+</tr>
+<tr class="row-even"><td><p>mpg((17.65, 21.3])</p></td>
+<td><p>0.2665</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((21.3, 25.65])</p></td>
+<td><p>0.1540</p></td>
+</tr>
+<tr class="row-even"><td><p>mpg((25.65, 28.9])</p></td>
+<td><p>0.1327</p></td>
+</tr>
+<tr class="row-odd"><td><p>mpg((28.9, 46.6])</p></td>
+<td><p>0.1358</p></td>
+</tr>
+</tbody>
+</table>
+<section id="references">
+<h3>References<a class="headerlink" href="#references" title="Link to this heading"></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Chen, Y.-C., Wheeler, T. A., &amp; Kochenderfer, M. J. (2015). Learning discrete Bayesian networks from continuous data. arXiv. <a class="reference external" href="https://arxiv.org/abs/1512.02406">https://arxiv.org/abs/1512.02406</a></p>
+</aside>
+<aside class="footnote brackets" id="id4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>Julia 0.4 implementation. (n.d.). LearnDiscreteBayesNets.jl. <a class="reference external" href="https://github.com/sisl/LearnDiscreteBayesNets.jl">https://github.com/sisl/LearnDiscreteBayesNets.jl</a></p>
+</aside>
+</aside>
+<hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="Installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Structure%20learning.html" class="btn btn-neutral float-right" title="Causation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
