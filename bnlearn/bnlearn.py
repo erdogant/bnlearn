@@ -1530,7 +1530,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
 
     # Change node properties
     _, IB = ismember([*d3.D3graph.node_properties.keys()], nodelist)
-
+    
     d3.D3graph.set_node_properties(tooltip=np.array(tooltip)[IB],
                                    size=np.array(node_sizes)[IB],
                                    color=np.array(node_colors)[IB],

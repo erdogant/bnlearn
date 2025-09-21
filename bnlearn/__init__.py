@@ -34,7 +34,7 @@ from bnlearn.bnlearn import (
     # dataframe_to_cpd,
 )
 
-# Import function in new level
+# Import functions
 import bnlearn.structure_learning as structure_learning
 import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
@@ -44,6 +44,8 @@ from bnlearn.impute import knn_imputer, mice_imputer
 from bnlearn.discretize import discretize, discretize_value
 from bnlearn.learn_discrete_bayes_net import discretize_all
 from bnlearn.sampling import sampling
+
+
 
 from packaging import version
 
@@ -68,15 +70,6 @@ if version.parse(nx.__version__) < version.parse("2.7.1"):
 import numpy as np
 if version.parse(np.__version__) < version.parse("1.24.1"):
     raise ImportError('[bnlearn] >Error: numpy version should be > 1.24.1\nTry to: pip install -U numpy')
-
-# import pandas as pd
-# if version.parse(pd.__version__) > version.parse("1.5.3"):
-#     raise ImportError('[bnlearn] >Error: pands version should be <= 1.5.3')
-
-# This one is moved towards the interactive plot function because it is not required in the setup.
-# import d3blocks as d3
-# if version.parse(d3.__version__) < version.parse("1.4.9"):
-#     raise ImportError('[bnlearn] >Error: d3blocks version should be >= 1.4.9')
 
 # module level doc-string
 __doc__ = """
