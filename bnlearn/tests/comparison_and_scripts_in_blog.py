@@ -4,6 +4,33 @@ import numpy as np
 import matplotlib.pyplot as plt
 import bnlearn as bn
 
+
+def test_example_4():
+    import bnlearn as bn
+    
+    # Load sprinkler dataset
+    df = bn.import_example('sprinkler')
+    
+    # The edges can be created using the available variables.
+    print(df.columns)
+    # ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']
+    
+    # Define the causal dependencies based on your expert/domain knowledge.
+    # Left is the source, and right is the target node.
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+    
+    # Create the DAG
+    DAG = bn.make_DAG(edges)
+    
+    # Parameter learning on the user-defined DAG and input data using Bayes
+    model_bayes = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
+    
+    # Print the learned CPDs
+    bn.print_CPD(model_bayes)
+
 def test_example_3():
     import bnlearn as bn
     # Load sprinkler dataset
@@ -156,6 +183,46 @@ def test_hypergeo_test():
     
     # 3.5925132664684234e-60
     assert P==3.5925132664694183e-60
+    
+
+def test_PyAgrum():
+    import datazets as dz
+    import pandas as pd
+    import pyagrum as gum
+    import pyagrum.lib.notebook as gnb
+    import pyagrum.lib.explain as explain
+    import pyagrum.lib.bn_vs_bn as bnvsbn
+ 
+    # Import data set and drop continous and sensitive features
+    df = dz.get(data='census_income')
+    # Data cleaning
+    drop_cols = ['age', 'fnlwgt', 'education-num', 'capital-gain', 'capital-loss', 'hours-per-week', 'race', 'sex']
+    df.drop(labels=drop_cols, axis=1, inplace=True)
+    # Drop rows with any missing values
+    df2 = df.dropna().copy()
+    # Replace *all* missing values with a placeholder string
+    df2 = df2.fillna("missing").replace("?", "missing")
+
+    # Make sure categorical columns are categorical dtype (pyAgrum expects discrete variables)
+    for col in df2.columns:
+        df2[col] = df2[col].astype("category")
+              
+    # Create the learner from the pandas DataFrame
+    learner = gum.BNLearner(df2)
+
+    # 3) Configure score and search
+    learner.useScoreBIC()        # use BIC score
+    learner.useGreedyHillClimbing()   # use Hill-Climbing search
+
+    # Learn the network
+    bn = learner.learnBN()
+
+    # Learn the parameters
+    bn2 = learner.learnParameters(bn.dag())
+    
+    # Plot the network
+    gnb.showBN(bn2)
+
     
 
 def test_bnlearn_example_1():

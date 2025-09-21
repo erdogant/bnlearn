@@ -1,3 +1,17 @@
+# Saving and loading
+import bnlearn as bn
+
+# Load example mixed dataset
+df = bn.import_example(data='sprinkler')
+
+# Structure learning
+model = bn.structure_learning.fit(df)
+model = bn.independence_test(model, df, test='chi_square', prune=True)
+model = bn.parameter_learning.fit(model, df)
+
+G = bn.plot(model, interactive=True)
+
+
 #%%
 import bnlearn as bn
 edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
