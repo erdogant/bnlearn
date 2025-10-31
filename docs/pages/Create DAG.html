@@ -1,0 +1,414 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Directed Acyclic Graphs &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=441dd29d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Impute" href="impute.html" />
+    <link rel="prev" title="Independence test" href="independence_test.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Directed Acyclic Graphs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#build-a-dag-auto-generated-cpts">Build a DAG (Auto generated CPTs)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-a-dag-manual-cpts">Build a DAG (Manual CPTs)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Notebook Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Notebook</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Directed Acyclic Graphs</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Create DAG.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="directed-acyclic-graphs">
+<h1>Directed Acyclic Graphs<a class="headerlink" href="#directed-acyclic-graphs" title="Link to this heading"></a></h1>
+<p>This section describes how to design your Directed Acyclic Graphs (DAGs), and how to assign <strong>Conditional Probability Distributions (CPDs)</strong>.</p>
+<ul class="simple">
+<li><p>Build a DAG (Auto generated CPTs)</p></li>
+<li><p>Build a DAG (Manual CPTs)</p></li>
+<li><p>Inference on the causal generative model</p></li>
+</ul>
+<section id="build-a-dag-auto-generated-cpts">
+<h2>Build a DAG (Auto generated CPTs)<a class="headerlink" href="#build-a-dag-auto-generated-cpts" title="Link to this heading"></a></h2>
+<p>If you already know the relationships between variables—either through prior knowledge or domain expertise—you can define the (causal) dependencies directly using a <strong>Directed Acyclic Graph (DAG)</strong>.</p>
+<p>In a DAG:
+- Each <strong>node</strong> represents a variable.
+- Each <strong>directed edge</strong> represents a direct dependency (often causal) from one variable to another.</p>
+<p>In <cite>bnlearn</cite>, we can explicitly construct and visualize these relationships. Below, we demonstrate this with the classic <strong>Sprinkler</strong> example.
+First, we define the directed relationships between the variables by specifying the <strong>edges</strong>:</p>
+<ul class="simple">
+<li><p>Cloudy    -&gt; Sprinkler</p></li>
+<li><p>Cloudy    -&gt; Rain</p></li>
+<li><p>Sprinkler -&gt; Wet_Grass</p></li>
+<li><p>Rain      -&gt; Wet_Grass</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Make the Bayesian DAG. The CPTs are auto-generated.</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+
+<span class="c1"># Plot the DAG</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Print the CPD</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-sprinkler">
+<img alt="_images/fig_sprinkler_sl.png" src="_images/fig_sprinkler_sl.png" />
+</figure>
+<p>We call this a causal DAG because we have assumed that the edges we encoded represent our causal assumptions about the system.
+When using <cite>bnlearn.make_DAG</cite>, the Conditional Probability Tables (CPTs), also known as Conditional Probability Distributions (CPDs), are <strong>automatically generated</strong> for all nodes if not explicitly provided.</p>
+<dl class="simple">
+<dt>These default CPTs assume:</dt><dd><ul class="simple">
+<li><p>A <strong>uniform probability distribution</strong>, meaning that all outcomes are equally likely.</p></li>
+<li><p>A <strong>default cardinality (variable_card) of 2</strong>, meaning that each node two has two states, [0, 1].</p></li>
+</ul>
+</dd>
+</dl>
+<p>You can override these defaults by explicitly specifying custom CPTs using <code class="docutils literal notranslate"><span class="pre">TabularCPD</span></code> from <code class="docutils literal notranslate"><span class="pre">pgmpy</span></code>.
+Alternatively, you can generate them using <code class="docutils literal notranslate"><span class="pre">bnlearn.generate_cpt()</span></code> for greater control over cardinality and probability values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Generate Placeholder CPTs</span>
+<span class="n">CPD</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">build_cpts_from_structure</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Adjust the Probability Table(s) accordingly</span>
+<span class="n">CPD</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># Create the DAG and add the probabiilty tables (CPD)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="n">CPD</span><span class="p">)</span>
+
+<span class="c1"># Print the CPD</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+
+<span class="p">[</span><span class="n">bnlearn</span><span class="p">]</span> <span class="o">&gt;</span><span class="n">Variable</span> <span class="n">Elimination</span><span class="o">.</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>    <span class="o">|</span>   <span class="n">Wet_Grass</span> <span class="o">|</span>        <span class="n">p</span> <span class="o">|</span>
+<span class="o">+====+=============+==========+</span>
+<span class="o">|</span>  <span class="mi">0</span> <span class="o">|</span>           <span class="mi">0</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>  <span class="mi">1</span> <span class="o">|</span>           <span class="mi">1</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+<span class="o">|</span>  <span class="mi">2</span> <span class="o">|</span>           <span class="mi">2</span> <span class="o">|</span> <span class="mf">0.333333</span> <span class="o">|</span>
+<span class="o">+----+-------------+----------+</span>
+
+<span class="n">Summary</span> <span class="k">for</span> <span class="n">variables</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="n">Given</span> <span class="n">evidence</span><span class="p">:</span> <span class="n">Rain</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">Sprinkler</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">Cloudy</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="n">Wet_Grass</span> <span class="n">outcomes</span><span class="p">:</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">0</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">1</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+<span class="o">-</span> <span class="n">Wet_Grass</span><span class="p">:</span> <span class="mi">2</span> <span class="p">(</span><span class="mf">33.3</span><span class="o">%</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can have more controle per node and the variable_card and probabilities as following.
+Note that if you change the <cite>variable_card</cite>, it must also match with the child nodes, otherwise it will return a cardinality error!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Get parent nodes from the edges</span>
+<span class="n">parents</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">parents</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span>
+ <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+<span class="c1"># Create the CPT for each node. When changing the variable_card, it should match the cardinality!</span>
+<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_sprinkler</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">cpt_wetgrass</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">generate_cpt</span><span class="p">(</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">parents</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># Create the DAG with custom CPTs. The order of the CPTs does not matter.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wetgrass</span><span class="p">,</span> <span class="n">cpt_cloudy</span><span class="p">])</span>
+
+<span class="c1"># The causal DAG as a generative representation of joint probability</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="build-a-dag-manual-cpts">
+<h2>Build a DAG (Manual CPTs)<a class="headerlink" href="#build-a-dag-manual-cpts" title="Link to this heading"></a></h2>
+<p>Each factor in a Bayesian network is a conditional probability distribution (CPD), often referred to as a conditional probability table (CPT) in the discrete case.
+While CPDs can be derived from any directed acyclic graph (DAG), if the DAG represents causal relationships,
+the resulting CPDs are better interpreted as <em>causal Markov kernels</em> (CMKs).
+This causal factorization is particularly valuable because each CMK reflects an independent causal mechanism—assumed to remain stable across different datasets.
+Despite this distinction, the term CPD is still more commonly used than CMK.</p>
+<p>For each node we can specify the probability distributions as following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import the library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the network structure</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Import the library</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.factors.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">TabularCPD</span>
+
+<span class="c1"># Cloudy has no parents</span>
+<span class="n">cpt_cloudy</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                        <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]])</span>
+
+<span class="c1"># Sprinkler | Cloudy (Cloudy has 3 values)</span>
+<span class="n">cpt_sprinkler</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                           <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>  <span class="c1"># Sprinkler=0</span>
+                                   <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]],</span> <span class="c1"># Sprinkler=1</span>
+                           <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># Rain | Cloudy (Cloudy has 3 values)</span>
+<span class="n">cpt_rain</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                      <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>  <span class="c1"># Rain=0</span>
+                              <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]],</span> <span class="c1"># Rain=1</span>
+                      <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+<span class="c1"># Wet_Grass | Sprinkler, Rain (both binary)</span>
+<span class="n">cpt_wetgrass</span> <span class="o">=</span> <span class="n">TabularCPD</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span> <span class="n">variable_card</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                          <span class="n">values</span><span class="o">=</span><span class="p">[[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>  <span class="c1"># Wet_Grass=0</span>
+                                  <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">]],</span> <span class="c1"># Wet_Grass=1</span>
+                          <span class="n">evidence</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">],</span> <span class="n">evidence_card</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_sprinkler</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_rain</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_wet_grass</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cpt_cloudy</span><span class="p">)</span>
+<span class="c1"># +-----------+-----+</span>
+<span class="c1"># | Cloudy(0) | 0.3 |</span>
+<span class="c1"># +-----------+-----+</span>
+<span class="c1"># | Cloudy(1) | 0.7 |</span>
+<span class="c1"># +-----------+-----+</span>
+
+<span class="c1"># Now need to connect the edges with CPDs.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="p">[</span><span class="n">cpt_cloudy</span><span class="p">,</span> <span class="n">cpt_sprinkler</span><span class="p">,</span> <span class="n">cpt_rain</span><span class="p">,</span> <span class="n">cpt_wet_grass</span><span class="p">])</span>
+
+<span class="c1"># The causal DAG as a generative representation of joint probability</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Make inferences</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+<hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="independence_test.html" class="btn btn-neutral float-left" title="Independence test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="impute.html" class="btn btn-neutral float-right" title="Impute" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

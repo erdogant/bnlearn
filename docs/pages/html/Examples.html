@@ -1,0 +1,722 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Examples &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=441dd29d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Titanic Dataset Analysis" href="UseCases.html" />
+    <link rel="prev" title="Saving and Loading" href="saving%20and%20loading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataframe%20conversions.html">Data Conversions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#working-with-raw-data">Working with Raw Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-learning-example">Structure Learning Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#example-1-basic-structure-learning">Example 1: Basic Structure Learning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-2-sprinkler-dataset">Example 2: Sprinkler Dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-3-asia-dataset">Example 3: Asia Dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-learning-example">Parameter Learning Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Notebook Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Notebook</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Examples</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Examples.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> contains several examples within the library that can be used to practice with the functionalities of <a class="reference internal" href="bnlearn.structure_learning.html#module-bnlearn.structure_learning" title="bnlearn.structure_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.structure_learning()</span></code></a>, <a class="reference internal" href="bnlearn.parameter_learning.html#module-bnlearn.parameter_learning" title="bnlearn.parameter_learning"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.parameter_learning()</span></code></a>, and <a class="reference internal" href="bnlearn.inference.html#module-bnlearn.inference" title="bnlearn.inference"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.inference()</span></code></a>.</p>
+</section>
+<section id="working-with-raw-data">
+<h1>Working with Raw Data<a class="headerlink" href="#working-with-raw-data" title="Link to this heading"></a></h1>
+<p>Let’s demonstrate how to process a dataset containing mixed variables using the Titanic dataset as an example. This dataset contains both continuous and categorical variables and can be easily imported using <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.import_example" title="bnlearn.bnlearn.import_example"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.import_example()</span></code></a>.
+The function <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot" title="bnlearn.bnlearn.df2onehot"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.df2onehot()</span></code></a> helps convert the mixed dataset into a one-hot matrix. By default, the unique non-zero values must be above 80% per variable, and the minimum number of samples must be at least 10 per variable.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load Titanic dataset containing mixed variables</span>
+<span class="n">df_raw</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
+
+<span class="c1"># Pre-process the input dataset</span>
+<span class="n">dfhot</span><span class="p">,</span> <span class="n">dfnum</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">df2onehot</span><span class="p">(</span><span class="n">df_raw</span><span class="p">)</span>
+
+<span class="c1"># Structure learning</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">dfnum</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-titanic">
+<img alt="_images/fig_titanic.png" src="_images/fig_titanic.png" />
+</figure>
+<p>From this point, we can learn the parameters using the DAG and input dataframe:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameter learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">dfnum</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Finally, we can start making inferences. Note that the variable and evidence names should exactly match the input data (case sensitive):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Print CPDs</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="c1"># Make inference</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Survived&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Sex&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Pclass&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">_str</span><span class="p">())</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Survived</p></th>
+<th class="head"><p>phi(Survived)</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Survived(0)</p></td>
+<td><p>0.3312</p></td>
+</tr>
+<tr class="row-odd"><td><p>Survived(1)</p></td>
+<td><p>0.6688</p></td>
+</tr>
+</tbody>
+</table>
+<section id="structure-learning-example">
+<h2>Structure Learning Example<a class="headerlink" href="#structure-learning-example" title="Link to this heading"></a></h2>
+<p id="examples-structure-learning">A different but straightforward approach to build a DAG from data is to identify independencies in the dataset using hypothesis tests, such as the chi-square test statistic. The p-value of the test and a heuristic flag indicate if the sample size was sufficient. The p-value is the probability of observing the computed chi-square statistic (or an even higher chi-square value), given the null hypothesis that X and Y are independent given Zs. This can be used to make independence judgments at a given significance level.</p>
+<section id="example-1-basic-structure-learning">
+<h3>Example 1: Basic Structure Learning<a class="headerlink" href="#example-1-basic-structure-learning" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
+<span class="c1"># Learn structure</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Get adjacency matrix</span>
+<span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
+
+<span class="c1"># Print adjacency matrix</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Reading the table from left to right:
+- Cloudy is connected to Sprinkler and Rain in a directed manner
+- Sprinkler is connected to Wet_grass
+- Rain is connected to Wet_grass
+- Wet_grass has no outgoing connections</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cloudy</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprinkler</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-even"><td><p>Rain</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wet_Grass</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="example-2-sprinkler-dataset">
+<h3>Example 2: Sprinkler Dataset<a class="headerlink" href="#example-2-sprinkler-dataset" title="Link to this heading"></a></h3>
+<p>For this example, we will investigate the sprinkler dataset. This is a simple dataset with 4 variables, where each variable can contain values [1] or [0]. The question we can ask is: What are the relationships and dependencies across the variables? Note that this dataset is already pre-processed and contains no missing values.</p>
+<p>Let’s load our dataset:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>From the <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> library, we’ll use the <a class="reference internal" href="bnlearn.structure_learning.html#bnlearn.structure_learning.fit" title="bnlearn.structure_learning.fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">fit</span></code></a> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dot</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-center" id="id1">
+<caption><span class="caption-text">Learned structure on the Sprinkler dataset</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_images/fig_sprinkler_sl.png"><img alt="logo3" src="_images/fig_sprinkler_sl.png" style="width: 510.59999999999997px; height: 269.4px;" /></a></p></td>
+</tr>
+</tbody>
+</table>
+<p>We can specify the method and scoring type. As described previously, some methods are more computationally expensive than others. Choose based on:
+- Number of variables
+- Available hardware
+- Time constraints</p>
+<p><strong>Method types:</strong>
+* hillclimbsearch or hc (greedy local search for networks with many nodes)
+* exhaustivesearch or ex (exhaustive search for very small networks)
+* constraintsearch or cs (Constraint-based Structure Learning using hypothesis tests)</p>
+<p><strong>Scoring types:</strong>
+* bic (Bayesian Information Criterion)
+* k2 (K2 score)
+* bdeu (Bayesian Dirichlet equivalent uniform)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="n">model_hc_bic</span>  <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+<span class="n">model_hc_k2</span>   <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
+<span class="n">model_hc_bdeu</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
+<span class="n">model_ex_bic</span>  <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+<span class="n">model_ex_k2</span>   <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;k2&#39;</span><span class="p">)</span>
+<span class="n">model_ex_bdeu</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;ex&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bdeu&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="example-3-asia-dataset">
+<h3>Example 3: Asia Dataset<a class="headerlink" href="#example-3-asia-dataset" title="Link to this heading"></a></h3>
+<p>Let’s learn the structure of a more complex dataset and compare it to another one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load Asia DAG</span>
+<span class="n">model_true</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
+<span class="c1"># Plot ground truth</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_true</span><span class="p">)</span>
+<span class="n">dot</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model_true</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id2">
+<span id="fig2a-asia-groundtruth"></span><img alt="_images/fig2a_asia_groundtruth.png" src="_images/fig2a_asia_groundtruth.png" />
+<figcaption>
+<p><span class="caption-text">True DAG of the Asia dataset.</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Generate samples</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>
+<span class="c1"># Structure learning of sampled dataset</span>
+<span class="n">model_learned</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="id3">
+<span id="fig2b-asia-structurelearning"></span><img alt="_images/fig2b_asia_structurelearning.png" src="_images/fig2b_asia_structurelearning.png" />
+<figcaption>
+<p><span class="caption-text">Learned DAG based on dataset.</span><a class="headerlink" href="#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot based on structure learning of sampled data</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="c1"># Compare networks and make plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">model_true</span><span class="p">,</span> <span class="n">model_learned</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig2c-asia-comparion">
+<img alt="_images/fig2c_asia_comparion.png" src="_images/fig2c_asia_comparion.png" />
+</figure>
+<figure class="align-default" id="id4">
+<img alt="_images/fig2d_confmatrix.png" src="_images/fig2d_confmatrix.png" />
+<figcaption>
+<p><span class="caption-text">Comparison of True vs. learned DAG.</span><a class="headerlink" href="#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="parameter-learning-example">
+<h2>Parameter Learning Example<a class="headerlink" href="#parameter-learning-example" title="Link to this heading"></a></h2>
+<p id="examples-parameter-learning">Extracting adjacency matrix after Parameter learning:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_example</span><span class="p">()</span>
+<span class="c1"># Import DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">,</span> <span class="n">CPD</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># Learn parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bnlearn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="c1"># adjacency matrix:</span>
+<span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
+
+<span class="c1"># print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cloudy</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprinkler</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-even"><td><p>Rain</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wet_Grass</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">
+<h1>Create a Bayesian Network, learn its parameters from data and perform the inference<a class="headerlink" href="#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference" title="Link to this heading"></a></h1>
+<p>Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes.
+Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcase this, I will use the sprinkler example.</p>
+<p>Import example dataset of the sprinkler dataset.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">tabulate</span>
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(),</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;grid&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+<td><p>…</p></td>
+</tr>
+</tbody>
+</table>
+<p>Define the network structure. This can be based on expert knowledge.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+</pre></div>
+</div>
+<p>Make the actual Bayesian DAG</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="c1"># [BNLEARN] Bayesian DAG created.</span>
+
+<span class="c1"># Print the CPDs</span>
+<span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+<span class="c1"># [BNLEARN.print_CPD] No CPDs to print. Use bnlearn.plot(DAG) to make a plot.</span>
+</pre></div>
+</div>
+<p>Plot the DAG</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default" id="fig-dag-sprinkler">
+<img alt="_images/DAG_sprinkler.png" src="_images/DAG_sprinkler.png" />
+</figure>
+<p>Parameter learning on the user-defined DAG and input data using maximumlikelihood.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;maximumlikelihood&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Lets print the learned CPDs:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">CPDs</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">print_CPD</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># [BNLEARN.print_CPD] Independencies:</span>
+<span class="c1"># (Cloudy _|_ Wet_Grass | Rain, Sprinkler)</span>
+<span class="c1"># (Sprinkler _|_ Rain | Cloudy)</span>
+<span class="c1"># (Rain _|_ Sprinkler | Cloudy)</span>
+<span class="c1"># (Wet_Grass _|_ Cloudy | Rain, Sprinkler)</span>
+<span class="c1"># [BNLEARN.print_CPD] Nodes: [&#39;Cloudy&#39;, &#39;Sprinkler&#39;, &#39;Rain&#39;, &#39;Wet_Grass&#39;]</span>
+<span class="c1"># [BNLEARN.print_CPD] Edges: [(&#39;Cloudy&#39;, &#39;Sprinkler&#39;), (&#39;Cloudy&#39;, &#39;Rain&#39;), (&#39;Sprinkler&#39;, &#39;Wet_Grass&#39;), (&#39;Rain&#39;, &#39;Wet_Grass&#39;)]</span>
+</pre></div>
+</div>
+<dl>
+<dt>CPD of Cloudy:</dt><dd><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Cloudy(0)</p></td>
+<td><p>0.494</p></td>
+</tr>
+<tr class="row-even"><td><p>Cloudy(1)</p></td>
+<td><p>0.506</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>CPD of Sprinkler:</dt><dd><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>Cloudy(0)</p></td>
+<td><p>Cloudy(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprinkler(0)</p></td>
+<td><p>0.4807692307692308</p></td>
+<td><p>0.7075098814229249</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprinkler(1)</p></td>
+<td><p>0.5192307692307693</p></td>
+<td><p>0.2924901185770751</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>CPD of Rain:</dt><dd><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>Cloudy(0)</p></td>
+<td><p>Cloudy(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>Rain(0)</p></td>
+<td><p>0.6518218623481782</p></td>
+<td><p>0.33695652173913043</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rain(1)</p></td>
+<td><p>0.3481781376518219</p></td>
+<td><p>0.6630434782608695</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+<dt>CPD of Wet_Grass:</dt><dd><table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>Rain</p></td>
+<td><p>Rain(0)</p></td>
+<td><p>Rain(0)</p></td>
+<td><p>Rain(1)</p></td>
+<td><p>Rain(1)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprinkler</p></td>
+<td><p>Sprinkler(0)</p></td>
+<td><p>Sprinkler(1)</p></td>
+<td><p>Sprinkler(0)</p></td>
+<td><p>Sprinkler(1)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Wet_Grass(0)</p></td>
+<td><p>0.7553816046966731</p></td>
+<td><p>0.33755274261603374</p></td>
+<td><p>0.25588235294117645</p></td>
+<td><p>0.37910447761194027</p></td>
+</tr>
+<tr class="row-even"><td><p>Wet_Grass(1)</p></td>
+<td><p>0.2446183953033268</p></td>
+<td><p>0.6624472573839663</p></td>
+<td><p>0.7441176470588236</p></td>
+<td><p>0.6208955223880597</p></td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<p>Lets make an inference:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">q1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">})</span>
+
+<span class="o">+--------------+------------------+</span>
+<span class="o">|</span> <span class="n">Wet_Grass</span>    <span class="o">|</span>   <span class="n">phi</span><span class="p">(</span><span class="n">Wet_Grass</span><span class="p">)</span> <span class="o">|</span>
+<span class="o">+==============+==================+</span>
+<span class="o">|</span> <span class="n">Wet_Grass</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">|</span>           <span class="mf">0.2559</span> <span class="o">|</span>
+<span class="o">+--------------+------------------+</span>
+<span class="o">|</span> <span class="n">Wet_Grass</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">|</span>           <span class="mf">0.7441</span> <span class="o">|</span>
+<span class="o">+--------------+------------------+</span>
+</pre></div>
+</div>
+<p>Print the values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">q1</span><span class="o">.</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># array([0.25588235, 0.74411765])</span>
+</pre></div>
+</div>
+<hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="saving%20and%20loading.html" class="btn btn-neutral float-left" title="Saving and Loading" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="UseCases.html" class="btn btn-neutral float-right" title="Titanic Dataset Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
