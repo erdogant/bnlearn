@@ -4,8 +4,9 @@
 	* **Star** this repo at the github page.
 	* Become a `Sponsor <https://github.com/sponsors/erdogant?o=esb/>`_!
 	* `Buy <https://www.buymeacoffee.com/erdogant>`_ me a coffee! I ❤️ coffee :)
-	* Follow me on Medium! Go to my `medium profile <https://erdogant.medium.com/>`_ and press *follow*.
-	* Subscribe to me on Substack! Go to my `profile <https://erdogant.substack.com/>`_ where you can *subscribe*.
+	* Medium: `medium profile <https://erdogant.medium.com/>`_ and press *follow*.
+	* Substack: `profile <https://erdogant.substack.com/>`_ where you can *subscribe*.
+	* Gumroad: `profile <https://erdogant.gumroad.com/>`_. where you can *buy*.
 	* You can also buy a digital educational product over `here <https://erdogant.gumroad.com/>`_.
 	* Contribute in the form of feature requests, idea discussions, reporting bugs, opening pull requests.
 
