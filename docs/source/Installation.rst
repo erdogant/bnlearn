@@ -32,7 +32,7 @@ For better dependency management, it's recommended to install ``bnlearn`` in an 
 
 .. code-block:: console
 
-    conda create -n env_bnlearn python=3.10
+    conda create -n env_bnlearn python=3.13
     conda activate env_bnlearn
 
 .. _installation step 1:
