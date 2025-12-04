@@ -1,0 +1,673 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Data Conversions &mdash; bnlearn bnlearn documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=441dd29d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Structure Scores" href="Structure_scores.html" />
+    <link rel="prev" title="Topological sort" href="topological_sort.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            bnlearn
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+    
+              <p class="caption" role="heading"><span class="caption-text">Quickstart</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html#quick-examples">Quick Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Quickstart.html#comparison-between-bayesian-libraries">Comparison between Bayesian Libraries</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">Installation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Discretizing</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html">Discretizing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#manual-discretization">Manual Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-probability-density">Automatic Discretization: Probability Density</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Discretizing.html#automatic-discretization-principled-bayesian">Automatic Discretization: Principled Bayesian</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Structure learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html">Causation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#exhaustivesearch">Exhaustivesearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#chow-liu">Chow-liu</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html">Parameter learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#parameter-learning-examples">Parameter Learning Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parameter%20learning.html#conditional-probability-distributions-cpd">Conditional Probability Distributions (CPD)</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Inference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html">Inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Predict</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Predict.html">Predict</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Synthetic Data</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Plot</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Plot.html">Plotting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Other functionalities</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="independence_test.html">Independence test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Create%20DAG.html">Directed Acyclic Graphs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impute.html">Impute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html">DataFrames</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#import-dag-bif">Import DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Example%20Datasets.html#export-dag-bif">Export DAG/BIF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="whitelist_blacklist.html">Black and white lists</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sort.html">Topological sort</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Data Conversions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adjacency-matrix">Adjacency matrix</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vector">Vector</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adjmat2vec">adjmat2vec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vec2adjmat">vec2adjmat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adjmat2dict">adjmat2dict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dag2adjmat">dag2adjmat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vec2df">vec2df</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Structure_scores.html">Structure Scores</a></li>
+<li class="toctree-l1"><a class="reference internal" href="saving%20and%20loading.html">Saving and Loading</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#working-with-raw-data">Working with Raw Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Examples.html#create-a-bayesian-network-learn-its-parameters-from-data-and-perform-the-inference">Create a Bayesian Network, learn its parameters from data and perform the inference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Use Cases</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html">Titanic Dataset Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#medical-domain-analysis">Medical Domain Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UseCases.html#use-case-continuous-datasets">Use Case Continuous Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.structure_learning.html">bnlearn.structure_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.parameter_learning.html">bnlearn.parameter_learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.inference.html">bnlearn.inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bnlearn.bnlearn.html">bnlearn.bnlearn</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Notebook Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebook.html">Notebook</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+</ul>
+
+    <a href= "genindex.html">Index</a>
+  
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">bnlearn</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Data Conversions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/dataframe conversions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="data-conversions">
+<h1>Data Conversions<a class="headerlink" href="#data-conversions" title="Link to this heading"></a></h1>
+<p>Modeling your data and getting it in the right shape may require various conversions, depending your starting point and/or your goal. In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> various functionalities are readily implemented to make conversions <em>from</em> or <em>to</em> the <strong>adjacency matrix</strong> or <strong>vectors</strong>.</p>
+<p>Available functionalities:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>adjmat2dict : Convert adjacency matrix to dictionary.</p></li>
+<li><p>adjmat2vec : Convert adjacency matrix into vector with source and target.</p></li>
+<li><p>vec2adjmat : Convert source-target edges with its weights into an adjacency matrix.</p></li>
+<li><p>dag2adjmat : Convert model into adjacency matrix.</p></li>
+<li><p>vec2df : Convert source-target edges into sparse dataframe.</p></li>
+</ul>
+</div></blockquote>
+<section id="adjacency-matrix">
+<h2>Adjacency matrix<a class="headerlink" href="#adjacency-matrix" title="Link to this heading"></a></h2>
+<p>The adjacency matrix is used to store relationships across source-target variables (nodes) with its edges.
+In graph theory, a square matrix is used to represent a finite graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph.
+<code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> outputs an adjacency matrix in some functionalities. Values 0 or False indicate that nodes are not connected whereas pairs of vertices with value &gt;0 or True are connected.</p>
+<p><strong>Importing a DAG</strong></p>
+<p>Extracting adjacency matrix from imported DAG:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Import DAG</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sachs&#39;</span><span class="p">)</span>
+<span class="c1"># Show the retrieved adjacency matrix for Sachs:</span>
+<span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">]</span>
+
+<span class="c1"># print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Reading the table from left to right, we see that gene Erk is connected to Akt in a directed manner.
+This indicates that Erk influences gene Ark but not the otherway arround because gene Akt does not show a edge with Erk. In this example form, there may be a connection at the “…”.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p>Erk</p></td>
+<td><p>Akt</p></td>
+<td><p>PKA</p></td>
+<td><p>Mek</p></td>
+<td><p>Jnk</p></td>
+<td><p>…</p></td>
+<td><p>Raf</p></td>
+<td><p>P38</p></td>
+<td><p>PIP3</p></td>
+<td><p>PIP2</p></td>
+<td><p>Plcg</p></td>
+</tr>
+<tr class="row-even"><td><p>Erk</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Akt</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>PKA</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>…</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mek</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Jnk</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>PKC</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>…</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Raf</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>P38</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>PIP3</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-odd"><td><p>PIP2</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+</tr>
+<tr class="row-even"><td><p>Plcg</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>…</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td><p>True</p></td>
+<td><p>True</p></td>
+<td><p>False</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vector">
+<h2>Vector<a class="headerlink" href="#vector" title="Link to this heading"></a></h2>
+<p>The <strong>vector</strong> is used to store relationships based on source-target variables (nodes), and with its weigths.
+An example is illustrated below for which edges are defined when weights are True or a number &gt;=1.</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>source</p></td>
+<td><p>target</p></td>
+<td><p>weight</p></td>
+</tr>
+<tr class="row-even"><td><p>Cloudy</p></td>
+<td><p>Sprinkler</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>Rain</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprinkler</p></td>
+<td><p>Wet_Grass</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rain</p></td>
+<td><p>Wet_Grass</p></td>
+<td><p>True</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adjmat2vec">
+<h2>adjmat2vec<a class="headerlink" href="#adjmat2vec" title="Link to this heading"></a></h2>
+<p>Converting an adjacency matrix into vector with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2vec" title="bnlearn.bnlearn.adjmat2vec"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2vec()</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
+<span class="c1"># Convert adjmat to vector:</span>
+<span class="n">vector</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">adjmat2vec</span><span class="p">(</span><span class="n">DAG</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>source</p></td>
+<td><p>target</p></td>
+<td><p>weight</p></td>
+</tr>
+<tr class="row-even"><td><p>Cloudy</p></td>
+<td><p>Sprinkler</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>Rain</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-even"><td><p>Sprinkler</p></td>
+<td><p>Wet_Grass</p></td>
+<td><p>True</p></td>
+</tr>
+<tr class="row-odd"><td><p>Rain</p></td>
+<td><p>Wet_Grass</p></td>
+<td><p>True</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vec2adjmat">
+<h2>vec2adjmat<a class="headerlink" href="#vec2adjmat" title="Link to this heading"></a></h2>
+<p>Converting the created vector in the example above back into an adjacency matrix with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2adjmat" title="bnlearn.bnlearn.vec2adjmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2adjmat()</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Convert vector back to adjmat.</span>
+<span class="n">adjmat</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2adjmat</span><span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vector</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vector</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>source</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+<th class="head"><p>Cloudy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Rain</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprinkler</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>Wet_Grass</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="adjmat2dict">
+<h2>adjmat2dict<a class="headerlink" href="#adjmat2dict" title="Link to this heading"></a></h2>
+<p>Convert adjacency matrix to dictionary with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.adjmat2dict" title="bnlearn.bnlearn.adjmat2dict"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.adjmat2dict()</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
+<span class="c1"># Convert adjmat to vector:</span>
+<span class="n">adjmat_dict</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">adjmat2dict</span><span class="p">(</span><span class="n">DAG</span><span class="p">[</span><span class="s1">&#39;adjmat&#39;</span><span class="p">])</span>
+<span class="c1"># print</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">adjmat_dict</span><span class="p">)</span>
+
+<span class="c1"># {&#39;Cloudy&#39;: [&#39;Sprinkler&#39;, &#39;Rain&#39;],</span>
+<span class="c1">#  &#39;Sprinkler&#39;: [&#39;Wet_Grass&#39;],</span>
+<span class="c1">#  &#39;Rain&#39;: [&#39;Wet_Grass&#39;],</span>
+<span class="c1">#  &#39;Wet_Grass&#39;: []}</span>
+</pre></div>
+</div>
+</section>
+<section id="dag2adjmat">
+<h2>dag2adjmat<a class="headerlink" href="#dag2adjmat" title="Link to this heading"></a></h2>
+<p>Convert model into adjacency matrix with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.dag2adjmat" title="bnlearn.bnlearn.dag2adjmat"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.dag2adjmat()</span></code></a></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">)</span>
+<span class="c1"># Extract edges from model and store in adjacency matrix</span>
+<span class="n">adjmat</span><span class="o">=</span><span class="n">bn</span><span class="o">.</span><span class="n">dag2adjmat</span><span class="p">(</span><span class="n">DAG</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>source</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+<th class="head"><p>Cloudy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Rain</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sprinkler</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>Wet_Grass</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cloudy</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vec2df">
+<h2>vec2df<a class="headerlink" href="#vec2df" title="Link to this heading"></a></h2>
+<p>Convert edges between source and taget into a dataframe based on the weight with <a class="reference internal" href="bnlearn.bnlearn.html#bnlearn.bnlearn.vec2df" title="bnlearn.bnlearn.vec2df"><code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.vec2df()</span></code></a>
+For demonstration purposes, A small example is created below for which can be seen that the weights are indicative for the number of rows; a weight of 2 will result that a row with the edge is created 2 times.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Create source-target edges with its weights</span>
+<span class="n">source</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">]</span>
+<span class="n">target</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">,</span><span class="s1">&#39;Wet_Grass&#39;</span><span class="p">]</span>
+<span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="c1"># Convert into sparse dataframe.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>Cloudy</p></th>
+<th class="head"><p>Rain</p></th>
+<th class="head"><p>Sprinkler</p></th>
+<th class="head"><p>Wet_Grass</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-even"><td><p>2</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+<tr class="row-odd"><td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>4</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>5</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-even"><td><p>6</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>1</p></td>
+</tr>
+</tbody>
+</table>
+<p>To demonstrate the full functionality A larger example can be loaded containing 352 edges from the book A Storm of Swords.
+The results is that 107 unique names are extracted with 4324 edges. This dataframe can for example be an input for structure learning approaches.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="c1"># Load large example with source-target edges from the book A Storm of Swords</span>
+<span class="n">vec</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s2">&quot;stormofswords&quot;</span><span class="p">)</span>
+<span class="c1"># Convert into sparse dataframe.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">vec2df</span><span class="p">(</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">],</span> <span class="n">vec</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="n">vec</span><span class="p">[</span><span class="s1">&#39;weight&#39;</span><span class="p">])</span>
+<span class="c1"># sparse matrix:</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="c1"># (4324, 107)</span>
+</pre></div>
+</div>
+<hr>
+<center>
+        <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+        <!-- Show an image ad -->
+        <!-- <div data-ea-publisher="erdogantgithubio" data-ea-type="image"></div> -->
+        <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
+</center>
+<hr></section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="topological_sort.html" class="btn btn-neutral float-left" title="Topological sort" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="Structure_scores.html" class="btn btn-neutral float-right" title="Structure Scores" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Erdogan Taskesen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
