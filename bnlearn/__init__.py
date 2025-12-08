@@ -1,3 +1,41 @@
+# --------------------------------------------------------------------------
+# bnlearn initialization
+# --------------------------------------------------------------------------
+
+# --- Windows + Python >= 3.12 joblib/loky crash hotfix ---------------------
+import sys
+import platform
+import warnings
+
+_IS_WINDOWS = platform.system() == "Windows"
+_PYTHON_MAJOR = sys.version_info.major
+_PYTHON_MINOR = sys.version_info.minor
+_PYTHON_BROKEN = _IS_WINDOWS and (_PYTHON_MAJOR == 3 and _PYTHON_MINOR >= 12)
+
+if _PYTHON_BROKEN:
+    try:
+        import joblib
+        from joblib import parallel_backend
+
+        parallel_backend("threading")  # Avoid loky resource tracker bug
+
+        warnings.warn(
+            f"[bnlearn] Using 'threading' backend instead of 'loky' because "
+            f"Windows + Python {sys.version.split()[0]} causes joblib/loky crashes.",
+            RuntimeWarning,
+        )
+    except Exception as e:
+        warnings.warn(f"[bnlearn] Failed to set joblib threading backend: {e}",
+                      RuntimeWarning)
+# --------------------------------------------------------------------------
+
+# Suppress pgmpy SyntaxWarnings
+warnings.filterwarnings("ignore", category=SyntaxWarning, module="pgmpy")
+
+# --------------------------------------------------------------------------
+# Imports
+# --------------------------------------------------------------------------
+
 from bnlearn.bnlearn import (
     to_bayesiannetwork,
     make_DAG,
@@ -30,6 +68,7 @@ from bnlearn.bnlearn import (
     generate_cpt,
     build_cpts_from_structure,
     convert_edges_with_time_slice,
+    system_info,
     # cpd_to_dataframe,
     # dataframe_to_cpd,
 )
@@ -45,13 +84,11 @@ from bnlearn.discretize import discretize, discretize_value
 from bnlearn.learn_discrete_bayes_net import discretize_all
 from bnlearn.sampling import sampling
 
-
-
 from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.12.1'
+__version__ = '0.12.2'
 
 import pgmpy
 # Check version pgmpy

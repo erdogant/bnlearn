@@ -1,3 +1,8 @@
+import bnlearn as bn
+bn.system_info()
+
+# %%
+
 # Saving and loading
 import bnlearn as bn
 
@@ -9,7 +14,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, interactive=False)
 
 
 #%%

@@ -2476,6 +2476,51 @@ def convert_verbose_to_new(verbose):
         return verbose
 
 
+# %% System information helper
+
+def system_info():
+    """Print system information useful for debugging bnlearn issues."""
+    import sys
+    import platform
+    import joblib
+    import numpy as np
+    import networkx as nx
+    import matplotlib
+    import pgmpy
+    import bnlearn
+
+    # Detect forced backend due to Windows + Python >= 3.12 fix
+    _is_windows = platform.system() == "Windows"
+    _forced_threading = False
+    if _is_windows and sys.version_info.minor >= 12:
+        _forced_threading = True
+
+    print("\n[b n l e a r n]  System Information")
+    print("--------------------------------------------------")
+    print(f"OS                : {platform.system()} {platform.release()}")
+    print(f"Python version    : {sys.version.split()[0]}")
+    print(f"bnlearn version   : {bnlearn.__version__}")
+    print(f"pgmpy version     : {pgmpy.__version__}")
+    print(f"numpy version     : {np.__version__}")
+    print(f"networkx version  : {nx.__version__}")
+    print(f"matplotlib version: {matplotlib.__version__}")
+    print(f"joblib version    : {joblib.__version__}")
+    print("--------------------------------------------------")
+
+    # Joblib backend detection
+    try:
+        backend = joblib.parallel.get_active_backend()[0]
+    except Exception:
+        backend = "unknown"
+
+    print(f"Joblib backend    : {backend}")
+
+    if _forced_threading:
+        print("⚠ Forced threading backend (Windows + Python ≥ 3.12 hotfix active)")
+
+    print("--------------------------------------------------\n")
+
+
 #%%
 # def cpd_to_dataframe(cpd):
 #     variable = cpd.variable
