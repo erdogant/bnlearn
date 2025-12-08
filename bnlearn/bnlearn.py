@@ -6,7 +6,6 @@
 # Licence     : See LICENSE
 # ------------------------------------
 
-
 # %% Libraries
 import os
 import copy
@@ -140,7 +139,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
     """
     if methodtype is None:
-        if verbose>=2: print(f'[bnlearn] >Warning: methodtype can not be empty.')
+        if verbose>=2: print('[bnlearn] >Warning: methodtype can not be empty.')
         return None
 
     # Set names to lower
@@ -232,7 +231,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
 # %%
 def convert_edges_with_time_slice(edges, time_slice=0, verbose=3):
-    if verbose>=3: print(f'[bnlearn]> Converting edges to time slice.')
+    if verbose>=3: print('[bnlearn]> Converting edges to time slice.')
     return [( (u, time_slice), (v, time_slice) ) for u, v in edges]
 
 def has_valid_time_slice(edges):
@@ -1187,7 +1186,7 @@ def plot_graphviz(model,
 
     # Import libraries
     from lingam.utils import make_dot
-    from graphviz import Source
+    # from graphviz import Source
 
     # Set Graphviz path to envoirement if required.
     GraphvizPath = setgraphviz(verify_certificate=verify_certificate, verbose=verbose)
