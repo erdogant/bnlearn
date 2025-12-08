@@ -1,5 +1,4 @@
 import bnlearn as bn
-import numpy as np
 import pytest
 
 from pgmpy.estimators import TreeSearch

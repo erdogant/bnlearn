@@ -1,6 +1,5 @@
 from itertools import zip_longest
 from pathlib import Path
-import datazets as ds
 
 import pytest
 import numpy as np

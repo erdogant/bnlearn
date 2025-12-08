@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import pytest
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
