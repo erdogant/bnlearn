@@ -8,15 +8,42 @@ Sponsor
 
 .. include:: sponsor.rst
 
-Medium Blog Posts
+Blog Posts
 -----------------
 
 .. _doc-blog-posts:
 
-.. note::
-	* `The Starters Guide to Causal Structure Learning with Bayesian Methods in Python. <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
-	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
-	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
+.. list-table::
+   :header-rows: 1
+   :widths: 70 30
+
+   * - Topic
+     - Medium
+
+   * - **Causal Discovery – Overview and Starters Guide** – Foundations of causal modelling.
+     - `Read <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
+
+   * - **Structure Learning** – Learn structure from data or expert knowledge.
+     - `Read <https://medium.com/data-science-collective/the-complete-starter-guide-for-causal-discovery-using-bayesian-modeling-8853eb860d02>`_
+
+   * - **Causal Predictions** – Move beyond prediction to intervention.
+     - `Read <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
+
+   * - **Parameter Learning** – Estimate CPDs from observed data.
+     - `Read <https://medium.com/data-science-collective/human-machine-collaboration-with-bayesian-modeling-learn-to-combine-knowledge-with-data-1ee9bcd67745>`_
+
+   * - **Causal Inference** – Interventional & counterfactual reasoning.
+     - `Read <https://medium.com/data-science-collective/chat-with-your-dataset-using-bayesian-inferences-1afdbfd4bada>`_
+
+   * - **Generate Synthetic Data** – Forward sampling & data generation.
+     - `Read <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
+
+   * - **Discretize Data** – Convert continuous variables for BN modelling.
+     - —
+
+   * - **Comparisons** – Evaluate Bayesian causal libraries.
+     - `Read <https://medium.com/data-science-collective/six-causal-libraries-compared-which-bayesian-approach-finds-hidden-causes-in-your-data-9fa66fd02825>`_
+
 
 GitHub Repository
 -----------------
