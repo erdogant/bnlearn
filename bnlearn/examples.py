@@ -1,12 +1,13 @@
-# import bnlearn as bn
-# bn.system_info()
+import bnlearn as bn
+bn.system_info()
 
 # %%
 import bnlearn as bn
 import numpy as np
 
+DAG = bn.import_DAG('sprinkler')
 n = np.random.randint(10, 1000)
-df = bn.sampling(sprinkler_dag, n=n, methodtype='gibbs')
+df = bn.sampling(DAG, n=n, methodtype='gibbs')
 assert df.shape == (n, 4)
 
 n = np.random.randint(10, 1000)

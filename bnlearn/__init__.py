@@ -14,11 +14,8 @@ _PYTHON_BROKEN = _IS_WINDOWS and (_PYTHON_MAJOR == 3 and _PYTHON_MINOR >= 12)
 
 if _PYTHON_BROKEN:
     try:
-        import joblib
         from joblib import parallel_backend
-
         parallel_backend("threading")  # Avoid loky resource tracker bug
-
         warnings.warn(
             f"[bnlearn] Using 'threading' backend instead of 'loky' because "
             f"Windows + Python {sys.version.split()[0]} causes joblib/loky crashes.",
@@ -161,8 +158,7 @@ Example
 
 References
 ----------
-* Blog: https://towardsdatascience.com/a-step-by-step-guide-in-detecting-causal-relationships-using-bayesian-structure-learning-in-python-c20c6b31cee5
-* Blog: https://towardsdatascience.com/a-step-by-step-guide-in-designing-knowledge-driven-models-using-bayesian-theorem-7433f6fd64be
+* Blog: https://erdogant.github.io/bnlearn/pages/html/Documentation.html#medium-blog-posts
 * Github: https://github.com/erdogant/bnlearn
 * Documentation: https://erdogant.github.io/bnlearn/
 
