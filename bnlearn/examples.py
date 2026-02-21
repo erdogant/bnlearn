@@ -1,5 +1,18 @@
+# import bnlearn as bn
+# bn.system_info()
+
+# %%
 import bnlearn as bn
-bn.system_info()
+import numpy as np
+
+n = np.random.randint(10, 1000)
+df = bn.sampling(sprinkler_dag, n=n, methodtype='gibbs')
+assert df.shape == (n, 4)
+
+n = np.random.randint(10, 1000)
+DAG = bn.import_DAG('sprinkler')
+df = bn.sampling(DAG, n=n, methodtype='bayes')
+assert df.shape == (n, 4)
 
 # %%
 

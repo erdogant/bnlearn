@@ -7,6 +7,24 @@
 # ------------------------------------
 
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
+import pandas as pd
+
+_original_from_records = pd.DataFrame.from_records.__func__
+
+
+# %% Patch
+#   Patch pd.DataFrame.from_records itself. This is the single choke point
+#   that every code path goes through, regardless of how _return_samples was
+#   imported. If the data passed in is already a DataFrame, return it directly.
+#   Otherwise, call the original from_records as normal.
+
+@classmethod
+def _patched_from_records(cls, data, *args, **kwargs):
+    if isinstance(data, pd.DataFrame):
+        return data
+    return _original_from_records(cls, data, *args, **kwargs)
+
+pd.DataFrame.from_records = _patched_from_records
 
 # %% Sampling from model
 def sampling(DAG, n=1000, methodtype='bayes', verbose=0):

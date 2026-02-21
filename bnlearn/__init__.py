@@ -69,6 +69,7 @@ from bnlearn.bnlearn import (
     build_cpts_from_structure,
     convert_edges_with_time_slice,
     system_info,
+    sampling,
     # cpd_to_dataframe,
     # dataframe_to_cpd,
 )
