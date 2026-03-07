@@ -49,7 +49,7 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
 
     Examples
     --------
-    >>> from impute import knn_imputer, mice_imputer
+    >>> from sklearn.impute import knn_imputer, mice_imputer
     >>> df = pd.DataFrame({
     ...    'age': [25, np.nan, 27],
     ...    'income': [50000, 60000, np.nan],

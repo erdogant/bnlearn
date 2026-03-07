@@ -8,6 +8,8 @@
 
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 import pandas as pd
+# import logging
+# logging.getLogger("pgmpy").setLevel(logging.ERROR)
 
 _original_from_records = pd.DataFrame.from_records.__func__
 
@@ -77,7 +79,7 @@ def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
 
     """
     if n<=0: raise ValueError('Number of samples (n) must be 1 or larger!')
-    if (DAG is None) or ('BayesianNetwork' not in str(type(DAG['model']))):
+    if (DAG is None) or ('bayesiannetwork' not in str(type(DAG['model'])).lower()):
         raise ValueError('The input model (DAG) must contain BayesianNetwork.')
 
     if len(DAG['model'].get_cpds())==0:
