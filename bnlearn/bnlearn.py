@@ -1176,84 +1176,73 @@ def plot(model,
          params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
          verbose=3,
          ):
-    """Plot the learned stucture.
+    """
+    Plot the learned structure.
 
     Parameters
     ----------
     model : dict
         Learned model from the .fit() function.
     pos : graph, optional
-        Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
+        Coordinates of the network. If provided, the same structure will be used to plot the network. The default is None.
     scale : int, optional
-        Scaling parameter for the network. A larger number will linearily increase the network.. The default is 1.
-    interactive : Bool, (default: True)
+        Scaling parameter for the network. A larger number will linearly increase the network. The default is 1.
+    interactive : bool, optional
         True: Interactive web-based graph.
-        False: Static plot
+        False: Static plot.
     title : str, optional
         Title for the plots.
     node_color : str, optional
-        Color each node in the network using a hex-color, such as '#8A0707'
+        Color each node in the network using a hex-color, such as '#8A0707'.
     node_size : int, optional
-        Set the node size for each node in the network. The default size when using static plolts is 800, and for interactive plots it is 10.
-    node_properties : dict (default: None)
+        Set the node size for each node in the network. The default size when using static plots is 800, and for interactive plots it is 10.
+    node_properties : dict, optional
         Dictionary containing custom node_color and node_size parameters for the network.
-        The node properties can easily be retrieved using the function: node_properties = bn.get_node_properties(model)
-        node_properties = {'node1':{'node_color':'#8A0707','node_size':10},
-                           'node2':{'node_color':'#000000','node_size':30}}
-    edge_properties : dict (default: None)
-        Dictionary containing custom node_color and node_size parameters for the network. The edge properties can be retrieved with:
-        edge_properties = bn.get_edge_properties(model)
-    edge_labels : Bool (default: True)
-        None: Do not show edge labels
-        'weight': Show the input values in the array
-        'pvalue': Show the edge pvalues (this requires doing the independence_test: model = bn.independence_test(model, df)
-    params_interactive : dict.
-        Dictionary containing various settings in case of creating interactive plots.
-    params_static : dict.
-        Dictionary containing various settings in case of creating static plots.
-        layout: 'graphviz_layout', 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
+        The node properties can be retrieved using: node_properties = bn.get_node_properties(model)
+        Example: {'node1':{'node_color':'#8A0707','node_size':10}, 'node2':{'node_color':'#000000','node_size':30}}
+    edge_properties : dict, optional
+        Dictionary containing custom edge_color and edge_size parameters for the network. The edge properties can be retrieved with: edge_properties = bn.get_edge_properties(model)
+    edge_labels : str or None, optional
+        None: Do not show edge labels.
+        'weight': Show the input values in the array.
+        'pvalue': Show the edge p-values (requires running independence_test: model = bn.independence_test(model, df)).
+    params_interactive : dict, optional
+        Dictionary containing various settings for interactive plots.
+    params_static : dict, optional
+        Dictionary containing various settings for static plots.
+        layout: 'graphviz_layout', 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
     -------
-    dict containing pos and G
-        pos : list.
+    dict
+        pos : list
             Positions of the nodes.
-        G : Graph.
-            Graph model
-        node_properties: dict.
+        G : Graph
+            Graph model.
+        node_properties : dict
             Node properties.
 
     Examples
     --------
     >>> import bnlearn as bn
-    >>>
     >>> # Load asia DAG
     >>> df = bn.import_example(data='asia')
-    >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)
-    >>>
     >>> # plot static
     >>> fig = bn.plot(model)
-    >>>
     >>> # plot interactive
     >>> fig = bn.plot(model, interactive=True)
-    >>>
     >>> # plot interactive with various settings
-    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive = {'figsize':(800, 600), 'font_color': 'node_color', 'bgcolor':'#0f0f0f0f'})
-    >>>
+    >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive={'figsize':(800, 600), 'font_color': 'node_color', 'bgcolor':'#0f0f0f0f'})
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
-    >>> # Make some changes
-    >>> node_properties['xray']['node_color']='#8A0707'
-    >>> node_properties['xray']['node_size']=50
-    >>> # Plot
+    >>> node_properties['xray']['node_color'] = '#8A0707'
+    >>> node_properties['xray']['node_size'] = 50
     >>> fig = bn.plot(model, interactive=True, node_properties=node_properties)
-    >>>
-
     """
     fig = None
     # Check whether edges are available
@@ -2428,7 +2417,7 @@ def system_info():
     if _is_windows and sys.version_info.minor >= 12:
         _forced_threading = True
 
-    print("\n[b n l e a r n]  System Information")
+    print("\n[bnlearn]  System Information")
     print("--------------------------------------------------")
     print(f"OS                : {platform.system()} {platform.release()}")
     print(f"Python version    : {sys.version.split()[0]}")
@@ -2446,10 +2435,10 @@ def system_info():
     except Exception:
         backend = "unknown"
 
-    print(f"Joblib backend    : {backend}")
+    print(f"Joblib backend: {backend}")
 
     if _forced_threading:
-        print("⚠ Forced threading backend (Windows + Python ≥ 3.12 hotfix active)")
+        print("Forced threading backend (Windows + Python ≥ 3.12 hotfix active)")
 
     print("--------------------------------------------------\n")
 

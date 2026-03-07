@@ -39,6 +39,7 @@ def fit(df,
         epsilon=1e-4,
         max_iter=1e6,
         root_node=None,
+        start_dag=None,
         class_node=None,
         fixed_edges=None,
         return_all_dags=False,
@@ -108,13 +109,15 @@ def fit(df,
         A list of edges can be passed as `black_list` or `white_list` to exclude or to limit the search.
             * 'edges' : [('A', 'B'), ('C','D'), (...)] This option is limited to only methodtype='hc'
             * 'nodes' : ['A', 'B', ...] Filter the dataframe based on the nodes for `black_list` or `white_list`. Filtering can be done for every methodtype/scoretype.
+    start_dag: String. (only for hillclimbsearch or hc)
+        The starting point for the local search. By default, a completely disconnected network is used.
     max_indegree : int, (default : None)
         If provided and unequal None, the procedure only searches among models where all nodes have at most max_indegree parents. (only in case of methodtype='hc')
     epsilon: float (default: 1e-4)
         Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned. (only in case of methodtype='hc')
     max_iter: int (default: 1e6)
         The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
-    root_node: String. (only in case of chow-liu, Tree-augmented Naive Bayes (TAN))
+    root_node: String. (only for chow-liu, Tree-augmented Naive Bayes (TAN))
         The root node for treeSearch based methods.
     class_node: String
         The class node is required for Tree-augmented Naive Bayes (TAN)
@@ -211,7 +214,7 @@ def fit(df,
 
     out = []
     # Set config
-    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
+    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
     # Make some checks
     config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
@@ -245,6 +248,7 @@ def fit(df,
                                scoretype=config['scoring'],
                                black_list=config['black_list'],
                                white_list=config['white_list'],
+                               start_dag=config['start_dag'],
                                max_indegree=config['max_indegree'],
                                tabu_length=config['tabu_length'],
                                bw_list_method=bw_list_method,
@@ -491,7 +495,19 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_indegree=None, tabu_length=100, epsilon=1e-4, max_iter=1e6, bw_list_method='edges', fixed_edges=set(), n_jobs=-1, verbose=3):
+def _hillclimbsearch(df, 
+                     scoretype='bic',
+                     black_list=None,
+                     white_list=None,
+                     start_dag=None,
+                     max_indegree=None, 
+                     tabu_length=100, 
+                     epsilon=1e-4, 
+                     max_iter=1e6, 
+                     bw_list_method='edges', 
+                     fixed_edges=set(), 
+                     n_jobs=-1, 
+                     verbose=3):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
     Description
@@ -514,8 +530,16 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
     edges or to limit the search.
 
     """
-    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
     out = {}
+    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
+    if isinstance(start_dag, dict) and start_dag.get('model', None) is not None:
+        start_dag = start_dag['model']
+    if start_dag is not None and not 'bayesiannetwork' in str(type(start_dag)).lower():
+        if verbose >= 3: print('[bnlearn] >WARNING: start_dag is invalid. No DAG found of type BayesianNetwork. start_dag is set to None.')
+        start_dag = None
+    if start_dag is not None and 'bayesiannetwork' in str(type(start_dag)).lower():
+        if verbose >= 3: print('[bnlearn] >start_dag is set.')
+
     # Set scoring type
     scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
     # Set search algorithm
@@ -526,10 +550,10 @@ def _hillclimbsearch(df, scoretype='bic', black_list=None, white_list=None, max_
         if (black_list is not None) or (white_list is not None):
             if verbose >= 3: print('[bnlearn] >Filter edges based on black_list/white_list')
         # best_model = model.estimate()
-        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, fixed_edges=fixed_edges, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, start_dag=start_dag, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, black_list=black_list, white_list=white_list, fixed_edges=fixed_edges, show_progress=False)
     else:
         # At this point, variables are readily filtered based on bw_list_method or not (if nothing defined).
-        best_model = model.estimate(scoring_method=scoring_method, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, fixed_edges=fixed_edges, show_progress=False)
+        best_model = model.estimate(scoring_method=scoring_method, start_dag=start_dag, max_indegree=max_indegree, tabu_length=tabu_length, epsilon=epsilon, max_iter=max_iter, fixed_edges=fixed_edges, show_progress=False)
 
     # Store
     out['model'] = best_model
