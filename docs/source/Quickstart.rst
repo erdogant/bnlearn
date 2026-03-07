@@ -1,7 +1,7 @@
+.. _installation-quickstart:
+
 Installation
 ============
-
-.. _quickstart-installation:
 
 Installing bnlearn is straightforward. 
 It is recommended to create a new environment for the installation.

@@ -33,6 +33,8 @@ Finally, the marginal probability describes the probability of the new evidence 
 
    Bayes' Theorem equation.
 
+.. _structure-learning-main:
+
 Structure learning
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -88,13 +90,15 @@ Lets determine the best possible structure for the sprinkler dataset.
 
     # Load library
     import bnlearn as bn
+    from tabulate import tabulate
+
     # Load example
     df = bn.import_example('sprinkler')
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
     # Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
     model = bn.independence_test(model, df, alpha=0.05, prune=True)
-    
+
     # Examine the output of the chi-square test. All P values are significant. Nothing is removed.
     print(tabulate(model['independence_test'], tablefmt="grid", headers="keys"))
     #    source     target     stat_test        p_value    chi_square    dof
@@ -103,7 +107,7 @@ Lets determine the best possible structure for the sprinkler dataset.
     # 1  Cloudy     Sprinkler  True         8.38371e-53       233.906      1
     # 2  Rain       Wet_Grass  True         3.88651e-64       285.902      1
     # 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1
-    
+
     # Plot
     bn.plot(model, edge_labels='pvalue')
 
@@ -122,35 +126,38 @@ Hillclimbsearch
 ===================
 
 *Hillclimbsearch* is a heuristic search approach that can be used if more nodes are used. HillClimbSearch implements a greedy local search that starts from the DAG "start" (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
-With *Hillclimbsearch* we can determine the best DAG for multiple nodes. 
+With *Hillclimbsearch* we can determine the best DAG for multiple nodes.
 
-Lets examine the results using hte **alarm** example that contains 37 nodes.
+Lets examine the results using the **alarm** example that contains 37 nodes.
 
 .. code-block:: python
 
     # Load library
     import bnlearn as bn
+    from tabulate import tabulate
+
     # Load example
     df = bn.import_example('alarm')
-    
+
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-    
+
     # Plot detected DAG
     G = bn.plot(model, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None)
 
     # Create graphviz
     dot = bn.plot_graphviz(model)
-
+    # Show dot file
+    dot
 
     # Compute edge strength using chi-square independence test
-    model1 = bn.independence_test(model, df, alpha=0.05, prune=False)
+    model_2 = bn.independence_test(model, df, alpha=0.05, prune=False)
 
     # Plot
-    bn.plot(model1, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
+    bn.plot(model_2, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
 
     # Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False
-    print(tabulate(model1['independence_test'], headers="keys"))
+    print(tabulate(model_2['independence_test'], headers="keys"))
 
     #    source        target        stat_test         p_value    chi_square    dof
     #--  ------------  ------------  -----------  ------------  ------------  -----
@@ -212,7 +219,7 @@ Lets examine the results using hte **alarm** example that contains 37 nodes.
     model3 = bn.independence_test(model, df, alpha=0.05, prune=True)
     # plot
     bn.plot(model3, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
-    
+
 
 .. |hill0| image:: ../figs/Hillclimbsearch1_graphviz.png
 
@@ -236,6 +243,39 @@ Lets examine the results using hte **alarm** example that contains 37 nodes.
    +---------+
 
 
+Hillclimbsearch with DAG
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+When you already have a DAG, you can also start with that.
+
+.. code-block:: python
+
+    import bnlearn as bn
+
+    # Define the causal dependencies based on your expert/domain knowledge.
+    edges = [('Cloudy', 'Sprinkler'),
+             ('Cloudy', 'Rain'),
+             ('Sprinkler', 'Wet_Grass'),
+             ('Rain', 'Wet_Grass')]
+
+    # Create the DAG
+    DAG = bn.make_DAG(edges, methodtype='bayes')
+    bn.plot(DAG)
+
+    # Generate example data with the same number of nodes as the predefined DAG
+    df = bn.sampling(DAG, n=100, methodtype='gibbs')
+
+    # Structure learning with the DAG as starting point
+    model = bn.structure_learning.fit(df, start_dag=DAG)
+
+    # Plot
+    bn.plot(model)
+
+    # make comparison.
+    bn.compare_networks(DAG, model)
+
+
 
 Chow-liu
 ===================
@@ -256,6 +296,8 @@ Lets determine the best possible structure for the *titanic* dataset.
 
     # Load library
     import bnlearn as bn
+    from tabulate import tabulate
+
     # Load example
     df_raw = bn.import_example(data='titanic')
     # Preprocessing raw dataset
@@ -267,11 +309,11 @@ Lets determine the best possible structure for the *titanic* dataset.
     G = bn.plot(model)
 
     # Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
-    model1 = bn.independence_test(model, dfnum, alpha=0.05, prune=True)
+    model_2 = bn.independence_test(model, dfnum, alpha=0.05, prune=True)
     # [bnlearn] >Edge [Ticket <-> Sex] [P=0.714624] is excluded because it was not significant (P<0.05) with [chi_square]
-    
+
     # Plot
-    bn.plot(model1, pos=G['pos'])
+    bn.plot(model_2, pos=G['pos'])
 
 
 
@@ -289,7 +331,7 @@ Lets determine the best possible structure for the *titanic* dataset.
 
 
 
-Tree-augmented Naive Bayes (TAN) 
+Tree-augmented Naive Bayes (TAN)
 ======================================
 Tree-augmented Naive Bayes (TAN) algorithm is also a tree-based approach that can be used to model huge datasets involving lots of uncertainties among its various interdependent feature sets.
 It relaxes the naive Bayes attribute independence assumption by employing a tree structure, in which each attribute only depends on the class and one other attribute.
@@ -310,6 +352,8 @@ Lets determine the best possible structure for the *asia* dataset.
 
     # Load library
     import bnlearn as bn
+    from tabulate import tabulate
+
     # Load example
     df = bn.import_example('asia')
 
@@ -319,11 +363,11 @@ Lets determine the best possible structure for the *asia* dataset.
     G = bn.plot(model)
 
     # Compute edge strength using chi-square independence test
-    model1 = bn.independence_test(model, df, alpha=0.05, prune=False)
-    bn.plot(model1, pos=G['pos'])
+    model_2 = bn.independence_test(model, df, alpha=0.05, prune=False)
+    bn.plot(model_2, pos=G['pos'])
 
     # Examine the output of the chi-square test. 13 edges are detected but not all P values are significant, i.e. those with stat_test=False
-    print(tabulate(model1['independence_test'], headers="keys"))
+    print(tabulate(model_2['independence_test'], headers="keys"))
     #    source    target    stat_test         p_value    chi_square    dof
     #--  --------  --------  -----------  ------------  ------------  -----
     # 0  either    xray      True         0               5589.38         1
@@ -346,7 +390,7 @@ Lets determine the best possible structure for the *asia* dataset.
     # [bnlearn] >Edge [lung <-> asia] [P=1] is excluded because it was not significant (P<0.05) with [chi_square]
     # [bnlearn] >Edge [lung <-> tub] [P=0.125939] is excluded because it was not significant (P<0.05) with [chi_square]
     bn.plot(model2, pos=G['pos'])
-    
+
 
 .. |tan0| image:: ../figs/tan0.png
 
@@ -374,7 +418,7 @@ NaiveBayes
 ===================
 Naive Bayes is a special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable.
 
-The method requires specifying: 
+The method requires specifying:
 
     1. The root node.
     2. Edges should start from the root node.
@@ -387,18 +431,19 @@ Example to design a DAG with the naivebayes model:
 
     # Load library
     from pgmpy.factors.discrete import TabularCPD
+    from tabulate import tabulate
     import bnlearn as bn
-    
+
     # Create some edges, all starting from the same root node: A
     edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     DAG = bn.make_DAG(edges, methodtype='naivebayes')
-    
+
     # Set CPDs
     cpd_A = TabularCPD(variable='A', variable_card=3, values=[[0.3], [0.5], [0.2]])
     cpd_B = TabularCPD(variable='B', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
     cpd_C = TabularCPD(variable='C', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
     cpd_D = TabularCPD(variable='D', variable_card=2, values=[[0.4, 0.9], [0.6, 0.1]], evidence=['A'], evidence_card=[2])
-    
+
     # Make the DAG
     DAG = bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, cpd_C, cpd_D], checkmodel=True)
     # Plot the CPDs as a sanity check
@@ -418,6 +463,7 @@ Example for structure learning with the naivebayes model:
 
     # Load library
     import bnlearn as bn
+
     # Load example
     df = bn.import_example('random_discrete')
     # Structure learning
@@ -448,8 +494,8 @@ Example for structure learning with the naivebayes model:
    +---------+---------+
    | |logo1| | |logo2| |
    +---------+---------+
-   
-   
+
+
 Constraint-based
 ===================
 

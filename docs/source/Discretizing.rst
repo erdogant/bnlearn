@@ -1,5 +1,11 @@
+.. _documentation-discretizing:
+
 Discretizing
 =========================================
+
+
+.. _discretizing-structure-learning:
+
 
 In ``bnlearn``, the following options are available to work with continuous datasets:
 

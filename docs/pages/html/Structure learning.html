@@ -70,7 +70,10 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#exhaustivesearch">Exhaustivesearch</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#hillclimbsearch">Hillclimbsearch</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#hillclimbsearch">Hillclimbsearch</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#hillclimbsearch-with-dag">Hillclimbsearch with DAG</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="#chow-liu">Chow-liu</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#naivebayes">NaiveBayes</a></li>
@@ -204,7 +207,7 @@ Finally, the marginal probability describes the probability of the new evidence 
 </figure>
 </section>
 <section id="structure-learning">
-<h2>Structure learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h2>
+<span id="structure-learning-main"></span><h2>Structure learning<a class="headerlink" href="#structure-learning" title="Link to this heading"></a></h2>
 <p>With structure learning, we want to determine the structure of the graph that best captures the causal dependencies between the variables in the data set.</p>
 <p><strong>What is the DAG that best fits the data?</strong></p>
 <p>A naïve manner to find the best DAG is simply creating all possible combinations of the graph,
@@ -254,6 +257,8 @@ This search approach is only attractable for very small networks and prohibits e
 <p>Lets determine the best possible structure for the sprinkler dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
+
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>
@@ -286,9 +291,11 @@ This search approach is only attractable for very small networks and prohibits e
 <h1>Hillclimbsearch<a class="headerlink" href="#hillclimbsearch" title="Link to this heading"></a></h1>
 <p><em>Hillclimbsearch</em> is a heuristic search approach that can be used if more nodes are used. HillClimbSearch implements a greedy local search that starts from the DAG “start” (default: disconnected DAG) and proceeds by iteratively performing single-edge manipulations that maximally increase the score. The search terminates once a local maximum is found.
 With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.</p>
-<p>Lets examine the results using hte <strong>alarm</strong> example that contains 37 nodes.</p>
+<p>Lets examine the results using the <strong>alarm</strong> example that contains 37 nodes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
+
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;alarm&#39;</span><span class="p">)</span>
 
@@ -300,16 +307,17 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 
 <span class="c1"># Create graphviz</span>
 <span class="n">dot</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-
+<span class="c1"># Show dot file</span>
+<span class="n">dot</span>
 
 <span class="c1"># Compute edge strength using chi-square independence test</span>
-<span class="n">model1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">model_2</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">edge_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_2</span><span class="p">,</span> <span class="n">params_static</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;figsize&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="s1">&#39;dpi&#39;</span><span class="p">:</span> <span class="mi">300</span><span class="p">,</span> <span class="s1">&#39;font_size&#39;</span><span class="p">:</span> <span class="mi">18</span><span class="p">},</span> <span class="n">edge_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 
 <span class="c1"># Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">model1</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">model_2</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
 
 <span class="c1">#    source        target        stat_test         p_value    chi_square    dof</span>
 <span class="c1">#--  ------------  ------------  -----------  ------------  ------------  -----</span>
@@ -386,6 +394,35 @@ With <em>Hillclimbsearch</em> we can determine the best DAG for multiple nodes.<
 </tr>
 </tbody>
 </table>
+<section id="hillclimbsearch-with-dag">
+<h2>Hillclimbsearch with DAG<a class="headerlink" href="#hillclimbsearch-with-dag" title="Link to this heading"></a></h2>
+<p>When you already have a DAG, you can also start with that.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Define the causal dependencies based on your expert/domain knowledge.</span>
+<span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Sprinkler&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Cloudy&#39;</span><span class="p">,</span> <span class="s1">&#39;Rain&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Sprinkler&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">),</span>
+         <span class="p">(</span><span class="s1">&#39;Rain&#39;</span><span class="p">,</span> <span class="s1">&#39;Wet_Grass&#39;</span><span class="p">)]</span>
+
+<span class="c1"># Create the DAG</span>
+<span class="n">DAG</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">make_DAG</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Generate example data with the same number of nodes as the predefined DAG</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;gibbs&#39;</span><span class="p">)</span>
+
+<span class="c1"># Structure learning with the DAG as starting point</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">start_dag</span><span class="o">=</span><span class="n">DAG</span><span class="p">)</span>
+
+<span class="c1"># Plot</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># make comparison.</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">compare_networks</span><span class="p">(</span><span class="n">DAG</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 </section>
 <section id="chow-liu">
 <h1>Chow-liu<a class="headerlink" href="#chow-liu" title="Link to this heading"></a></h1>
@@ -402,6 +439,8 @@ The complexity can be limited by restricting to tree structures which makes this
 <p>Lets determine the best possible structure for the <em>titanic</em> dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
+
 <span class="c1"># Load example</span>
 <span class="n">df_raw</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;titanic&#39;</span><span class="p">)</span>
 <span class="c1"># Preprocessing raw dataset</span>
@@ -413,11 +452,11 @@ The complexity can be limited by restricting to tree structures which makes this
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges</span>
-<span class="n">model1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dfnum</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">model_2</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">dfnum</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># [bnlearn] &gt;Edge [Ticket &lt;-&gt; Sex] [P=0.714624] is excluded because it was not significant (P&lt;0.05) with [chi_square]</span>
 
 <span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_2</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 </pre></div>
 </div>
 <table class="docutils align-center" id="id5">
@@ -452,6 +491,8 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <p>Lets determine the best possible structure for the <em>asia</em> dataset.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
+
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
 
@@ -461,11 +502,11 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Compute edge strength using chi-square independence test</span>
-<span class="n">model1</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model1</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="n">model_2</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_2</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
 
 <span class="c1"># Examine the output of the chi-square test. 13 edges are detected but not all P values are significant, i.e. those with stat_test=False</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">model1</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">model_2</span><span class="p">[</span><span class="s1">&#39;independence_test&#39;</span><span class="p">],</span> <span class="n">headers</span><span class="o">=</span><span class="s2">&quot;keys&quot;</span><span class="p">))</span>
 <span class="c1">#    source    target    stat_test         p_value    chi_square    dof</span>
 <span class="c1">#--  --------  --------  -----------  ------------  ------------  -----</span>
 <span class="c1"># 0  either    xray      True         0               5589.38         1</span>
@@ -518,6 +559,7 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <p>Example to design a DAG with the naivebayes model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pgmpy.factors.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">TabularCPD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tabulate</span><span class="w"> </span><span class="kn">import</span> <span class="n">tabulate</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
 <span class="c1"># Create some edges, all starting from the same root node: A</span>
@@ -544,6 +586,7 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 <p>Example for structure learning with the naivebayes model:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
 <span class="c1"># Load example</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="s1">&#39;random_discrete&#39;</span><span class="p">)</span>
 <span class="c1"># Structure learning</span>

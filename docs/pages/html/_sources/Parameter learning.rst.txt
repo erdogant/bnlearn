@@ -1,3 +1,5 @@
+.. _parameter-learning-main:
+
 Parameter learning
 ==================
 
