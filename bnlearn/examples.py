@@ -1,5 +1,41 @@
+# import bnlearn as bn
+# bn.system_info()
+
+# %%
 import bnlearn as bn
-bn.system_info()
+import numpy as np
+
+n = np.random.randint(10, 1000)
+DAG = bn.import_DAG('sprinkler')
+df = bn.sampling(DAG, n=n, methodtype='gibbs')
+model = bn.structure_learning.fit(df, start_dag=DAG)
+model = bn.structure_learning.fit(df, start_dag='test')
+
+bn.plot(model)
+
+# %%
+import bnlearn as bn
+
+# Define the causal dependencies based on your expert/domain knowledge.
+# Left is the source, and right is the target node.
+edges = [('Cloudy', 'Sprinkler'),
+         ('Cloudy', 'Rain'),
+         ('Sprinkler', 'Wet_Grass'),
+         ('Rain', 'Wet_Grass')]
+
+# Create the DAG
+# DAG = bn.make_DAG(edges)
+DAG = bn.make_DAG(edges, methodtype='bayes')
+# bn.plot(DAG)
+
+# Generate data
+df = bn.sampling(DAG, n=10)
+model = bn.structure_learning.fit(df, start_dag=DAG)
+bn.plot(model)
+
+# Nothing is changed for the DAG. Only the CPDs are estimated now.
+# bn.compare_networks(DAG, model)
+
 
 # %%
 import bnlearn as bn
@@ -401,27 +437,32 @@ import numpy as np
 # from impute import knn_imputer, mice_imputer
 
 # Load the dataset
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', delim_whitespace=True, header=None, names=['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+df = pd.read_fwf('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', header=None)
+df.columns = ["mpg","cylinders","displacement","horsepower", "weight","acceleration","model_year","origin_car"]
+df[["origin","car_name"]] = df["origin_car"].str.split("\t", expand=True)
+df["origin"] = df["origin"].str.replace(".", "", regex=False).astype(int)
+df["car_name"] = df["car_name"].str.strip('"')
+df = df.drop(columns="origin_car")
 
 df.loc[1]=df.loc[0]
 df.loc[11]=df.loc[10]
 df.loc[50]=df.loc[20]
 
 index_nan = [0, 10, 20]
-carnames = df['car name'].loc[index_nan]
+carnames = df['car_name'].loc[index_nan]
 
-df['car name'].loc[index_nan]=None
+df['car_name'].loc[index_nan]=None
 df.isna().sum()
 
 # KNN imputer
-dfnew = bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns=['car name'])
+dfnew = bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns=['car_name'])
 # Results
-np.all(dfnew['car name'].loc[index_nan].values==carnames.values)
+np.all(dfnew['car_name'].loc[index_nan].values==carnames.values)
 
 # MICE imputer
-dfnew = bn.mice_imputer(df, max_iter=5, string_columns='car name')
+dfnew = bn.mice_imputer(df, max_iter=5, string_columns='car_name')
 # Results
-np.all(dfnew['car name'].loc[index_nan].values==carnames.values)
+np.all(dfnew['car_name'].loc[index_nan].values==carnames.values)
 
 
 
@@ -719,7 +760,7 @@ del df['origin']
 
 # Structure learning
 # model = bn.structure_learning.fit(df, methodtype='hc')
-model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'pearsonr': cii_test,'alpha': 0.05})
+model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'pearsonr': 'chi_square','alpha': 0.05})
 
 # Compute edge strength
 model = bn.independence_test(model, df)
@@ -744,9 +785,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import bnlearn as bn
 
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
-                 delim_whitespace=True, header=None,
-                 names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
+df = pd.read_fwf('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', header=None)
+df.columns = ["mpg","cylinders","displacement","horsepower", "weight","acceleration","model_year","origin_car"]
+df[["origin","car_name"]] = df["origin_car"].str.split("\t", expand=True)
+df["origin"] = df["origin"].str.replace(".", "", regex=False).astype(int)
+df["car_name"] = df["car_name"].str.strip('"')
+df = df.drop(columns="origin_car")
 
 # df = bn.import_example(data='auto_mpg')
 
@@ -902,11 +946,13 @@ dotgraph.view(filename=r'c:/temp/dotgraph_DirectLiNGAM')
 
 
 # %%
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
-                   delim_whitespace=True, header=None,
-                   names = ['mpg', 'cylinders', 'displacement',
-                            'horsepower', 'weight', 'acceleration',
-                            'model year', 'origin', 'car name'])
+df = pd.read_fwf('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', header=None)
+df.columns = ["mpg","cylinders","displacement","horsepower", "weight","acceleration","model_year","origin_car"]
+df[["origin","car_name"]] = df["origin_car"].str.split("\t", expand=True)
+df["origin"] = df["origin"].str.replace(".", "", regex=False).astype(int)
+df["car_name"] = df["car_name"].str.strip('"')
+df = df.drop(columns="origin_car")
+
 df.dropna(inplace=True)
 df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
 
