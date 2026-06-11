@@ -33,7 +33,7 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 .. raw:: html
 
     <iframe 
-        srcdoc='<a href="https://www.buymeacoffee.com/erdogant" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&amp;emoji=&amp;slug=erdogant&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff" /></a>' 
+        srcdoc='<a href="https://www.buymeacoffee.com/erdogant" target="_blank"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&amp;emoji=&amp;slug=erdogant&amp;button_colour=FFDD00&amp;font_colour=000000&amp;font_family=Cookie&amp;outline_colour=000000&amp;coffee_colour=ffffff" /></a>'
         style="border:none; width:250px; height:80px;">
     </iframe>
 
@@ -42,8 +42,8 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 
 .. tip::
 	* `The Starters Guide to Causal Structure Learning with Bayesian Methods in Python. <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
-	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
-	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
+	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-584ad0dd6ab5>`_
+	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-in-python-82fb7d2ecb19>`_
 
 
 -----------------------------------
@@ -57,7 +57,7 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 -----------------------------------
 
 .. note::
-	**Your ❤️ is important to keep maintaining this package.** You can `support <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_ in various ways, have a look at the `sponser page <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_.
+	**Your ❤️ is important to keep maintaining this package.** You can `support <https://erdogant.github.io/bnlearn/pages/html/Documentation.html>`_ in various ways, have a look at the `sponser page <https://github.com/sponsors/erdogant>`_.
 	Report bugs, issues and feature extensions at `github <https://github.com/erdogant/bnlearn/>`_ page.
 
 	.. code-block:: console
@@ -234,7 +234,7 @@ Indices and tables
     :alt: Github Forks
     :target: https://github.com/erdogant/bnlearn/network
 
-.. |open issues| image:: https://img.shields.io/github/issues/erdogant/bnlearn.svg
+.. |open issues| image:: https://img.shields.io/github/issues/erdogant/bnlearn?style=flat-square
     :alt: Open Issues
     :target: https://github.com/erdogant/bnlearn/issues
 
