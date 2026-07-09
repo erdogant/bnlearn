@@ -640,8 +640,8 @@ def adjmat2dict(adjmat):
 
 
 # %%
-def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
-    return bn_sampling(DAG, n=n, methodtype=methodtype, verbose=verbose)
+def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
+    return bn_sampling(DAG, n=n, methodtype=methodtype, evidence=evidence, verbose=verbose)
 
 
 # %% Convert BIF model to bayesian model
