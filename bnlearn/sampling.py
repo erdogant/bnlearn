@@ -123,11 +123,25 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
 
 # %% Convert an evidence dict into pgmpy State tuples
 def _evidence_as_states(evidence, model):
-    """Convert an evidence dict {variable: state} into a list of pgmpy State tuples."""
+    """Convert an evidence dict {variable: state} into a list of pgmpy State tuples.
+
+    Each variable is checked against the model, and each requested state against
+    that variable's state space. Impossible evidence (an unknown variable or a
+    state that the variable can never take) therefore fails fast with a clear
+    message instead of hanging the rejection sampler, which would otherwise loop
+    forever waiting to accept a sample that can never occur.
+    """
     if not isinstance(evidence, dict):
         raise TypeError('[bnlearn] >evidence must be a dict of {variable: state}, e.g. {"Rain": 1}.')
     nodes = set(model.nodes())
     unknown = [var for var in evidence if var not in nodes]
     if len(unknown)>0:
         raise ValueError('[bnlearn] >evidence variable(s) %s are not in the model (case sensitive!). Available nodes: %s' %(unknown, sorted(nodes)))
-    return [State(var, state) for var, state in evidence.items()]
+
+    states = []
+    for var, state in evidence.items():
+        valid_states = model.get_cpds(var).state_names[var]
+        if state not in valid_states:
+            raise ValueError('[bnlearn] >evidence state [%s=%s] is not a valid state for variable [%s]. Valid states: %s' %(var, state, var, valid_states))
+        states.append(State(var, state))
+    return states

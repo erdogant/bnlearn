@@ -177,6 +177,11 @@ def test_sampling_evidence_errors():
     # Evidence variable not in the model
     with pytest.raises(ValueError):
         bn.sampling(model, n=10, evidence={'DoesNotExist': 1})
+    # Evidence state outside the variable's state space must fail fast rather than
+    # hang the rejection sampler (which would loop forever waiting to accept a
+    # sample that can never occur).
+    with pytest.raises(ValueError):
+        bn.sampling(model, n=10, evidence={'Rain': 99})
     # Gibbs does not support evidence
     with pytest.raises(ValueError):
         bn.sampling(model, n=10, methodtype='gibbs', evidence={'Rain': 1})
