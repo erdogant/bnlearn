@@ -6,15 +6,11 @@ pandas
 tqdm
 ismember
 scikit-learn
-funcsigs
-statsmodels
 python-louvain
 packaging
 df2onehot
-fsspec
 pypickle
 tabulate
-ipywidgets
 lingam
 datazets>=1.1.2
 setgraphviz>=1.0.3
