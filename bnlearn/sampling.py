@@ -7,6 +7,7 @@
 # ------------------------------------
 
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
+from pgmpy.factors.discrete import State
 import pandas as pd
 # import logging
 # logging.getLogger("pgmpy").setLevel(logging.ERROR)
@@ -29,7 +30,7 @@ def _patched_from_records(cls, data, *args, **kwargs):
 pd.DataFrame.from_records = _patched_from_records
 
 # %% Sampling from model
-def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
+def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
     """Generate synthetic data using the joint distribution of the network.
 
     Parameters
@@ -37,10 +38,19 @@ def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
     DAG : dict
         Contains model and the adjmat of the DAG.
     methodtype : str (default: 'bayes')
-        * 'bayes': Forward sampling using Bayesian.
-        * 'gibbs' : Gibbs sampling.
+        * 'bayes': Forward sampling using Bayesian. When ``evidence`` is
+          provided, rejection sampling is used to draw samples that are
+          consistent with the evidence.
+        * 'gibbs' : Gibbs sampling (does not support ``evidence``).
     n : int, optional
         Number of samples to generate. The default is 1000.
+    evidence : dict, optional
+        Condition the samples on the given evidence, e.g. ``{'Rain': 1,
+        'Cloudy': 0}``. Keys must be variable names in the model (case
+        sensitive) and values the observed state. Only supported for
+        ``methodtype='bayes'``, where it switches to rejection sampling so
+        every returned sample is consistent with the evidence. The default is
+        None (unconditional sampling).
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
@@ -76,6 +86,11 @@ def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
     >>> model = bn.parameter_learning.fit(DAG, df, verbose=3, methodtype='bayes')
     >>> # Sampling using gibbs
     >>> df = bn.sampling(model, n=100, methodtype='gibbs', verbose=0)
+    >>>
+    >>> # Example 3: Conditional sampling
+    >>>
+    >>> # Draw samples in which it is raining and not cloudy
+    >>> df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})
 
     """
     if n<=0: raise ValueError('Number of samples (n) must be 1 or larger!')
@@ -84,18 +99,49 @@ def sampling(DAG, n=1000, methodtype='bayes', verbose=0):
 
     if len(DAG['model'].get_cpds())==0:
         raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
-        return
 
     if methodtype=='bayes':
-        if verbose>=3: print('[bnlearn] >Bayesian forward sampling for %.0d samples..' %(n))
-        # Bayesian Forward sampling and make dataframe
         infer_model = BayesianModelSampling(DAG['model'])
-        df = infer_model.forward_sample(size=n, seed=None, show_progress=(True if verbose>=3 else False))
+        if evidence is None:
+            if verbose>=3: print('[bnlearn] >Bayesian forward sampling for %.0d samples..' %(n))
+            df = infer_model.forward_sample(size=n, seed=None, show_progress=(verbose>=3))
+        else:
+            states = _evidence_as_states(evidence, DAG['model'])
+            if verbose>=3: print('[bnlearn] >Bayesian rejection sampling for %.0d samples conditioned on %.0d evidence variable(s)..' %(n, len(states)))
+            df = infer_model.rejection_sample(evidence=states, size=n, seed=None, show_progress=(verbose>=3))
     elif methodtype=='gibbs':
+        if evidence is not None:
+            raise ValueError("[bnlearn] >Gibbs sampling does not support conditioning on evidence. Use methodtype='bayes' together with evidence=... for conditional (rejection) sampling.")
         if verbose>=3: print('[bnlearn] >Gibbs sampling for %.0d samples..' %(n))
         # Gibbs sampling
         gibbs = GibbsSampling(DAG['model'])
         df = gibbs.sample(size=n, seed=None)
     else:
-        if verbose>=3: print('[bnlearn] >Methodtype [%s] unknown' %(methodtype))
+        raise ValueError('[bnlearn] >Sampling methodtype [%s] is unknown. Use "bayes" or "gibbs".' %(methodtype))
     return df
+
+
+# %% Convert an evidence dict into pgmpy State tuples
+def _evidence_as_states(evidence, model):
+    """Convert an evidence dict {variable: state} into a list of pgmpy State tuples.
+
+    Each variable is checked against the model, and each requested state against
+    that variable's state space. Impossible evidence (an unknown variable or a
+    state that the variable can never take) therefore fails fast with a clear
+    message instead of hanging the rejection sampler, which would otherwise loop
+    forever waiting to accept a sample that can never occur.
+    """
+    if not isinstance(evidence, dict):
+        raise TypeError('[bnlearn] >evidence must be a dict of {variable: state}, e.g. {"Rain": 1}.')
+    nodes = set(model.nodes())
+    unknown = [var for var in evidence if var not in nodes]
+    if len(unknown)>0:
+        raise ValueError('[bnlearn] >evidence variable(s) %s are not in the model (case sensitive!). Available nodes: %s' %(unknown, sorted(nodes)))
+
+    states = []
+    for var, state in evidence.items():
+        valid_states = model.get_cpds(var).state_names[var]
+        if state not in valid_states:
+            raise ValueError('[bnlearn] >evidence state [%s=%s] is not a valid state for variable [%s]. Valid states: %s' %(var, state, var, valid_states))
+        states.append(State(var, state))
+    return states

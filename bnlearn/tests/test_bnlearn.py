@@ -162,6 +162,34 @@ def test_sampling_gibbs(sprinkler_dag):
     assert df.shape == (n, 4)
 
 
+def test_sampling_conditional():
+    # Conditional (rejection) sampling: every returned sample must satisfy the evidence.
+    n = np.random.randint(10, 500)
+    model = bn.import_DAG('sprinkler')
+    df = bn.sampling(model, n=n, evidence={'Rain': 1, 'Cloudy': 0})
+    assert df.shape == (n, 4)
+    assert (df['Rain'] == 1).all()
+    assert (df['Cloudy'] == 0).all()
+
+
+def test_sampling_evidence_errors():
+    model = bn.import_DAG('sprinkler')
+    # Evidence variable not in the model
+    with pytest.raises(ValueError):
+        bn.sampling(model, n=10, evidence={'DoesNotExist': 1})
+    # Evidence state outside the variable's state space must fail fast rather than
+    # hang the rejection sampler (which would loop forever waiting to accept a
+    # sample that can never occur).
+    with pytest.raises(ValueError):
+        bn.sampling(model, n=10, evidence={'Rain': 99})
+    # Gibbs does not support evidence
+    with pytest.raises(ValueError):
+        bn.sampling(model, n=10, methodtype='gibbs', evidence={'Rain': 1})
+    # Unknown methodtype
+    with pytest.raises(ValueError):
+        bn.sampling(model, n=10, methodtype='does_not_exist')
+
+
 # def test_to_undirected():
 #     # TEST 1:
 #     randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
