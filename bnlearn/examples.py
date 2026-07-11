@@ -1,6 +1,14 @@
 # import bnlearn as bn
 # bn.system_info()
 
+import bnlearn as bn
+model = bn.import_DAG('sprinkler')
+
+# every returned row has Rain=1 and Cloudy=0
+df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})
+df = bn.sampling(model, n=100, evidence={'Rain': 1})
+df = bn.sampling(model, n=100,  methodtype='bayes', evidence={'Rain': 1})
+
 # %%
 import bnlearn as bn
 import numpy as np
