@@ -116,5 +116,22 @@ Another example with Gibbs sampling but now by creating some user-defined edges
   +--------+-----------+------+-------------+
 
 
+Conditional Sampling
+==========================
+
+Conditional sampling generates synthetic observations while fixing selected variables to predefined values. 
+For example, a Bayesian network can generate additional Sprinkler samples conditioned on `Rain=1` and a specific Cloudy setting, while sampling the remaining variables according to the learned probability distributions.
+
+
+.. code-block:: python
+ 
+    import bnlearn as bn
+    model = bn.import_DAG('sprinkler')
+    
+    # every returned row has Rain=1 and Cloudy=0
+    df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})
+    df = bn.sampling(model, n=100, evidence={'Rain': 1})
+    df = bn.sampling(model, n=100,  methodtype='bayes', evidence={'Rain': 1})
+
 
 .. include:: add_bottom.add

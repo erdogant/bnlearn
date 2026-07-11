@@ -96,6 +96,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#gibbs-sampling">Gibbs Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#conditional-sampling">Conditional Sampling</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -141,6 +142,7 @@
 <p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Documentation.html">Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Documentation.html#doc-sponsor">Sponsor</a></li>
 </ul>
 
     <a href= "genindex.html">Index</a>
@@ -325,6 +327,20 @@ While Forward Sampling is better suited for full synthetic data generation, Gibb
 </tr>
 </tbody>
 </table>
+</section>
+<section id="conditional-sampling">
+<h1>Conditional Sampling<a class="headerlink" href="#conditional-sampling" title="Link to this heading"></a></h1>
+<p>Conditional sampling generates synthetic observations while fixing selected variables to predefined values.
+For example, a Bayesian network can generate additional Sprinkler samples conditioned on <cite>Rain=1</cite> and a specific Cloudy setting, while sampling the remaining variables according to the learned probability distributions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;sprinkler&#39;</span><span class="p">)</span>
+
+<span class="c1"># every returned row has Rain=1 and Cloudy=0</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Cloudy&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
