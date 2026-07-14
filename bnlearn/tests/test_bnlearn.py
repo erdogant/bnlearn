@@ -4,6 +4,7 @@
 import pytest
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
+from pgmpy.sampling import BayesianModelSampling
 import numpy as np
 import pandas as pd
 import matplotlib
@@ -188,6 +189,20 @@ def test_sampling_evidence_errors():
     # Unknown methodtype
     with pytest.raises(ValueError):
         bn.sampling(model, n=10, methodtype='does_not_exist')
+
+
+def test_sampling_rejects_jointly_impossible_evidence(monkeypatch):
+    cpd_a = TabularCPD(variable='A', variable_card=2, values=[[0.5], [0.5]])
+    cpd_b = TabularCPD(variable='B', variable_card=2, values=[[1, 0], [0, 1]],
+                       evidence=['A'], evidence_card=[2])
+    model = bn.make_DAG([('A', 'B')], CPD=[cpd_a, cpd_b], checkmodel=True)
+
+    def fail_if_called(*args, **kwargs):
+        pytest.fail('rejection_sample must not run for zero-probability evidence')
+
+    monkeypatch.setattr(BayesianModelSampling, 'rejection_sample', fail_if_called)
+    with pytest.raises(ValueError, match='zero probability'):
+        bn.sampling(model, n=1, evidence={'A': 0, 'B': 1})
 
 
 # def test_to_undirected():

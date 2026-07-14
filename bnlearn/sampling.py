@@ -8,6 +8,7 @@
 
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.factors.discrete import State
+from pgmpy.inference import VariableElimination
 import pandas as pd
 # import logging
 # logging.getLogger("pgmpy").setLevel(logging.ERROR)
@@ -107,6 +108,8 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
             df = infer_model.forward_sample(size=n, seed=None, show_progress=(verbose>=3))
         else:
             states = _evidence_as_states(evidence, DAG['model'])
+            if _evidence_probability(evidence, DAG['model']) <= 0:
+                raise ValueError('[bnlearn] >evidence %s has zero probability under the model. Rejection sampling cannot produce matching samples.' %(evidence))
             if verbose>=3: print('[bnlearn] >Bayesian rejection sampling for %.0d samples conditioned on %.0d evidence variable(s)..' %(n, len(states)))
             df = infer_model.rejection_sample(evidence=states, size=n, seed=None, show_progress=(verbose>=3))
     elif methodtype=='gibbs':
@@ -145,3 +148,11 @@ def _evidence_as_states(evidence, model):
             raise ValueError('[bnlearn] >evidence state [%s=%s] is not a valid state for variable [%s]. Valid states: %s' %(var, state, var, valid_states))
         states.append(State(var, state))
     return states
+
+def _evidence_probability(evidence, model):
+    if len(evidence)==0:
+        return 1
+
+    distribution = VariableElimination(model).query(variables=list(evidence), show_progress=False)
+    state_numbers = tuple(distribution.get_state_no(var, evidence[var]) for var in distribution.variables)
+    return distribution.values[state_numbers]
