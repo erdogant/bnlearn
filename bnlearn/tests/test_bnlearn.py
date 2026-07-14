@@ -2,6 +2,7 @@
 # pytest -v
 
 import pytest
+import importlib
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np
@@ -141,6 +142,18 @@ def test_make_DAG():
     assert bn.make_DAG(DAG, CPD=[cpt_cloudy, cpt_sprinkler], checkmodel=True)
     # TEST 3
     assert set(DAG.keys()) == {'adjmat', 'model', 'methodtype', 'model_edges'}
+
+
+def test_print_cpd_propagates_conversion_errors(monkeypatch):
+    model = bn.import_DAG('sprinkler')
+    bnlearn_module = importlib.import_module('bnlearn.bnlearn')
+
+    def fail_conversion(*args, **kwargs):
+        raise RuntimeError('conversion failed')
+
+    monkeypatch.setattr(bnlearn_module, 'query2df', fail_conversion)
+    with pytest.raises(RuntimeError, match='conversion failed'):
+        bn.print_CPD(model, verbose=0)
 
 
 @pytest.fixture

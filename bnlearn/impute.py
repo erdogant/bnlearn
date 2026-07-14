@@ -256,7 +256,7 @@ def _typing(df, string_columns, verbose=3):
             if (string_columns is None) or (not np.isin(col, string_columns)):
                 df[col] = df[col].astype(float)
                 if verbose>=4: print(f'[bnlearn] >float: {col}')
-        except Exception:
+        except (TypeError, ValueError):
             if verbose>=4: print(f'[bnlearn] >Category forced: {col}')
             if string_columns is None: string_columns = []
             string_columns = string_columns + [col]

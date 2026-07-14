@@ -185,7 +185,7 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
         # Get the layout
         layout_func = getattr(nx, layout)
         layout_func(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    except Exception:
+    except:
         if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The [spring_layout] is used instead.' %(layout))
         nx.spring_layout(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
 
@@ -400,7 +400,7 @@ def graphlayout(G, pos, scale=1, layout='graphviz_layout', verbose=3):
                     # Get the layout
                     layout_func = getattr(nx, layout)
                     pos = layout_func(G, scale=scale)
-            except Exception:
+            except:
                 if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The layout [spring_layout] is used instead.' %(layout))
                 pos = nx.spring_layout(G, scale=scale)
         else:
