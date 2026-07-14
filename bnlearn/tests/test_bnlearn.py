@@ -1,8 +1,9 @@
 # pip install pytest
 # pytest -v
 
-import pytest
 import importlib
+
+import pytest
 import bnlearn as bn
 from pgmpy.factors.discrete import TabularCPD
 import numpy as np
