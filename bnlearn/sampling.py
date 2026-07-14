@@ -151,8 +151,16 @@ def _evidence_as_states(evidence, model):
 
 def _evidence_probability(evidence, model):
     if len(evidence)==0:
-        return 1
+        return 1.0
 
-    distribution = VariableElimination(model).query(variables=list(evidence), show_progress=False)
-    state_numbers = tuple(distribution.get_state_no(var, evidence[var]) for var in distribution.variables)
-    return distribution.values[state_numbers]
+    infer_model = VariableElimination(model)
+    probability = 1.0
+    observed = {}
+    for var, state in evidence.items():
+        distribution = infer_model.query(variables=[var], evidence=observed, show_progress=False)
+        state_number = distribution.get_state_no(var, state)
+        probability *= distribution.values[state_number]
+        if probability==0:
+            return 0.0
+        observed[var] = state
+    return probability
