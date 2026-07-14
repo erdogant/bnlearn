@@ -668,7 +668,9 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
 
 
 # %%
-def _is_independent(model, X, Y, Zs=[], significance_level=0.05):
+def _is_independent(model, X, Y, Zs=None, significance_level=0.05):
+    if Zs is None:
+        Zs = []
     return model.test_conditional_independence(X, Y, Zs)[1] >= significance_level
 
 

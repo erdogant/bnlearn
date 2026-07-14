@@ -322,7 +322,6 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
             # print CPDs using Bayesian Parameter Estimation
             if len(DAG.get_cpds())==0:
                 raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
-                return
             for cpd in DAG.get_cpds():
                 CPDs[cpd.variable] = query2df(cpd, verbose=0)
                 if verbose>=3:
@@ -337,7 +336,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
 
         if checkmodel:
             check_model(DAG, verbose=3)
-    except:
+    except Exception:
         if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
 
     # Returning dict with CPDs
