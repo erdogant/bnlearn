@@ -8,7 +8,7 @@ dynamic = ["version"]
 authors = [{ name = "Erdogan Taskesen", email = "erdogant@gmail.com" },]
 description = "bnlearn is a Python package for Causal Discovery by learning the graphical structure of Bayesian networks, parameter learning, inference and sampling methods."
 readme = "README.md"
-requires-python = ">=3"
+requires-python = ">=3.10"
 license = "MIT"
 keywords = ["Python", "causal discovery", "causal learning"]
 classifiers = [
@@ -39,6 +39,12 @@ dependencies = [
     "datazets>=1.1.2",
     "setgraphviz>=1.0.3",
     "lingam",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
 ]
 
 [project.urls]
