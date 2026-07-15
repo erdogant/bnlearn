@@ -2121,13 +2121,19 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     >>> bn.structure_scores(model, df, scoring_method="bic")
     """
     method = None
+    selected_score = None
     show_message = True
     scores = {}
     # Get models and method
     if isinstance(model, dict):
-        method = model.get('config')['method']
+        config = model.get('config', {})
+        method = config.get('method')
+        selected_score = config.get('scoring')
         model = model.get('model', None)
     if isinstance(scoring_method, str): scoring_method = [scoring_method]
+    gaussian_scores = ['loglik-g', 'aic-g', 'bic-g']
+    if selected_score in gaussian_scores and not np.any(np.isin(scoring_method, gaussian_scores)):
+        scoring_method = [selected_score]
     if verbose>=3: print('[bnlearn] >Compute structure scores for model comparison (higher is better).' %(scoring_method))
 
     # Return if method not supported
@@ -2145,8 +2151,12 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     if model is not None:
         for s in scoring_method:
             try:
-                scores[s] = structure_score(model, df, scoring_method=s)
-            except ValueError as e:
+                if s in gaussian_scores:
+                    scoring_object = bnlearn.structure_learning._SetScoringType(df, s, verbose=0, **kwargs)
+                    scores[s] = scoring_object.score(model)
+                else:
+                    scores[s] = structure_score(model, df, scoring_method=s)
+            except (ValueError, TypeError, np.linalg.LinAlgError) as e:
                 if verbose>=2 and show_message:
                     print(f'[bnlearn] >WARNING> {e}')
                     print(f'[bnlearn] >WARNING> Can not compute [{s}] score. <skip>')

@@ -144,21 +144,21 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
         # Learning CPDs using Maximum Likelihood Estimators
         model.fit(df, estimator=None)  # estimator as None makes it maximum likelihood estimator according pgmpy docs.
         for cpd in model.get_cpds():
-            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-            if config['verbose']>=3: print(cpd)
+            if config['verbose']>=2: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=2: print(cpd)
     elif config['method']=='bayes':
         #  Learning CPDs using Bayesian Parameter Estimation
         model.fit(df, estimator=BayesianEstimator, prior_type=scoretype, equivalent_sample_size=1000, pseudo_counts=smooth, n_jobs=config['n_jobs'])
         # model.fit(df, estimator=BayesianEstimator, prior_type="BDeu", equivalent_sample_size=1000, pseudo_counts=smooth)
         for cpd in model.get_cpds():
-            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-            if config['verbose']>=3: print(cpd)
+            if config['verbose']>=2: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=2: print(cpd)
     elif config['method']=='DBN':
         #  Learning CPDs using Bayesian Parameter Estimation
         model.fit(df, estimator='MLE')
         for cpd in model.get_cpds():
-            if config['verbose']>=3: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-            if config['verbose']>=3: print(cpd)
+            if config['verbose']>=2: print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
+            if config['verbose']>=2: print(cpd)
     else:
         if config['verbose']>=2: print("[bnlearn] >Warning: methodtype [%s] is unknown. Returning None." %(config['method']))
         return None

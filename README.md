@@ -36,6 +36,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [**Causal Inference**](https://pgmpy.org/examples/Causal%20Inference.html) | Compute interventional and counterfactual distributions using do-calculus. |[link](https://medium.com/data-science-collective/causal-inference-simplified-the-fundamentals-with-bayesian-networks-in-python-96f8f0abf75b) | [Podcast](https://www.gumlet.com/learn/causal-inference-simplified-with-bayesian-networks-in-python/) |
 | [**Generate Synthetic Data**](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | Generate synthetic data. |[link](https://medium.com/data-science-collective/synthetic-data-the-essential-guide-for-data-science-applications-in-python-82fb7d2ecb19) | [Podcast](https://www.gumlet.com/learn/generating-synthetic-data-with-bayesian-networks-in-python/) |
 | [**Discretize Data**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Discretize continuous datasets. |---|---|
+| [**Data Types**](https://erdogant.github.io/bnlearn/pages/html/Continuous%20Data.html) | Discrete, continuous and mixed datasets. |---|---|
 | [**Comparisons**](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html) | Comparison with other causal libraries. |[link](https://medium.com/data-science-collective/six-causal-libraries-for-beginners-and-experts-8f1dd1d1e6ce) | [Podcast](https://www.gumlet.com/learn/6-causal-libraries-for-beginners-and-experts/) |
 
 ---

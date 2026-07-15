@@ -1,3 +1,154 @@
+import numpy as np
+import pandas as pd
+from lingam.utils import make_dot
+
+# Number of samples
+n = 1000
+
+# Step 1: Initialize root node
+x3 = np.random.uniform(size=n)
+
+# Step 2: Create dependent variables
+x0 = 3.0 * x3 + np.random.uniform(size=n)
+x2 = 6.0 * x3 + np.random.uniform(size=n)
+
+# Step 3: Create further dependencies
+x5 = 4.0 * x0 + np.random.uniform(size=n)
+
+# Step 4: Create final dependencies
+x1 = 3.0 * x0 + 2.0 * x2 + np.random.uniform(size=n)
+x4 = 8.0 * x0 - 1.0 * x2 + np.random.uniform(size=n)
+
+# Create DataFrame
+df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T,
+                 columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
+df.head()
+
+# Define adjacency matrix
+m = np.array([[0.0, 0.0, 0.0, 3.0, 0.0, 0.0],
+             [3.0, 0.0, 2.0, 0.0, 0.0, 0.0],
+             [0.0, 0.0, 0.0, 6.0, 0.0, 0.0],
+             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+             [8.0, 0.0,-1.0, 0.0, 0.0, 0.0],
+             [4.0, 0.0, 0.0, 0.0, 0.0, 0.0]])
+# dot = make_dot(m)
+# dot
+
+import bnlearn as bn
+
+# model = bn.structure_learning.fit(df, methodtype='direct-lingam')
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
+
+print(model['adjmat'])
+bn.plot(model)
+model = bn.independence_test(model, df, prune=False)
+bn.plot(model)
+
+dotgraph = bn.plot_graphviz(model)
+dotgraph
+
+
+# %%
+
+
+# Import libraries
+import bnlearn as bn
+
+# Load dataset
+df = bn.import_example(data='auto_mpg')
+del df['origin']
+
+# Perform structure learning
+# model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam={'random_state': 2})
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
+
+# Compute edge strength
+model = bn.independence_test(model, df, prune=True)
+
+# Create visualizations
+bn.plot(model)
+dotgraph = bn.plot_graphviz(model)
+dotgraph
+dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
+
+
+# %%
+
+
+import numpy as np
+import pandas as pd
+import bnlearn as bn
+
+rng = np.random.default_rng(42)
+n = 1000
+
+A = rng.normal(size=n)
+B = 1.8 * A + rng.normal(scale=0.5, size=n)
+C = -0.9 * B + rng.normal(scale=0.5, size=n)
+
+df = pd.DataFrame({
+    'A': A,
+    'B': B,
+    'C': C,
+})
+
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=3)
+print(model['model_edges'])
+print(model['structure_scores'])
+bn.plot(model)
+
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g', verbose=3)
+print(model['model_edges'])
+print(model['structure_scores'])
+bn.plot(model)
+
+
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g', verbose=3)
+print(model['model_edges'])
+print(model['structure_scores'])
+bn.plot(model)
+
+
+
+# %% Continous and mixed
+import bnlearn as bn
+
+# Load example mixed dataset
+df = bn.import_example(data='auto_mpg')
+del df['origin']
+
+scoretype = 'bic-g'
+# scoretype = 'aic-g'
+# scoretype = 'loglik-g'
+
+# Structure learning
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype=scoretype, verbose=3)
+
+# Compute edge strength
+model = bn.independence_test(model, df)
+
+bn.plot(model, edge_labels='pvalue')
+
+dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
+dotgraph
+
+# Parameter learning
+model = bn.parameter_learning.fit(model, df)
+
+# Print the CPDs
+# bn.print_CPD(model)
+
+# Make inference
+q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
+
+
+# %%
+
+
 # import bnlearn as bn
 # bn.system_info()
 
