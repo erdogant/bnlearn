@@ -87,6 +87,9 @@
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html">Modelling Continuous Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#lingam-based-methods">LiNGAM-based Methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -131,6 +134,18 @@
 <p class="caption" role="heading"><span class="caption-text">Parameters and attributes</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">bnlearn.structure_learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.structure_learning.AICGauss"><code class="docutils literal notranslate"><span class="pre">AICGauss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bnlearn.structure_learning.AICGauss.local_score"><code class="docutils literal notranslate"><span class="pre">AICGauss.local_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.structure_learning.BICGauss"><code class="docutils literal notranslate"><span class="pre">BICGauss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bnlearn.structure_learning.BICGauss.local_score"><code class="docutils literal notranslate"><span class="pre">BICGauss.local_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bnlearn.structure_learning.LogLikelihoodGauss"><code class="docutils literal notranslate"><span class="pre">LogLikelihoodGauss</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#bnlearn.structure_learning.LogLikelihoodGauss.local_score"><code class="docutils literal notranslate"><span class="pre">LogLikelihoodGauss.local_score()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#bnlearn.structure_learning.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 </ul>
 </li>
@@ -177,6 +192,47 @@
   <section id="module-bnlearn.structure_learning">
 <span id="bnlearn-structure-learning"></span><h1>bnlearn.structure_learning<a class="headerlink" href="#module-bnlearn.structure_learning" title="Link to this heading"></a></h1>
 <p>Structure learning. Given a set of data samples, estimate a DAG that captures the dependencies between the variables.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.AICGauss">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">AICGauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.AICGauss" title="Link to this definition"></a></dt>
+<dd><p>Gaussian AIC score using the higher-is-better convention.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.AICGauss.local_score">
+<span class="sig-name descname"><span class="pre">local_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.AICGauss.local_score" title="Link to this definition"></a></dt>
+<dd><p>Return the local Gaussian log-likelihood for one node family.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.BICGauss">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">BICGauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.BICGauss" title="Link to this definition"></a></dt>
+<dd><p>Gaussian BIC score using the higher-is-better convention.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.BICGauss.local_score">
+<span class="sig-name descname"><span class="pre">local_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.BICGauss.local_score" title="Link to this definition"></a></dt>
+<dd><p>Return the local Gaussian log-likelihood for one node family.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.LogLikelihoodGauss">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">LogLikelihoodGauss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variance_floor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.LogLikelihoodGauss" title="Link to this definition"></a></dt>
+<dd><p>Multivariate Gaussian log-likelihood score for continuous data.</p>
+<p>Each node is modelled by a linear Gaussian regression on its parents. The
+total DAG score is decomposable into the sum of the local node scores, which
+makes this class compatible with pgmpy’s HillClimbSearch and ExhaustiveSearch.</p>
+<p class="rubric">Notes</p>
+<p>Higher scores are better. Missing and infinite values are not supported.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="bnlearn.structure_learning.LogLikelihoodGauss.local_score">
+<span class="sig-name descname"><span class="pre">local_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parents</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.LogLikelihoodGauss.local_score" title="Link to this definition"></a></dt>
+<dd><p>Return the local Gaussian log-likelihood for one node family.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="bnlearn.structure_learning.fit">
 <span class="sig-prename descclassname"><span class="pre">bnlearn.structure_learning.</span></span><span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methodtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoretype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bic'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">black_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">white_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bw_list_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_indegree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabu_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_dag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_node</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_all_dags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_lingam</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'apply_prior_knowledge_softly':</span> <span class="pre">False,</span> <span class="pre">'measure':</span> <span class="pre">'pwling',</span> <span class="pre">'prior_knowledge':</span> <span class="pre">None,</span> <span class="pre">'random_state':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_pc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'alpha':</span> <span class="pre">0.05,</span> <span class="pre">'ci_test':</span> <span class="pre">'chi_square'}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#bnlearn.structure_learning.fit" title="Link to this definition"></a></dt>
@@ -236,6 +292,9 @@ Or in other words, the lingam-direct method allows you to model continuous and m
 <li><p>‘bdeu’</p></li>
 <li><p>‘bds’</p></li>
 <li><p>‘aic’</p></li>
+<li><p>‘loglik-g’ (continues variables)</p></li>
+<li><p>‘aic-g’    (continues variables)</p></li>
+<li><p>‘bic-g’    (continues variables)</p></li>
 </ul>
 </dd>
 </dl>

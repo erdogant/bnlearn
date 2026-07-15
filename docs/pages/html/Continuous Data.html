@@ -17,6 +17,7 @@
       <script src="_static/documentation_options.js?v=441dd29d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -86,14 +87,18 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Modelling Continuous Datasets</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#toy-example">Toy Example</a></li>
-</ul>
-</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Modelling Continuous Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#lingam-based-methods">LiNGAM-based Methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#toy-example">Toy Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#direct-lingam-method">Direct-LiNGAM Method</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ica-lingam-method">ICA-LiNGAM Method</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#pc-method">PC Method</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#multivariate-gaussian-log-likelihood">Multivariate Gaussian log-likelihood</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#aic-gaussian">AIC-Gaussian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bic-gaussian">BIC-Gaussian</a></li>
 </ul>
 </li>
 </ul>
@@ -182,16 +187,42 @@
              
   <section id="modelling-continuous-datasets">
 <h1>Modelling Continuous Datasets<a class="headerlink" href="#modelling-continuous-datasets" title="Link to this heading"></a></h1>
-<p>Learning Bayesian Networks from continuous data is a challenging task. There are different approaches to working with continuous and/or hybrid datasets, each with its own advantages and disadvantages.</p>
+<p>Learning Bayesian Networks from continuous data is more challenging than learning from purely discrete variables because most Bayesian network algorithms were originally developed for categorical probability distributions. In practice, there are several approaches to model continuous and hybrid datasets, each making different assumptions about the underlying data.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">bnlearn</span></code>, the following options are available to work with continuous datasets:</p>
-<ol class="arabic simple">
-<li><p>Discretize continuous datasets manually using domain knowledge</p></li>
-<li><p>Discretize continuous datasets using probability density fitting</p></li>
-<li><p>Discretize continuous datasets using a principled Bayesian discretization method</p></li>
-<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships</p></li>
+<ol class="arabic">
+<li><dl class="simple">
+<dt>Manual discretization</dt><dd><p>Convert continuous variables into discrete categories using domain knowledge or predefined thresholds. This provides full control over the discretization process and is often preferred when meaningful boundaries are known.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Probability density fitting</dt><dd><p>Fit an appropriate probability distribution to each continuous variable and discretize the data based on the estimated density.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Bayesian discretization</dt><dd><p>Automatically discretize continuous variables using a principled Bayesian discretization algorithm that considers the dependency structure of the network.</p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Linear Gaussian Bayesian Networks</dt><dd><p>Learn the network structure directly from continuous data without discretization by assuming that each variable follows a Gaussian distribution conditioned on its parents. Parent-child relationships are modelled using linear regression, making this approach suitable for continuous datasets with approximately linear dependencies.</p>
+<dl class="simple">
+<dt>The following score-based structure learning methods are supported:</dt><dd><ul class="simple">
+<li><p>loglik-g — Multivariate Gaussian log-likelihood.</p></li>
+<li><p>aic-g — Akaike Information Criterion (AIC) for Gaussian Bayesian Networks.</p></li>
+<li><p>bic-g — Bayesian Information Criterion (BIC) for Gaussian Bayesian Networks.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
 </ol>
+<p>The Gaussian scores are available for score-based structure learning algorithms such as Hill Climbing and Exhaustive Search, and provide an alternative to discretization when the assumptions of a linear Gaussian model are appropriate.</p>
+</section>
 <section id="lingam-based-methods">
-<h2>LiNGAM-based Methods<a class="headerlink" href="#lingam-based-methods" title="Link to this heading"></a></h2>
+<h1>LiNGAM-based Methods<a class="headerlink" href="#lingam-based-methods" title="Link to this heading"></a></h1>
 <p>Bnlearn includes LiNGAM-based methods which estimate Linear, Non-Gaussian Acyclic Models from observed data. These methods assume non-Gaussianity of the noise terms in the causal model. Various methods have been developed and published, of which Bnlearn includes two: ICA-based LiNGAM <a class="footnote-reference brackets" href="#id6" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> and DirectLiNGAM <a class="footnote-reference brackets" href="#id7" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>. The following three methods are not included: VAR-LiNGAM <a class="footnote-reference brackets" href="#id8" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>, RCD <a class="footnote-reference brackets" href="#id9" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a>, and CAM-UV <a class="footnote-reference brackets" href="#id10" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>.</p>
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="id6" role="doc-footnote">
@@ -216,7 +247,7 @@
 </aside>
 </aside>
 <section id="toy-example">
-<h3>Toy Example<a class="headerlink" href="#toy-example" title="Link to this heading"></a></h3>
+<h2>Toy Example<a class="headerlink" href="#toy-example" title="Link to this heading"></a></h2>
 <p>To demonstrate how LiNGAM works, let’s create a small toy example with six variables. The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables. All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution. If the number of samples is much smaller (e.g., in the tens), the method becomes less reliable due to insufficient information to determine causality.</p>
 <p>We will establish dependencies between variables and then allow the model to infer the original values:</p>
 <ol class="arabic simple">
@@ -315,7 +346,6 @@
 </table>
 <p>This example nicely demonstrates that we can accurately capture the dependencies with the causal factors.</p>
 </section>
-</section>
 <section id="direct-lingam-method">
 <h2>Direct-LiNGAM Method<a class="headerlink" href="#direct-lingam-method" title="Link to this heading"></a></h2>
 <p>The Direct-LiNGAM method ‘direct-lingam’ is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable. When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables. Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.</p>
@@ -346,9 +376,7 @@
 <p>Using the LINGAM method, the values on the edges describe the dependency using a multiplication factor of one variable to another. For example, Origin -&gt; -10 -&gt; Displacement tells us that Displacement has values that are a factor of -10 lower than origin.</p>
 <table class="docutils align-center">
 <tbody>
-<tr class="row-odd"><td><p><img alt="fig4a" src="_images/fig_auto_mpg_lingam_a.png" /></p></td>
-</tr>
-<tr class="row-even"><td><p><img alt="fig4b" src="_images/fig_auto_mpg_lingam_b.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="fig4b" src="_images/fig_auto_mpg_lingam_b.png" /></p></td>
 </tr>
 </tbody>
 </table>
@@ -378,15 +406,14 @@
 </div>
 <table class="docutils align-center">
 <tbody>
-<tr class="row-odd"><td><p><img alt="fig6a" src="_images/fig_auto_mpg_lingam_ica_a.png" /></p></td>
-</tr>
-<tr class="row-even"><td><p><img alt="fig6b" src="_images/fig_auto_mpg_lingam_ica_b.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="fig6b" src="_images/fig_auto_mpg_lingam_ica_b.png" /></p></td>
 </tr>
 </tbody>
 </table>
 </section>
+</section>
 <section id="pc-method">
-<h2>PC Method<a class="headerlink" href="#pc-method" title="Link to this heading"></a></h2>
+<h1>PC Method<a class="headerlink" href="#pc-method" title="Link to this heading"></a></h1>
 <p>A different, but quite straightforward approach to building a DAG from data is identifying independencies in the dataset using hypothesis tests and then constructing a DAG (pattern) according to the identified independencies (Conditional Independence Tests). Independencies in the data can be identified using chi2 conditional independence tests.</p>
 <p>The Constraint-Based PC Algorithm (named after Peter and Clark, its inventors) is a popular method in causal inference and Bayesian network learning. It is a type of constraint-based algorithm that uses conditional independence tests to build a causal graph from data. This algorithm is widely used to learn the structure of Bayesian networks and causal graphs by identifying relationships between variables.</p>
 <p>DAG (pattern) construction involves three steps:
@@ -415,9 +442,63 @@
 <p>PC PDAG construction is only guaranteed to work under the assumption that the identified set of independencies is <em>faithful</em>, i.e. there exists a DAG that exactly corresponds to it. Spurious dependencies in the data set can cause the reported independencies to violate faithfulness. It can happen that the estimated PDAG does not have any faithful completions (i.e. edge orientations that do not introduce new v-structures). In that case a warning is issued.</p>
 <table class="docutils align-center">
 <tbody>
-<tr class="row-odd"><td><p><img alt="fig5a" src="_images/fig_auto_mpg_PC_a.png" /></p></td>
+<tr class="row-odd"><td><p><img alt="fig5b" src="_images/fig_auto_mpg_PC_b.png" /></p></td>
 </tr>
-<tr class="row-even"><td><p><img alt="fig5b" src="_images/fig_auto_mpg_PC_b.png" /></p></td>
+</tbody>
+</table>
+</section>
+<section id="linear-gaussian-bayesian-networks">
+<h1>Linear Gaussian Bayesian Networks<a class="headerlink" href="#linear-gaussian-bayesian-networks" title="Link to this heading"></a></h1>
+<p>An alternative to discretizing continuous variables is to model them directly using a <strong>Linear Gaussian Bayesian Network (LGBN)</strong>.
+In this approach, every variable is assumed to follow a Gaussian distribution conditioned on its parent variables, where the conditional mean is modelled as a linear combination of the parents.</p>
+<p>More formally, for a variable <span class="math notranslate nohighlight">\(X_i\)</span> with parents <span class="math notranslate nohighlight">\(Pa(X_i)\)</span>, the model assumes</p>
+<div class="math notranslate nohighlight">
+\[X_i = \beta_0 + \sum_{j \in Pa(X_i)} \beta_j X_j + \epsilon,\]</div>
+<p>where <span class="math notranslate nohighlight">\(\epsilon \sim \mathcal{N}(0,\sigma^2)\)</span> is Gaussian noise.
+The structure learning algorithm searches for the directed acyclic graph (DAG) that maximizes a decomposable scoring function computed from these local linear regressions.</p>
+<section id="multivariate-gaussian-log-likelihood">
+<h2>Multivariate Gaussian log-likelihood<a class="headerlink" href="#multivariate-gaussian-log-likelihood" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>loglik-g</cite> — <strong>Multivariate Gaussian log-likelihood</strong>. Maximizes the likelihood of the observed data under the assumed linear Gaussian model. Since model complexity is not penalized, this score generally prefers denser networks and is therefore primarily useful for evaluating or comparing fixed network structures.</p></li>
+</ul>
+</section>
+<section id="aic-gaussian">
+<h2>AIC-Gaussian<a class="headerlink" href="#aic-gaussian" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>aic-g</cite> — <strong>Akaike Information Criterion (AIC)</strong>. Extends the Gaussian log-likelihood with a complexity penalty based on the number of estimated parameters. Compared to BIC, AIC typically favours slightly larger and more complex networks.</p></li>
+</ul>
+</section>
+<section id="bic-gaussian">
+<h2>BIC-Gaussian<a class="headerlink" href="#bic-gaussian" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><cite>bic-g</cite> — <strong>Bayesian Information Criterion (BIC)</strong>. Applies a stronger complexity penalty that increases with the sample size, often resulting in sparser network structures. BIC is generally the preferred default score for continuous Bayesian network structure learning.</p></li>
+</ul>
+<p>These Gaussian score functions can be used with score-based structure learning algorithms such as <strong>Hill Climbing</strong> and <strong>Exhaustive Search</strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import libraries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+
+<span class="c1"># Load dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_example</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="s1">&#39;auto_mpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Perform structure learning</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-g&#39;</span><span class="p">)</span>
+<span class="c1"># model = bn.structure_learning.fit(df, methodtype=&#39;hc&#39;, scoretype=&#39;aic-g&#39;)</span>
+<span class="c1"># model = bn.structure_learning.fit(df, methodtype=&#39;hc&#39;, scoretype=&#39;loglik-g&#39;)</span>
+
+<span class="c1"># Compute edge strength</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Create visualizations</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dotgraph</span>
+<span class="n">dotgraph</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;dotgraph_auto_mpg_bic_g&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Linear Gaussian Bayesian Networks provide an attractive alternative to discretization when the relationships between variables are approximately linear and the Gaussian assumption is reasonable. When these assumptions are violated, discretization or more advanced hybrid Bayesian network models may provide better results.</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_images/dotgraph_auto_mpg_bic_g.png"><img alt="fig6a" height="516" src="_images/dotgraph_auto_mpg_bic_g.png" width="360" /></a></p></td>
 </tr>
 </tbody>
 </table>

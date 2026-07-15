@@ -1,17 +1,29 @@
 Modelling Continuous Datasets
 =========================================
 
-Learning Bayesian Networks from continuous data is a challenging task. There are different approaches to working with continuous and/or hybrid datasets, each with its own advantages and disadvantages.
+Learning Bayesian Networks from continuous data is more challenging than learning from purely discrete variables because most Bayesian network algorithms were originally developed for categorical probability distributions. In practice, there are several approaches to model continuous and hybrid datasets, each making different assumptions about the underlying data.
 
 In ``bnlearn``, the following options are available to work with continuous datasets:
 
-1. Discretize continuous datasets manually using domain knowledge
-2. Discretize continuous datasets using probability density fitting
-3. Discretize continuous datasets using a principled Bayesian discretization method
-4. Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships
+1. Manual discretization
+    Convert continuous variables into discrete categories using domain knowledge or predefined thresholds. This provides full control over the discretization process and is often preferred when meaningful boundaries are known.
+2. Probability density fitting
+    Fit an appropriate probability distribution to each continuous variable and discretize the data based on the estimated density.
+3. Bayesian discretization
+    Automatically discretize continuous variables using a principled Bayesian discretization algorithm that considers the dependency structure of the network.
+4. Linear Gaussian Bayesian Networks
+    Learn the network structure directly from continuous data without discretization by assuming that each variable follows a Gaussian distribution conditioned on its parents. Parent-child relationships are modelled using linear regression, making this approach suitable for continuous datasets with approximately linear dependencies.
+
+    The following score-based structure learning methods are supported:
+        * loglik-g — Multivariate Gaussian log-likelihood.
+        * aic-g — Akaike Information Criterion (AIC) for Gaussian Bayesian Networks.
+        * bic-g — Bayesian Information Criterion (BIC) for Gaussian Bayesian Networks.
+
+The Gaussian scores are available for score-based structure learning algorithms such as Hill Climbing and Exhaustive Search, and provide an alternative to discretization when the assumptions of a linear Gaussian model are appropriate.
+
 
 LiNGAM-based Methods
-----------------------------------------
+=========================================
 
 Bnlearn includes LiNGAM-based methods which estimate Linear, Non-Gaussian Acyclic Models from observed data. These methods assume non-Gaussianity of the noise terms in the causal model. Various methods have been developed and published, of which Bnlearn includes two: ICA-based LiNGAM [1]_ and DirectLiNGAM [2]_. The following three methods are not included: VAR-LiNGAM [3]_, RCD [4]_, and CAM-UV [5]_.
 
@@ -22,7 +34,7 @@ Bnlearn includes LiNGAM-based methods which estimate Linear, Non-Gaussian Acycli
 .. [5] Maeda, T. N., & Shimizu, S. (2021). Causal Additive Models with Unobserved Variables. UAI.
 
 Toy Example
-^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To demonstrate how LiNGAM works, let's create a small toy example with six variables. The goal of this dataset is to demonstrate the contribution of different variables and their causal impact on other variables. All variables must be consistent, as in any other dataset. The sample size is set to n=1000 with a uniform distribution. If the number of samples is much smaller (e.g., in the tens), the method becomes less reliable due to insufficient information to determine causality.
 
@@ -133,7 +145,7 @@ Structure learning can be applied with the direct-lingam method for fitting:
 This example nicely demonstrates that we can accurately capture the dependencies with the causal factors.
 
 Direct-LiNGAM Method
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Direct-LiNGAM method 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable. When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables. Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.
 
@@ -166,20 +178,17 @@ In other words, the lingam-direct method allows you to model continuous and mixe
 
 Using the LINGAM method, the values on the edges describe the dependency using a multiplication factor of one variable to another. For example, Origin -> -10 -> Displacement tells us that Displacement has values that are a factor of -10 lower than origin.
 
-.. |fig4a| image:: ../figs/fig_auto_mpg_lingam_a.png
 .. |fig4b| image:: ../figs/fig_auto_mpg_lingam_b.png
 
 .. table::
    :align: center
 
    +----------+
-   | |fig4a|  |
-   +----------+
    | |fig4b|  |
    +----------+
 
 ICA-LiNGAM Method
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The ICA-LiNGAM method ('ica-lingam') is also from lingam and follows the same procedure.
 
@@ -204,20 +213,17 @@ The ICA-LiNGAM method ('ica-lingam') is also from lingam and follows the same pr
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_ica')
 
-.. |fig6a| image:: ../figs/fig_auto_mpg_lingam_ica_a.png
 .. |fig6b| image:: ../figs/fig_auto_mpg_lingam_ica_b.png
 
 .. table::
    :align: center
 
    +----------+
-   | |fig6a|  |
-   +----------+
    | |fig6b|  |
    +----------+
 
 PC Method
-----------------------------------------
+=========================================
 
 A different, but quite straightforward approach to building a DAG from data is identifying independencies in the dataset using hypothesis tests and then constructing a DAG (pattern) according to the identified independencies (Conditional Independence Tests). Independencies in the data can be identified using chi2 conditional independence tests.
 
@@ -250,19 +256,85 @@ DAG (pattern) construction involves three steps:
 
 PC PDAG construction is only guaranteed to work under the assumption that the identified set of independencies is *faithful*, i.e. there exists a DAG that exactly corresponds to it. Spurious dependencies in the data set can cause the reported independencies to violate faithfulness. It can happen that the estimated PDAG does not have any faithful completions (i.e. edge orientations that do not introduce new v-structures). In that case a warning is issued.
 
-.. |fig5a| image:: ../figs/fig_auto_mpg_PC_a.png
 .. |fig5b| image:: ../figs/fig_auto_mpg_PC_b.png
 
 .. table::
    :align: center
 
    +----------+
-   | |fig5a|  |
-   +----------+
    | |fig5b|  |
    +----------+
 
 
-       
+Linear Gaussian Bayesian Networks
+=========================================
+
+An alternative to discretizing continuous variables is to model them directly using a **Linear Gaussian Bayesian Network (LGBN)**.
+In this approach, every variable is assumed to follow a Gaussian distribution conditioned on its parent variables, where the conditional mean is modelled as a linear combination of the parents.
+
+More formally, for a variable :math:`X_i` with parents :math:`Pa(X_i)`, the model assumes
+
+.. math::
+
+    X_i = \beta_0 + \sum_{j \in Pa(X_i)} \beta_j X_j + \epsilon,
+
+where :math:`\epsilon \sim \mathcal{N}(0,\sigma^2)` is Gaussian noise. 
+The structure learning algorithm searches for the directed acyclic graph (DAG) that maximizes a decomposable scoring function computed from these local linear regressions.
+
+
+Multivariate Gaussian log-likelihood
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* `loglik-g` — **Multivariate Gaussian log-likelihood**. Maximizes the likelihood of the observed data under the assumed linear Gaussian model. Since model complexity is not penalized, this score generally prefers denser networks and is therefore primarily useful for evaluating or comparing fixed network structures.
+
+AIC-Gaussian
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* `aic-g` — **Akaike Information Criterion (AIC)**. Extends the Gaussian log-likelihood with a complexity penalty based on the number of estimated parameters. Compared to BIC, AIC typically favours slightly larger and more complex networks.
+
+BIC-Gaussian
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+* `bic-g` — **Bayesian Information Criterion (BIC)**. Applies a stronger complexity penalty that increases with the sample size, often resulting in sparser network structures. BIC is generally the preferred default score for continuous Bayesian network structure learning.
+
+These Gaussian score functions can be used with score-based structure learning algorithms such as **Hill Climbing** and **Exhaustive Search**:
+
+
+.. code-block:: python
+
+    # Import libraries
+    import bnlearn as bn
+    
+    # Load dataset
+    df = bn.import_example(data='auto_mpg')
+
+    # Perform structure learning
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+    # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
+    # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
+    
+    # Compute edge strength
+    model = bn.independence_test(model, df, prune=True)
+
+    # Create visualizations
+    bn.plot(model)
+    dotgraph = bn.plot_graphviz(model)
+    dotgraph
+    dotgraph.view(filename=r'dotgraph_auto_mpg_bic_g')
+
+Linear Gaussian Bayesian Networks provide an attractive alternative to discretization when the relationships between variables are approximately linear and the Gaussian assumption is reasonable. When these assumptions are violated, discretization or more advanced hybrid Bayesian network models may provide better results.
+
+
+.. |fig6a| image:: ../figs/dotgraph_auto_mpg_bic_g.png
+   :scale: 50%
+
+.. table::
+   :align: center
+
+   +----------+
+   | |fig6a|  |
+   +----------+
+
+
 
 .. include:: add_bottom.add
