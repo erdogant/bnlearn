@@ -205,6 +205,33 @@ def test_sampling_rejects_jointly_impossible_evidence(monkeypatch):
         bn.sampling(model, n=1, evidence={'A': 0, 'B': 1})
 
 
+def test_sampling_evidence_possibility_check_does_not_underflow(monkeypatch):
+    import importlib
+
+    sampling_module = importlib.import_module('bnlearn.sampling')
+
+    class TinyConditionalDistribution:
+        values = np.array([1e-100])
+
+        @staticmethod
+        def get_state_no(var, state):
+            return 0
+
+    class TinyConditionalInference:
+        def __init__(self, model):
+            pass
+
+        def query(self, variables, evidence, show_progress):
+            return TinyConditionalDistribution()
+
+    monkeypatch.setattr(sampling_module, 'VariableElimination', TinyConditionalInference)
+
+    # The product of four non-zero 1e-100 factors underflows to zero, but the
+    # evidence is still possible and must not be rejected as impossible.
+    evidence = {'A': 1, 'B': 1, 'C': 1, 'D': 1}
+    assert sampling_module._evidence_is_possible(evidence, model=None)
+
+
 # def test_to_undirected():
 #     # TEST 1:
 #     randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
