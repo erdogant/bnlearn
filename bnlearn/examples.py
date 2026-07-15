@@ -2187,6 +2187,9 @@ model = bn.load(filepath='bnlearn_model')
 
 # %% CHECK DIFFERENCES PGMPY vs. BNLEARN
 
+from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
+from pgmpy.models import BayesianNetwork, NaiveBayes
+from pgmpy.inference import VariableElimination
 
 df=bn.import_example(data='andes')
 
