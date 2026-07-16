@@ -72,12 +72,16 @@ def to_bayesiannetwork(model, verbose=3):
     vec = adjmat2vec(adjmat)[['source', 'target']].values.tolist()
     # Make BayesianNetwork
     bayesianmodel = BayesianNetwork(vec)
+    # Add any nodes from the adjmat that have no incoming or outgoing edges
+    # (isolated nodes); otherwise they would silently disappear since
+    # adjmat2vec() only returns edges.
+    bayesianmodel.add_nodes_from(adjmat.columns.values)
     # Return
     return bayesianmodel
 
 
 # %% Make DAG
-def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
+def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=True, verbose=3):
     """Create Directed Acyclic Graph based on list.
 
     Parameters
@@ -91,6 +95,12 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         * 'nb' or 'naivebayes': Special case of Bayesian Model where the only edges in the model are from the feature variables to the dependent variable. Or in other words, each tuple should start with the same variable name such as: edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
         * 'markov': Markov model
         * 'DBN': DynamicBayesianNetwork
+    isolated_nodes : list, optional
+        Nodes that should be added to the DAG even though they have no
+        incoming or outgoing edges. This is useful, for example, when
+        building a ground-truth graph to evaluate causal discovery methods
+        (accuracy/precision/recall), where some variables may not be
+        connected to anything. The default is None.
     checkmodel : bool
         Check the validity of the model. The default is True
     verbose : int, optional
@@ -139,6 +149,16 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     >>> DAG = bn.make_DAG(edges, methodtype='DBN')
     >>> fig = bn.plot(DAG)
 
+    Examples
+    --------
+    >>> # Add nodes that are not connected to anything (e.g. a ground-truth
+    >>> # graph for scoring a causal discovery method)
+    >>> import bnlearn as bn
+    >>> edges = [('A', 'B'), ('A', 'C')]
+    >>> DAG = bn.make_DAG(edges, isolated_nodes=['D', 'E'])
+    >>> DAG['adjmat'].columns.tolist()
+    >>> # ['A', 'B', 'C', 'D', 'E']
+
     """
     if methodtype is None:
         if verbose>=2: print('[bnlearn] >Warning: methodtype can not be empty.')
@@ -148,9 +168,20 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
     if methodtype == 'nb': methodtype = 'naivebayes'
     if methodtype == 'dbn': methodtype = 'DBN'
 
+    if isolated_nodes is not None and not isinstance(isolated_nodes, list):
+        isolated_nodes = [isolated_nodes]
+
+    if isinstance(DAG, list):
+        # Allow bare node names (not part of a tuple) to be mixed into the edge
+        # list; these represent nodes without any incoming or outgoing edges.
+        bare_nodes = [node for node in DAG if not isinstance(node, tuple)]
+        if len(bare_nodes) > 0:
+            DAG = [edge for edge in DAG if isinstance(edge, tuple)]
+            isolated_nodes = list(bare_nodes) if isolated_nodes is None else list(isolated_nodes) + list(bare_nodes)
+
     if isinstance(DAG, list) and CPD is None:
         # Automatically generate placeholder values for the CPTs
-        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, verbose=verbose)
+        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, isolated_nodes=isolated_nodes, verbose=verbose)
     elif isinstance(DAG, dict) and CPD is not None:
         # Extract the DAG from the model
         if verbose>=3: print('[bnlearn] >Update current DAG with custom CPD.')
@@ -178,6 +209,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
             edges = DAG
             DAG = NaiveBayes()
             DAG.add_edges_from(edges)
+            if isolated_nodes is not None: DAG.add_nodes_from(isolated_nodes)
             # DAG.add_nodes_from(CPD)
             for cpd in CPD: DAG.add_cpds(cpd)
         except ValueError as e:
@@ -192,6 +224,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         edges = DAG
         DAG = BayesianNetwork()
         DAG.add_edges_from(edges)
+        if isolated_nodes is not None: DAG.add_nodes_from(isolated_nodes)
         # DAG.add_nodes_from(CPD)
         for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'markov':
@@ -201,6 +234,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
         # DAG = MarkovNetwork(DAG)
         DAG = MarkovNetwork()
         DAG.add_edges_from(edges)
+        if isolated_nodes is not None: DAG.add_nodes_from(isolated_nodes)
         # DAG.add_nodes_from(CPD)
         # for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'DBN':
@@ -213,6 +247,8 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', checkmodel=True, verbose=3):
 
         DAG = DBN()
         DAG.add_edges_from(edges)
+        if isolated_nodes is not None:
+            raise ValueError('[bnlearn] >isolated_nodes is not yet supported for methodtype="DBN" (a DBN implicitly instantiates every node across both time slices, which requires additional structural changes). Use methodtype="bayes" or add the node(s) directly as self-loops for now.')
         for cpd in CPD: DAG.add_cpds(cpd)
 
     if CPD is not None:
@@ -1274,6 +1310,10 @@ def plot(model,
 
     out = {}
     G = nx.DiGraph()  # Directed graph
+    # Add all nodes from the adjacency matrix first so that nodes without any
+    # incoming or outgoing edges (isolated nodes) still show up in the plot.
+    if model.get('adjmat', None) is not None:
+        G.add_nodes_from(model['adjmat'].columns.values)
     node_size_default = 10 if interactive else 800
     if (node_properties is not None) and (node_size is not None):
         if verbose>=2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will be used.')
@@ -2166,7 +2206,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
 
 
 #%%
-def get_parents(edges):
+def get_parents(edges, isolated_nodes=None):
     """
     Build a dictionary mapping each node to its list of parents based on edges.
 
@@ -2174,6 +2214,10 @@ def get_parents(edges):
     ----------
     edges : list of tuple
         A list of (parent, child) tuples defining the DAG structure.
+    isolated_nodes : list, optional
+        Nodes that should be part of the DAG but that have no incoming or
+        outgoing edges (i.e., they do not appear in ``edges``). These are
+        added to the returned dictionary with an empty parent list.
 
     Returns
     -------
@@ -2188,6 +2232,10 @@ def get_parents(edges):
     >>> edges = [('Cloudy', 'Rain'), ('Cloudy', 'Sprinkler')]
     >>> bn.get_parents(edges)
     >>> # {'Rain': ['Cloudy'], 'Sprinkler': ['Cloudy'], 'Cloudy': []}
+    >>> #
+    >>> # Also register a node that has no edges at all
+    >>> bn.get_parents(edges, isolated_nodes=['Windy'])
+    >>> # {'Rain': ['Cloudy'], 'Sprinkler': ['Cloudy'], 'Cloudy': [], 'Windy': []}
 
     """
     parent_dict = defaultdict(list)
@@ -2195,6 +2243,8 @@ def get_parents(edges):
     for parent, child in edges:
         parent_dict[child].append(parent)
         all_nodes.update([parent, child])
+    if isolated_nodes is not None:
+        all_nodes.update(isolated_nodes)
     for node in all_nodes:
         parent_dict.setdefault(node, [])
     return dict(parent_dict)
@@ -2338,7 +2388,7 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
     return cpt
 
 
-def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, verbose=3):
+def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, isolated_nodes=None, verbose=3):
     """
     Automatically generates placeholder CPTs for all nodes in a network structure.
 
@@ -2351,6 +2401,9 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
     rulebook : dict, optional
         A dictionary of {node: callable} functions returning probabilities.
         Each function must return either a float (binary) or a list of probabilities summing to 1.
+    isolated_nodes : list, optional
+        Nodes that have no incoming or outgoing edges but that should still be
+        part of the model (and therefore need a placeholder marginal CPT).
     verbose : int, optional
         Verbosity level (default is 3).
 
@@ -2370,15 +2423,20 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
     >>> # Create DAG with default CPD values
     >>> DAG = bn.make_DAG(edges, CPD=CPD)
     >>> bn.plot(DAG)
+    >>> #
+    >>> # Include a node that has no edges at all
+    >>> CPD = bn.build_cpts_from_structure(edges, isolated_nodes=['Windy'])
 
     """
     if verbose>=3: print('[bnlearn]> Auto generate placeholders for the CPTs.')
     # Convert edges with time for DBN
     if methodtype=='DBN' and not has_valid_time_slice(edges):
         edges = convert_edges_with_time_slice(edges, verbose=verbose)
+        if isolated_nodes is not None:
+            raise ValueError('[bnlearn] >isolated_nodes is not yet supported for methodtype="DBN".')
 
     cpts = []
-    parents_map = get_parents(edges)
+    parents_map = get_parents(edges, isolated_nodes=isolated_nodes)
 
     for node, parents in parents_map.items():
         cpt = generate_cpt(node, parents, variable_card=variable_card, rulebook=rulebook, verbose=verbose)

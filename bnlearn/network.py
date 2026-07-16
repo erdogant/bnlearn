@@ -34,6 +34,9 @@ def to_graph(adjmat, verbose=3):
 # %% Convert Adjmat to graph (G) (also works with lower versions of networkx)
 def adjmat2graph(adjmat):
     G = nx.DiGraph()  # Directed graph
+    # Add all nodes first, so that nodes without any incoming or outgoing
+    # edges (isolated nodes) are still part of the graph.
+    G.add_nodes_from(adjmat.columns.values)
     # Convert adjmat to source target
     df_edges=adjmat.stack().reset_index()
     df_edges.columns=['source', 'target', 'weight']
