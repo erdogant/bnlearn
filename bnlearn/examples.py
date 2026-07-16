@@ -1,3 +1,18 @@
+# Add nodes that are not connected to anything (e.g. a ground-truth
+# graph for scoring a causal discovery method)
+import bnlearn as bn
+edges = [('A', 'B'), ('A', 'C')]
+DAG = bn.make_DAG(edges, isolated_nodes=['D', 'E'])
+DAG['adjmat'].columns.tolist()
+# ['A', 'B', 'C', 'D', 'E']
+bn.plot(DAG)
+
+dotgraph = bn.plot_graphviz(DAG)
+dotgraph
+
+# %%
+
+
 import numpy as np
 import pandas as pd
 from lingam.utils import make_dot
@@ -18,10 +33,10 @@ x5 = 4.0 * x0 + np.random.uniform(size=n)
 # Step 4: Create final dependencies
 x1 = 3.0 * x0 + 2.0 * x2 + np.random.uniform(size=n)
 x4 = 8.0 * x0 - 1.0 * x2 + np.random.uniform(size=n)
+x6 = x1 + x2 + x3 + np.random.uniform(size=n)
 
 # Create DataFrame
-df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T,
-                 columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
+df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5, x6]).T, columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5', 'x6'])
 df.head()
 
 # Define adjacency matrix
@@ -36,8 +51,8 @@ m = np.array([[0.0, 0.0, 0.0, 3.0, 0.0, 0.0],
 
 import bnlearn as bn
 
-# model = bn.structure_learning.fit(df, methodtype='direct-lingam')
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+model = bn.structure_learning.fit(df, methodtype='direct-lingam')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
 # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
 # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
 
@@ -51,8 +66,6 @@ dotgraph
 
 
 # %%
-
-
 # Import libraries
 import bnlearn as bn
 
@@ -147,8 +160,6 @@ q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year':
 
 
 # %%
-
-
 # import bnlearn as bn
 # bn.system_info()
 
