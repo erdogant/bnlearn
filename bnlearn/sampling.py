@@ -8,6 +8,7 @@
 
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.factors.discrete import State
+from pgmpy.inference import VariableElimination
 import pandas as pd
 # import logging
 # logging.getLogger("pgmpy").setLevel(logging.ERROR)
@@ -107,6 +108,8 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
             df = infer_model.forward_sample(size=n, seed=None, show_progress=(verbose>=3))
         else:
             states = _evidence_as_states(evidence, DAG['model'])
+            if not _evidence_is_possible(evidence, DAG['model']):
+                raise ValueError('[bnlearn] >evidence %s has zero probability under the model. Rejection sampling cannot produce matching samples.' %(evidence))
             if verbose>=3: print('[bnlearn] >Bayesian rejection sampling for %.0d samples conditioned on %.0d evidence variable(s)..' %(n, len(states)))
             df = infer_model.rejection_sample(evidence=states, size=n, seed=None, show_progress=(verbose>=3))
     elif methodtype=='gibbs':
@@ -145,3 +148,21 @@ def _evidence_as_states(evidence, model):
             raise ValueError('[bnlearn] >evidence state [%s=%s] is not a valid state for variable [%s]. Valid states: %s' %(var, state, var, valid_states))
         states.append(State(var, state))
     return states
+
+
+def _evidence_is_possible(evidence, model):
+    """Return whether the joint evidence has non-zero probability."""
+    if len(evidence) == 0:
+        return True
+
+    infer_model = VariableElimination(model)
+    observed = {}
+    for var, state in evidence.items():
+        distribution = infer_model.query(variables=[var], evidence=observed, show_progress=False)
+        state_number = distribution.get_state_no(var, state)
+        # Check each conditional factor directly. Multiplying the factors can
+        # underflow and incorrectly classify very unlikely evidence as impossible.
+        if distribution.values[state_number] == 0:
+            return False
+        observed[var] = state
+    return True
