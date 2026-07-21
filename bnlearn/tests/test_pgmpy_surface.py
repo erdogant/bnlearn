@@ -7,7 +7,6 @@ is the safety net for migrating off pgmpy==0.1.25: it must pass unchanged
 before and after the migration.
 """
 import numpy as np
-import pandas as pd
 import pytest
 
 import bnlearn as bn
@@ -25,6 +24,9 @@ def sprinkler_model():
 
 @pytest.fixture(scope="module")
 def sprinkler_df(sprinkler_model):
+    # bn.sampling has no seed parameter; pgmpy 0.1.25 draws from numpy's
+    # global RNG, so seed it here to keep the sampled frame deterministic
+    np.random.seed(42)
     return bn.sampling(sprinkler_model, n=1000, verbose=0)
 
 
@@ -138,7 +140,7 @@ def test_inference_locked_value(sprinkler_model):
     assert p1 == pytest.approx(WETGRASS_GIVEN_RAIN, abs=1e-4)
 
 
-def test_print_cpd_returns_all_nodes(sprinkler_model, capsys):
+def test_print_cpd_returns_all_nodes(sprinkler_model):
     CPDs = bn.print_CPD(sprinkler_model, verbose=0)
     assert set(CPDs) == {'Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass'}
     for df in CPDs.values():
