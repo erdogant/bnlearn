@@ -684,7 +684,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
 
     """
     if df.shape[1] > 15 and verbose >= 3:
-        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasable with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
+        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasible with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
     if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [exhaustivesearch]')
 
     out = {}
