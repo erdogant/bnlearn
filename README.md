@@ -97,6 +97,8 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 ---
 ### Installation
 
+Python 3.10 or newer is required.
+
 ##### Install bnlearn from PyPI
 ```bash
 pip install bnlearn
@@ -105,6 +107,13 @@ pip install bnlearn
 ```bash
 pip install git+https://github.com/erdogant/bnlearn
 ```
+##### Run the tests from a source checkout
+```bash
+pip install -e ".[dev]"
+pytest
+```
+With uv, use `uv sync --extra dev` followed by `uv run pytest`.
+
 ##### Load library
 ```python
 # Import library
