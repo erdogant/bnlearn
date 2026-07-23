@@ -345,36 +345,33 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
     if isinstance(DAG, dict):
         DAG = DAG.get('model', None)
 
-    try:
-        if ('markovnetwork' in str(type(DAG)).lower()):
-            if verbose>=3: print('[bnlearn] >Converting markovnetwork to Bayesian model')
-            DAG = DAG.to_bayesian_model()
+    if ('markovnetwork' in str(type(DAG)).lower()):
+        if verbose>=3: print('[bnlearn] >Converting markovnetwork to Bayesian model')
+        DAG = DAG.to_bayesian_model()
 
-        if 'maximumlikelihood' in str(type(DAG)).lower():
-            # print CPDs using Maximum Likelihood Estimators
-            for node in DAG.state_names:
-                if verbose>=3: print(DAG.estimate_cpd(node))
-        elif ('bayesiannetwork' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
-            # print CPDs using Bayesian Parameter Estimation
-            if len(DAG.get_cpds())==0:
-                raise Exception('[bnlearn] >Error! This is a Bayesian DAG containing only edges, and no CPDs. Tip: you need to specify or learn the CPDs. Try: DAG=bn.parameter_learning.fit(DAG, df). At this point you can make a plot with: bn.plot(DAG).')
-                return
-            for cpd in DAG.get_cpds():
-                CPDs[cpd.variable] = query2df(cpd, verbose=0)
-                if verbose>=3:
-                    print("[bnlearn] >[CPD] >[Node {variable}]:".format(variable=cpd.variable))
-                    print(cpd)
-            if ('bayesiannetwork' in str(type(DAG)).lower()):
-                if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
-
+    if 'maximumlikelihood' in str(type(DAG)).lower():
+        # print CPDs using Maximum Likelihood Estimators
+        for node in DAG.state_names:
+            if verbose>=3: print(DAG.estimate_cpd(node))
+    elif ('bayesiannetwork' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
+        # print CPDs using Bayesian Parameter Estimation
+        if len(DAG.get_cpds())==0:
+            if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
+            return CPDs
+        for cpd in DAG.get_cpds():
+            CPDs[cpd.variable] = query2df(cpd, verbose=0)
             if verbose>=3:
-                print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
-                print('[bnlearn] >Edges: %s' %(DAG.edges()))
+                print("[bnlearn] >[CPD] >[Node {variable}]:".format(variable=cpd.variable))
+                print(cpd)
+        if ('bayesiannetwork' in str(type(DAG)).lower()):
+            if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
 
-        if checkmodel:
-            check_model(DAG, verbose=3)
-    except:
-        if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bnlearn.plot(DAG) to make a plot.')
+        if verbose>=3:
+            print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
+            print('[bnlearn] >Edges: %s' %(DAG.edges()))
+
+    if checkmodel:
+        check_model(DAG, verbose=3)
 
     # Returning dict with CPDs
     return CPDs
