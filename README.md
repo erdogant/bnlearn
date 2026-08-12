@@ -200,7 +200,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 
 ### Star history
 
-[![Star History Chart](https://api.star-history.com/svg?repos=erdogant/bnlearn&type=Date)](https://www.star-history.com/#erdogant/bnlearn&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=erdogant/bnlearn&type=Date)](https://star-history.dera.page/#erdogant/bnlearn&Date)
 
 ### Contributors
 Thank the contributors!
