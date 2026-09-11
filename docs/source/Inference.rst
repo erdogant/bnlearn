@@ -108,4 +108,83 @@ Lets make the inference:
 
 
 
+
+Do-calculus (Intervention)
+======================================
+
+Observational inference answers ``P(Y | X=x)`` (conditioning on evidence).
+Intervention answers a different question: ``P(Y | do(X=x))`` — what happens
+to **Y** if we *actively set* **X** to **x**.
+
+In ``bnlearn``, Pearl's do-operator is available via the ``do`` argument of
+``bn.inference.fit``. Internally the query runs Variable Elimination on the
+**mutilated** network (incoming edges of the intervened nodes are cut), with
+the intervened values fixed as evidence. That is exact and combines freely
+with ordinary ``evidence``.
+
+A variable cannot appear in both ``do`` and ``evidence``.
+
+
+Example (4) — Observational vs interventional
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On the sprinkler network, observing that the sprinkler is on is evidence that
+it is probably not cloudy. Setting the sprinkler on by intervention cuts the
+``Cloudy → Sprinkler`` edge, so the weather is unaffected. The two queries
+therefore differ:
+
+.. code-block:: python
+
+   import bnlearn as bn
+
+   model = bn.import_DAG('sprinkler')
+
+   # Observational: P(Wet_Grass | Sprinkler=1) ≈ 0.927
+   q_obs = bn.inference.fit(
+       model,
+       variables=['Wet_Grass'],
+       evidence={'Sprinkler': 1},
+   )
+
+   # Interventional: P(Wet_Grass | do(Sprinkler=1)) ≈ 0.945
+   q_do = bn.inference.fit(
+       model,
+       variables=['Wet_Grass'],
+       do={'Sprinkler': 1},
+   )
+
+
+Example (5) — Combining do and evidence
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Interventions and ordinary evidence can be used together:
+
+.. code-block:: python
+
+   # P(Wet_Grass | do(Sprinkler=1), Rain=1)
+   q_mix = bn.inference.fit(
+       model,
+       variables=['Wet_Grass'],
+       do={'Sprinkler': 1},
+       evidence={'Rain': 1},
+   )
+
+
+Example (6) — Multiple interventions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+   q_multi = bn.inference.fit(
+       model,
+       variables=['Wet_Grass'],
+       do={'Sprinkler': 1, 'Rain': 0},
+   )
+
+
+When ``to_df=True`` (the default), interventions are labeled ``do(X)=…`` in
+``query.text``. ``do`` is the last parameter of ``fit``, so existing positional
+calls remain compatible.
+
+
 .. include:: add_bottom.add
