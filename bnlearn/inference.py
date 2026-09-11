@@ -27,6 +27,7 @@ def fit(model,
         groupby=None,
         plot=False,
         verbose=3,
+        do=None,
         ):
     """Inference using using Variable Elimination.
 
@@ -47,6 +48,14 @@ def fit(model,
         For exact inference, P(variables | evidence). The default is None.
             * {'Rain':1}
             * {'Rain':1, 'Sprinkler':0, 'Cloudy':1}
+    do : dict, optional
+        Interventions for causal inference, P(variables | do(X=x), evidence).
+        Whereas evidence conditions on passively observed values, do simulates
+        setting the variable by intervention: incoming edges of the intervened
+        variables are cut (Pearl's do-operator, comparable to mutilated() in the
+        R version of bnlearn). The query runs on the mutilated network, so it
+        combines freely with evidence and the other query options. The default is None.
+            * {'Sprinkler':1}
     to_df : Bool, (default is True)
         The output is converted in the dataframe [query.df]. Enabling this function may impact the processing speed.
     elimination_order: str or list (default='greedy')
@@ -87,15 +96,25 @@ def fit(model,
     >>> print(query)
     >>> query.df
     >>>
+    >>> # Causal inference: P(Wet_Grass | do(Sprinkler=1)) differs from the
+    >>> # observational P(Wet_Grass | Sprinkler=1) because the intervention
+    >>> # cuts the Cloudy->Sprinkler edge.
+    >>> query = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler':1})
+    >>> query.df
+    >>>
 
     """
     if not isinstance(model, dict): raise Exception('[bnlearn] >Error: Input requires a object that contains the key: model.')
     adjmat = model['adjmat']
     if not np.all(np.isin(variables, adjmat.columns)):
         raise Exception('[bnlearn] >Error: [variables] should match names in the model (Case sensitive!)')
-    if not np.all(np.isin([*evidence.keys()], adjmat.columns)):
+    if evidence is not None and not np.all(np.isin([*evidence.keys()], adjmat.columns)):
         raise Exception('[bnlearn] >Error: [evidence] should match names in the model (Case sensitive!)')
-    if verbose>=3: print('[bnlearn] >Variable Elimination.')
+    if do is not None and not np.all(np.isin([*do.keys()], adjmat.columns)):
+        raise Exception('[bnlearn] >Error: [do] should match names in the model (Case sensitive!)')
+    if do is not None and evidence is not None and (set(do.keys()) & set(evidence.keys())):
+        raise Exception('[bnlearn] >Error: A variable can not be in both [do] and [evidence]: %s' %(set(do.keys()) & set(evidence.keys())))
+    if verbose>=3: print('[bnlearn] >Causal inference with do-operator.' if do else '[bnlearn] >Variable Elimination.')
 
     # Extract model
     if isinstance(model, dict):
@@ -111,20 +130,35 @@ def fit(model,
         model = bnlearn.to_bayesiannetwork(adjmat, verbose=verbose)
 
     try:
+        if do:
+            # Query the mutilated network (incoming edges of the intervened nodes
+            # are cut) with the interventions fixed as evidence. This is exact for
+            # any mix of do and evidence, including interventions on causally
+            # related nodes, where pgmpy's adjustment-based CausalInference.query
+            # is not, and it keeps elimination_order/joint applicable.
+            model = model.do(list(do.keys()))
         model_infer = VariableElimination(model)
     except ValueError as e:
         raise Exception(f'[bnlearn] >Error: {e}')
         # Input model does not contain learned CPDs. hint: did you run parameter_learning.fit()?
 
-    # Computing the probability P(class | evidence)
-    query = model_infer.query(variables=variables, evidence=evidence, elimination_order=elimination_order, joint=joint, show_progress=(verbose>=3))
+    # Computing the probability P(class | do, evidence): in the mutilated network,
+    # fixing the intervened variables as evidence equals intervening on them.
+    query_evidence = {**do, **(evidence or {})} if do else evidence
+    query = model_infer.query(variables=variables, evidence=query_evidence, elimination_order=elimination_order, joint=joint, show_progress=(verbose>=3))
 
     # Store dataframe in query
+    if isinstance(query, dict):
+        # joint=False returns a dict of per-variable factors; there is no single
+        # joint table to attach a dataframe or summary to. (Attaching attributes
+        # to the dict raised AttributeError before, so this also unbreaks joint=False.)
+        return query
     if to_df or plot:
         # Convert to Dataframe
         query.df = bnlearn.query2df(query, variables=variables, groupby=groupby, verbose=verbose)
-        # Make readable text
-        query.text = summarize_inference(variables, evidence, query, plot=plot, verbose=verbose)
+        # Make readable text; label interventions as do(X) to keep them apart from observations
+        summary_given = {**{f'do({k})': v for k, v in (do or {}).items()}, **(evidence or {})}
+        query.text = summarize_inference(variables, summary_given, query, plot=plot, verbose=verbose)
         if verbose>=3 and query.text is not None: print(query.text)
     else:
         query.df = None
