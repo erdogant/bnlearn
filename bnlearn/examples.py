@@ -1,5 +1,64 @@
 # %%
+# =============================================================================
+# DO CALCULUS
+# =============================================================================
+import bnlearn as bn
 
+# Load the classic sprinkler DAG + CPDs
+model = bn.import_DAG('sprinkler')
+bn.plot(model)   # optional visualization
+
+# -------------------------------------------------
+# 1. Observational query  (conditioning)
+#    P(Wet_Grass | Sprinkler=1)
+# -------------------------------------------------
+query_obs = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    evidence={'Sprinkler': 1}
+)
+print(query_obs)
+# → P(Wet_Grass=1 | Sprinkler=1) ≈ 0.927
+
+# -------------------------------------------------
+# 2. Interventional query  (do-operator)
+#    P(Wet_Grass | do(Sprinkler=1))
+# -------------------------------------------------
+query_do = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1}
+)
+print(query_do)
+# → P(Wet_Grass=1 | do(Sprinkler=1)) ≈ 0.945
+
+
+
+# =============================================================================
+# # P(Wet_Grass | do(Sprinkler=1), Rain=1)
+# =============================================================================
+query_mix = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1},
+    evidence={'Rain': 1}
+)
+print(query_mix)
+# → ≈ 0.99
+
+
+# =============================================================================
+# # Any nodes can be intervened on (they must not also appear in evidence)
+# =============================================================================
+query_multi = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1, 'Rain': 0}
+)
+
+print(query_do.text)
+
+# %%
 
 import numpy as np
 import pandas as pd
