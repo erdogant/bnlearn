@@ -6,28 +6,33 @@
 > query = bn.inference.fit(
 >     model,                       # must already contain CPDs
 >     variables=['Target'],        # list of query variables
->     evidence={'A': 1, 'B': 0},   # dict of observed states
+>     evidence={'A': 1, 'B': 0},   # dict of observed states (conditioning)
 >     to_df=True,
 >     elimination_order='greedy',
 >     joint=True,
 >     verbose=3,
+>     do=None,                     # interventional assignment, e.g. {'X': 1}
 > )
 > # query.df → DataFrame with columns = variables + 'p'
 > # bn.query2df(query, variables=[...]) for reshaping
 > ```
 >
-> Evidence variable names and states must exist in the model; otherwise a
-> `ValueError` is raised. Do **not** confuse this with intervention (`do`).
+> Evidence / `do` variable names and states must exist in the model; otherwise a
+> `ValueError` is raised. A variable cannot appear in both `evidence` and `do`.
+>
+> - `evidence={'X': x}` → observational `P(Y | X = x)`
+> - `do={'X': x}` → interventional `P(Y | do(X = x))` (Pearl's do-operator)
 
 ---
 
-Inference is the process of asking conditional probability questions to a
-Bayesian Network.
+Inference is the process of asking conditional (and interventional) probability
+questions to a Bayesian Network.
 
 In `bnlearn`, exact inference is performed using **Variable Elimination**
-through pgmpy's `VariableElimination`.
+through pgmpy's `VariableElimination`. Interventions (`do`) are implemented by
+running the same engine on the mutilated network.
 
-The basic question is:
+The basic observational question is:
 
 ```text
 P(Query variables | Evidence)
@@ -37,6 +42,12 @@ For example:
 
 ```text
 P(Wet_Grass | Rain=1, Sprinkler=0, Cloudy=1)
+```
+
+The corresponding interventional question uses the `do` argument:
+
+```text
+P(Wet_Grass | do(Sprinkler=1))
 ```
 
 Inference does not learn a new network.
@@ -98,7 +109,8 @@ The main interface is:
 bn.inference.fit(
     model,
     variables=None,
-    evidence=None
+    evidence=None,
+    do=None,
 )
 ```
 
@@ -107,10 +119,11 @@ The most important arguments are:
 ```text
 model
 variables
-evidence
+evidence   # observational conditioning
+do         # interventional assignment (Pearl's do-operator)
 ```
 
-For example:
+For example (observational):
 
 ```python
 query = bn.inference.fit(
@@ -128,6 +141,17 @@ This asks:
 
 ```text
 P(Wet_Grass | Rain=1, Sprinkler=0, Cloudy=1)
+```
+
+For an intervention, pass `do` instead of (or in addition to) `evidence`:
+
+```python
+query = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1},
+)
+# P(Wet_Grass | do(Sprinkler=1))
 ```
 
 ---
@@ -1371,59 +1395,100 @@ bn.inference.fit(
 
 ---
 
-# 42. Inference Is Not Intervention
+# 42. Inference vs Intervention (do-calculus)
 
 This distinction is essential.
 
-Inference asks:
+**Observational inference** asks:
 
 ```text
-P(Y | X=x)
+P(Y | X=x)          # evidence={'X': x}
 ```
 
-This means:
+Meaning: given that we *observe* X=x, what is the probability of Y?
+
+**Interventional inference** (Pearl's do-operator) asks:
 
 ```text
-Given that we observe X=x,
-what is the probability of Y?
+P(Y | do(X=x))      # do={'X': x}
 ```
 
-An intervention asks:
-
-```text
-P(Y | do(X=x))
-```
-
-This means:
-
-```text
-What happens to Y if we actively set X=x?
-```
+Meaning: what happens to Y if we *actively set* X=x (incoming edges of X are
+cut)?
 
 These are not generally the same quantity.
 
-The `bnlearn.inference.fit()` function described here performs **conditional
-inference** using Variable Elimination.
+## 42.1 Using `do` in bnlearn
 
-It does not represent an intervention merely because evidence is supplied.
-
-Therefore:
+`bn.inference.fit` accepts a `do` argument:
 
 ```python
-evidence={'X': 1}
+query = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1},
+)
 ```
 
-means:
+Internally the code:
 
-```text
-observe X=1
+1. Builds the **mutilated** network with `model.do(list(do.keys()))` (incoming
+   edges of the intervened nodes are removed).
+2. Runs ordinary Variable Elimination on that network with the intervened
+   values fixed as evidence.
+
+Because conditioning on a mutilated graph *is* intervening, the result is exact
+and works with `evidence`, `elimination_order`, and `joint`.
+
+## 42.2 Observational vs interventional example (sprinkler)
+
+```python
+import bnlearn as bn
+
+model = bn.import_DAG('sprinkler')
+
+# Observational: P(Wet_Grass | Sprinkler=1) ≈ 0.927
+q_obs = bn.inference.fit(
+    model, variables=['Wet_Grass'], evidence={'Sprinkler': 1}
+)
+
+# Interventional: P(Wet_Grass | do(Sprinkler=1)) ≈ 0.945
+q_do = bn.inference.fit(
+    model, variables=['Wet_Grass'], do={'Sprinkler': 1}
+)
 ```
 
-not:
+Observing Sprinkler=1 is evidence that it was probably not cloudy; setting it
+by intervention says nothing about the weather (Cloudy → Sprinkler is cut).
 
-```text
-do(X=1)
+## 42.3 Combining `do` and `evidence`
+
+```python
+# P(Wet_Grass | do(Sprinkler=1), Rain=1)
+q_mix = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1},
+    evidence={'Rain': 1},
+)
 ```
+
+Rules:
+
+* A variable **cannot** appear in both `do` and `evidence` (raises).
+* Unknown node names in `do` raise.
+* Interventions are labeled `do(X)=…` in `query.text`.
+* `do` is the **last** parameter of `fit`, so existing positional calls stay
+  compatible.
+
+## 42.4 `evidence` alone is never an intervention
+
+```python
+evidence={'X': 1}   # observe X=1
+do={'X': 1}         # do(X=1)
+```
+
+Supplying a value only in `evidence` never performs an intervention.
 
 ---
 
@@ -1617,32 +1682,35 @@ When an AI agent needs to perform inference:
 2. Confirm that the underlying model is a `BayesianNetwork`.
 3. Confirm that the network contains learned CPDs.
 4. Use `variables` to specify the query variables.
-5. Use `evidence` to specify observed variable values.
-6. Treat variable names as case-sensitive.
-7. Ensure every query variable exists in the model.
-8. Ensure every evidence variable exists in the model.
-9. Use `joint=True` when a joint distribution over multiple query variables is
-   required.
-10. Use `joint=False` when separate distributions are required.
-11. Use `elimination_order='greedy'` as the default unless there is a reason to
+5. Use `evidence` to specify observed variable values (conditioning).
+6. Use `do` to specify interventions (Pearl's do-operator).
+7. Treat variable names as case-sensitive.
+8. Ensure every query variable exists in the model.
+9. Ensure every evidence and `do` variable exists in the model.
+10. Ensure no variable appears in both `evidence` and `do`.
+11. Use `joint=True` when a joint distribution over multiple query variables is
+    required.
+12. Use `joint=False` when separate distributions are required.
+13. Use `elimination_order='greedy'` as the default unless there is a reason to
     change it.
-12. Use an explicit elimination-order list only when it contains the required
+14. Use an explicit elimination-order list only when it contains the required
     non-query variables.
-13. Use `to_df=True` when a pandas representation is useful.
-14. Use `to_df=False` when DataFrame conversion is unnecessary.
-15. Remember that `plot=True` requires DataFrame conversion.
-16. Use `query.df` for tabular probability results.
-17. Use `query.text` for the generated human-readable summary.
-18. Remember that `evidence={'X': value}` represents observation, not
-    intervention.
-19. Do not interpret conditional inference as causal intervention.
-20. Do not use inference to establish causal direction.
-21. Remember that inference answers questions under the supplied Bayesian
-    Network and CPDs.
-22. For large networks, consider elimination-order and factor-size
+15. Use `to_df=True` when a pandas representation is useful.
+16. Use `to_df=False` when DataFrame conversion is unnecessary.
+17. Remember that `plot=True` requires DataFrame conversion.
+18. Use `query.df` for tabular probability results.
+19. Use `query.text` for the generated human-readable summary (interventions
+    appear as `do(X)=…`).
+20. Remember that `evidence={'X': value}` represents observation, not
+    intervention; use `do={'X': value}` for intervention.
+21. Do not interpret conditional inference as causal intervention.
+22. Do not use inference to establish causal direction.
+23. Remember that inference answers questions under the supplied Bayesian
+    Network and CPDs (and the mutilated graph when `do` is used).
+24. For large networks, consider elimination-order and factor-size
     implications.
-23. Do not compare separate marginal distributions with a joint distribution.
-24. Validate the probability results before making domain-level conclusions.
+25. Do not compare separate marginal distributions with a joint distribution.
+26. Validate the probability results before making domain-level conclusions.
 
 ---
 
@@ -1751,6 +1819,25 @@ query = bn.inference.fit(
 )
 ```
 
+### Intervention (do-calculus)
+
+```python
+# P(Target | do(X=1))
+query = bn.inference.fit(
+    model,
+    variables=['Target'],
+    do={'X': 1},
+)
+
+# Combined with evidence
+query = bn.inference.fit(
+    model,
+    variables=['Target'],
+    do={'X': 1},
+    evidence={'Z': 0},
+)
+```
+
 ---
 
 # 52. Final Checklist
@@ -1764,14 +1851,17 @@ Before running inference:
 * [ ] Does the Bayesian Network contain learned CPDs?
 * [ ] Do all query variables exist?
 * [ ] Do all evidence variables exist?
+* [ ] Do all `do` variables exist (if interventions are used)?
 * [ ] Are variable names spelled exactly and with correct case?
-* [ ] Are evidence values valid states for their variables?
+* [ ] Are evidence / `do` values valid states for their variables?
+* [ ] Is no variable present in both `evidence` and `do`?
 * [ ] Is a joint distribution required?
 * [ ] Is DataFrame output required?
 * [ ] Is plotting required?
 * [ ] Is the default elimination order sufficient?
 * [ ] Is the network large enough that elimination order may affect performance?
 * [ ] Are conditional probabilities being distinguished from interventions?
+* [ ] For interventions: is `do=` used (not only `evidence=`)?
 * [ ] Are causal conclusions being kept separate from ordinary inference?
 
 The central principle is:
@@ -1781,13 +1871,15 @@ Bayesian Network + CPDs
         +
 Query variables
         +
-Evidence
+Evidence and/or do-interventions
         ↓
 Variable Elimination
+  (on the possibly mutilated network)
         ↓
-P(Query | Evidence)
+P(Query | Evidence, do(...))
 ```
 
-`bnlearn.inference.fit()` answers conditional probability questions about the
-model you provide. It does not modify the network, learn new parameters, or
-turn observations into interventions.
+`bnlearn.inference.fit()` answers conditional *and* interventional probability
+questions about the model you provide. Use `evidence` for observation and
+`do` for intervention. It does not learn new parameters or invent causal
+structure.

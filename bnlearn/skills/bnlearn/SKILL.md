@@ -468,7 +468,7 @@ See:
 # 10. Bayesian Inference
 
 Use inference when the user wants to calculate probabilities conditioned on
-observed evidence.
+observed evidence, or (with the `do` argument) interventional probabilities.
 
 ```python
 query = bn.inference.fit(
@@ -480,7 +480,7 @@ query = bn.inference.fit(
 # query.df has columns = variables + 'p'
 ```
 
-Typical problem:
+Typical observational problem:
 
 ```text
 Given:
@@ -490,19 +490,33 @@ Calculate:
     P(Y | X = x)
 ```
 
+Interventional problem (Pearl's do-operator):
+
+```python
+query = bn.inference.fit(
+    model,
+    variables=['Y'],
+    do={'X': 1},
+)
+# P(Y | do(X = 1))
+```
+
+`do` and `evidence` may be combined. A variable cannot appear in both.
+
 General workflow:
 
 ```text
 Fitted Bayesian Network
         │
         ▼
-Evidence
+Evidence and/or interventions (do)
         │
         ▼
-Inference
+Inference (Variable Elimination on the
+possibly mutilated network)
         │
         ▼
-Posterior distribution
+Posterior / interventional distribution
 ```
 
 Clearly distinguish:
@@ -512,6 +526,7 @@ Clearly distinguish:
 * Posterior probability
 * Marginal probability
 * Conditional probability
+* Interventional probability `P(Y | do(X=x))`
 
 See:
 
@@ -597,33 +612,67 @@ See:
 
 ---
 
-# 14. Intervention
+# 14. Intervention (do-calculus)
 
 An intervention asks a different question from ordinary inference.
 
 Observational question:
 
 ```text
-P(Y | X = x)
+P(Y | X = x)          # evidence={'X': x}
 ```
 
 Interventional question:
 
 ```text
-P(Y | do(X = x))
+P(Y | do(X = x))      # do={'X': x}
 ```
+
+bnlearn implements Pearl's do-operator via the `do` argument of
+`bn.inference.fit`. Internally the query runs Variable Elimination on the
+**mutilated** network (`model.do(...)`): incoming edges of the intervened
+variables are cut, then the intervened values are fixed as evidence. That is
+exact and works together with ordinary evidence, `elimination_order`, and
+`joint`.
+
+```python
+model = bn.import_DAG('sprinkler')
+
+# Observational
+q_obs = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1})
+# P(Wet_Grass=1 | Sprinkler=1) ≈ 0.927
+
+# Interventional
+q_do = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1})
+# P(Wet_Grass=1 | do(Sprinkler=1)) ≈ 0.945
+
+# Combined
+q_mix = bn.inference.fit(
+    model,
+    variables=['Wet_Grass'],
+    do={'Sprinkler': 1},
+    evidence={'Rain': 1},
+)
+```
+
+Rules:
+
+* A variable cannot appear in both `do` and `evidence` (raises).
+* Unknown node names in `do` raise.
+* Interventions are labeled `do(X)=…` in `query.text`.
+* `do` is the last parameter of `fit`, so existing positional calls stay compatible.
 
 Do not replace an intervention with ordinary conditioning.
 
 When the user asks:
 
-> What happens if I force X to a particular value?
+> What happens if I force / set / change X to a particular value?
 
-interpret this as an intervention problem.
+interpret this as an intervention problem and use `do=`.
 
-See:
-
-`references/causal_discovery.md`
+Causal interpretation of the underlying DAG still requires the usual
+assumptions (no hidden confounding, correct causal graph, etc.). See
+`references/causal_discovery.md` and `references/inference.md`.
 
 ---
 
@@ -803,19 +852,20 @@ prediction and sampling.
 
 ---
 
-## 18.3 Inference
+## 18.3 Inference (including do-calculus)
 
 ```python
 query = bn.inference.fit(
     model,                     # fitted model (after parameter learning) or DAG with CPDs
     variables=['Target'],      # variables to query (list)
-    evidence={'A': 1, 'B': 0}, # evidence dict (state values)
+    evidence={'A': 1, 'B': 0}, # observational evidence (state values)
     to_df=True,                # return a DataFrame-friendly object
     elimination_order='greedy',
     joint=True,
     groupby=None,
     plot=False,
     verbose=3,
+    do=None,                   # interventional assignment, e.g. {'Sprinkler': 1}
 )
 ```
 
@@ -825,6 +875,22 @@ query = bn.inference.fit(
   raise `AttributeError`).
 - When `to_df=True` the result has a `.df` attribute with columns = variables + `p`.
 - Use `bn.query2df(query, variables=[...])` to reshape.
+- **`do`**: Pearl's do-operator. Cuts incoming edges of the intervened nodes
+  (mutilated network) and runs Variable Elimination with those values fixed.
+  Combines freely with `evidence`. A variable must not appear in both `do` and
+  `evidence`. Interventions appear as `do(X)=…` in `query.text`.
+
+**Observational vs interventional (sprinkler)**
+
+```python
+model = bn.import_DAG('sprinkler')
+
+# P(Wet_Grass | Sprinkler=1)  ≈ 0.927
+bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1})
+
+# P(Wet_Grass | do(Sprinkler=1)) ≈ 0.945
+bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1})
+```
 
 **Pattern: inference on a hand-built DAG with placeholder CPDs**
 
@@ -1051,14 +1117,13 @@ df['job_title'] = df['job_title'].where(~df['job_title'].isin(rare), 'Other')
 
 ### E. Prediction vs intervention (prescriptive framing)
 
-- **Prediction / inference:** `P(Y | X = x)` → `bn.inference.fit` or `bn.predict`
-- **Intervention:** `P(Y | do(X = x))` → requires a causal interpretation of the
-  DAG and appropriate adjustment; do **not** answer an intervention question
-  with ordinary conditioning.
+- **Prediction / inference:** `P(Y | X = x)` → `bn.inference.fit(..., evidence={'X': x})` or `bn.predict`
+- **Intervention:** `P(Y | do(X = x))` → `bn.inference.fit(..., do={'X': x})`
 
-If the user asks “what happens if we *force* / *set* / *change* X?”, treat it
-as interventional and state the extra assumptions (see §13–14 and
-`references/causal_discovery.md`).
+If the user asks “what happens if we *force* / *set* / *change* X?”, use the
+`do=` argument. The underlying DAG still needs a causal interpretation
+(no unmeasured confounding, correct structure, etc.); state those assumptions
+(see §13–14 and `references/causal_discovery.md`).
 
 ---
 
@@ -1126,14 +1191,18 @@ discretization or when a continuous method is demonstrably unsuitable.
 These are different operations:
 
 ```text
-P(Y | X = x)
+P(Y | X = x)          # evidence={'X': x}
 ```
 
 versus:
 
 ```text
-P(Y | do(X = x))
+P(Y | do(X = x))      # do={'X': x}
 ```
+
+Use the `do` argument of `bn.inference.fit` for interventions. Do not answer
+an intervention question with ordinary `evidence`. A variable cannot appear in
+both `do` and `evidence`.
 
 ---
 
