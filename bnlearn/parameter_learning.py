@@ -275,13 +275,15 @@ def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1,
     out['model'] = out_model
     out['adjmat'] = adjmat
     out['config'] = config
+    out['independence_test'] = independence_test
+    out['continuous_cpds'] = continuous_cpds  # CG local params when method is cg
+
     if out_model is not None and hasattr(out_model, 'edges'):
         out['model_edges'] = list(out_model.edges())
     else:
         edges, _ = edges_and_nodes_from_adjmat(adjmat)
         out['model_edges'] = edges
-    out['independence_test'] = independence_test
-    out['continuous_cpds'] = continuous_cpds  # CG local params when method is cg
+
     # structure_scores expects a discrete-style model for some scorers; skip on pure LG/CG failures
     try:
         out['structure_scores'] = bnlearn.structure_scores(out, df, verbose=verbose)
