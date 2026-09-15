@@ -22,6 +22,7 @@ import matplotlib.pyplot as plt
 
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.estimators import AIC, BDeu, BDs, BIC, K2, StructureScore
+from pgmpy.estimators import AICCondGauss, BICCondGauss, LogLikelihoodCondGauss
 from pgmpy.causal_discovery import ExpertKnowledge
 from pgmpy.models import NaiveBayes
 
@@ -30,87 +31,6 @@ from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 import lingam
 import bnlearn
-
-
-# %% Gaussian scoring methods
-class LogLikelihoodGauss(StructureScore):
-    """Multivariate Gaussian log-likelihood score for continuous data.
-
-    Each node is modelled by a linear Gaussian regression on its parents. The
-    total DAG score is decomposable into the sum of the local node scores, which
-    makes this class compatible with pgmpy's HillClimbSearch and ExhaustiveSearch.
-
-    Notes
-    -----
-    Higher scores are better. Missing and infinite values are not supported.
-    """
-
-    def __init__(self, data, variance_floor=1e-12, **kwargs):
-        if not isinstance(data, pd.DataFrame):
-            raise TypeError('[bnlearn] >Gaussian scores require a pandas DataFrame.')
-        if data.shape[0] == 0:
-            raise ValueError('[bnlearn] >Gaussian scores require at least one sample.')
-
-        non_numeric = [col for col in data.columns if not pd.api.types.is_numeric_dtype(data[col])]
-        if len(non_numeric) > 0:
-            raise ValueError('[bnlearn] >Gaussian scores require numeric columns. Non-numeric columns: %s' % non_numeric)
-
-        values = data.to_numpy(dtype=float, copy=False)
-        if not np.all(np.isfinite(values)):
-            raise ValueError('[bnlearn] >Gaussian scores do not support missing or infinite values.')
-
-        if variance_floor <= 0:
-            raise ValueError('[bnlearn] >variance_floor must be larger than zero.')
-
-        super().__init__(data, **kwargs)
-        self.variance_floor = float(variance_floor)
-        self._gaussian_score_cache = {}
-
-    def _local_log_likelihood(self, variable, parents):
-        parents = tuple(sorted(parents))
-        cache_key = (variable, parents)
-        if cache_key in self._gaussian_score_cache:
-            return self._gaussian_score_cache[cache_key]
-
-        y = self.data[variable].to_numpy(dtype=float, copy=False)
-        n_samples = y.shape[0]
-
-        if len(parents) == 0:
-            residuals = y - np.mean(y)
-        else:
-            X = self.data.loc[:, list(parents)].to_numpy(dtype=float, copy=False)
-            design = np.column_stack((np.ones(n_samples, dtype=float), X))
-            coefficients, _, _, _ = np.linalg.lstsq(design, y, rcond=None)
-            residuals = y - np.dot(design, coefficients)
-
-        rss = float(np.dot(residuals, residuals))
-        variance = max(rss / n_samples, self.variance_floor)
-        score = -0.5 * n_samples * (np.log(2.0 * np.pi) + 1.0 + np.log(variance))
-        score = float(score)
-        self._gaussian_score_cache[cache_key] = score
-        return score
-
-    def local_score(self, variable, parents):
-        """Return the local Gaussian log-likelihood for one node family."""
-        return self._local_log_likelihood(variable, parents)
-
-
-class AICGauss(LogLikelihoodGauss):
-    """Gaussian AIC score using the higher-is-better convention."""
-
-    def local_score(self, variable, parents):
-        parents = tuple(parents)
-        n_parameters = len(parents) + 2  # intercept, coefficients, variance
-        return self._local_log_likelihood(variable, parents) - n_parameters
-
-
-class BICGauss(LogLikelihoodGauss):
-    """Gaussian BIC score using the higher-is-better convention."""
-
-    def local_score(self, variable, parents):
-        parents = tuple(parents)
-        n_parameters = len(parents) + 2  # intercept, coefficients, variance
-        return self._local_log_likelihood(variable, parents) - 0.5 * n_parameters * np.log(self.data.shape[0])
 
 
 # %% Structure Learning
@@ -187,6 +107,9 @@ def fit(df,
             * 'loglik-g' (continues variables)
             * 'aic-g'    (continues variables)
             * 'bic-g'    (continues variables)
+            * 'loglik-cg' (hybrid discrete + continuous variables)
+            * 'aic-cg'   (hybrid discrete + continuous variables)
+            * 'bic-cg'   (hybrid discrete + continuous variables)
     black_list : List or None, (default : None)
         List of edges are black listed.
         In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.
@@ -283,10 +206,10 @@ def fit(df,
     >>> model = bn.structure_learning.fit(df, methodtype='direct-lingam')
     >>>
     >>> # Compute edge strength using chi-square independence test
-    >>> model = bn.independence_test(model_sl, df)
+    >>> model = bn.independence_test(model, df)
     >>>
     >>> # Plot based on structure learning of sampled data
-    >>> bn.plot(model_sl, pos=G['pos'])
+    >>> bn.plot(model)
 
     References
     ----------
@@ -382,7 +305,7 @@ def fit(df,
 # %% Make Checks
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
+    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
     if not np.isin(config['method'], ['ica-lingam', 'direct-lingam', 'naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'pc', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
@@ -762,7 +685,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
         A DataFrame object with column names same as the variable names of network.
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-        'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g'
+        'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg'
     return_all_dags : Bool, (default: False)
         Return all possible DAGs.
     verbose : int, (default : 3)
@@ -826,6 +749,9 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
             * loglik-g
             * aic-g
             * bic-g
+            * loglik-cg
+            * aic-cg
+            * bic-cg
     verbose : int, (default : 3)
         0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
 
@@ -856,6 +782,12 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
         scoring_method = AICGauss(df, **kwargs)
     elif scoretype=='bic-g':
         scoring_method = BICGauss(df, **kwargs)
+    elif scoretype=='loglik-cg':
+        scoring_method = LogLikelihoodCondGauss(df, **kwargs)
+    elif scoretype=='aic-cg':
+        scoring_method = AICCondGauss(df, **kwargs)
+    elif scoretype=='bic-cg':
+        scoring_method = BICCondGauss(df, **kwargs)
     else:
         raise ValueError('[bnlearn] >Unknown scoretype: %s' % scoretype)
 
@@ -938,3 +870,86 @@ def _lingam(df,
 
     # Return
     return out
+
+
+# %% Gaussian scoring methods
+class LogLikelihoodGauss(StructureScore):
+    """Multivariate Gaussian log-likelihood score for continuous data.
+
+    Each node is modelled by a linear Gaussian regression on its parents. The
+    total DAG score is decomposable into the sum of the local node scores, which
+    makes this class compatible with pgmpy's HillClimbSearch and ExhaustiveSearch.
+
+    Notes
+    -----
+    Higher scores are better. Missing and infinite values are not supported.
+    """
+
+    def __init__(self, data, variance_floor=1e-12, **kwargs):
+        if not isinstance(data, pd.DataFrame):
+            raise TypeError('[bnlearn] >Gaussian scores require a pandas DataFrame.')
+        if data.shape[0] == 0:
+            raise ValueError('[bnlearn] >Gaussian scores require at least one sample.')
+
+        non_numeric = [col for col in data.columns if not pd.api.types.is_numeric_dtype(data[col])]
+        if len(non_numeric) > 0:
+            raise ValueError('[bnlearn] >Gaussian scores require numeric columns. Non-numeric columns: %s' % non_numeric)
+
+        values = data.to_numpy(dtype=float, copy=False)
+        if not np.all(np.isfinite(values)):
+            raise ValueError('[bnlearn] >Gaussian scores do not support missing or infinite values.')
+
+        if variance_floor <= 0:
+            raise ValueError('[bnlearn] >variance_floor must be larger than zero.')
+
+        super().__init__(data, **kwargs)
+        self.variance_floor = float(variance_floor)
+        self._gaussian_score_cache = {}
+
+    def _local_log_likelihood(self, variable, parents):
+        parents = tuple(sorted(parents))
+        cache_key = (variable, parents)
+        if cache_key in self._gaussian_score_cache:
+            return self._gaussian_score_cache[cache_key]
+
+        y = self.data[variable].to_numpy(dtype=float, copy=False)
+        n_samples = y.shape[0]
+
+        if len(parents) == 0:
+            residuals = y - np.mean(y)
+        else:
+            X = self.data.loc[:, list(parents)].to_numpy(dtype=float, copy=False)
+            design = np.column_stack((np.ones(n_samples, dtype=float), X))
+            coefficients, _, _, _ = np.linalg.lstsq(design, y, rcond=None)
+            residuals = y - np.dot(design, coefficients)
+
+        rss = float(np.dot(residuals, residuals))
+        variance = max(rss / n_samples, self.variance_floor)
+        score = -0.5 * n_samples * (np.log(2.0 * np.pi) + 1.0 + np.log(variance))
+        score = float(score)
+        self._gaussian_score_cache[cache_key] = score
+        return score
+
+    def local_score(self, variable, parents):
+        """Return the local Gaussian log-likelihood for one node family."""
+        return self._local_log_likelihood(variable, parents)
+
+
+class AICGauss(LogLikelihoodGauss):
+    """Gaussian AIC score using the higher-is-better convention."""
+
+    def local_score(self, variable, parents):
+        parents = tuple(parents)
+        n_parameters = len(parents) + 2  # intercept, coefficients, variance
+        return self._local_log_likelihood(variable, parents) - n_parameters
+
+
+class BICGauss(LogLikelihoodGauss):
+    """Gaussian BIC score using the higher-is-better convention."""
+
+    def local_score(self, variable, parents):
+        parents = tuple(parents)
+        n_parameters = len(parents) + 2  # intercept, coefficients, variance
+        return self._local_log_likelihood(variable, parents) - 0.5 * n_parameters * np.log(self.data.shape[0])
+
+
