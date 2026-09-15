@@ -1,6 +1,6 @@
 ---
 name: bnlearn
-description: Use this skill when working with bnlearn, a Python library for Bayesian networks, probabilistic graphical models, causal discovery, parameter learning, structure learning, inference, sampling, and directed acyclic graphs (DAG).
+description: Use this skill when working with bnlearn, a Python library for Bayesian modeling, probabilistic graphical models, causal discovery, parameter learning, structure learning, inference, do-why calculus (dowhy), sampling, and directed acyclic graphs (DAG).
 ---
 
 # bnlearn
@@ -612,7 +612,7 @@ See:
 
 ---
 
-# 14. Intervention (do-calculus)
+# 14. Intervention (do-why calculus)
 
 An intervention asks a different question from ordinary inference.
 
@@ -636,7 +636,20 @@ exact and works together with ordinary evidence, `elimination_order`, and
 `joint`.
 
 ```python
+# Import bnlearn library
+import bnlearn as bn
+
+# Example data
 model = bn.import_DAG('sprinkler')
+
+#  print(model)
+#  {'model': <pgmpy.models.DiscreteBayesianNetwork.DiscreteBayesianNetwork at 0x2cf90df3410>,
+#  'adjmat': target     Cloudy  Sprinkler   Rain  Wet_Grass
+#  source
+# Cloudy      False       True   True      False
+#  Sprinkler   False      False  False       True
+#  Rain        False      False  False       True
+#  Wet_Grass   False      False  False      False}
 
 # Observational
 q_obs = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1})
@@ -852,7 +865,7 @@ prediction and sampling.
 
 ---
 
-## 18.3 Inference (including do-calculus)
+## 18.3 Inference (including do-why calculus)
 
 ```python
 query = bn.inference.fit(
