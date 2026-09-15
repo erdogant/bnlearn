@@ -31,12 +31,13 @@ from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 import lingam
 import bnlearn
+from bnlearn.utils import infer_data_type, default_scoretype, default_ci_test
 
 
 # %% Structure Learning
 def fit(df,
         methodtype='hc',
-        scoretype='bic',
+        scoretype='auto',
         black_list=None,
         white_list=None,
         bw_list_method=None,
@@ -85,31 +86,28 @@ def fit(df,
         Input dataframe.
     methodtype : str, (default : 'hc')
         String Search strategy for structure_learning.
-        # Constraintsearch
-        'pc' or 'cs' or 'constraintsearch'
-        # Score-Based
-        'ex' or 'exhaustivesearch'
-        'hc' or 'hillclimbsearch' (default)
-        # Score-Based: Requires Root Node
-        'cl' or 'chow-liu' (requires setting root_node parameter)
-        'nb' or 'naivebayes' (requires <root_node>)
-        'tan' (requires <root_node> and <class_node> parameter)
-        # Score-Based: For continuous and mixed datasets
-        'direct-lingam'
-        'ica-lingam'
+        'pc' or 'cs' or 'constraintsearch'          # Constraintsearch
+        'ex' or 'exhaustivesearch'                  # Score-Based
+        'hc' or 'hillclimbsearch'                   # Score-Based
+        'direct-lingam'                             # Score-Based: For continuous and mixed datasets
+        'ica-lingam'                                # Score-Based: For continuous and mixed datasets
+        'cl' or 'chow-liu'                          # Score-Based: Requires root_node
+        'tan'                                       # requires root_node and class_node
+        'nb' or 'naivebayes'                        # requires root_node
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-            * 'bic'
-            * 'k2'
-            * 'bdeu'
-            * 'bds'
-            * 'aic'
-            * 'loglik-g' (continues variables)
-            * 'aic-g'    (continues variables)
-            * 'bic-g'    (continues variables)
-            * 'loglik-cg' (hybrid discrete + continuous variables)
-            * 'aic-cg'   (hybrid discrete + continuous variables)
-            * 'bic-cg'   (hybrid discrete + continuous variables)
+            * 'auto'        # choose bic / bic-g / bic-cg from data types
+            * 'bic'         # discrete
+            * 'k2'          # discrete
+            * 'bdeu'        # discrete
+            * 'bds'         # discrete
+            * 'aic'         # discrete
+            * 'loglik-g'    # continuous
+            * 'aic-g'       # continuous
+            * 'bic-g'       # continuous
+            * 'loglik-cg'   # hybrid discrete + continuous
+            * 'aic-cg'      # hybrid discrete + continuous
+            * 'bic-cg'      # hybrid discrete + continuous
     black_list : List or None, (default : None)
         List of edges are black listed.
         In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.
@@ -148,6 +146,7 @@ def fit(df,
             'pwling', 'kernel', 'pwling_fast'
     params_pc : dict: {'ci_test': 'chi_square', 'alpha': 0.05}
         * 'ci_test': 'chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence'
+          When left at the default 'chi_square' and the data are continuous, bnlearn switches to 'pearsonr'.
         * 'alpha': 0.05
     verbose : int, (default : 3)
         0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
@@ -227,14 +226,37 @@ def fit(df,
     out = []
     # Set config
     config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
+    
+    # Detect discrete / continuous / mixed columns (before filtering is fine for type policy)
+    var_types = infer_data_type(df)
+    config['data_type'] = var_types['dtype']
+    config['discrete_cols'] = var_types['discrete']
+    config['continuous_cols'] = var_types['continuous']
+    
+    # Resolve scoretype='auto' from detected data type
+    if config['scoring'] == 'auto':
+        config['scoring'] = default_scoretype(config['data_type'])
+        if verbose >= 3:
+            print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (config['scoring'], config['data_type']))
+    
+    # Auto CI test for PC when user left the discrete default on continuous data
+    params_pc['ci_test'] = default_ci_test(config['data_type'], params_pc['ci_test'])
     # Make some checks
     config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
     df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
+    # Refresh type info after node filtering
+    var_types = infer_data_type(df)
+    config['data_type'] = var_types['dtype']
+    config['discrete_cols'] = var_types['discrete']
+    config['continuous_cols'] = var_types['continuous']
     # Lets go!
     if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
+    if config['verbose']>=3:
+        print('[bnlearn] >Data type detected: [%s] (%d discrete, %d continuous)' % (
+            config['data_type'], len(config['discrete_cols']), len(config['continuous_cols'])))
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='nb' or config['method']=='naivebayes':
@@ -305,7 +327,7 @@ def fit(df,
 # %% Make Checks
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
+    if not np.isin(config['scoring'], ['auto', 'bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
     if not np.isin(config['method'], ['ica-lingam', 'direct-lingam', 'naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'pc', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
@@ -685,7 +707,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
         A DataFrame object with column names same as the variable names of network.
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-        'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg'
+        'auto', 'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg'
     return_all_dags : Bool, (default: False)
         Return all possible DAGs.
     verbose : int, (default : 3)
@@ -951,5 +973,6 @@ class BICGauss(LogLikelihoodGauss):
         parents = tuple(parents)
         n_parameters = len(parents) + 2  # intercept, coefficients, variance
         return self._local_log_likelihood(variable, parents) - 0.5 * n_parameters * np.log(self.data.shape[0])
+
 
 
