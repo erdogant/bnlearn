@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 # parallel score hierarchies, and the estimator-style search classes only
 # accept scores from their own (pgmpy.estimators.StructureScore) lineage.
 
-from pgmpy.estimators import LogLikelihoodCondGauss, AICCondGauss, BICCondGauss
+# from pgmpy.estimators import LogLikelihoodCondGauss, AICCondGauss, BICCondGauss
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.estimators import AIC, BDeu, BDs, BIC, K2, StructureScore
 from pgmpy.causal_discovery import ExpertKnowledge
@@ -31,6 +31,8 @@ from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 import lingam
 import bnlearn
+from bnlearn.utils import infer_data_type
+# from bnlearn.utils import default_ci_test
 
 
 # %% Structure Learning
@@ -228,37 +230,26 @@ def fit(df,
     out = []
     # Set config
     config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
-    
-    # Detect discrete / continuous / mixed columns (before filtering is fine for type policy)
-    var_types = infer_data_type(df)
-    config['data_type'] = var_types['dtype']
-    config['discrete_cols'] = var_types['discrete']
-    config['continuous_cols'] = var_types['continuous']
-    
-    # Resolve scoretype='auto' from detected data type
-    if config['scoring'] == 'auto':
-        config['scoring'] = default_scoretype(config['data_type'])
-        if verbose >= 3:
-            print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (config['scoring'], config['data_type']))
-    
-    # Auto CI test for PC when user left the discrete default on continuous data
-    params_pc['ci_test'] = default_ci_test(config['data_type'], params_pc['ci_test'])
     # Make some checks
     config = _make_checks(df, config, verbose=verbose)
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
     df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
+
+    # Auto CI test for PC when user left the discrete default on continuous data
+    # params_pc['ci_test'] = default_ci_test(config['data_type'], params_pc['ci_test'])
     # Refresh type info after node filtering
-    var_types = infer_data_type(df)
-    config['data_type'] = var_types['dtype']
-    config['discrete_cols'] = var_types['discrete']
-    config['continuous_cols'] = var_types['continuous']
+    # var_types = infer_data_type(df)
+    # config['data_type'] = var_types['dtype']
+    # config['discrete_cols'] = var_types['discrete']
+    # config['continuous_cols'] = var_types['continuous']
+    
     # Lets go!
     if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
-    if config['verbose']>=3:
-        print('[bnlearn] >Data type detected: [%s] (%d discrete, %d continuous)' % (
-            config['data_type'], len(config['discrete_cols']), len(config['continuous_cols'])))
+    # if config['verbose']>=3:
+    #     print('[bnlearn] >Data type detected: [%s] (%d discrete, %d continuous)' % (
+    #         config['data_type'], len(config['discrete_cols']), len(config['continuous_cols'])))
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='nb' or config['method']=='naivebayes':
@@ -793,7 +784,6 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
 
     # Resolve 'auto' to the appropriate score based on detected column types.
     if scoretype == 'auto':
-        from bnlearn.utils import infer_data_type
         dtype = infer_data_type(df)['dtype']
         if dtype == 'continuous':
             scoretype = 'bic-g'
