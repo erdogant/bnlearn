@@ -74,9 +74,10 @@ For score-based approaches there are two main components; **1**. The search algo
 
 Each approach can be scored using the following scoretypes:
 
-    * bic
-    * k2
-    * bdeu
+    * Discrete: ``bic``, ``k2``, ``bdeu``, ``bds``, ``aic``
+    * Continuous (Gaussian): ``loglik-g``, ``aic-g``, ``bic-g``
+    * Hybrid / Conditional Gaussian: ``loglik-cg``, ``aic-cg``, ``bic-cg``
+    * ``auto`` — detect data type and select ``bic`` / ``bic-g`` / ``bic-cg``
 
 Exhaustivesearch
 ===================
@@ -545,10 +546,51 @@ Lets determine the best possible structure for the *water* dataset.
 
 
 
-**References**
 
-    1. https://ermongroup.github.io/cs228-notes/learning/structure/
-    2. https://doi.org/10.1007/978-0-387-30164-8_850
+Continuous and hybrid structure scores
+=========================================
+
+When variables are continuous, use the Gaussian scores with score-based search
+(Hill Climbing or Exhaustive Search):
+
+* ``loglik-g`` — multivariate Gaussian log-likelihood
+* ``aic-g`` — AIC for linear-Gaussian networks
+* ``bic-g`` — BIC for linear-Gaussian networks (recommended default for continuous data)
+
+When the data mix discrete and continuous columns, use the Conditional Gaussian scores:
+
+* ``loglik-cg``, ``aic-cg``, ``bic-cg``
+
+Setting ``scoretype='auto'`` runs a simple type detector and picks ``bic``, ``bic-g``,
+or ``bic-cg``. For the constraint-based PC algorithm, the default CI test switches
+from ``chi_square`` to ``pearsonr`` on continuous data when left at the default.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    import numpy as np
+    import pandas as pd
+
+    # Continuous example
+    rng = np.random.default_rng(1)
+    n = 300
+    x = rng.normal(size=n)
+    y = 0.8 * x + rng.normal(scale=0.3, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+    # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
+    bn.plot_graphviz(model)
+
+    # Mixed (hybrid) example
+    fail = rng.integers(0, 2, size=n)
+    torque = rng.normal(size=n) + fail * 1.5
+    df_mix = pd.DataFrame({'fail': fail, 'torque': torque})
+    model_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg')
+    bn.plot_graphviz(model_mix)
+
+More background and full continuous workflows are described in :doc:`Continuous Data`.
+
 
 
 

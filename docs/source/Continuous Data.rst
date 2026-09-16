@@ -342,4 +342,132 @@ PC PDAG construction is only guaranteed to work under the assumption that the id
 
 
 
+Conditional Gaussian (Hybrid) Networks
+=========================================
+
+Many real datasets mix continuous sensor readings with discrete labels (for example failure indicators).
+A **Conditional Gaussian (CG)** network models this hybrid setting:
+
+* **Discrete nodes** keep standard conditional probability tables (CPTs), as in a discrete Bayesian network.
+* **Continuous nodes** are modelled as linear Gaussian regressions on their parents.
+* If a continuous node has discrete parents, it gets one set of regression coefficients and one residual standard deviation **per configuration** of those discrete parents.
+
+This is the natural model when you want coefficient-level insight among continuous variables and probability-level answers for discrete outcomes in the same graph.
+
+Structure scores for hybrid data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Score-based structure learning supports Conditional Gaussian scores (via pgmpy):
+
+* ``loglik-cg`` — Conditional Gaussian log-likelihood (no complexity penalty).
+* ``aic-cg`` — AIC for Conditional Gaussian networks.
+* ``bic-cg`` — BIC for Conditional Gaussian networks (preferred default for mixed data).
+
+You can also set ``scoretype='auto'``. bnlearn then detects discrete / continuous / mixed columns and selects ``bic``, ``bic-g``, or ``bic-cg`` accordingly.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    import numpy as np
+    import pandas as pd
+
+    # Synthetic mixed data: discrete failure label + continuous torque
+    rng = np.random.default_rng(42)
+    n = 500
+    fail = rng.integers(0, 2, size=n)
+    torque = rng.normal(size=n) + fail * 1.5
+    df = pd.DataFrame({'fail': fail, 'torque': torque})
+
+    # Structure learning with Conditional Gaussian BIC
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
+    # Or let bnlearn choose the score from the data types:
+    # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
+
+    bn.plot(model)
+
+
+Parameter learning for continuous and hybrid models
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+After structure learning, estimate parameters with the matching method:
+
+* ``methodtype='linear-gaussian'`` (alias ``'lg'``) — pure continuous data; fits a ``LinearGaussianBayesianNetwork``.
+* ``methodtype='cg'`` (alias ``'conditional-gaussian'``) — mixed data; discrete CPTs plus configuration-specific linear Gaussians stored in ``continuous_cpds``.
+* ``methodtype='auto'`` — chooses bayes / linear-gaussian / cg from detected column types.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    import numpy as np
+    import pandas as pd
+
+    rng = np.random.default_rng(0)
+    n = 400
+    x = rng.normal(size=n)
+    y = 1.5 * x + rng.normal(scale=0.4, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+
+    # Continuous structure + linear-Gaussian parameters
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
+
+    # Mixed example
+    fail = rng.integers(0, 2, size=n)
+    torque = rng.normal(size=n) + fail * 2.0
+    df_mix = pd.DataFrame({'fail': fail, 'torque': torque})
+    model_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg')
+    model_mix = bn.parameter_learning.fit(model_mix, df_mix, methodtype='cg')
+    # model_mix['continuous_cpds'] holds the CG local regressions
+
+
+Inference on continuous and hybrid models
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``bn.inference.fit`` routes automatically:
+
+* Discrete Bayesian networks → Variable Elimination (``fit_discrete``).
+* Linear-Gaussian models → conditional means (``fit_continuous``).
+* Conditional-Gaussian models → discrete VE for discrete query nodes and CG local regressions for continuous query nodes.
+
+Evidence may mix discrete states and continuous numbers. Interventions use the same ``do`` argument as in discrete inference.
+
+.. code-block:: python
+
+    # Query continuous Y given X (linear-Gaussian model from above)
+    q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.5})
+    print(q.means)   # conditional mean of Y
+
+    # Intervention: set X by do-operator
+    q_do = bn.inference.fit(model, variables=['Y'], do={'X': 1.0})
+
+    # CG: continuous node given discrete evidence
+    q_cg = bn.inference.fit(model_mix, variables=['torque'], evidence={'fail': 1})
+
+
+Sampling from continuous and hybrid models
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``bn.sampling`` supports continuous and CG models in addition to discrete forward / Gibbs sampling:
+
+* ``methodtype='linear-gaussian'`` (or ``'lg'``)
+* ``methodtype='cg'`` (or ``'conditional-gaussian'``)
+* ``methodtype='auto'`` — detect type from the fitted model
+
+.. code-block:: python
+
+    # Samples from a linear-Gaussian network
+    df_s = bn.sampling(model, n=200, methodtype='linear-gaussian', seed=0)
+
+    # Samples from a Conditional-Gaussian network
+    df_s = bn.sampling(model_mix, n=200, methodtype='cg', seed=0)
+
+    # Or let bnlearn detect the model type
+    df_s = bn.sampling(model, n=200, methodtype='auto')
+
+
+See also :doc:`Structure learning`, :doc:`Parameter learning`, :doc:`Inference`, and :doc:`Sampling` for discrete workflows and further options.
+
+
+
+
 .. include:: add_bottom.add

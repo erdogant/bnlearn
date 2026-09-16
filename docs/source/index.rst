@@ -21,7 +21,8 @@ BNLearn's Documentation
 
 * Contains the most-wanted Bayesian pipelines for Causal Discovery
 * Simple and intuitive
-* Focus on structure learning, parameter learning and inference.
+* Focus on structure learning, parameter learning and inference
+* Supports discrete, continuous (linear-Gaussian), and hybrid Conditional Gaussian networks
 
 
 -----------------------------------
