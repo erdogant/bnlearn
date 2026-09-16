@@ -1,42 +1,61 @@
 # Continuous Models
 
-> **Quick API (verified bnlearn ≥ 0.14)**
+> **Quick API (verified bnlearn ≥ 0.14, continuous / hybrid pipeline)**
 >
-> **Gaussian score-based structure learning**
+> **Gaussian structure + linear-Gaussian parameters + inference / sampling**
 > ```python
-> DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
-> # also: scoretype='aic-g' | 'loglik-g'
+> DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')  # or aic-g | loglik-g | auto
+> model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian')  # alias: 'lg'
+> q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.5})
+> df_s = bn.sampling(model, n=200, methodtype='linear-gaussian', seed=0)
 > ```
 >
-> **LiNGAM causal discovery**
+> **Conditional Gaussian (mixed discrete + continuous)**
 > ```python
-> DAG = bn.structure_learning.fit(df, methodtype='direct-lingam')
-> # or methodtype='ica-lingam'
+> DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')  # or aic-cg | loglik-cg | auto
+> model = bn.parameter_learning.fit(DAG, df, methodtype='cg')  # alias: 'conditional-gaussian'
+> q = bn.inference.fit(model, variables=['torque'], evidence={'fail': 1})
+> df_s = bn.sampling(model, n=200, methodtype='cg', seed=0)
+> ```
+>
+> **LiNGAM causal discovery** (structure only)
+> ```python
+> DAG = bn.structure_learning.fit(df, methodtype='direct-lingam')  # or 'ica-lingam'
 > ```
 >
 > Do **not** use discrete scores (`bic`, `k2`, …) on continuous data.
-> Do **not** discretize automatically; prefer the continuous pathway first.
+> Do **not** discretize automatically; prefer the continuous / CG pathway first.
 
 ---
 
-`bnlearn` supports continuous-data modeling through two distinct approaches:
+`bnlearn` supports continuous and hybrid data through several approaches:
 
-1. **Linear Gaussian Bayesian Network scoring**
+1. **Linear Gaussian Bayesian Network scoring** (structure)
 
-   * `loglik-g`
-   * `aic-g`
-   * `bic-g`
+   * `loglik-g`, `aic-g`, `bic-g`
 
-2. **LiNGAM causal discovery**
+2. **Conditional Gaussian (hybrid) scoring** (structure on mixed data)
 
-   * `direct-lingam`
-   * `ica-lingam`
+   * `loglik-cg`, `aic-cg`, `bic-cg`
+   * `scoretype='auto'` selects `bic` / `bic-g` / `bic-cg` from column types
+
+3. **Parameter learning**
+
+   * `methodtype='linear-gaussian'` / `'lg'` — pure continuous
+   * `methodtype='cg'` / `'conditional-gaussian'` — mixed
+   * `methodtype='auto'` — choose from data types
+
+4. **Inference and sampling** on fitted LG / CG models
+
+5. **LiNGAM causal discovery** (structure only)
+
+   * `direct-lingam`, `ica-lingam`
 
 These approaches should not be treated as equivalent.
 
 The Gaussian scores evaluate DAG structures under a linear Gaussian model.
-LiNGAM instead uses linear structural relationships together with
-non-Gaussian error assumptions to infer causal structure.
+Conditional Gaussian scores handle mixed discrete/continuous data.
+LiNGAM uses linear structural relationships with non-Gaussian errors to orient edges.
 
 ---
 
@@ -45,27 +64,25 @@ non-Gaussian error assumptions to infer causal structure.
 The continuous-data workflow is:
 
 ```text
-Continuous data
+Continuous / mixed data
       │
-      ├── Want a Gaussian Bayesian Network?
-      │       │
-      │       └── Hill Climbing / Exhaustive Search
-      │               │
-      │               ├── loglik-g
-      │               ├── aic-g
-      │               └── bic-g
+      ├── Pure continuous → Gaussian BN pipeline
+      │       structure: hc/ex + bic-g | aic-g | loglik-g | auto
+      │       parameters: methodtype='linear-gaussian'
+      │       inference / sampling: methodtype='linear-gaussian' | auto
       │
-      └── Want causal discovery?
-              │
+      ├── Mixed discrete + continuous → Conditional Gaussian pipeline
+      │       structure: hc/ex + bic-cg | aic-cg | loglik-cg | auto
+      │       parameters: methodtype='cg'
+      │       inference / sampling: methodtype='cg' | auto
+      │
+      └── Causal orientation only (structure endpoint)
               ├── direct-lingam
               └── ica-lingam
 ```
 
-The first branch is **score-based Bayesian Network structure learning**.
-
-The second branch is **causal discovery using LiNGAM**.
-
 Do not select LiNGAM merely because the variables are continuous.
+Prefer the Gaussian or CG pipeline when parameters, inference, or sampling are required.
 
 ---
 
@@ -1803,3 +1820,65 @@ Before using a continuous model:
 * [ ] Are learned edges being interpreted appropriately?
 * [ ] Has structure stability been evaluated?
 * [ ] If reproducing scores, are `RSS / n` and `k = p + 2` being used?
+
+---
+
+# Parameter learning for continuous and hybrid models
+
+After structure learning, estimate parameters with a matching method:
+
+| `methodtype` | Data | Result |
+|---|---|---|
+| `linear-gaussian` / `lg` | continuous | `LinearGaussianBayesianNetwork` |
+| `cg` / `conditional-gaussian` | mixed | discrete CPTs + `continuous_cpds` |
+| `auto` | any | chooses bayes / linear-gaussian / cg |
+
+```python
+model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian')
+model = bn.parameter_learning.fit(DAG, df, methodtype='cg')
+model = bn.parameter_learning.fit(DAG, df, methodtype='auto')
+```
+
+For CG fits, local continuous regressions are stored in `model['continuous_cpds']`.
+Discrete-only fits do **not** include that key (stable result keys for existing tests).
+
+---
+
+# Inference on continuous and hybrid models
+
+`bn.inference.fit` routes by model type:
+
+* Discrete → `fit_discrete` (Variable Elimination; original behaviour)
+* Linear-Gaussian → `fit_continuous` (conditional means)
+* CG → discrete VE for discrete queries; CG local means/std for continuous queries
+
+Evidence may mix discrete states and continuous numbers. Use `do={...}` for interventions.
+
+```python
+q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.5})
+q = bn.inference.fit(model, variables=['Y'], do={'X': 1.0})
+print(q.means)  # ContinuousQueryResult
+```
+
+---
+
+# Sampling continuous and hybrid models
+
+```python
+df_s = bn.sampling(model, n=200, methodtype='linear-gaussian', seed=0)
+df_s = bn.sampling(model, n=200, methodtype='cg', do={'fail': 0}, seed=0)
+df_s = bn.sampling(model, n=200, methodtype='auto')
+# or
+df_s = bn.inference.sample(model, n=200, seed=0)
+```
+
+---
+
+# Conditional Gaussian (hybrid) networks
+
+A CG network models mixed data as:
+
+* **Discrete nodes** — standard TabularCPDs
+* **Continuous nodes** — linear Gaussian regressions; if discrete parents exist, one coefficient vector and residual std **per discrete parent configuration**
+
+Use CG when you need both probability-level answers for discrete outcomes and coefficient-level insight among continuous sensors in one graph.

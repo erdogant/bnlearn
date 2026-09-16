@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-Continuous Bayesian Network Example
-====================================
+Continuous and hybrid Bayesian Network example
+==============================================
 
-Demonstrates structure learning from continuous numerical data with bnlearn.
+Full pipeline for continuous (linear-Gaussian) and mixed (Conditional Gaussian)
+data with bnlearn:
 
-Important limitations (bnlearn ≥ 0.14)
---------------------------------------
-* Gaussian scores (bic-g, aic-g, loglik-g) and LiNGAM methods learn a DAG.
-* bnlearn's parameter_learning.fit / inference.fit / sampling are designed for
-  *discrete* Conditional Probability Distributions (TabularCPD).
-* Do NOT call parameter_learning.fit(..., methodtype='bayes') on continuous
-  data and expect a working continuous probabilistic model.
-* For continuous data the practical bnlearn workflow is:
+    structure learning → parameter learning → inference → sampling
 
-      inspect data → structure learning (bic-g / LiNGAM) → inspect DAG
-
-  Optional: discretize (bn.discretize) if a discrete BN is required downstream.
-
-Workflow in this script
------------------------
-1. Generate continuous data with a known linear structure.
-2. Learn structure with Hill Climbing + bic-g.
-3. Compare aic-g and loglik-g.
-4. Run DirectLiNGAM for causal orientation.
-5. Show the discretization path when a discrete BN is needed.
+Workflow
+--------
+1. Continuous linear-Gaussian data: HC + bic-g → linear-gaussian params → query / sample.
+2. Mixed discrete + continuous data: HC + bic-cg → cg params → query / sample.
+3. Optional: DirectLiNGAM for causal orientation only (structure endpoint).
 """
 
 # %% Libraries
@@ -35,97 +23,80 @@ import pandas as pd
 import numpy as np
 
 
-# %% Generate continuous example data
+# %% Continuous linear-Gaussian data
 #
-# True generating process (linear Gaussian):
-#
+# True process:
 #     X1 → X2
 #     X1 → X3
 #     X2 → X3
 
 np.random.seed(42)
 n = 500
-
 X1 = np.random.normal(0, 1, n)
 X2 = 2.0 * X1 + np.random.normal(0, 0.5, n)
 X3 = 1.0 * X1 + 1.5 * X2 + np.random.normal(0, 0.5, n)
-
 df = pd.DataFrame({'X1': X1, 'X2': X2, 'X3': X3})
 
-print('\n[bnlearn] > Continuous example data:')
-print(df.head())
-print('\n[bnlearn] > Data types:')
-print(df.dtypes)
-print('\n[bnlearn] > Shape:', df.shape)
-print('\n[bnlearn] > Statistics:')
-print(df.describe())
+print('\n[bnlearn] > Continuous data shape:', df.shape)
 
 
-# %% Structure learning with Gaussian BIC
-DAG = bn.structure_learning.fit(
-    df,
-    methodtype='hc',
-    scoretype='bic-g',
-    verbose=3,
-)
-
-print('\n[bnlearn] > Learned DAG (bic-g):')
-print(DAG['model_edges'])
-print('\n[bnlearn] > Model type:', type(DAG['model']))
-print('\n[bnlearn] > Structure scores:', DAG.get('structure_scores'))
-
-# Note: the returned object is a structure (DAG). It does not contain
-# continuous CPDs suitable for bn.inference.fit / bn.sampling.
+# %% Structure learning (Gaussian BIC)
+DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
+print('[bnlearn] > Continuous structure edges:', DAG['model_edges'])
+print('[bnlearn] > data_type:', DAG['config'].get('data_type'))
 
 
-# %% Alternative Gaussian scores
-DAG_aic = bn.structure_learning.fit(
-    df,
-    methodtype='hc',
-    scoretype='aic-g',
-    verbose=0,
-)
-print('\n[bnlearn] > DAG (aic-g):', DAG_aic['model_edges'])
-
-DAG_loglik = bn.structure_learning.fit(
-    df,
-    methodtype='hc',
-    scoretype='loglik-g',
-    verbose=0,
-)
-print('\n[bnlearn] > DAG (loglik-g):', DAG_loglik['model_edges'])
+# %% Parameter learning (linear-Gaussian)
+model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian', verbose=0)
+print('[bnlearn] > LG model type:', type(model['model']).__name__)
+print('[bnlearn] > LG CPDs:', len(model['model'].get_cpds()))
 
 
-# %% LiNGAM causal discovery (continuous)
-# DirectLiNGAM uses non-Gaussian residual assumptions to orient edges.
+# %% Inference (conditional mean)
+q = bn.inference.fit(model, variables=['X3'], evidence={'X1': 0.0}, verbose=0)
+print('[bnlearn] > P-mean(X3 | X1=0):', getattr(q, 'means', q))
+
+q_do = bn.inference.fit(model, variables=['X3'], do={'X1': 1.0}, verbose=0)
+print('[bnlearn] > P-mean(X3 | do(X1=1)):', getattr(q_do, 'means', q_do))
+
+
+# %% Sampling
+df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', seed=0, verbose=0)
+print('[bnlearn] > LG samples shape:', df_s.shape)
+
+
+# %% Mixed / Conditional Gaussian data
+rng = np.random.default_rng(0)
+fail = rng.integers(0, 2, size=n)
+torque = rng.normal(size=n) + fail * 2.0
+df_mix = pd.DataFrame({'fail': fail, 'torque': torque})
+
+DAG_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg', verbose=0)
+print('\n[bnlearn] > Mixed structure edges:', DAG_mix['model_edges'])
+print('[bnlearn] > data_type:', DAG_mix['config'].get('data_type'))
+
+model_mix = bn.parameter_learning.fit(DAG_mix, df_mix, methodtype='cg', verbose=0)
+print('[bnlearn] > CG continuous_cpds nodes:',
+      [c['variable'] for c in (model_mix.get('continuous_cpds') or [])])
+
+q_cg = bn.inference.fit(model_mix, variables=['torque'], evidence={'fail': 1}, verbose=0)
+print('[bnlearn] > CG torque | fail=1:', getattr(q_cg, 'means', q_cg))
+
+df_cg = bn.sampling(model_mix, n=100, methodtype='cg', seed=0, verbose=0)
+print('[bnlearn] > CG samples shape:', df_cg.shape)
+
+
+# %% Optional: LiNGAM (structure only)
 try:
-    DAG_lingam = bn.structure_learning.fit(
-        df,
-        methodtype='direct-lingam',
-        verbose=3,
-    )
-    print('\n[bnlearn] > DirectLiNGAM edges:')
-    print(DAG_lingam.get('model_edges'))
+    DAG_lingam = bn.structure_learning.fit(df, methodtype='direct-lingam', verbose=0)
+    print('\n[bnlearn] > DirectLiNGAM edges:', DAG_lingam.get('model_edges'))
 except Exception as exc:
     print('\n[bnlearn] > DirectLiNGAM skipped:', type(exc).__name__, exc)
 
 
-# %% Optional path: discretize then use a discrete BN
-# Only when the user explicitly needs discrete inference/sampling.
-# Example (commented — can be slow on large data):
-#
-# edges = DAG["model_edges"] or [("X1", "X2"), ("X2", "X3")]
-# df_disc = bn.discretize(df, edges, continuous_columns=["X1", "X2", "X3"], max_iterations=8)
-# DAG_disc = bn.structure_learning.fit(df_disc, methodtype="hc", scoretype="bic")
-# model_disc = bn.parameter_learning.fit(DAG_disc, df_disc, methodtype="bayes")
-
-print("\n[bnlearn] > For discrete inference on continuous data, discretize first")
-print("            (bn.discretize) then run the discrete BN pipeline.")
-
 # %% Summary
 print('\n' + '=' * 70)
-print('Continuous Bayesian Network example completed successfully.')
+print('Continuous / hybrid pipeline completed.')
+print('  linear-gaussian: structure(bic-g) → params(lg) → inference → sampling')
+print('  conditional-gaussian: structure(bic-cg) → params(cg) → inference → sampling')
 print('=' * 70)
-print('Gaussian structure edges (bic-g):', DAG['model_edges'])
-print('Remember: continuous structure ≠ discrete parameter learning.')
-print('Use discretization only when a discrete BN is required downstream.')

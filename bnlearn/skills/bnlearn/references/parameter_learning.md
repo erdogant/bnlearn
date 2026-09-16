@@ -6,8 +6,11 @@
 > model = bn.parameter_learning.fit(
 >     model,                  # output of structure_learning.fit / make_DAG / import_DAG
 >     df,                     # DataFrame
->     methodtype='bayes',     # 'bayes' | 'ml' | 'maximumlikelihood'
->     scoretype='bdeu',
+>     methodtype='bayes',     # discrete: 'bayes' | 'ml' | 'maximumlikelihood'
+>                             # continuous: 'linear-gaussian' | 'lg'
+>                             # mixed: 'cg' | 'conditional-gaussian'
+>                             # or 'auto' / 'DBN'
+>     scoretype='bdeu',       # discrete Bayesian prior (bdeu | k2 | ...)
 >     smooth=None,
 >     n_jobs=-1,
 >     verbose=3,
@@ -15,8 +18,11 @@
 > ```
 >
 > - Always run **after** structure learning (or after supplying a DAG).
-> - `methodtype='bayes'` is preferred when counts are sparse.
-> - After this call the model contains CPDs → ready for inference, prediction, sampling.
+> - Discrete: `methodtype='bayes'` is preferred when counts are sparse.
+> - Continuous: `methodtype='linear-gaussian'` fits a `LinearGaussianBayesianNetwork`.
+> - Mixed: `methodtype='cg'` fits discrete CPTs + `continuous_cpds` (CG locals).
+> - `methodtype='auto'` chooses bayes / linear-gaussian / cg from column types.
+> - After this call the model is ready for inference, prediction, sampling.
 
 ---
 
@@ -49,16 +55,13 @@ CPDs
 Parameterized Bayesian Network
 ```
 
-The current implementation supports parameter learning for **discrete nodes**:
+The implementation supports:
 
 ```text
-Maximum Likelihood Estimation
-Bayesian Parameter Estimation
-```
-
-It also contains a separate pathway for:
-
-```text
+Discrete: Maximum Likelihood (ml) and Bayesian Estimation (bayes)
+Continuous: Linear-Gaussian (linear-gaussian / lg)
+Hybrid: Conditional Gaussian (cg / conditional-gaussian)
+Auto: choose from detected data types (auto)
 Dynamic Bayesian Networks (DBNs)
 ```
 
@@ -1801,3 +1804,23 @@ Before parameter learning:
 * [ ] Are parameter estimation and structure learning being treated as
   separate steps?
 * [ ] Are the learned parameters being distinguished from causal claims?
+
+---
+
+# Linear-Gaussian and Conditional-Gaussian parameter learning
+
+```python
+# Pure continuous
+model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian')
+# model['model'] is LinearGaussianBayesianNetwork
+
+# Mixed / Conditional Gaussian
+model = bn.parameter_learning.fit(DAG, df, methodtype='cg')
+# model['continuous_cpds'] holds configuration-specific linear Gaussians
+# model['model'] is the discrete DiscreteBayesianNetwork sub-model (or None)
+
+# Automatic selection
+model = bn.parameter_learning.fit(DAG, df, methodtype='auto')
+```
+
+Discrete result keys remain stable: `continuous_cpds` is only attached for CG fits.

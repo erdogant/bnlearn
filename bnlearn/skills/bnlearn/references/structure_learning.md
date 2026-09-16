@@ -8,6 +8,8 @@
 >     methodtype='hc',          # NEVER use method= ; correct name is methodtype
 >     scoretype='bic',          # discrete: bic|aic|k2|bdeu|bds
 >                               # continuous: bic-g|aic-g|loglik-g
+>                               # hybrid CG: bic-cg|aic-cg|loglik-cg
+>                               # auto: bic / bic-g / bic-cg from data types
 >     black_list=None,
 >     white_list=None,
 >     bw_list_method=None,      # 'edges' | 'nodes' | None

@@ -4,19 +4,23 @@
 >
 > ```python
 > df_samples = bn.sampling(
->     DAG,                     # model that already contains CPDs
+>     DAG,                     # model that already contains CPDs / LG / CG params
 >     n=1000,
->     methodtype='bayes',      # 'bayes' | 'gibbs'
+>     methodtype='bayes',      # discrete: 'bayes' | 'gibbs'
+>                              # continuous: 'linear-gaussian' | 'lg'
+>                              # mixed: 'cg' | 'conditional-gaussian'
+>                              # or 'auto'
 >     evidence=None,           # optional conditioning dict
+>     do=None,                 # optional interventions (LG / CG)
+>     seed=None,               # continuous / CG sampling
 >     verbose=0,
 > )
 > ```
 >
 > Rules enforced by the library:
 > - `methodtype='gibbs'` does **not** accept `evidence`.
-> - Unknown evidence variables → `ValueError`.
-> - Evidence states outside the CPD support → `ValueError`.
-> - Jointly impossible evidence (zero probability) → `ValueError`.
+> - Discrete: unknown evidence variables / invalid states / impossible evidence → `ValueError`.
+> - Continuous / CG: use `methodtype='linear-gaussian'`, `'cg'`, or `'auto'`.
 
 ---
 
@@ -26,11 +30,14 @@ In `bnlearn`, sampling uses the probability distributions encoded in the
 network's Conditional Probability Distributions (CPDs) to generate new
 observations.
 
-The function supports two sampling methods:
+The function supports:
 
 ```text
-bayes   – supports unconditional and conditional (rejection) sampling
-gibbs   – does not support evidence
+bayes            – discrete forward / rejection sampling (optional evidence)
+gibbs            – discrete Gibbs (no evidence)
+linear-gaussian  – LinearGaussianBayesianNetwork.simulate (optional do / evidence)
+cg               – Conditional Gaussian hybrid sampling
+auto             – detect model type
 ```
 
 ---
@@ -1838,3 +1845,16 @@ gibbs + evidence
 `bnlearn.sampling()` therefore provides synthetic-data generation directly from
 a parameterized Bayesian Network, with conditional generation available
 through Bayesian rejection sampling.
+
+---
+
+# Sampling continuous and hybrid models
+
+```python
+df_s = bn.sampling(model_lg, n=200, methodtype='linear-gaussian', seed=0)
+df_s = bn.sampling(model_lg, n=200, methodtype='linear-gaussian', do={'X': 0.0}, seed=0)
+df_s = bn.sampling(model_cg, n=200, methodtype='cg', evidence={'fail': 0}, seed=0)
+df_s = bn.sampling(model, n=200, methodtype='auto')
+# convenience wrapper
+df_s = bn.inference.sample(model, n=200, seed=0)
+```

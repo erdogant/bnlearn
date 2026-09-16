@@ -80,6 +80,23 @@ print(query.df)
 #   model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
 #   query = bn.inference.fit(model, variables=['D'], evidence={'A': 1}, verbose=0)
 
+# %% Continuous (linear-Gaussian) inference
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(5)
+n = 300
+x = rng.normal(size=n)
+y = 1.5 * x + rng.normal(scale=0.4, size=n)
+df_c = pd.DataFrame({'X': x, 'Y': y})
+DAG_c = bn.structure_learning.fit(df_c, methodtype='hc', scoretype='bic-g', verbose=0)
+model_c = bn.parameter_learning.fit(DAG_c, df_c, methodtype='linear-gaussian', verbose=0)
+q_c = bn.inference.fit(model_c, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+print('\nContinuous P-mean(Y | X=0):', getattr(q_c, 'means', q_c))
+q_do = bn.inference.fit(model_c, variables=['Y'], do={'X': 1.0}, verbose=0)
+print('Continuous P-mean(Y | do(X=1)):', getattr(q_do, 'means', q_do))
+
+
 print('\n' + '=' * 70)
 print('Inference example completed successfully.')
 print('=' * 70)

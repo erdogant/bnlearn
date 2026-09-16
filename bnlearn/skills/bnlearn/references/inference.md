@@ -4,24 +4,28 @@
 >
 > ```python
 > query = bn.inference.fit(
->     model,                       # must already contain CPDs
+>     model,                       # discrete CPDs, LinearGaussian, or CG model
 >     variables=['Target'],        # list of query variables
->     evidence={'A': 1, 'B': 0},   # dict of observed states (conditioning)
+>     evidence={'A': 1, 'B': 0},   # discrete states and/or continuous numbers
 >     to_df=True,
 >     elimination_order='greedy',
 >     joint=True,
 >     verbose=3,
 >     do=None,                     # interventional assignment, e.g. {'X': 1}
 > )
-> # query.df → DataFrame with columns = variables + 'p'
-> # bn.query2df(query, variables=[...]) for reshaping
+> # Discrete: query.df → columns = variables + 'p'
+> # Continuous/CG continuous: ContinuousQueryResult with .means / .df / .text
 > ```
 >
-> Evidence / `do` variable names and states must exist in the model; otherwise a
-> `ValueError` is raised. A variable cannot appear in both `evidence` and `do`.
+> `fit()` routes to `fit_discrete` (Variable Elimination) or `fit_continuous`
+> (linear-Gaussian / Conditional Gaussian) from the model type.
+>
+> Evidence / `do` variable names must exist in the model. A variable cannot appear
+> in both `evidence` and `do`.
 >
 > - `evidence={'X': x}` → observational `P(Y | X = x)`
 > - `do={'X': x}` → interventional `P(Y | do(X = x))` (Pearl's do-operator)
+> - Continuous evidence example: `evidence={'X': 0.5}` on a linear-Gaussian model
 
 ---
 
@@ -1883,3 +1887,23 @@ P(Query | Evidence, do(...))
 questions about the model you provide. Use `evidence` for observation and
 `do` for intervention. It does not learn new parameters or invent causal
 structure.
+
+---
+
+# Continuous and hybrid inference
+
+```python
+# Linear-Gaussian conditional mean
+q = bn.inference.fit(model_lg, variables=['Y'], evidence={'X': 0.0})
+print(q.means)
+
+# Intervention on continuous variable
+q = bn.inference.fit(model_lg, variables=['Y'], do={'X': 1.0})
+
+# CG: continuous node given discrete evidence
+q = bn.inference.fit(model_cg, variables=['torque'], evidence={'fail': 1})
+
+# Explicit backends
+q = bn.inference.fit_discrete(model_disc, variables=['Wet_Grass'], evidence={'Rain': 1})
+q = bn.inference.fit_continuous(model_lg, variables=['Y'], evidence={'X': 0.5})
+```

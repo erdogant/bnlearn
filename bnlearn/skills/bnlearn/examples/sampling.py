@@ -65,6 +65,22 @@ gibbs = bn.sampling(model, n=200, methodtype='gibbs', verbose=0)
 print('\n[bnlearn] > Gibbs samples:', gibbs.shape)
 print(gibbs.head())
 
+# %% Continuous (linear-Gaussian) sampling
+import numpy as np
+import pandas as pd
+
+rng = np.random.default_rng(7)
+n = 200
+x = rng.normal(size=n)
+y = 0.5 * x + rng.normal(scale=0.5, size=n)
+df_c = pd.DataFrame({'X': x, 'Y': y})
+DAG_c = bn.structure_learning.fit(df_c, methodtype='hc', scoretype='bic-g', verbose=0)
+model_c = bn.parameter_learning.fit(DAG_c, df_c, methodtype='linear-gaussian', verbose=0)
+df_lg = bn.sampling(model_c, n=50, methodtype='linear-gaussian', seed=0, verbose=0)
+print('\n[bnlearn] > Linear-Gaussian samples:', df_lg.shape)
+print(df_lg.head())
+
+
 print('\n' + '=' * 70)
 print('Sampling example completed successfully.')
 print('=' * 70)

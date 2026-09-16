@@ -223,12 +223,16 @@ When the assumptions are appropriate, prefer continuous structure learning
 (`scoretype='bic-g'` / `'aic-g'` / `'loglik-g'`, or LiNGAM methods) rather
 than discarding information through discretization.
 
-**API limitation:** `parameter_learning.fit`, `inference.fit`, and
-`sampling` in bnlearn are built around **discrete** TabularCPDs. After
-continuous structure learning you obtain a DAG structure; do not expect
-the discrete parameter/inference/sampling pipeline to work unchanged on
-raw continuous columns. If discrete inference is required, discretize
-explicitly (see `bn.discretize`) and state that choice.
+**Full continuous pipeline** (structure → parameters → inference / sampling):
+
+```python
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
+q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.5})
+df_s = bn.sampling(model, n=200, methodtype='linear-gaussian')
+```
+
+Discretize only when a discrete BN is explicitly required (`bn.discretize`).
 
 See:
 
@@ -240,10 +244,20 @@ See:
 
 When variables contain a mixture of discrete and continuous values:
 
-1. Identify the variable types.
-2. Determine whether the selected bnlearn method supports the combination.
-3. Select a compatible scoring or testing method.
-4. Do not silently convert variables without explaining the consequences.
+1. Identify the variable types (`utils.infer_data_type` / automatic detection).
+2. Prefer Conditional Gaussian (CG) modeling over forced discretization.
+3. Structure: `scoretype='bic-cg'` (or `'auto'`).
+4. Parameters: `methodtype='cg'` (or `'auto'`).
+5. Inference and sampling work on the fitted CG model.
+
+```python
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
+model = bn.parameter_learning.fit(model, df, methodtype='cg')
+q = bn.inference.fit(model, variables=['torque'], evidence={'fail': 1})
+df_s = bn.sampling(model, n=200, methodtype='cg')
+```
+
+Do not silently convert variables without explaining the consequences.
 
 See:
 
@@ -293,6 +307,8 @@ Typical scores:
 
 * Discrete: `bic`, `aic`, `k2`, `bdeu`, `bds`
 * Continuous (Gaussian): `bic-g`, `aic-g`, `loglik-g`
+* Hybrid / Conditional Gaussian: `bic-cg`, `aic-cg`, `loglik-cg`
+* `auto` — detect data type and select `bic` / `bic-g` / `bic-cg`
 
 See:
 
