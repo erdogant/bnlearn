@@ -191,3 +191,65 @@ def test_hillclimb_supports_gaussian_scores(gaussian_data, scoretype):
     assert scoretype in model["structure_scores"]
     assert np.isfinite(model["structure_scores"][scoretype])
     
+
+# %% Parameter learning: linear-gaussian and CG
+def test_parameter_learning_linear_gaussian(gaussian_data):
+    """Pure continuous data: linear-gaussian parameter learning."""
+    # Structure from HC with Gaussian score
+    model = bn.structure_learning.fit(
+        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=500, verbose=0
+    )
+    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='linear-gaussian', verbose=0)
+    assert fitted is not None
+    assert 'model' in fitted
+    assert fitted['config']['method'] in ('linear-gaussian', 'lg')
+    assert fitted['config']['data_type'] == 'continuous'
+    # For pure linear-gaussian, continuous_cpds key is present but set to None
+    assert fitted.get('continuous_cpds') is None
+    cpds = fitted['model'].get_cpds()
+    assert len(cpds) == gaussian_data.shape[1]
+    for cpd in cpds:
+        assert getattr(cpd, 'std', 0) > 0
+
+
+def test_parameter_learning_auto_continuous(gaussian_data):
+    model = bn.structure_learning.fit(
+        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0
+    )
+    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='auto', verbose=0)
+    assert fitted['config']['method'] == 'linear-gaussian'
+
+
+def test_parameter_learning_cg_mixed():
+    """Mixed data: CG parameter learning yields discrete model + continuous_cpds."""
+    import pandas as pd
+    rng = np.random.default_rng(3)
+    n = 400
+    fail = rng.integers(0, 2, size=n)
+    torque = rng.normal(loc=0, scale=1, size=n) + fail * 2.0
+    wear = rng.normal(size=n)
+    df = pd.DataFrame({'fail': fail, 'torque': torque, 'wear': wear})
+
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='cg', verbose=0)
+    assert fitted is not None
+    assert fitted['config']['data_type'] == 'mixed'
+    assert 'continuous_cpds' in fitted
+    assert fitted['continuous_cpds'] is not None
+    vars_cg = {c['variable'] for c in fitted['continuous_cpds']}
+    assert 'torque' in vars_cg or 'wear' in vars_cg
+    # Discrete result keys used by existing tests remain present
+    for key in ('model', 'adjmat', 'config', 'model_edges', 'structure_scores', 'independence_test'):
+        assert key in fitted
+
+
+def test_parameter_learning_discrete_keys_stable(gaussian_data):
+    """Discrete bayes path must not populate continuous_cpds (package test compatibility)."""
+    df = bn.import_example()
+    model = bn.import_DAG('sprinkler', CPD=False, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+    # The key is present but must be None for the discrete path
+    assert fitted.get('continuous_cpds') is None
+    assert set(fitted.keys()) >= {
+        'model', 'adjmat', 'config', 'model_edges', 'structure_scores', 'independence_test'
+    }

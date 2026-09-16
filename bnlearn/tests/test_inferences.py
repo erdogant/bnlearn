@@ -227,6 +227,7 @@ def test_inference_linear_gaussian_do():
 
 def test_inference_sample_linear_gaussian():
     import pandas as pd
+    from bnlearn.sampling import sampling as bn_sampling
     rng = np.random.default_rng(7)
     n = 200
     x = rng.normal(size=n)
@@ -234,7 +235,7 @@ def test_inference_sample_linear_gaussian():
     df = pd.DataFrame({'X': x, 'Y': y})
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=200, verbose=0)
     fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
-    samples = bn.inference.sample(fitted, n=50, seed=0, verbose=0)
+    samples = bn_sampling(fitted, methodtype='auto', n=50, seed=0, evidence=None, do=None, verbose=0)
     assert isinstance(samples, pd.DataFrame)
     assert samples.shape[0] == 50
     assert set(samples.columns) >= {'X', 'Y'}
