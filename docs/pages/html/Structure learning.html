@@ -78,6 +78,7 @@
 <li class="toctree-l1"><a class="reference internal" href="#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#naivebayes">NaiveBayes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#continuous-and-hybrid-structure-scores">Continuous and hybrid structure scores</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
@@ -91,6 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#do-calculus-intervention">Do-calculus (Intervention)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
@@ -98,6 +100,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#conditional-gaussian-hybrid-networks">Conditional Gaussian (Hybrid) Networks</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -108,6 +111,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#conditional-sampling">Conditional Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#sampling-continuous-and-hybrid-models">Sampling continuous and hybrid models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -249,9 +253,10 @@ Note that a local search strategy makes incremental changes aimed at improving t
 <p>Each approach can be scored using the following scoretypes:</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>bic</p></li>
-<li><p>k2</p></li>
-<li><p>bdeu</p></li>
+<li><p>Discrete: <code class="docutils literal notranslate"><span class="pre">bic</span></code>, <code class="docutils literal notranslate"><span class="pre">k2</span></code>, <code class="docutils literal notranslate"><span class="pre">bdeu</span></code>, <code class="docutils literal notranslate"><span class="pre">bds</span></code>, <code class="docutils literal notranslate"><span class="pre">aic</span></code></p></li>
+<li><p>Continuous (Gaussian): <code class="docutils literal notranslate"><span class="pre">loglik-g</span></code>, <code class="docutils literal notranslate"><span class="pre">aic-g</span></code>, <code class="docutils literal notranslate"><span class="pre">bic-g</span></code></p></li>
+<li><p>Hybrid / Conditional Gaussian: <code class="docutils literal notranslate"><span class="pre">loglik-cg</span></code>, <code class="docutils literal notranslate"><span class="pre">aic-cg</span></code>, <code class="docutils literal notranslate"><span class="pre">bic-cg</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auto</span></code> — detect data type and select <code class="docutils literal notranslate"><span class="pre">bic</span></code> / <code class="docutils literal notranslate"><span class="pre">bic-g</span></code> / <code class="docutils literal notranslate"><span class="pre">bic-cg</span></code></p></li>
 </ul>
 </div></blockquote>
 </section>
@@ -658,13 +663,47 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </tr>
 </tbody>
 </table>
-<p><strong>References</strong></p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p><a class="reference external" href="https://ermongroup.github.io/cs228-notes/learning/structure/">https://ermongroup.github.io/cs228-notes/learning/structure/</a></p></li>
-<li><p><a class="reference external" href="https://doi.org/10.1007/978-0-387-30164-8_850">https://doi.org/10.1007/978-0-387-30164-8_850</a></p></li>
-</ol>
-</div></blockquote>
+</section>
+<section id="continuous-and-hybrid-structure-scores">
+<h1>Continuous and hybrid structure scores<a class="headerlink" href="#continuous-and-hybrid-structure-scores" title="Link to this heading"></a></h1>
+<p>When variables are continuous, use the Gaussian scores with score-based search
+(Hill Climbing or Exhaustive Search):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">loglik-g</span></code> — multivariate Gaussian log-likelihood</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aic-g</span></code> — AIC for linear-Gaussian networks</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bic-g</span></code> — BIC for linear-Gaussian networks (recommended default for continuous data)</p></li>
+</ul>
+<p>When the data mix discrete and continuous columns, use the Conditional Gaussian scores:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">loglik-cg</span></code>, <code class="docutils literal notranslate"><span class="pre">aic-cg</span></code>, <code class="docutils literal notranslate"><span class="pre">bic-cg</span></code></p></li>
+</ul>
+<p>Setting <code class="docutils literal notranslate"><span class="pre">scoretype='auto'</span></code> runs a simple type detector and picks <code class="docutils literal notranslate"><span class="pre">bic</span></code>, <code class="docutils literal notranslate"><span class="pre">bic-g</span></code>,
+or <code class="docutils literal notranslate"><span class="pre">bic-cg</span></code>. For the constraint-based PC algorithm, the default CI test switches
+from <code class="docutils literal notranslate"><span class="pre">chi_square</span></code> to <code class="docutils literal notranslate"><span class="pre">pearsonr</span></code> on continuous data when left at the default.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Continuous example</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-g&#39;</span><span class="p">)</span>
+<span class="c1"># model = bn.structure_learning.fit(df, methodtype=&#39;hc&#39;, scoretype=&#39;auto&#39;)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="c1"># Mixed (hybrid) example</span>
+<span class="n">fail</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">torque</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">fail</span> <span class="o">*</span> <span class="mf">1.5</span>
+<span class="n">df_mix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="n">fail</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="n">torque</span><span class="p">})</span>
+<span class="n">model_mix</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_mix</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-cg&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model_mix</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More background and full continuous workflows are described in <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a>.</p>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

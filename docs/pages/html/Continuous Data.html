@@ -72,6 +72,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#continuous-and-hybrid-structure-scores">Continuous and hybrid structure scores</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
@@ -85,6 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#do-calculus-intervention">Do-calculus (Intervention)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul class="current">
@@ -102,6 +104,13 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#conditional-gaussian-hybrid-networks">Conditional Gaussian (Hybrid) Networks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#structure-scores-for-hybrid-data">Structure scores for hybrid data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameter-learning-for-continuous-and-hybrid-models">Parameter learning for continuous and hybrid models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inference-on-continuous-and-hybrid-models">Inference on continuous and hybrid models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sampling-from-continuous-and-hybrid-models">Sampling from continuous and hybrid models</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -112,6 +121,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#conditional-sampling">Conditional Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#sampling-continuous-and-hybrid-models">Sampling continuous and hybrid models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -508,6 +518,118 @@ The structure learning algorithm searches for the directed acyclic graph (DAG) t
 </tr>
 </tbody>
 </table>
+</section>
+<section id="conditional-gaussian-hybrid-networks">
+<h1>Conditional Gaussian (Hybrid) Networks<a class="headerlink" href="#conditional-gaussian-hybrid-networks" title="Link to this heading"></a></h1>
+<p>Many real datasets mix continuous sensor readings with discrete labels (for example failure indicators).
+A <strong>Conditional Gaussian (CG)</strong> network models this hybrid setting:</p>
+<ul class="simple">
+<li><p><strong>Discrete nodes</strong> keep standard conditional probability tables (CPTs), as in a discrete Bayesian network.</p></li>
+<li><p><strong>Continuous nodes</strong> are modelled as linear Gaussian regressions on their parents.</p></li>
+<li><p>If a continuous node has discrete parents, it gets one set of regression coefficients and one residual standard deviation <strong>per configuration</strong> of those discrete parents.</p></li>
+</ul>
+<p>This is the natural model when you want coefficient-level insight among continuous variables and probability-level answers for discrete outcomes in the same graph.</p>
+<section id="structure-scores-for-hybrid-data">
+<h2>Structure scores for hybrid data<a class="headerlink" href="#structure-scores-for-hybrid-data" title="Link to this heading"></a></h2>
+<p>Score-based structure learning supports Conditional Gaussian scores (via pgmpy):</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">loglik-cg</span></code> — Conditional Gaussian log-likelihood (no complexity penalty).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">aic-cg</span></code> — AIC for Conditional Gaussian networks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bic-cg</span></code> — BIC for Conditional Gaussian networks (preferred default for mixed data).</p></li>
+</ul>
+<p>You can also set <code class="docutils literal notranslate"><span class="pre">scoretype='auto'</span></code>. bnlearn then detects discrete / continuous / mixed columns and selects <code class="docutils literal notranslate"><span class="pre">bic</span></code>, <code class="docutils literal notranslate"><span class="pre">bic-g</span></code>, or <code class="docutils literal notranslate"><span class="pre">bic-cg</span></code> accordingly.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="c1"># Synthetic mixed data: discrete failure label + continuous torque</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">fail</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">torque</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">fail</span> <span class="o">*</span> <span class="mf">1.5</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="n">fail</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="n">torque</span><span class="p">})</span>
+
+<span class="c1"># Structure learning with Conditional Gaussian BIC</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-cg&#39;</span><span class="p">)</span>
+<span class="c1"># Or let bnlearn choose the score from the data types:</span>
+<span class="c1"># model = bn.structure_learning.fit(df, methodtype=&#39;hc&#39;, scoretype=&#39;auto&#39;)</span>
+
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="parameter-learning-for-continuous-and-hybrid-models">
+<h2>Parameter learning for continuous and hybrid models<a class="headerlink" href="#parameter-learning-for-continuous-and-hybrid-models" title="Link to this heading"></a></h2>
+<p>After structure learning, estimate parameters with the matching method:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='linear-gaussian'</span></code> (alias <code class="docutils literal notranslate"><span class="pre">'lg'</span></code>) — pure continuous data; fits a <code class="docutils literal notranslate"><span class="pre">LinearGaussianBayesianNetwork</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='cg'</span></code> (alias <code class="docutils literal notranslate"><span class="pre">'conditional-gaussian'</span></code>) — mixed data; discrete CPTs plus configuration-specific linear Gaussians stored in <code class="docutils literal notranslate"><span class="pre">continuous_cpds</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='auto'</span></code> — chooses bayes / linear-gaussian / cg from detected column types.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
+
+<span class="c1"># Continuous structure + linear-Gaussian parameters</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-g&#39;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;linear-gaussian&#39;</span><span class="p">)</span>
+
+<span class="c1"># Mixed example</span>
+<span class="n">fail</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">torque</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">fail</span> <span class="o">*</span> <span class="mf">2.0</span>
+<span class="n">df_mix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="n">fail</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="n">torque</span><span class="p">})</span>
+<span class="n">model_mix</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_mix</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-cg&#39;</span><span class="p">)</span>
+<span class="n">model_mix</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model_mix</span><span class="p">,</span> <span class="n">df_mix</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;cg&#39;</span><span class="p">)</span>
+<span class="c1"># model_mix[&#39;continuous_cpds&#39;] holds the CG local regressions</span>
+</pre></div>
+</div>
+</section>
+<section id="inference-on-continuous-and-hybrid-models">
+<h2>Inference on continuous and hybrid models<a class="headerlink" href="#inference-on-continuous-and-hybrid-models" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bn.inference.fit</span></code> routes automatically:</p>
+<ul class="simple">
+<li><p>Discrete Bayesian networks → Variable Elimination (<code class="docutils literal notranslate"><span class="pre">fit_discrete</span></code>).</p></li>
+<li><p>Linear-Gaussian models → conditional means (<code class="docutils literal notranslate"><span class="pre">fit_continuous</span></code>).</p></li>
+<li><p>Conditional-Gaussian models → discrete VE for discrete query nodes and CG local regressions for continuous query nodes.</p></li>
+</ul>
+<p>Evidence may mix discrete states and continuous numbers. Interventions use the same <code class="docutils literal notranslate"><span class="pre">do</span></code> argument as in discrete inference.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query continuous Y given X (linear-Gaussian model from above)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">means</span><span class="p">)</span>   <span class="c1"># conditional mean of Y</span>
+
+<span class="c1"># Intervention: set X by do-operator</span>
+<span class="n">q_do</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">do</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
+
+<span class="c1"># CG: continuous node given discrete evidence</span>
+<span class="n">q_cg</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model_mix</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;torque&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+</pre></div>
+</div>
+</section>
+<section id="sampling-from-continuous-and-hybrid-models">
+<h2>Sampling from continuous and hybrid models<a class="headerlink" href="#sampling-from-continuous-and-hybrid-models" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bn.sampling</span></code> supports continuous and CG models in addition to discrete forward / Gibbs sampling:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='linear-gaussian'</span></code> (or <code class="docutils literal notranslate"><span class="pre">'lg'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='cg'</span></code> (or <code class="docutils literal notranslate"><span class="pre">'conditional-gaussian'</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='auto'</span></code> — detect type from the fitted model</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Samples from a linear-Gaussian network</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;linear-gaussian&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Samples from a Conditional-Gaussian network</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model_mix</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;cg&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Or let bnlearn detect the model type</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See also <a class="reference internal" href="Structure%20learning.html"><span class="doc">Causation</span></a>, <a class="reference internal" href="Parameter%20learning.html"><span class="doc">Parameter learning</span></a>, <a class="reference internal" href="Inference.html"><span class="doc">Inference</span></a>, and <a class="reference internal" href="Sampling.html"><span class="doc">Forward Sampling</span></a> for discrete workflows and further options.</p>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
@@ -516,6 +638,7 @@ The structure learning algorithm searches for the directed acyclic graph (DAG) t
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
+</section>
 
 
            </div>

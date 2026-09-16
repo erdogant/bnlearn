@@ -36,7 +36,7 @@ What is the probability of *wet grass* given that it *Rains*, and the *sprinkler
 
    # Import library
    import bnlearn as bn
-   
+
    model = bn.import_DAG('sprinkler')
    q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
@@ -58,7 +58,7 @@ Example (2)
 What is the probability of wet grass given and Rain given that the *Sprinkler* is on?
 
 .. code-block:: python
-   
+
    q2 = bn.inference.fit(model, variables=['Wet_Grass','Rain'], evidence={'Sprinkler':1})
 
 
@@ -105,8 +105,16 @@ Lets make the inference:
   | lung(1) |      0.8577 |
   +---------+-------------+
 
+  # Do operator
+  q2 = bn.inference.fit(model, variables=['lung'], do={'xray':0, 'smoke':1})
 
-
+  +----+--------+------+
+  |    |   lung |    p |
+  +====+========+======+
+  |  0 |      0 | 0.01 |
+  +----+--------+------+
+  |  1 |      1 | 0.99 |
+  +----+--------+------+
 
 
 Do-calculus (Intervention)
@@ -185,6 +193,54 @@ Example (6) — Multiple interventions
 When ``to_df=True`` (the default), interventions are labeled ``do(X)=…`` in
 ``query.text``. ``do`` is the last parameter of ``fit``, so existing positional
 calls remain compatible.
+
+
+Continuous and hybrid inference
+=========================================
+
+``bn.inference.fit`` detects the fitted model type and routes accordingly:
+
+* **Discrete** Bayesian networks → ``fit_discrete`` (Variable Elimination; original behaviour).
+* **Linear-Gaussian** networks → ``fit_continuous`` (conditional means via predict / simulate).
+* **Conditional-Gaussian** (mixed) networks → discrete queries via Variable Elimination and continuous queries via the fitted CG local regressions.
+
+You can also call ``fit_discrete`` or ``fit_continuous`` directly. Evidence may contain
+discrete states and continuous numbers on hybrid models. The do-operator works for
+discrete, continuous, and CG interventions.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    import numpy as np
+    import pandas as pd
+
+    rng = np.random.default_rng(5)
+    n = 300
+    x = rng.normal(size=n)
+    y = 1.5 * x + rng.normal(scale=0.4, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
+    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+
+    # Conditional mean of Y given X
+    q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+    print(q.means)
+
+    # Intervention do(X=1)
+    q_do = bn.inference.fit(model, variables=['Y'], do={'X': 1.0}, verbose=0)
+    print(q_do.means)
+
+Continuous results are returned as a ``ContinuousQueryResult`` with attributes
+``.means``, ``.variances`` (when available), ``.df``, and ``.text``.
+
+For Conditional-Gaussian models, discrete query variables still produce probability
+tables; continuous query variables produce means (and local residual std) given the
+discrete configuration and continuous parents in the evidence.
+
+See :doc:`Continuous Data` for more hybrid examples.
+
+
 
 
 .. include:: add_bottom.add

@@ -71,6 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#continuous-and-hybrid-structure-scores">Continuous and hybrid structure scores</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
@@ -84,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#do-calculus-intervention">Do-calculus (Intervention)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
@@ -91,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#conditional-gaussian-hybrid-networks">Conditional Gaussian (Hybrid) Networks</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -101,6 +104,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#gibbs-sampling">Gibbs Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#conditional-sampling">Conditional Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#sampling-continuous-and-hybrid-models">Sampling continuous and hybrid models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -345,6 +349,42 @@ For example, a Bayesian network can generate additional Sprinkler samples condit
 <span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>  <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;bayes&#39;</span><span class="p">,</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Rain&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
+</section>
+<section id="sampling-continuous-and-hybrid-models">
+<h1>Sampling continuous and hybrid models<a class="headerlink" href="#sampling-continuous-and-hybrid-models" title="Link to this heading"></a></h1>
+<p>Besides discrete <code class="docutils literal notranslate"><span class="pre">bayes</span></code> (forward / rejection) and <code class="docutils literal notranslate"><span class="pre">gibbs</span></code> sampling, <code class="docutils literal notranslate"><span class="pre">bn.sampling</span></code>
+supports continuous and Conditional-Gaussian models:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='linear-gaussian'</span></code> (alias <code class="docutils literal notranslate"><span class="pre">'lg'</span></code>) — <code class="docutils literal notranslate"><span class="pre">LinearGaussianBayesianNetwork.simulate</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='cg'</span></code> (alias <code class="docutils literal notranslate"><span class="pre">'conditional-gaussian'</span></code>) — discrete sample then continuous draws from CG locals</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methodtype='auto'</span></code> — detect type from the fitted model</p></li>
+</ul>
+<p>Optional <code class="docutils literal notranslate"><span class="pre">do</span></code> and <code class="docutils literal notranslate"><span class="pre">seed</span></code> apply on continuous and CG paths.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">scale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-g&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;linear-gaussian&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Unconditional samples from a linear-Gaussian network</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;linear-gaussian&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Samples under an intervention</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;linear-gaussian&#39;</span><span class="p">,</span> <span class="n">do</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">},</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Or auto-detect the model type</span>
+<span class="n">df_s</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also use <code class="docutils literal notranslate"><span class="pre">bn.inference.sample(...)</span></code>, which delegates to the same sampling backend.</p>
+<p>See <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a> for Conditional-Gaussian sampling examples.</p>
 <hr>
 <center>
         <script async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>

@@ -71,6 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#continuous-and-hybrid-structure-scores">Continuous and hybrid structure scores</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
@@ -84,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#do-calculus-intervention">Do-calculus (Intervention)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
@@ -91,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#conditional-gaussian-hybrid-networks">Conditional Gaussian (Hybrid) Networks</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -101,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#conditional-sampling">Conditional Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#sampling-continuous-and-hybrid-models">Sampling continuous and hybrid models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -273,14 +277,18 @@ Or in other words, the lingam-direct method allows you to model continuous and m
 <dt class="field-odd">param scoretype<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>Scoring function for the search spaces.</dt><dd><ul class="simple">
-<li><p>‘bic’</p></li>
-<li><p>‘k2’</p></li>
-<li><p>‘bdeu’</p></li>
-<li><p>‘bds’</p></li>
-<li><p>‘aic’</p></li>
-<li><p>‘loglik-g’ (continues variables)</p></li>
-<li><p>‘aic-g’    (continues variables)</p></li>
-<li><p>‘bic-g’    (continues variables)</p></li>
+<li><p>‘bic’        (discrete)</p></li>
+<li><p>‘k2’         (discrete)</p></li>
+<li><p>‘bdeu’       (discrete)</p></li>
+<li><p>‘bds’        (discrete)</p></li>
+<li><p>‘aic’        (discrete)</p></li>
+<li><p>‘loglik-g’   (continuous variables, Gaussian)</p></li>
+<li><p>‘aic-g’      (continuous variables, Gaussian)</p></li>
+<li><p>‘bic-g’      (continuous variables, Gaussian)</p></li>
+<li><p>‘bic-cg’     (mixed discrete+continuous, Conditional Gaussian; only with methodtype=’hc’)</p></li>
+<li><p>‘aic-cg’     (mixed discrete+continuous, Conditional Gaussian; only with methodtype=’hc’)</p></li>
+<li><p>‘loglik-cg’  (mixed discrete+continuous, Conditional Gaussian; only with methodtype=’hc’)</p></li>
+<li><p>‘auto’       (choose bic / bic-g / bic-cg based on detected column types)</p></li>
 </ul>
 </dd>
 </dl>
@@ -448,10 +456,10 @@ False: Do not return DAGs</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;direct-lingam&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute edge strength using chi-square independence test</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Plot based on structure learning of sampled data</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_sl</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">G</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
 <p class="rubric">References</p>

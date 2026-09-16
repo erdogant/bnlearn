@@ -71,6 +71,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#tree-augmented-naive-bayes-tan">Tree-augmented Naive Bayes (TAN)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#naivebayes">NaiveBayes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#constraint-based">Constraint-based</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Structure%20learning.html#continuous-and-hybrid-structure-scores">Continuous and hybrid structure scores</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Parameter learning</span></p>
 <ul>
@@ -84,6 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#inference-algorithms">Inference Algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#examples-inference">Examples Inference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Inference.html#do-calculus-intervention">Do-calculus (Intervention)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Inference.html#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
@@ -91,6 +93,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#linear-gaussian-bayesian-networks">Linear Gaussian Bayesian Networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#lingam-based-methods">LiNGAM-based Methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#pc-method">PC Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Continuous%20Data.html#conditional-gaussian-hybrid-networks">Conditional Gaussian (Hybrid) Networks</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Predict</span></p>
 <ul>
@@ -101,6 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html">Forward Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#gibbs-sampling">Gibbs Sampling</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Sampling.html#conditional-sampling">Conditional Sampling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Sampling.html#sampling-continuous-and-hybrid-models">Sampling continuous and hybrid models</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul>
@@ -188,9 +192,11 @@ To make sense of the given data, we can start by counting how often each state o
 If the variable is dependent on the parents, the counts are done conditionally on the parents states,
 i.e. for seperately for each parent configuration</p>
 <dl class="simple">
-<dt>Currently, the library supports parameter learning for <em>discrete</em> nodes:</dt><dd><ul class="simple">
-<li><p>Maximum Likelihood Estimation</p></li>
-<li><p>Bayesian Estimation</p></li>
+<dt>Supported model families:</dt><dd><ul class="simple">
+<li><p>Discrete nodes: Maximum Likelihood Estimation, Bayesian Estimation</p></li>
+<li><p>Continuous nodes (all continuous): Linear Gaussian Bayesian Network (OLS)</p></li>
+<li><p>Mixed / Conditional Gaussian: discrete CPTs + configuration-specific linear Gaussians</p></li>
+<li><p>Dynamic Bayesian Networks (DBN)</p></li>
 </ul>
 </dd>
 </dl>
@@ -229,6 +235,13 @@ A somewhat more sensible choice of prior is <em>BDeu</em> (Bayesian Dirichlet eq
 For BDeu we need to specify an <em>equivalent sample size</em> <cite>N</cite> and then the pseudo-counts are
 the equivalent of having observed <cite>N</cite> uniform samples of each variable (and each parent configuration).</p>
 </dd>
+<dt>Linear Gaussian (continuous)</dt><dd><p>When all variables are continuous, parameters are estimated by ordinary least squares
+under a Linear Gaussian Bayesian Network (each node is a linear regression on its parents
+plus Gaussian noise).</p>
+</dd>
+<dt>Conditional Gaussian (mixed)</dt><dd><p>Discrete nodes keep tabular CPTs. Continuous nodes are linear Gaussians whose
+coefficients and residual variance may depend on the configuration of discrete parents.</p>
+</dd>
 </dl>
 <dl class="field-list simple">
 <dt class="field-odd">param model<span class="colon">:</span></dt>
@@ -246,9 +259,12 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 <dt class="field-odd">param methodtype<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
 <dt>Strategy for parameter learning.</dt><dd><ul class="simple">
-<li><p>‘ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators.</p></li>
-<li><p>‘bayes’: Bayesian Parameter Estimation.</p></li>
+<li><p>‘ml’, ‘maximumlikelihood’: Learning CPDs using Maximum Likelihood Estimators (discrete).</p></li>
+<li><p>‘bayes’: Bayesian Parameter Estimation (discrete).</p></li>
 <li><p>‘DBN’: DynamicBayesianNetwork</p></li>
+<li><p>‘linear-gaussian’, ‘lg’: Linear Gaussian BN (all continuous).</p></li>
+<li><p>‘cg’, ‘conditional-gaussian’: Conditional Gaussian for mixed data.</p></li>
+<li><p>‘auto’: choose discrete / linear-gaussian / cg from data types.</p></li>
 </ul>
 </dd>
 </dl>
@@ -258,7 +274,7 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dd>
 <dt class="field-odd">param scoretype<span class="colon">:</span></dt>
 <dd class="field-odd"><dl class="simple">
-<dt>Scoring function for the search spaces.</dt><dd><ul class="simple">
+<dt>Scoring / prior for discrete Bayesian estimation.</dt><dd><ul class="simple">
 <li><p>‘bdeu’</p></li>
 <li><p>‘dirichlet’</p></li>
 <li><p>‘k2’</p></li>
@@ -267,7 +283,7 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 </dl>
 </dd>
 <dt class="field-even">type scoretype<span class="colon">:</span></dt>
-<dd class="field-even"><p>str, (default : ‘bic’)</p>
+<dd class="field-even"><p>str, (default : ‘bdeu’)</p>
 </dd>
 <dt class="field-odd">param smooth<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.</p>
@@ -275,8 +291,22 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 <dt class="field-even">type smooth<span class="colon">:</span></dt>
 <dd class="field-even"><p>float (default: None)</p>
 </dd>
-<dt class="field-odd">param Print progress to screen. The default is 3.<span class="colon">:</span></dt>
+<dt class="field-odd">param n_jobs<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Parallel jobs where supported.</p>
+</dd>
+<dt class="field-even">type n_jobs<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, (default: -1)</p>
+</dd>
+<dt class="field-odd">param verbose<span class="colon">:</span></dt>
 <dd class="field-odd"><p>0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE</p>
+</dd>
+<dt class="field-even">type verbose<span class="colon">:</span></dt>
+<dd class="field-even"><p>int, (default: 3)</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>For linear-gaussian: model is a LinearGaussianBayesianNetwork.
+For cg: model is the discrete DiscreteBayesianNetwork (or None); continuous_cpds holds CG locals.
+Also includes data_type, discrete_cols, continuous_cols.</p>
 </dd>
 <dt class="field-even">rtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict with model.</p>
@@ -292,11 +322,11 @@ the equivalent of having observed <cite>N</cite> uniform samples of each variabl
 <span class="gp">&gt;&gt;&gt; </span><span class="n">model_update</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># LOAD BIF FILE</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;alarm&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">model_update</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">parameter_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_update</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Continuous data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model_lg = bn.parameter_learning.fit(model, df_cont, methodtype=&#39;linear-gaussian&#39;)</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Mixed data</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># model_cg = bn.parameter_learning.fit(model, df_mixed, methodtype=&#39;cg&#39;)</span>
 </pre></div>
 </div>
 </section>

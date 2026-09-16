@@ -134,4 +134,47 @@ For example, a Bayesian network can generate additional Sprinkler samples condit
     df = bn.sampling(model, n=100,  methodtype='bayes', evidence={'Rain': 1})
 
 
+Sampling continuous and hybrid models
+=========================================
+
+Besides discrete ``bayes`` (forward / rejection) and ``gibbs`` sampling, ``bn.sampling``
+supports continuous and Conditional-Gaussian models:
+
+* ``methodtype='linear-gaussian'`` (alias ``'lg'``) — ``LinearGaussianBayesianNetwork.simulate``
+* ``methodtype='cg'`` (alias ``'conditional-gaussian'``) — discrete sample then continuous draws from CG locals
+* ``methodtype='auto'`` — detect type from the fitted model
+
+Optional ``do`` and ``seed`` apply on continuous and CG paths.
+
+.. code-block:: python
+
+    import bnlearn as bn
+    import numpy as np
+    import pandas as pd
+
+    rng = np.random.default_rng(7)
+    n = 200
+    x = rng.normal(size=n)
+    y = 0.5 * x + rng.normal(scale=0.5, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
+    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+
+    # Unconditional samples from a linear-Gaussian network
+    df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', seed=0)
+
+    # Samples under an intervention
+    df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', do={'X': 0.0}, seed=0)
+
+    # Or auto-detect the model type
+    df_s = bn.sampling(model, n=100, methodtype='auto', seed=0)
+
+You can also use ``bn.inference.sample(...)``, which delegates to the same sampling backend.
+
+See :doc:`Continuous Data` for Conditional-Gaussian sampling examples.
+
+
+
+
 .. include:: add_bottom.add
