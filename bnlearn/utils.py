@@ -106,3 +106,22 @@ def edges_and_nodes_from_adjmat(adjmat):
             except (TypeError, ValueError):
                 pass
     return edges, nodes
+
+
+# %% Model-type helpers
+def model_kind(model):
+    """Return 'discrete' | 'linear-gaussian' | 'cg' from a bnlearn result dict."""
+    if not isinstance(model, dict):
+        return 'discrete'
+    if model.get('continuous_cpds'):
+        return 'cg'
+    m = model.get('model')
+    if m is not None and 'LinearGaussian' in type(m).__name__:
+        return 'linear-gaussian'
+    cfg = model.get('config') or {}
+    method = str(cfg.get('method', '')).lower()
+    if method in ('linear-gaussian', 'lg'):
+        return 'linear-gaussian'
+    if method in ('cg', 'conditional-gaussian'):
+        return 'cg'
+    return 'discrete'
