@@ -11,9 +11,13 @@
 # %% Libraries
 import matplotlib.pyplot as plt
 from pgmpy.inference import VariableElimination
+from pgmpy.models import LinearGaussianBayesianNetwork
 import numpy as np
+import pandas as pd
 import bnlearn
 import warnings
+from bnlearn.utils import model_kind
+
 warnings.filterwarnings("ignore")
 
 
@@ -29,7 +33,58 @@ def fit(model,
         verbose=3,
         do=None,
         ):
-    """Inference using using Variable Elimination.
+    """Inference router: discrete Variable Elimination or continuous / CG.
+
+    Chooses the backend from the fitted model:
+        * discrete BayesianNetwork  -> :func:`fit_discrete`
+        * LinearGaussianBayesianNetwork -> :func:`fit_continuous`
+        * Conditional-Gaussian (mixed)  -> :func:`fit_continuous`
+
+    Parameters match :func:`fit_discrete` and :func:`fit_continuous`.
+    Evidence may contain discrete states and/or continuous numeric values when
+    the model is linear-Gaussian or CG.
+    """
+    kind = model_kind(model)
+    if kind in ('linear-gaussian', 'cg'):
+        return fit_continuous(
+            model,
+            variables=variables,
+            evidence=evidence,
+            do=do,
+            to_df=to_df,
+            plot=plot,
+            verbose=verbose,
+            elimination_order=elimination_order,
+            joint=joint,
+            groupby=groupby,
+        )
+    return fit_discrete(
+        model,
+        variables=variables,
+        evidence=evidence,
+        to_df=to_df,
+        elimination_order=elimination_order,
+        joint=joint,
+        groupby=groupby,
+        plot=plot,
+        verbose=verbose,
+        do=do,
+    )
+
+
+# %% Exact inference using Variable Elimination (discrete — original behaviour)
+def fit_discrete(model,
+        variables=None,
+        evidence=None,
+        to_df=True,
+        elimination_order='greedy',
+        joint=True,
+        groupby=None,
+        plot=False,
+        verbose=3,
+        do=None,
+        ):
+    """Inference using Variable Elimination (discrete networks).
 
     The basic concept of variable elimination is same as doing marginalization over Joint Distribution.
     But variable elimination avoids computing the Joint Distribution by doing marginalization over much smaller factors.
@@ -166,6 +221,310 @@ def fit(model,
 
     # Return
     return query
+
+
+# %% Continuous / Conditional-Gaussian inference
+class ContinuousQueryResult:
+    """Container for continuous (and CG continuous) query results."""
+
+    def __init__(self, means, variables, evidence=None, do=None, variances=None):
+        self.means = means
+        self.variances = variances
+        self.variables = list(variables)
+        self.evidence = evidence or {}
+        self.do = do or {}
+        self.df = None
+        self.text = None
+
+    def __repr__(self):
+        parts = ['%s: mean=%.4f' % (k, v) for k, v in self.means.items()]
+        return 'ContinuousQueryResult(%s)' % ', '.join(parts)
+
+
+def fit_continuous(model,
+                   variables=None,
+                   evidence=None,
+                   do=None,
+                   to_df=True,
+                   plot=False,
+                   verbose=3,
+                   elimination_order='greedy',
+                   joint=True,
+                   groupby=None,
+                   ):
+    """Inference for Linear-Gaussian and Conditional-Gaussian (mixed) models.
+
+    Parameters
+    ----------
+    model : dict
+        bnlearn model after parameter learning (linear-gaussian or cg).
+    variables : list of str
+        Query variables.
+    evidence : dict, optional
+        Observed values (discrete states and/or continuous numbers).
+    do : dict, optional
+        Interventions; incoming edges are treated as cut. Continuous do fixes
+        the value; discrete do uses the discrete sub-model mutilation when present.
+    to_df, plot, verbose
+        Summary options.
+    elimination_order, joint, groupby
+        Passed through to discrete sub-queries in CG models.
+
+    Returns
+    -------
+    ContinuousQueryResult, discrete query object, or dict with keys
+    'discrete' / 'continuous' for mixed CG queries.
+    """
+    if not isinstance(model, dict):
+        raise Exception('[bnlearn] >Error: Input requires a object that contains the key: model.')
+    if variables is None:
+        raise Exception('[bnlearn] >Error: [variables] must be provided.')
+    if isinstance(variables, str):
+        variables = [variables]
+
+    adjmat = model.get('adjmat')
+    if adjmat is not None:
+        cols = list(adjmat.columns.astype(str))
+        if not np.all(np.isin(variables, cols)):
+            raise Exception('[bnlearn] >Error: [variables] should match names in the model (Case sensitive!)')
+        if evidence is not None and not np.all(np.isin([*evidence.keys()], cols)):
+            raise Exception('[bnlearn] >Error: [evidence] should match names in the model (Case sensitive!)')
+        if do is not None and not np.all(np.isin([*do.keys()], cols)):
+            raise Exception('[bnlearn] >Error: [do] should match names in the model (Case sensitive!)')
+    if do is not None and evidence is not None and (set(do.keys()) & set(evidence.keys())):
+        raise Exception('[bnlearn] >Error: A variable can not be in both [do] and [evidence]: %s' % (set(do.keys()) & set(evidence.keys())))
+
+    kind = model_kind(model)
+    if verbose >= 3:
+        print('[bnlearn] >Continuous/CG inference (%s)%s.' % (kind, ' with do-operator' if do else ''))
+
+    if kind == 'linear-gaussian':
+        return _query_linear_gaussian(model, variables=variables, evidence=evidence, do=do, to_df=to_df, verbose=verbose)
+
+    if kind == 'cg':
+        return _query_cg(
+            model, variables=variables, evidence=evidence, do=do, to_df=to_df,
+            elimination_order=elimination_order, joint=joint, groupby=groupby,
+            plot=plot, verbose=verbose,
+        )
+
+    if verbose >= 1:
+        print('[bnlearn] >Warning: fit_continuous expected a linear-gaussian or cg model; falling back to fit_discrete.')
+    return fit_discrete(
+        model, variables=variables, evidence=evidence, do=do, to_df=to_df,
+        elimination_order=elimination_order, joint=joint, groupby=groupby, plot=plot, verbose=verbose,
+    )
+
+
+def _query_linear_gaussian(model_dict, variables, evidence=None, do=None, to_df=True, verbose=3):
+    """Conditional means for a LinearGaussianBayesianNetwork (step 7 + 8)."""
+    lg = model_dict['model']
+    if lg is None or not isinstance(lg, LinearGaussianBayesianNetwork):
+        if verbose >= 1:
+            print('[bnlearn] >Warning: linear-gaussian inference requires a LinearGaussianBayesianNetwork.')
+        return None
+
+    evidence = dict(evidence or {})
+    do = dict(do or {})
+    known = {**do, **evidence}
+
+    means = {}
+    predict_vars = [v for v in variables if v not in known]
+    for v in variables:
+        if v in known:
+            means[v] = float(known[v])
+
+    if predict_vars:
+        all_nodes = list(lg.nodes())
+        row = {n: known[n] for n in all_nodes if n in known}
+        if not row:
+            try:
+                samp = lg.simulate(n_samples=1, do=do or None, evidence=None, seed=0)
+                for v in predict_vars:
+                    if v in samp.columns:
+                        means[v] = float(samp[v].iloc[0])
+            except Exception:
+                for v in predict_vars:
+                    cpd = lg.get_cpds(v)
+                    beta = getattr(cpd, 'beta', [0.0])
+                    means[v] = float(beta[0]) if beta is not None else 0.0
+        else:
+            evidence_df = pd.DataFrame([row])
+            try:
+                pred = lg.predict(evidence_df)
+                if isinstance(pred, pd.DataFrame):
+                    for v in predict_vars:
+                        if v in pred.columns:
+                            means[v] = float(pred[v].iloc[0])
+                elif isinstance(pred, tuple) and len(pred) >= 2:
+                    order, mean_arr = pred[0], np.atleast_2d(pred[1])
+                    for i, name in enumerate(order):
+                        if name in predict_vars:
+                            means[name] = float(mean_arr[0, i])
+                else:
+                    for v in predict_vars:
+                        means[v] = np.nan
+            except Exception as err:
+                if verbose >= 2:
+                    print('[bnlearn] >Warning: Linear-Gaussian predict failed (%s); using simulate.' % err)
+                samp = lg.simulate(n_samples=200, do=do or None, evidence=evidence or None, seed=0)
+                for v in predict_vars:
+                    if v in samp.columns:
+                        means[v] = float(samp[v].mean())
+
+    result = ContinuousQueryResult(means=means, variables=variables, evidence=evidence, do=do)
+    if to_df:
+        result.df = pd.DataFrame([{'variable': k, 'mean': v} for k, v in means.items()])
+        given = {**{f'do({k})': v for k, v in do.items()}, **evidence}
+        lines = ['Continuous query: %s' % variables, 'Given: %s' % given]
+        for k, v in means.items():
+            lines.append('  %s -> mean = %.6f' % (k, v))
+        result.text = '\n'.join(lines)
+        if verbose >= 3:
+            print(result.text)
+    return result
+
+
+def _cg_cpd_map(continuous_cpds):
+    return {c['variable']: c for c in (continuous_cpds or [])}
+
+
+def _cg_mean_std(local, evidence):
+    """Evaluate CG local mean and std given evidence (discrete + continuous parents)."""
+    disc_parents = local['disc_parents']
+    cont_parents = local['cont_parents']
+    key = tuple(evidence[p] for p in disc_parents) if disc_parents else ()
+    configs = local['configs']
+    cfg = configs.get(key)
+    if cfg is None and len(disc_parents) == 1:
+        cfg = configs.get((evidence[disc_parents[0]],))
+    if cfg is None:
+        if not configs:
+            return np.nan, np.nan
+        cfg = next(iter(configs.values()))
+    beta = cfg['beta']
+    std = cfg['std']
+    mu = float(beta[0])
+    for i, p in enumerate(cont_parents):
+        if p not in evidence:
+            raise ValueError('[bnlearn] >CG query for %s needs continuous parent "%s" in evidence or do.'
+                             % (local['variable'], p))
+        mu += float(beta[i + 1]) * float(evidence[p])
+    return mu, float(std)
+
+
+def _query_cg(model_dict, variables, evidence=None, do=None, to_df=True,
+              elimination_order='greedy', joint=True, groupby=None, plot=False, verbose=3):
+    """Hybrid CG query: discrete via fit_discrete, continuous via local Gaussians."""
+    evidence = dict(evidence or {})
+    do = dict(do or {})
+
+    continuous_cpds = model_dict.get('continuous_cpds') or []
+    cpd_map = _cg_cpd_map(continuous_cpds)
+    cfg = model_dict.get('config') or {}
+    discrete_cols = set(cfg.get('discrete_cols') or [])
+    continuous_cols = set(cfg.get('continuous_cols') or [])
+    if not discrete_cols and not continuous_cols:
+        continuous_cols = set(cpd_map.keys())
+        disc_model = model_dict.get('model')
+        if disc_model is not None and hasattr(disc_model, 'nodes'):
+            discrete_cols = set(str(n) for n in disc_model.nodes()) - continuous_cols
+
+    disc_query = [v for v in variables if v in discrete_cols or (v not in continuous_cols and v not in cpd_map)]
+    cont_query = [v for v in variables if v in continuous_cols or v in cpd_map]
+
+    disc_result = None
+    if disc_query and model_dict.get('model') is not None:
+        disc_evidence = {k: v for k, v in evidence.items() if k in discrete_cols}
+        disc_do = {k: v for k, v in do.items() if k in discrete_cols}
+        disc_result = fit_discrete(
+            model_dict,
+            variables=disc_query,
+            evidence=disc_evidence or None,
+            do=disc_do or None,
+            to_df=to_df,
+            elimination_order=elimination_order,
+            joint=joint,
+            groupby=groupby,
+            plot=plot,
+            verbose=verbose,
+        )
+
+    cont_means = {}
+    cont_stds = {}
+    if cont_query:
+        known = {**do, **evidence}
+        pending = list(cont_query)
+        resolved = dict(known)
+        for v in list(pending):
+            if v in do:
+                cont_means[v] = float(do[v])
+                cont_stds[v] = 0.0
+                resolved[v] = float(do[v])
+                pending.remove(v)
+
+        safety = 0
+        while pending and safety < len(pending) + 5:
+            safety += 1
+            progress = False
+            for v in list(pending):
+                local = cpd_map.get(v)
+                if local is None:
+                    if verbose >= 2:
+                        print('[bnlearn] >Warning: no CG CPD for continuous node "%s".' % v)
+                    pending.remove(v)
+                    progress = True
+                    continue
+                need = list(local['disc_parents']) + list(local['cont_parents'])
+                if all(p in resolved for p in need):
+                    mu, std = _cg_mean_std(local, resolved)
+                    cont_means[v] = mu
+                    cont_stds[v] = std
+                    resolved[v] = mu
+                    pending.remove(v)
+                    progress = True
+            if not progress:
+                break
+        for v in pending:
+            if verbose >= 2:
+                print('[bnlearn] >Warning: could not resolve CG node "%s" (missing parent evidence).' % v)
+            cont_means[v] = np.nan
+            cont_stds[v] = np.nan
+
+    if cont_query and not disc_query:
+        result = ContinuousQueryResult(means=cont_means, variables=variables, evidence=evidence, do=do, variances=cont_stds)
+        if to_df:
+            result.df = pd.DataFrame([
+                {'variable': k, 'mean': cont_means[k], 'std': cont_stds.get(k)} for k in cont_query
+            ])
+            given = {**{f'do({k})': v for k, v in do.items()}, **evidence}
+            lines = ['CG continuous query: %s' % cont_query, 'Given: %s' % given]
+            for k in cont_query:
+                lines.append('  %s -> mean = %.6f, std = %.6f' % (k, cont_means[k], cont_stds.get(k, np.nan)))
+            result.text = '\n'.join(lines)
+            if verbose >= 3:
+                print(result.text)
+        return result
+
+    if disc_query and not cont_query:
+        return disc_result
+
+    combined = {
+        'discrete': disc_result,
+        'continuous': ContinuousQueryResult(means=cont_means, variables=cont_query, evidence=evidence, do=do, variances=cont_stds),
+        'variables': variables,
+        'evidence': evidence,
+        'do': do,
+    }
+    if to_df and cont_means:
+        combined['continuous'].df = pd.DataFrame([
+            {'variable': k, 'mean': cont_means[k], 'std': cont_stds.get(k)} for k in cont_query
+        ])
+    if verbose >= 3:
+        print('[bnlearn] >CG hybrid query: discrete=%s continuous=%s' % (disc_query, cont_query))
+        for k, v in cont_means.items():
+            print('  %s -> mean = %.6f' % (k, v))
+    return combined
 
 #%%
 def summarize_inference(variables, evidence, query, plot=False, verbose=3):
