@@ -277,7 +277,13 @@ def test_parameter_learning():
     df = bn.import_example()
     model = bn.import_DAG('sprinkler', CPD=False)
     model_update = bn.parameter_learning.fit(model, df)
-    assert [*model_update.keys()] == ['model', 'adjmat', 'config', 'model_edges', 'structure_scores', 'independence_test']
+    assert [*model_update.keys()] == ['model',
+     'adjmat',
+     'config',
+     'independence_test',
+     'continuous_cpds',
+     'model_edges',
+     'structure_scores']
 
 
 def test_inference():

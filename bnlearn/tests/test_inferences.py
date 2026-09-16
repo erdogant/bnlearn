@@ -193,3 +193,68 @@ def test_make_DAG_DBN():
     assert 'model' in DAG_ts and 'adjmat' in DAG_ts
     assert set(fig_ts).issuperset({'fig', 'ax', 'pos', 'G', 'node_properties', 'edge_properties'})
 
+
+
+# %% Hybrid inference / sampling
+def test_inference_linear_gaussian_query():
+    import pandas as pd
+    rng = np.random.default_rng(5)
+    n = 300
+    x = rng.normal(size=n)
+    y = 1.5 * x + rng.normal(scale=0.4, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+    q = bn.inference.fit(fitted, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+    assert hasattr(q, 'means')
+    assert 'Y' in q.means
+    assert np.isfinite(q.means['Y'])
+
+
+def test_inference_linear_gaussian_do():
+    import pandas as pd
+    rng = np.random.default_rng(6)
+    n = 300
+    x = rng.normal(size=n)
+    y = 1.5 * x + rng.normal(scale=0.4, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+    q = bn.inference.fit(fitted, variables=['Y'], do={'X': 1.0}, verbose=0)
+    assert 'Y' in q.means
+    assert np.isfinite(q.means['Y'])
+
+
+def test_inference_sample_linear_gaussian():
+    import pandas as pd
+    rng = np.random.default_rng(7)
+    n = 200
+    x = rng.normal(size=n)
+    y = 0.5 * x + rng.normal(scale=0.5, size=n)
+    df = pd.DataFrame({'X': x, 'Y': y})
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=200, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+    samples = bn.inference.sample(fitted, n=50, seed=0, verbose=0)
+    assert isinstance(samples, pd.DataFrame)
+    assert samples.shape[0] == 50
+    assert set(samples.columns) >= {'X', 'Y'}
+
+
+def test_inference_cg_continuous_query():
+    import pandas as pd
+    rng = np.random.default_rng(8)
+    n = 400
+    fail = rng.integers(0, 2, size=n)
+    torque = rng.normal(size=n) + fail * 2.0
+    df = pd.DataFrame({'fail': fail, 'torque': torque})
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400, verbose=0)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='cg', verbose=0)
+    # Query continuous node given discrete evidence
+    q = bn.inference.fit(fitted, variables=['torque'], evidence={'fail': 1}, verbose=0)
+    if hasattr(q, 'means'):
+        assert 'torque' in q.means
+        assert np.isfinite(q.means['torque'])
+    else:
+        # hybrid combined dict
+        assert 'continuous' in q
+        assert 'torque' in q['continuous'].means

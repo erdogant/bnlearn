@@ -20,9 +20,9 @@ import matplotlib.pyplot as plt
 # parallel score hierarchies, and the estimator-style search classes only
 # accept scores from their own (pgmpy.estimators.StructureScore) lineage.
 
+from pgmpy.estimators import LogLikelihoodCondGauss, AICCondGauss, BICCondGauss
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.estimators import AIC, BDeu, BDs, BIC, K2, StructureScore
-from pgmpy.estimators import AICCondGauss, BICCondGauss, LogLikelihoodCondGauss
 from pgmpy.causal_discovery import ExpertKnowledge
 from pgmpy.models import NaiveBayes
 
@@ -31,13 +31,12 @@ from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 import lingam
 import bnlearn
-from bnlearn.utils import infer_data_type, default_scoretype, default_ci_test
 
 
 # %% Structure Learning
 def fit(df,
         methodtype='hc',
-        scoretype='auto',
+        scoretype='bic',
         black_list=None,
         white_list=None,
         bw_list_method=None,
@@ -86,28 +85,32 @@ def fit(df,
         Input dataframe.
     methodtype : str, (default : 'hc')
         String Search strategy for structure_learning.
-        'pc' or 'cs' or 'constraintsearch'          # Constraintsearch
-        'ex' or 'exhaustivesearch'                  # Score-Based
-        'hc' or 'hillclimbsearch'                   # Score-Based
-        'direct-lingam'                             # Score-Based: For continuous and mixed datasets
-        'ica-lingam'                                # Score-Based: For continuous and mixed datasets
-        'cl' or 'chow-liu'                          # Score-Based: Requires root_node
-        'tan'                                       # requires root_node and class_node
-        'nb' or 'naivebayes'                        # requires root_node
+        # Constraintsearch
+        'pc' or 'cs' or 'constraintsearch'
+        # Score-Based
+        'ex' or 'exhaustivesearch'
+        'hc' or 'hillclimbsearch' (default)
+        # Score-Based: Requires Root Node
+        'cl' or 'chow-liu' (requires setting root_node parameter)
+        'nb' or 'naivebayes' (requires <root_node>)
+        'tan' (requires <root_node> and <class_node> parameter)
+        # Score-Based: For continuous and mixed datasets
+        'direct-lingam'
+        'ica-lingam'
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-            * 'auto'        # choose bic / bic-g / bic-cg from data types
-            * 'bic'         # discrete
-            * 'k2'          # discrete
-            * 'bdeu'        # discrete
-            * 'bds'         # discrete
-            * 'aic'         # discrete
-            * 'loglik-g'    # continuous
-            * 'aic-g'       # continuous
-            * 'bic-g'       # continuous
-            * 'loglik-cg'   # hybrid discrete + continuous
-            * 'aic-cg'      # hybrid discrete + continuous
-            * 'bic-cg'      # hybrid discrete + continuous
+            * 'bic'        (discrete)
+            * 'k2'         (discrete)
+            * 'bdeu'       (discrete)
+            * 'bds'        (discrete)
+            * 'aic'        (discrete)
+            * 'loglik-g'   (continuous variables, Gaussian)
+            * 'aic-g'      (continuous variables, Gaussian)
+            * 'bic-g'      (continuous variables, Gaussian)
+            * 'bic-cg'     (mixed discrete+continuous, Conditional Gaussian; only with methodtype='hc')
+            * 'aic-cg'     (mixed discrete+continuous, Conditional Gaussian; only with methodtype='hc')
+            * 'loglik-cg'  (mixed discrete+continuous, Conditional Gaussian; only with methodtype='hc')
+            * 'auto'       (choose bic / bic-g / bic-cg based on detected column types)
     black_list : List or None, (default : None)
         List of edges are black listed.
         In case of filtering on nodes, the nodes black listed nodes are removed from the dataframe. The resulting model will not contain any nodes that are in black_list.
@@ -146,7 +149,6 @@ def fit(df,
             'pwling', 'kernel', 'pwling_fast'
     params_pc : dict: {'ci_test': 'chi_square', 'alpha': 0.05}
         * 'ci_test': 'chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence'
-          When left at the default 'chi_square' and the data are continuous, bnlearn switches to 'pearsonr'.
         * 'alpha': 0.05
     verbose : int, (default : 3)
         0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
@@ -327,7 +329,7 @@ def fit(df,
 # %% Make Checks
 def _make_checks(df, config, verbose=3):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
-    if not np.isin(config['scoring'], ['auto', 'bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
+    if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'bic-cg', 'aic-cg', 'loglik-cg', 'auto']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
     if not np.isin(config['method'], ['ica-lingam', 'direct-lingam', 'naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'pc', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
 
     if isinstance(config['white_list'], str):
@@ -707,7 +709,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
         A DataFrame object with column names same as the variable names of network.
     scoretype : str, (default : 'bic')
         Scoring function for the search spaces.
-        'auto', 'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g', 'loglik-cg', 'aic-cg', 'bic-cg'
+        'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g'
     return_all_dags : Bool, (default: False)
         Return all possible DAGs.
     verbose : int, (default : 3)
@@ -763,17 +765,18 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
         Note that pandas converts each column containing `numpy.NaN`s to dtype `float`.)
     scoretype : string
         Name of the scoring type method.
-            * bic
-            * k2
-            * bdue
-            * bds
-            * aic
-            * loglik-g
-            * aic-g
-            * bic-g
-            * loglik-cg
-            * aic-cg
-            * bic-cg
+            * bic          (discrete)
+            * k2           (discrete)
+            * bdeu         (discrete)
+            * bds          (discrete)
+            * aic          (discrete)
+            * loglik-g     (continuous, Gaussian)
+            * aic-g        (continuous, Gaussian)
+            * bic-g        (continuous, Gaussian)
+            * bic-cg       (mixed, Conditional Gaussian)
+            * aic-cg       (mixed, Conditional Gaussian)
+            * loglik-cg    (mixed, Conditional Gaussian; maps to pgmpy 'll-cg')
+            * auto         (choose from data types automatically)
     verbose : int, (default : 3)
         0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
 
@@ -788,32 +791,52 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
     """
     if verbose>=3: print('[bnlearn] >Set scoring type at [%s]' %(scoretype))
 
-    if scoretype=='bic':
+    # Resolve 'auto' to the appropriate score based on detected column types.
+    if scoretype == 'auto':
+        from bnlearn.utils import infer_data_type
+        dtype = infer_data_type(df)['dtype']
+        if dtype == 'continuous':
+            scoretype = 'bic-g'
+        elif dtype == 'mixed':
+            scoretype = 'bic-cg'
+        else:
+            scoretype = 'bic'
+        if verbose >= 3:
+            print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
+
+    if scoretype == 'bic':
         scoring_method = BIC(df)
-    elif scoretype=='k2':
+    elif scoretype == 'k2':
         scoring_method = K2(df)
-    elif scoretype=='bdeu':
+    elif scoretype == 'bdeu':
         scoring_method = BDeu(df, equivalent_sample_size=5)
-    elif scoretype=='bds':
+    elif scoretype == 'bds':
         scoring_method = BDs(df, equivalent_sample_size=5)
-    elif scoretype=='aic':
+    elif scoretype == 'aic':
         scoring_method = AIC(df)
-    elif scoretype=='loglik-g':
+    elif scoretype == 'loglik-g':
         scoring_method = LogLikelihoodGauss(df, **kwargs)
-    elif scoretype=='aic-g':
+    elif scoretype == 'aic-g':
         scoring_method = AICGauss(df, **kwargs)
-    elif scoretype=='bic-g':
+    elif scoretype == 'bic-g':
         scoring_method = BICGauss(df, **kwargs)
-    elif scoretype=='loglik-cg':
-        scoring_method = LogLikelihoodCondGauss(df, **kwargs)
-    elif scoretype=='aic-cg':
-        scoring_method = AICCondGauss(df, **kwargs)
-    elif scoretype=='bic-cg':
-        scoring_method = BICCondGauss(df, **kwargs)
+    # elif scoretype=='loglik-cg':
+    #     scoring_method = LogLikelihoodCondGauss(df, **kwargs)
+    # elif scoretype=='aic-cg':
+    #     scoring_method = AICCondGauss(df, **kwargs)
+    # elif scoretype=='bic-cg':
+    #     scoring_method = BICCondGauss(df, **kwargs)
+    elif scoretype in ('bic-cg', 'aic-cg', 'loglik-cg'):
+        # Conditional Gaussian scores. pgmpy's HillClimbSearch.estimate() accepts
+        # these as plain strings ('bic-cg', 'aic-cg', 'll-cg') natively, so we
+        # return the string directly rather than constructing a scorer object.
+        # ExhaustiveSearch does not support CG scores; callers should use HC.
+        # pgmpy uses 'll-cg' for the log-likelihood CG score; map our alias.
+        scoring_method = 'll-cg' if scoretype == 'loglik-cg' else scoretype
     else:
         raise ValueError('[bnlearn] >Unknown scoretype: %s' % scoretype)
 
-    return(scoring_method)
+    return scoring_method
 
 
 # %%
@@ -892,7 +915,6 @@ def _lingam(df,
 
     # Return
     return out
-
 
 # %% Gaussian scoring methods
 class LogLikelihoodGauss(StructureScore):
@@ -973,6 +995,3 @@ class BICGauss(LogLikelihoodGauss):
         parents = tuple(parents)
         n_parameters = len(parents) + 2  # intercept, coefficients, variance
         return self._local_log_likelihood(variable, parents) - 0.5 * n_parameters * np.log(self.data.shape[0])
-
-
-
