@@ -22,7 +22,7 @@ Supported model families:
 
 
 # %% Libraries
-from pgmpy.parameter_estimator import DiscreteBayesianEstimator
+from pgmpy.parameter_estimator import DiscreteBayesianEstimator, LinearGaussianMLE
 from pgmpy.models import LinearGaussianBayesianNetwork, DiscreteBayesianNetwork
 # from pgmpy.factors.continuous import LinearGaussianCPD
 import bnlearn
@@ -309,7 +309,7 @@ def _fit_linear_gaussian(adjmat, df, verbose=3):
     if not np.all(np.isfinite(df_num.to_numpy(dtype=float, copy=False))):
         raise ValueError('[bnlearn] >Linear-Gaussian parameter learning requires finite numeric values.')
 
-    model.fit(df_num, estimator='mle', std_estimator='unbiased')
+    model.fit(df_num, estimator=LinearGaussianMLE())
     _validate_linear_gaussian(model, verbose=verbose)
     return model
 
