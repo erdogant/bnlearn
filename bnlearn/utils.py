@@ -91,18 +91,17 @@ def edges_and_nodes_from_adjmat(adjmat):
     Returns
     -------
     edges : list of tuple
-        (source, target) pairs where the matrix entry is non-zero.
+        (source, target) pairs where the matrix entry is non-zero / True.
     nodes : list
         Node names as strings.
     """
     nodes = list(adjmat.columns.astype(str))
     edges = []
-    for source in adjmat.index.astype(str):
-        for target in adjmat.columns.astype(str):
-            val = adjmat.loc[source, target] if source in adjmat.index and target in adjmat.columns else 0
+    for src, row in adjmat.iterrows():
+        for tgt, val in row.items():
             try:
                 if float(val) != 0:
-                    edges.append((str(source), str(target)))
+                    edges.append((str(src), str(tgt)))
             except (TypeError, ValueError):
                 pass
     return edges, nodes
