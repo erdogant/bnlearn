@@ -1852,13 +1852,29 @@ Discrete-only fits do **not** include that key (stable result keys for existing 
 * Linear-Gaussian → `fit_continuous` (conditional means)
 * CG → discrete VE for discrete queries; CG local means/std for continuous queries
 
-Evidence may mix discrete states and continuous numbers. Use `do={...}` for interventions.
-
 ```python
 q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.5})
 q = bn.inference.fit(model, variables=['Y'], do={'X': 1.0})
 print(q.means)  # ContinuousQueryResult
 ```
+
+### CG mixed-evidence limitation
+
+CG inference is hybrid: discrete VE and continuous local Gaussians **do not
+fully communicate**. Supported combinations:
+
+| Query type | Evidence type | Behaviour |
+| ---------- | ------------- | --------- |
+| Continuous | Discrete and/or continuous | Conditional local Gaussian (correct) |
+| Discrete | Discrete only | VE on discrete sub-model (correct) |
+| Discrete | Continuous | Returns the **marginal** discrete distribution; continuous evidence is not applied |
+
+There is no built-in step that evaluates a continuous parent against a Gaussian
+CPD and feeds that into a discrete CPT. Queries such as
+`P(Machine failure | Torque = 40)` are therefore **not** conditional on torque
+in the CG architecture.
+
+Use `do={...}` for interventions within the supported type combinations above.
 
 ---
 
@@ -1881,4 +1897,13 @@ A CG network models mixed data as:
 * **Discrete nodes** — standard TabularCPDs
 * **Continuous nodes** — linear Gaussian regressions; if discrete parents exist, one coefficient vector and residual std **per discrete parent configuration**
 
-Use CG when you need both probability-level answers for discrete outcomes and coefficient-level insight among continuous sensors in one graph.
+**When to use CG vs discretize**
+
+* **CG** — continuous sensor dynamics; continuous queries; discrete parents as
+  regimes for continuous children (e.g. torque distribution given failure flag).
+* **Discretize then discrete BN** — binary / categorical decision targets that
+  must be conditioned on sensor-like evidence (e.g. failure probability given
+  torque/temperature thresholds). Discretization is the appropriate tool for
+  that question, not a downgrade of CG.
+
+Choose from the **analytical target**, not only from column dtypes.

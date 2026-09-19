@@ -245,23 +245,55 @@ See:
 When variables contain a mixture of discrete and continuous values:
 
 1. Identify the variable types (`utils.infer_data_type` / automatic detection).
-2. Prefer Conditional Gaussian (CG) modeling over forced discretization.
-3. Structure: `scoretype='bic-cg'` (or `'auto'`).
+2. Choose the model from the **query target**, not only from the data types
+   (see CG inference limitation below).
+3. Structure: `scoretype='bic-cg'` (or `'auto'`) for a Conditional Gaussian graph.
 4. Parameters: `methodtype='cg'` (or `'auto'`).
-5. Inference and sampling work on the fitted CG model.
 
 ```python
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
 model = bn.parameter_learning.fit(model, df, methodtype='cg')
+# Supported: continuous query given discrete (or continuous) evidence
 q = bn.inference.fit(model, variables=['torque'], evidence={'fail': 1})
 df_s = bn.sampling(model, n=200, methodtype='cg')
 ```
+
+### CG inference limitation (important)
+
+The CG engine is a **hybrid** that does not fully couple the two sides:
+
+* Discrete nodes → Variable Elimination on the discrete sub-network (TabularCPDs).
+* Continuous nodes → local Gaussian CPDs (`continuous_cpds`).
+* There is **no bridge** that takes a continuous parent value, evaluates a
+  Gaussian CPD, and propagates that result into a **discrete** target.
+
+| Query | Evidence | Result |
+| ----- | -------- | ------ |
+| Continuous | Discrete and/or continuous | Conditional mean / local Gaussian (correct) |
+| Discrete | Discrete only | CPT / VE (correct) |
+| Discrete | Continuous | **Marginal** of the discrete node — **not** conditioned on the continuous value |
+
+Example of what is **not** supported:  
+`P(Machine failure | Torque [Nm] = 40)` in a CG model where failure is discrete
+and torque is continuous. The continuous evidence is ignored for the discrete
+query; you get the marginal failure distribution.
+
+This is an **architectural constraint**, not a temporary bug. It is also an
+argument for discretization when the decision target is discrete (e.g. binary
+failure driven by operational thresholds):
+
+* **CG** — right tool when you need continuous sensor dynamics and continuous
+  queries (how torque / temperature propagate given discrete regimes).
+* **Discrete BN** (after `bn.discretize`) — right tool when the target is a
+  binary / categorical event and you must condition on sensor-like evidence.
+* The **target of the analysis** decides the approach; discretization is not
+  merely a weaker version of CG for failure-prediction questions.
 
 Do not silently convert variables without explaining the consequences.
 
 See:
 
-`references/continuous_models.md`
+`references/continuous_models.md` and `references/inference.md`
 
 ---
 

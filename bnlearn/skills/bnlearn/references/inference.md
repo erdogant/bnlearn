@@ -6,7 +6,7 @@
 > query = bn.inference.fit(
 >     model,                       # discrete CPDs, LinearGaussian, or CG model
 >     variables=['Target'],        # list of query variables
->     evidence={'A': 1, 'B': 0},   # discrete states and/or continuous numbers
+>     evidence={'A': 1, 'B': 0},   # type must match the supported CG combinations
 >     to_df=True,
 >     elimination_order='greedy',
 >     joint=True,
@@ -23,9 +23,11 @@
 > Evidence / `do` variable names must exist in the model. A variable cannot appear
 > in both `evidence` and `do`.
 >
-> - `evidence={'X': x}` → observational `P(Y | X = x)`
+> - `evidence={'X': x}` → observational `P(Y | X = x)` when types are compatible
 > - `do={'X': x}` → interventional `P(Y | do(X = x))` (Pearl's do-operator)
-> - Continuous evidence example: `evidence={'X': 0.5}` on a linear-Gaussian model
+> - Linear-Gaussian: continuous evidence → continuous query (conditional mean)
+> - CG: continuous←discrete/continuous evidence works; **discrete←continuous does not**
+>   (returns the discrete marginal; see Continuous and hybrid inference below)
 
 ---
 
@@ -1900,10 +1902,34 @@ print(q.means)
 # Intervention on continuous variable
 q = bn.inference.fit(model_lg, variables=['Y'], do={'X': 1.0})
 
-# CG: continuous node given discrete evidence
+# CG: continuous node given discrete evidence (supported)
 q = bn.inference.fit(model_cg, variables=['torque'], evidence={'fail': 1})
 
 # Explicit backends
 q = bn.inference.fit_discrete(model_disc, variables=['Wet_Grass'], evidence={'Rain': 1})
 q = bn.inference.fit_continuous(model_lg, variables=['Y'], evidence={'X': 0.5})
 ```
+
+## CG structural limitation
+
+The CG engine keeps discrete and continuous inference separate:
+
+* Discrete targets → Variable Elimination on TabularCPDs only.
+* Continuous targets → local Gaussian CPDs (`continuous_cpds`).
+* **No bridge** evaluates continuous evidence and injects it into a discrete CPT.
+
+Therefore:
+
+* `P(torque | fail=1)` — OK (continuous query, discrete evidence).
+* `P(fail | fail parents discrete)` — OK.
+* `P(fail | torque=40)` — **not** conditional on torque; you get the **marginal**
+  of `fail`. Continuous evidence is not applied to discrete queries.
+
+This constraint is informative for modelling choices:
+
+* Use **CG** when the question is about continuous sensor behaviour (including
+  under discrete regimes).
+* Use a **discretized discrete BN** when the decision target is binary/categorical
+  and must be conditioned on sensor thresholds (e.g. machine failure given torque).
+* Do not treat discretization as a mere simplification of CG for that class of
+  questions — it is the appropriate inference path given the architecture.
