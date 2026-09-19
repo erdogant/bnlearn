@@ -110,7 +110,7 @@ Lets determine the best possible structure for the sprinkler dataset.
     # 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1
 
     # Plot
-    bn.plot(model, edge_labels='pvalue')
+    bn.plot(model, edge_labels='p_value')
 
 
 .. |exh1| image:: ../figs/exhaustivesearch_example.png
@@ -546,6 +546,12 @@ Lets determine the best possible structure for the *water* dataset.
 
 
 
+**References**
+
+    1. https://ermongroup.github.io/cs228-notes/learning/structure/
+    2. https://doi.org/10.1007/978-0-387-30164-8_850
+
+
 
 Continuous and hybrid structure scores
 =========================================
@@ -580,14 +586,12 @@ from ``chi_square`` to ``pearsonr`` on continuous data when left at the default.
 
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
     # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
-    bn.plot_graphviz(model)
 
     # Mixed (hybrid) example
     fail = rng.integers(0, 2, size=n)
     torque = rng.normal(size=n) + fail * 1.5
     df_mix = pd.DataFrame({'fail': fail, 'torque': torque})
     model_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg')
-    bn.plot_graphviz(model_mix)
 
 More background and full continuous workflows are described in :doc:`Continuous Data`.
 

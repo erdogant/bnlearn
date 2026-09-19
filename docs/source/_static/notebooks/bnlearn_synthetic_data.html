@@ -8340,9 +8340,9 @@ Successfully installed colourmap-1.1.21 distfit-1.8.6
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">test</span><span class="o">=</span><span class="s1">'chi_square'</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <span class="c1"># Plot the best DAG</span>
-<span class="c1"># bn.plot(model, edge_labels='pvalue', params_static={'maxscale': 4, 'figsize': (6, 6), 'font_size': 6, 'arrowsize': 6})</span>
+<span class="c1"># bn.plot(model, edge_labels='p_value', params_static={'maxscale': 4, 'figsize': (6, 6), 'font_size': 6, 'arrowsize': 6})</span>
 
-<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">'pvalue'</span><span class="p">)</span>
+<span class="n">dotgraph</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">'p_value'</span><span class="p">)</span>
 <span class="n">dotgraph</span>
 
 <span class="c1"># Store to pdf</span>

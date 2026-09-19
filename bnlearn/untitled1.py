@@ -60,7 +60,6 @@ print(model['independence_test'])
 # 19          Tool wear [min]              Torque [Nm]      1.0    1      False
 
 # %%
-from distfit import distfit
 import pandas as pd
 import bnlearn as bn
 
@@ -92,4 +91,32 @@ dotgraph
 dotgraph = bn.plot_graphviz(model2)
 dotgraph
 dotgraph = bn.plot_graphviz(model3)
+dotgraph
+
+
+# %%
+
+# %%
+import pandas as pd
+import bnlearn as bn
+
+# Load the predictive maintenance dataset
+df = bn.import_example('predictive_maintenance')
+print(df.head())
+
+del df['UDI']
+del df['Product ID']
+del df['Type']
+
+# Learn causal structure on mixed dataset
+model = bn.structure_learning.fit(df)
+
+model = bn.independence_test(model, df, prune=True)
+
+# print(model['independence_test'])
+
+# Visualize
+# bn.plot(model, title='Predictive Maintenance: Mixed Dataset DAG')
+bn.plot(model, interactive=True)
+dotgraph = bn.plot_graphviz(model)
 dotgraph

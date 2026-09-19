@@ -157,8 +157,8 @@ After all continuous variables are categorized, the causal discovery approach fo
     model = bn.independence_test(model, df)
 
     # Create visualizations
-    bn.plot(model, edge_labels='pvalue')
-    dotgraph = bn.plot_graphviz(model, edge_labels='pvalue')
+    bn.plot(model, edge_labels='p_value')
+    dotgraph = bn.plot_graphviz(model, edge_labels='p_value')
     dotgraph
 
 .. |figd2a| image:: ../figs/auto_mpg_distfit.png
@@ -270,8 +270,8 @@ We will learn the structure on the discretized continuous data. Note that the da
     # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
 
     # Create visualizations
-    bn.plot(model, edge_labels='pvalue')
-    bn.plot_graphviz(model, edge_labels='pvalue')
+    bn.plot(model, edge_labels='p_value')
+    bn.plot_graphviz(model, edge_labels='p_value')
     bn.plot(model, interactive=True)
 
 .. |fig2a| image:: ../figs/fig2a.png
@@ -311,8 +311,8 @@ After fitting the model on the DAG and dataframe, we can perform the independenc
     model = bn.independence_test(model, df, prune=True)
 
     # Create visualizations
-    bn.plot(model, edge_labels='pvalue')
-    bn.plot_graphviz(model, edge_labels='pvalue')
+    bn.plot(model, edge_labels='p_value')
+    bn.plot_graphviz(model, edge_labels='p_value')
     bn.plot(model, interactive=True)
 
 .. |fig3a| image:: ../figs/fig_cont_1.png

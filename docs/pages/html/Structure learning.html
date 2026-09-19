@@ -287,7 +287,7 @@ This search approach is only attractable for very small networks and prohibits e
 <span class="c1"># 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1</span>
 
 <span class="c1"># Plot</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;pvalue&#39;</span><span class="p">)</span>
+<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="s1">&#39;p_value&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <table class="docutils align-center" id="id3">
@@ -663,6 +663,13 @@ A maximum weighted spanning tree that maximizes the likelihood of the training d
 </tr>
 </tbody>
 </table>
+<p><strong>References</strong></p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><a class="reference external" href="https://ermongroup.github.io/cs228-notes/learning/structure/">https://ermongroup.github.io/cs228-notes/learning/structure/</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.1007/978-0-387-30164-8_850">https://doi.org/10.1007/978-0-387-30164-8_850</a></p></li>
+</ol>
+</div></blockquote>
 </section>
 <section id="continuous-and-hybrid-structure-scores">
 <h1>Continuous and hybrid structure scores<a class="headerlink" href="#continuous-and-hybrid-structure-scores" title="Link to this heading"></a></h1>
@@ -693,14 +700,12 @@ from <code class="docutils literal notranslate"><span class="pre">chi_square</sp
 
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-g&#39;</span><span class="p">)</span>
 <span class="c1"># model = bn.structure_learning.fit(df, methodtype=&#39;hc&#39;, scoretype=&#39;auto&#39;)</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="c1"># Mixed (hybrid) example</span>
 <span class="n">fail</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span>
 <span class="n">torque</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">fail</span> <span class="o">*</span> <span class="mf">1.5</span>
 <span class="n">df_mix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="n">fail</span><span class="p">,</span> <span class="s1">&#39;torque&#39;</span><span class="p">:</span> <span class="n">torque</span><span class="p">})</span>
 <span class="n">model_mix</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_mix</span><span class="p">,</span> <span class="n">methodtype</span><span class="o">=</span><span class="s1">&#39;hc&#39;</span><span class="p">,</span> <span class="n">scoretype</span><span class="o">=</span><span class="s1">&#39;bic-cg&#39;</span><span class="p">)</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model_mix</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>More background and full continuous workflows are described in <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a>.</p>

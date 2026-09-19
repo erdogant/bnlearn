@@ -43,6 +43,7 @@ def fit(model,
     Parameters match :func:`fit_discrete` and :func:`fit_continuous`.
     Evidence may contain discrete states and/or continuous numeric values when
     the model is linear-Gaussian or CG.
+
     """
     kind = model_kind(model)
     if kind in ('linear-gaussian', 'cg'):
