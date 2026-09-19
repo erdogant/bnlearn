@@ -95,7 +95,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#example-6-multiple-interventions">Example (6) — Multiple interventions</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#continuous-and-hybrid-inference">Continuous and hybrid inference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#continuous-and-hybrid-inference">Continuous and hybrid inference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#cg-inference-limitation">CG inference limitation</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Continuous Data</span></p>
 <ul>
@@ -388,9 +391,8 @@ calls remain compatible.</p>
 <li><p><strong>Linear-Gaussian</strong> networks → <code class="docutils literal notranslate"><span class="pre">fit_continuous</span></code> (conditional means via predict / simulate).</p></li>
 <li><p><strong>Conditional-Gaussian</strong> (mixed) networks → discrete queries via Variable Elimination and continuous queries via the fitted CG local regressions.</p></li>
 </ul>
-<p>You can also call <code class="docutils literal notranslate"><span class="pre">fit_discrete</span></code> or <code class="docutils literal notranslate"><span class="pre">fit_continuous</span></code> directly. Evidence may contain
-discrete states and continuous numbers on hybrid models. The do-operator works for
-discrete, continuous, and CG interventions.</p>
+<p>You can also call <code class="docutils literal notranslate"><span class="pre">fit_discrete</span></code> or <code class="docutils literal notranslate"><span class="pre">fit_continuous</span></code> directly. The do-operator works
+for discrete, continuous, and CG interventions within the type combinations below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -415,9 +417,23 @@ discrete, continuous, and CG interventions.</p>
 </div>
 <p>Continuous results are returned as a <code class="docutils literal notranslate"><span class="pre">ContinuousQueryResult</span></code> with attributes
 <code class="docutils literal notranslate"><span class="pre">.means</span></code>, <code class="docutils literal notranslate"><span class="pre">.variances</span></code> (when available), <code class="docutils literal notranslate"><span class="pre">.df</span></code>, and <code class="docutils literal notranslate"><span class="pre">.text</span></code>.</p>
-<p>For Conditional-Gaussian models, discrete query variables still produce probability
-tables; continuous query variables produce means (and local residual std) given the
-discrete configuration and continuous parents in the evidence.</p>
+<p>For Conditional-Gaussian models, continuous query variables produce means (and local
+residual std) given discrete configurations and continuous parents in the evidence.
+Discrete query variables produce probability tables from the discrete sub-model.</p>
+<section id="cg-inference-limitation">
+<span id="cg-inference-limitation-inference"></span><h2>CG inference limitation<a class="headerlink" href="#cg-inference-limitation" title="Link to this heading"></a></h2>
+<p>The CG engine keeps discrete and continuous inference separate. There is <strong>no bridge</strong>
+that evaluates continuous evidence and injects it into a discrete CPT.</p>
+<ul class="simple">
+<li><p>Continuous query + discrete/continuous evidence → conditional local Gaussian (correct).</p></li>
+<li><p>Discrete query + discrete evidence → Variable Elimination (correct).</p></li>
+<li><p>Discrete query + continuous evidence → <strong>marginal</strong> of the discrete node; continuous
+evidence is not applied.</p></li>
+</ul>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">P(Machine</span> <span class="pre">failure</span> <span class="pre">|</span> <span class="pre">Torque</span> <span class="pre">=</span> <span class="pre">40)</span></code> in a CG model with binary failure and
+continuous torque is <strong>not</strong> conditioned on torque. Use a discretized discrete BN when
+the target is a failure-style event that must depend on sensor thresholds
+(see <a class="reference internal" href="Discretizing.html"><span class="doc">Discretizing</span></a> and <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a>).</p>
 <p>See <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a> for more hybrid examples.</p>
 <hr>
 <center>
@@ -427,6 +443,7 @@ discrete configuration and continuous parents in the evidence.</p>
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
+</section>
 
 
            </div>

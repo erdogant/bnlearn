@@ -204,10 +204,18 @@
 </ol>
 </li>
 <li><ol class="arabic simple" start="4">
-<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships</p></li>
+<li><p>Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships (Linear-Gaussian or Conditional Gaussian)</p></li>
 </ol>
 </li>
 </ul>
+<p><strong>When discretization is the right tool for mixed data.</strong> Conditional Gaussian (CG)
+networks model continuous sensors under discrete regimes, but CG inference cannot
+condition a <strong>discrete</strong> target on <strong>continuous</strong> evidence
+(e.g. <code class="docutils literal notranslate"><span class="pre">P(Machine</span> <span class="pre">failure</span> <span class="pre">|</span> <span class="pre">Torque</span> <span class="pre">=</span> <span class="pre">40)</span></code> returns the marginal failure distribution).
+If your decision target is binary or categorical and must depend on sensor thresholds,
+discretize the continuous columns and use a discrete Bayesian network. That path is
+not a weaker CG model for failure-style questions; it is the appropriate inference
+architecture. See <a class="reference internal" href="Continuous%20Data.html"><span class="doc">Modelling Continuous Datasets</span></a> (CG inference limitation) and <a class="reference internal" href="Inference.html"><span class="doc">Inference</span></a>.</p>
 </section>
 <section id="manual-discretization">
 <h1>Manual Discretization<a class="headerlink" href="#manual-discretization" title="Link to this heading"></a></h1>

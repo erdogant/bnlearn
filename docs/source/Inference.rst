@@ -237,8 +237,10 @@ For Conditional-Gaussian models, continuous query variables produce means (and l
 residual std) given discrete configurations and continuous parents in the evidence.
 Discrete query variables produce probability tables from the discrete sub-model.
 
+.. _cg-inference-limitation-inference:
+
 CG inference limitation
------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The CG engine keeps discrete and continuous inference separate. There is **no bridge**
 that evaluates continuous evidence and injects it into a discrete CPT.

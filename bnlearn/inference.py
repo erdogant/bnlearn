@@ -111,7 +111,7 @@ def fit_discrete(model,
         variables are cut (Pearl's do-operator, comparable to mutilated() in the
         R version of bnlearn). The query runs on the mutilated network, so it
         combines freely with evidence and the other query options. The default is None.
-            * {'Sprinkler':1}
+        Example: {'Sprinkler':1}
     to_df : Bool, (default is True)
         The output is converted in the dataframe [query.df]. Enabling this function may impact the processing speed.
     elimination_order: str or list (default='greedy')

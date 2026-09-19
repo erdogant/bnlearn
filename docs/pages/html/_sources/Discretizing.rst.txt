@@ -12,7 +12,16 @@ In ``bnlearn``, the following options are available to work with continuous data
 * 1. Discretize continuous datasets manually using domain knowledge
 * 2. Discretize continuous datasets using probability density fitting
 * 3. Discretize continuous datasets using a principled Bayesian discretization method
-* 4. Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships
+* 4. Model continuous and hybrid datasets in a semi-parametric approach that assumes linear relationships (Linear-Gaussian or Conditional Gaussian)
+
+**When discretization is the right tool for mixed data.** Conditional Gaussian (CG)
+networks model continuous sensors under discrete regimes, but CG inference cannot
+condition a **discrete** target on **continuous** evidence
+(e.g. ``P(Machine failure | Torque = 40)`` returns the marginal failure distribution).
+If your decision target is binary or categorical and must depend on sensor thresholds,
+discretize the continuous columns and use a discrete Bayesian network. That path is
+not a weaker CG model for failure-style questions; it is the appropriate inference
+architecture. See :doc:`Continuous Data` (CG inference limitation) and :doc:`Inference`.
 
 Manual Discretization
 =========================================

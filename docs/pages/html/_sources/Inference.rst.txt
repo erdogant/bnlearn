@@ -204,9 +204,8 @@ Continuous and hybrid inference
 * **Linear-Gaussian** networks → ``fit_continuous`` (conditional means via predict / simulate).
 * **Conditional-Gaussian** (mixed) networks → discrete queries via Variable Elimination and continuous queries via the fitted CG local regressions.
 
-You can also call ``fit_discrete`` or ``fit_continuous`` directly. Evidence may contain
-discrete states and continuous numbers on hybrid models. The do-operator works for
-discrete, continuous, and CG interventions.
+You can also call ``fit_discrete`` or ``fit_continuous`` directly. The do-operator works
+for discrete, continuous, and CG interventions within the type combinations below.
 
 .. code-block:: python
 
@@ -234,9 +233,27 @@ discrete, continuous, and CG interventions.
 Continuous results are returned as a ``ContinuousQueryResult`` with attributes
 ``.means``, ``.variances`` (when available), ``.df``, and ``.text``.
 
-For Conditional-Gaussian models, discrete query variables still produce probability
-tables; continuous query variables produce means (and local residual std) given the
-discrete configuration and continuous parents in the evidence.
+For Conditional-Gaussian models, continuous query variables produce means (and local
+residual std) given discrete configurations and continuous parents in the evidence.
+Discrete query variables produce probability tables from the discrete sub-model.
+
+.. _cg-inference-limitation-inference:
+
+CG inference limitation
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The CG engine keeps discrete and continuous inference separate. There is **no bridge**
+that evaluates continuous evidence and injects it into a discrete CPT.
+
+* Continuous query + discrete/continuous evidence → conditional local Gaussian (correct).
+* Discrete query + discrete evidence → Variable Elimination (correct).
+* Discrete query + continuous evidence → **marginal** of the discrete node; continuous
+  evidence is not applied.
+
+Example: ``P(Machine failure | Torque = 40)`` in a CG model with binary failure and
+continuous torque is **not** conditioned on torque. Use a discretized discrete BN when
+the target is a failure-style event that must depend on sensor thresholds
+(see :doc:`Discretizing` and :doc:`Continuous Data`).
 
 See :doc:`Continuous Data` for more hybrid examples.
 

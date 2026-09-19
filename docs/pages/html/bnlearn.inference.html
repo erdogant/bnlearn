@@ -269,18 +269,13 @@ involving X and marginalize over them, thus allowing us to work on much smaller 
 </dd>
 </dl>
 </p></li>
-<li><p><strong>do</strong> (<em>dict</em><em>, </em><em>optional</em>) – <p>Interventions for causal inference, P(variables | do(X=x), evidence).
+<li><p><strong>do</strong> (<em>dict</em><em>, </em><em>optional</em>) – Interventions for causal inference, P(variables | do(X=x), evidence).
 Whereas evidence conditions on passively observed values, do simulates
 setting the variable by intervention: incoming edges of the intervened
 variables are cut (Pearl’s do-operator, comparable to mutilated() in the
 R version of bnlearn). The query runs on the mutilated network, so it
-combines freely with evidence and the other query options. The default is None.</p>
-<blockquote>
-<div><ul>
-<li><p>{‘Sprinkler’:1}</p></li>
-</ul>
-</div></blockquote>
-</p></li>
+combines freely with evidence and the other query options. The default is None.
+Example: {‘Sprinkler’:1}</p></li>
 <li><p><strong>to_df</strong> (<em>Bool</em><em>, </em><em>(</em><em>default is True</em><em>)</em>) – The output is converted in the dataframe [query.df]. Enabling this function may impact the processing speed.</p></li>
 <li><p><strong>elimination_order</strong> (<em>str</em><em> or </em><em>list</em><em> (</em><em>default='greedy'</em><em>)</em>) – Order in which to eliminate the variables in the algorithm. If list is provided,
 should contain all variables in the model except the ones in <cite>variables</cite>. str options

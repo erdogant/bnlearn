@@ -108,6 +108,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#structure-scores-for-hybrid-data">Structure scores for hybrid data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameter-learning-for-continuous-and-hybrid-models">Parameter learning for continuous and hybrid models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inference-on-continuous-and-hybrid-models">Inference on continuous and hybrid models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cg-inference-limitation">CG inference limitation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#sampling-from-continuous-and-hybrid-models">Sampling from continuous and hybrid models</a></li>
 </ul>
 </li>
@@ -528,7 +529,10 @@ A <strong>Conditional Gaussian (CG)</strong> network models this hybrid setting:
 <li><p><strong>Continuous nodes</strong> are modelled as linear Gaussian regressions on their parents.</p></li>
 <li><p>If a continuous node has discrete parents, it gets one set of regression coefficients and one residual standard deviation <strong>per configuration</strong> of those discrete parents.</p></li>
 </ul>
-<p>This is the natural model when you want coefficient-level insight among continuous variables and probability-level answers for discrete outcomes in the same graph.</p>
+<p>This is the natural model when you want coefficient-level insight among continuous
+variables, including under discrete regimes (e.g. sensor distributions given a
+failure flag). Discrete targets conditioned on continuous evidence are a different
+question — see the CG inference limitation below.</p>
 <section id="structure-scores-for-hybrid-data">
 <h2>Structure scores for hybrid data<a class="headerlink" href="#structure-scores-for-hybrid-data" title="Link to this heading"></a></h2>
 <p>Score-based structure learning supports Conditional Gaussian scores (via pgmpy):</p>
@@ -598,7 +602,6 @@ A <strong>Conditional Gaussian (CG)</strong> network models this hybrid setting:
 <li><p>Linear-Gaussian models → conditional means (<code class="docutils literal notranslate"><span class="pre">fit_continuous</span></code>).</p></li>
 <li><p>Conditional-Gaussian models → discrete VE for discrete query nodes and CG local regressions for continuous query nodes.</p></li>
 </ul>
-<p>Evidence may mix discrete states and continuous numbers. Interventions use the same <code class="docutils literal notranslate"><span class="pre">do</span></code> argument as in discrete inference.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Query continuous Y given X (linear-Gaussian model from above)</span>
 <span class="n">q</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">means</span><span class="p">)</span>   <span class="c1"># conditional mean of Y</span>
@@ -606,10 +609,40 @@ A <strong>Conditional Gaussian (CG)</strong> network models this hybrid setting:
 <span class="c1"># Intervention: set X by do-operator</span>
 <span class="n">q_do</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">do</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;X&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span>
 
-<span class="c1"># CG: continuous node given discrete evidence</span>
+<span class="c1"># CG: continuous node given discrete evidence (supported)</span>
 <span class="n">q_cg</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">inference</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model_mix</span><span class="p">,</span> <span class="n">variables</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;torque&#39;</span><span class="p">],</span> <span class="n">evidence</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fail&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
 </pre></div>
 </div>
+</section>
+<section id="cg-inference-limitation">
+<h2>CG inference limitation<a class="headerlink" href="#cg-inference-limitation" title="Link to this heading"></a></h2>
+<p>The CG engine is a <strong>hybrid</strong>: discrete nodes use Variable Elimination on
+TabularCPDs; continuous nodes use local Gaussian CPDs. The two sides do <strong>not</strong>
+fully communicate. There is no built-in step that evaluates a continuous parent
+value against a Gaussian CPD and then propagates that result into a <strong>discrete</strong>
+target.</p>
+<p>Supported combinations:</p>
+<ul class="simple">
+<li><p>Continuous query with discrete and/or continuous evidence → conditional local Gaussian (correct).</p></li>
+<li><p>Discrete query with discrete evidence → CPT / Variable Elimination (correct).</p></li>
+<li><p>Discrete query with continuous evidence → <strong>marginal</strong> of the discrete node;
+continuous evidence is <strong>not</strong> applied.</p></li>
+</ul>
+<p>Example of what is <strong>not</strong> a true conditional in CG:
+<code class="docutils literal notranslate"><span class="pre">P(Machine</span> <span class="pre">failure</span> <span class="pre">|</span> <span class="pre">Torque</span> <span class="pre">[Nm]</span> <span class="pre">=</span> <span class="pre">40)</span></code> when failure is discrete and torque is
+continuous. You obtain the marginal failure distribution, not the probability
+conditioned on that torque value.</p>
+<p>This is an architectural constraint, not a temporary bug. It is also an argument
+for discretization when the decision target is discrete (e.g. binary failure driven
+by operational thresholds):</p>
+<ul class="simple">
+<li><p><strong>CG</strong> — continuous sensor dynamics and continuous queries (including under discrete regimes).</p></li>
+<li><p><strong>Discretized discrete BN</strong> (<code class="docutils literal notranslate"><span class="pre">bn.discretize</span></code>) — binary / categorical targets that must
+be conditioned on sensor-like evidence.</p></li>
+</ul>
+<p>The <strong>target of the analysis</strong> decides the approach. For failure-style questions,
+the discretized pipeline is not a weaker CG model; it is the appropriate inference path.
+See <a class="reference internal" href="Discretizing.html"><span class="doc">Discretizing</span></a> and <a class="reference internal" href="Inference.html"><span class="doc">Inference</span></a>.</p>
 </section>
 <section id="sampling-from-continuous-and-hybrid-models">
 <h2>Sampling from continuous and hybrid models<a class="headerlink" href="#sampling-from-continuous-and-hybrid-models" title="Link to this heading"></a></h2>
