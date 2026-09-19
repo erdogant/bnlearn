@@ -998,54 +998,58 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
     >>> fig = bn.plot(model, interactive=True, edge_properties=edge_properties)
 
     """
-    # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     edges = {}
-    defaults = {'color': color, 'weight': weight, 'pvalue': 1, 'value': 1}
-    adjmat = model.get('independence_test', None)
-    # Use edge weights from test statistic
-    # if adjmat is not None and ('lingam' in model['config']['method']):
-    #     # Add to adjmat
-    #     adjmat = (model['adjmat'].abs() > 0).astype(float)
-    #     adjmatP = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=model['independence_test']['p_value'])
-    # if adjmat is not None and ('lingam' not in model['config']['method']):
-    if adjmat is not None:
-        if verbose>=3: print('[bnlearn]> Set edge weights based on the [%s] test statistic.' %(model['independence_test'].columns[-2]))
-        # Compute logp
-        logp = compute_logp(model['independence_test']['p_value'])
-        # Rescale the weights
+    # Edge property keys:
+    #   color   – edge color
+    #   weight  – display thickness (scaled -log10(p) when independence_test is present)
+    #   p_value – raw p-value from independence_test (1.0 if not available)
+    #   logp    – -log10(p_value) for strength labels (0.0 if not available)
+    #   value   – structure/coefficient entry from model['adjmat']
+    defaults = {'color': color, 'weight': weight, 'p_value': 1.0, 'logp': 0.0, 'value': 1}
+    indep = model.get('independence_test', None)
+    adjmat_weight = None
+    adjmat_p = None
+    adjmat_logp = None
+
+    if indep is not None:
+        # Prefer named column over positional index for the test statistic label
+        stat_cols = [c for c in indep.columns if c not in ('source', 'target', 'stat_test', 'p_value', 'dof')]
+        stat_name = stat_cols[0] if stat_cols else 'independence_test'
+        if verbose >= 3:
+            print('[bnlearn]> Set edge weights based on the [%s] test statistic.' % (stat_name))
+        raw_p = indep['p_value']
+        logp = compute_logp(raw_p)
         weights = _normalize_weights(logp.values, minscale=minscale, maxscale=maxscale)
-        # Add to adjmat
-        if 'lingam' in model['config']['method']:
-            adjmat = (model['adjmat'].abs() > 0).astype(float)
+        if model.get('config', {}).get('method') and 'lingam' in str(model['config'].get('method', '')):
+            adjmat_weight = (model['adjmat'].abs() > 0).astype(float)
         else:
-            adjmat = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=weights)
-        adjmatP = vec2adjmat(model['independence_test']['source'], model['independence_test']['target'], weights=logp)
+            adjmat_weight = vec2adjmat(indep['source'], indep['target'], weights=weights)
+        adjmat_p = vec2adjmat(indep['source'], indep['target'], weights=raw_p)
+        adjmat_logp = vec2adjmat(indep['source'], indep['target'], weights=logp)
     else:
-        adjmat = model.get('adjmat', None)
-        adjmat = (adjmat.abs() > 0).astype(float)
+        adjmat_weight = model.get('adjmat', None)
+        if adjmat_weight is not None:
+            adjmat_weight = (adjmat_weight.abs() > 0).astype(float)
 
-    # Get model edges
-    model_edges = adjmat2vec(adjmat)[['source', 'target']].values
-    # model_edges = model['model'].edges() if (model.get('model_edges', None) is None) else model['model_edges']
+    # Get model edges from the weight matrix (or structure)
+    if adjmat_weight is None:
+        return edges
+    model_edges = adjmat2vec(adjmat_weight)[['source', 'target']].values
 
-    # Store edge properties
-    if adjmat is not None:
-        if verbose>=3: print('[bnlearn] >Set edge properties.')
-        # For each edge, use the default properties.
-        for u, v in model_edges:
-            edge_property = defaults.copy()
-            # Use the edge weight from the adjmat
-            if not isinstance(adjmat.loc[u, v], np.bool_):
-                edge_property['weight'] = adjmat.loc[u, v]
+    if verbose >= 3:
+        print('[bnlearn] >Set edge properties.')
+    for u, v in model_edges:
+        edge_property = defaults.copy()
+        if not isinstance(adjmat_weight.loc[u, v], np.bool_):
+            edge_property['weight'] = float(adjmat_weight.loc[u, v])
+            if model.get('adjmat', None) is not None and u in model['adjmat'].index and v in model['adjmat'].columns:
                 edge_property['value'] = model['adjmat'].loc[u, v]
-                if model.get('independence_test', None) is not None:
-                    edge_property['pvalue'] = adjmatP.loc[u, v]
-                else:
-                    edge_property['pvalue'] = 1
-            # Update edges dict
-            edges.update({(u, v): edge_property})
+            if adjmat_p is not None and u in adjmat_p.index and v in adjmat_p.columns:
+                edge_property['p_value'] = float(adjmat_p.loc[u, v])
+            if adjmat_logp is not None and u in adjmat_logp.index and v in adjmat_logp.columns:
+                edge_property['logp'] = float(adjmat_logp.loc[u, v])
+        edges.update({(u, v): edge_property})
 
-    # Return dict with node properties
     return edges
 
 
@@ -1060,7 +1064,7 @@ def compute_logp(p_value):
 
 # %% PLOT
 def plot_graphviz(model,
-                  edge_labels='weight',
+                  edge_labels='logp',
                   params = {'prediction_feature_indices': None,
                             'prediction_target_label': "Y(pred)",
                             'prediction_line_color': "red",
@@ -1080,11 +1084,13 @@ def plot_graphviz(model,
     ----------
     model : dict
         A dictionary containing the network model.
-        Must include an adjacency matrix under the key "adjmat" and when the independence_test is performed, the -log10(pvalues) will be shown on the edges to highlight the strength of the significant relationships between variables.
-    edge_labels : Bool (default: True)
-         None: Do not show edge labels
-        'weight': Show the input values in the array
-        'pvalue': Show the edge pvalues (this requires doing the independence_test: model = bn.independence_test(model, df)
+        Must include an adjacency matrix under the key "adjmat". When independence_test
+        has been run, edge numbers can show raw p-values or -log10(p) strength.
+    edge_labels : str or None
+         None: Do not show numeric edge labels (node labels still applied when possible)
+        'weight': Show the adjacency / coefficient values
+        'p_value': Show raw edge p-values (requires model = bn.independence_test(...))
+        'logp': Show -log10(p_value) strength (requires independence_test)
     params : dict, optional
         A dictionary of parameters to control the visualization. Default values are provided,
         but users can modify specific parameters. The available options are:
@@ -1153,7 +1159,7 @@ def plot_graphviz(model,
     from lingam.utils import make_dot
     # from graphviz import Source
 
-    # Set Graphviz path to envoirement if required.
+    # Set Graphviz path to env if required.
     GraphvizPath = setgraphviz(verify_certificate=verify_certificate, verbose=verbose)
     if GraphvizPath is None:
         if verbose>=1:print('Graphviz is not found in path and can therefore cause an error in producint the dot image.')
@@ -1165,23 +1171,23 @@ def plot_graphviz(model,
     # Set a copy
     model = copy.deepcopy(model)
 
-    # In case independence test is performed, take that Pvalues
-    if model.get('independence_test') is not None and edge_labels=='pvalue':
-        if verbose>=3: print('[bnlearn] >Setting edge labels to pvalue.')
-        source = model.get('independence_test')['source']
-        target = model.get('independence_test')['target']
-        # Compute logp
-        logp = compute_logp(model['independence_test']['p_value'])
-        # Create new adjmat based on indepdence test
-        adjmat = vec2adjmat(source, target, weights=logp, symmetric=True, aggfunc='sum', verbose=verbose)
+    # Choose matrix values shown on edges (make_dot uses matrix entries as edge numbers)
+    indep = model.get('independence_test')
+    if indep is not None and ('logp' in edge_labels):
+        if verbose >= 3: print('[bnlearn] >Setting edge labels to logp (-log10(p_value)).')
+        logp = compute_logp(indep['p_value'])
+        adjmat = vec2adjmat(indep['source'], indep['target'], weights=logp, symmetric=True, aggfunc='sum', verbose=verbose)
+    elif indep is not None and ('p_value' in indep) and ('p_value' in edge_labels):
+        if verbose >= 3: print('[bnlearn] >Setting edge labels to p_value.')
+        adjmat = vec2adjmat(indep['source'], indep['target'], weights=indep['p_value'], symmetric=True, aggfunc='sum', verbose=verbose)
     else:
         adjmat = model['adjmat'].copy()
 
-    if edge_labels is not None:
-        edge_labels = list(adjmat.T.columns)
+    # make_dot `labels` are node names
+    node_labels = list(adjmat.T.columns) if edge_labels is not None else None
 
     # Make the dot and output Directed graph source code in the DOT language.
-    dot_graph = make_dot(adjmat.T.values.astype(float), labels=edge_labels, lower_limit=0, **params)
+    dot_graph = make_dot(adjmat.T.values.astype(float), labels=node_labels, lower_limit=0, **params)
 
     # Return
     return dot_graph
@@ -1229,8 +1235,9 @@ def plot(model,
         Dictionary containing custom edge_color and edge_size parameters for the network. The edge properties can be retrieved with: edge_properties = bn.get_edge_properties(model)
     edge_labels : str or None, optional
         None: Do not show edge labels.
-        'weight': Show the input values in the array.
-        'pvalue': Show the edge p-values (requires running independence_test: model = bn.independence_test(model, df)).
+        'weight': Show the structure / coefficient values from the adjacency matrix.
+        'p_value': Show raw edge p-values (requires independence_test).
+        'logp': Show -log10(p_value) strength (requires independence_test).
     params_interactive : dict, optional
         Dictionary containing various settings for interactive plots.
     params_static : dict, optional
@@ -1286,8 +1293,8 @@ def plot(model,
         if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
-    if model.get('independence_test', None) is None and edge_labels=='pvalue':
-        if verbose>=2: print('[bnlearn] >Edge labels with Pvalues can only be shown after executing: model=bn.independence_test(model, df)')
+    if model.get('independence_test', None) is None and edge_labels in ('p_value', 'logp'):
+        if verbose>=2: print('[bnlearn] >Edge labels with p_value/logp require: model=bn.independence_test(model, df)')
         edge_labels = None
 
     model = copy.deepcopy(model)
@@ -1325,15 +1332,15 @@ def plot(model,
         if node_properties[key]['node_size'] is None:
             node_properties[key]['node_size']=node_size_default
 
-    # Add edges with weights based on independence test results
+    # Add edges with weights / p_value / logp from edge properties
     for edge, properties in edge_properties.items():
-        # strength = properties.get("weight", 0)
-        G.add_edge(*edge, weight=properties.get("weight", 0), pvalue=properties.get("pvalue", 1), value=properties.get("value", 0))
-
-    # Update the dataframe with the normalized weights or P-values
-    # if edge_labels=='pvalue':
-    #     for (source, target), value in edge_properties.items():
-    #         model['adjmat'].loc[source, target] = value['pvalue']
+        G.add_edge(
+            *edge,
+            weight=properties.get('weight', 0),
+            p_value=properties.get('p_value', 1.0),
+            logp=properties.get('logp', 0.0),
+            value=properties.get('value', 0),
+        )
 
     # Extract model if in dict
     if 'dict' in str(type(model)):
@@ -1342,7 +1349,7 @@ def plot(model,
         bnmodel = copy.deepcopy(model)
 
     # get node properties
-    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_pvalue, edge_value = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     tooltip = nodelist
 
     # Plot
@@ -1421,17 +1428,17 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     # edges
     nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
 
-    # Plot text of the weights
-    if edge_labels=='weight':
+    # Plot text of the edge attributes
+    if edge_labels == 'weight':
         edge_label = nx.get_edge_attributes(G, 'value')
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-        # edge_label = nx.get_edge_attributes(G, 'weight')
-        # edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
-        # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-    elif edge_labels=='pvalue':
-        edge_label = nx.get_edge_attributes(G, 'pvalue')
-        # Truncate or format values in the edge_weight dictionary to be no more than 3 characters
+    elif edge_labels == 'p_value':
+        edge_label = nx.get_edge_attributes(G, 'p_value')
+        edge_label = {key: float(f'{value:.2g}') for key, value in edge_label.items()}
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
+    elif edge_labels == 'logp':
+        edge_label = nx.get_edge_attributes(G, 'logp')
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
 
@@ -1476,10 +1483,7 @@ def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes, edg
     # X = vec2adjmat(target=X['target'], source=X['source'], weight=X['weight'])
 
     # Create network using default
-    d3.d3graph(X,
-               showfig=False,
-               title=title,
-               notebook=params_interactive['notebook'])
+    d3.d3graph(X, showfig=False, title=title, notebook=params_interactive['notebook'])
 
     # Change edge properties
     d3.D3graph.set_edge_properties(directed=params_interactive['directed'],
@@ -1511,20 +1515,22 @@ def _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     # edges=[*bnmodel.edges()]
     edges = list(edge_properties.keys())
     for edge in edges:
-        color = edge_properties.get((edge[0], edge[1])).get('color', '#000000')
-        weight = edge_properties.get((edge[0], edge[1])).get('weight', 1)
-        G.add_edge(edge[0], edge[1], weight=weight, color=color)
-        # arrowstyle = edge_properties.get((edge[0], edge[1])).get('arrowstyle', '-|>')
-        # arrowsize = edge_properties.get((edge[0], edge[1])).get('arrowsize', 30)
-        # G.add_edge(edge[0], edge[1], weight=weight, color=color, arrowstyle=arrowstyle, arrowsize=arrowsize)
+        props = edge_properties.get((edge[0], edge[1]), {})
+        G.add_edge(
+            edge[0],
+            edge[1],
+            weight=props.get('weight', 1),
+            color=props.get('color', '#000000'),
+            p_value=props.get('p_value', 1.0),
+            logp=props.get('logp', 0.0),
+            value=props.get('value', 0),
+        )
 
     edgelist = list(G.edges())
     edge_colors = [G[u][v].get('color') for u, v in G.edges()]
     edge_weights = [G[u][v].get('weight') for u, v in G.edges()]
-    edge_pvalue = [G[u][v].get('pvalue') for u, v in G.edges()]
+    edge_p_value = [G[u][v].get('p_value') for u, v in G.edges()]
     edge_value = [G[u][v].get('value') for u, v in G.edges()]
-    # edge_arrowstyles = [G[u][v].get('arrowstyle') for u, v in G.edges()]
-    # edge_arrowsizes = [G[u][v].get('arrowsize') for u, v in G.edges()]
 
     # Node properties
     nodelist = np.unique(edgelist)
@@ -1539,8 +1545,7 @@ def _plot_properties(G, node_properties, edge_properties, node_color, node_size)
             node_sizes.append(node_size)
         else:
             node_sizes.append(node_properties[node].get('node_size'))
-    # Return
-    return nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_pvalue, edge_value
+    return nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value
 
 
 # %%
@@ -1997,8 +2002,10 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     --------
     >>> import bnlearn as bn
     >>> df = bn.import_example(data='asia')
+    >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)
+    >>>
     >>> # Compute arc strength
     >>> model = bn.independence_test(model, df, test='chi_square')
     >>> print(model['independence_test'])
