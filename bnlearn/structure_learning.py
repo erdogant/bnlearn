@@ -791,8 +791,7 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
             scoretype = 'bic-cg'
         else:
             scoretype = 'bic'
-        if verbose >= 3:
-            print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
+        if verbose >= 3: print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
 
     if scoretype == 'bic':
         scoring_method = BIC(df)

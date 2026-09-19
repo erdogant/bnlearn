@@ -950,17 +950,30 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
     weight : float, (Default: 1)
         The default weight of the edges.
     minscale : float, (Default: 1)
-        The minimum weight of the edge in case of test statisics are used.
+        The minimum weight of the edge in case of test statistics are used.
     maxscale : float, (Default: 10)
-        The maximum weight of the edge in case of test statisics are used.
+        The maximum weight of the edge in case of test statistics are used.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
-    dict.
-        Edge properties.
+    dict
+        Mapping ``(source, target) -> properties`` with keys:
+
+        * ``color`` – edge color
+        * ``weight`` – display thickness (scaled ``-log10(p_value)`` when
+          ``independence_test`` is present, else the default weight)
+        * ``p_value`` – raw p-value from ``independence_test`` (1.0 if absent)
+        * ``logp`` – ``-log10(p_value)`` (0.0 if absent)
+        * ``value`` – structure / coefficient entry from ``model['adjmat']``
+
+    Notes
+    -----
+    The independence-test DataFrame uses the column name ``p_value``. Edge
+    properties use the same name for the raw p-value. There is no ``pvalue``
+    key (removed as redundant).
 
     Examples
     --------
@@ -1012,7 +1025,9 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
     adjmat_logp = None
 
     if indep is not None:
-        # Prefer named column over positional index for the test statistic label
+        # Named columns only (never positional)
+        if 'p_value' not in indep.columns:
+            raise KeyError("[bnlearn] >independence_test must contain column 'p_value'.")
         stat_cols = [c for c in indep.columns if c not in ('source', 'target', 'stat_test', 'p_value', 'dof')]
         stat_name = stat_cols[0] if stat_cols else 'independence_test'
         if verbose >= 3:
@@ -1061,6 +1076,37 @@ def compute_logp(p_value):
     if np.isnan(max_logp): max_logp = 1
     logp.loc[Iloc] = max_logp
     return logp
+
+
+def _normalize_independence_frame(df_indep, test_name='stat'):
+    """Ensure independence_test has a consistent column set.
+
+    Columns: source, target, stat_test, p_value, <test_name>, dof
+
+    Empty frames (no edges in the DAG) still get the full schema so downstream
+    code can rely on column names without KeyError.
+    """
+    # Empty result (e.g. structure learning found no edges)
+    if df_indep is None or len(df_indep) == 0:
+        return pd.DataFrame(columns=['source', 'target', 'stat_test', 'p_value', test_name, 'dof'])
+
+    required = ['source', 'target', 'p_value']
+    for col in required:
+        if col not in df_indep.columns:
+            raise KeyError("[bnlearn] >independence_test missing required column '%s'." % col)
+    out = df_indep.copy()
+    if 'stat_test' not in out.columns:
+        out['stat_test'] = out['p_value'] <= 0.05
+    if 'dof' not in out.columns:
+        out['dof'] = 1
+    if test_name not in out.columns:
+        # Placeholder statistic when the test does not return one (e.g. LiNGAM p-matrix)
+        out[test_name] = np.nan
+    # Canonical column order when possible
+    front = ['source', 'target', 'stat_test', 'p_value']
+    rest = [c for c in out.columns if c not in front + ['dof']]
+    ordered = front + rest + (['dof'] if 'dof' in out.columns else [])
+    return out.loc[:, ordered]
 
 # %% PLOT
 def plot_graphviz(model,
@@ -1173,11 +1219,11 @@ def plot_graphviz(model,
 
     # Choose matrix values shown on edges (make_dot uses matrix entries as edge numbers)
     indep = model.get('independence_test')
-    if indep is not None and ('logp' in edge_labels):
+    if indep is not None and edge_labels == 'logp':
         if verbose >= 3: print('[bnlearn] >Setting edge labels to logp (-log10(p_value)).')
         logp = compute_logp(indep['p_value'])
         adjmat = vec2adjmat(indep['source'], indep['target'], weights=logp, symmetric=True, aggfunc='sum', verbose=verbose)
-    elif indep is not None and ('p_value' in indep) and ('p_value' in edge_labels):
+    elif indep is not None and edge_labels == 'p_value':
         if verbose >= 3: print('[bnlearn] >Setting edge labels to p_value.')
         adjmat = vec2adjmat(indep['source'], indep['target'], weights=indep['p_value'], symmetric=True, aggfunc='sum', verbose=verbose)
     else:
@@ -2016,6 +2062,12 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     >>> 2       Rain     Cloudy       True  1.080606e-87  394.061629    1
     >>> 3       Rain  Wet_Grass       True  3.886511e-64  285.901702    1
 
+    Notes
+    -----
+    ``model['independence_test']`` is a DataFrame with columns
+    ``source``, ``target``, ``stat_test``, ``p_value``, ``<test>``, ``dof``.
+    Plotting uses ``edge_labels='p_value'`` or ``'logp'``.
+
     """
     # Imports
     from pgmpy.models import DiscreteBayesianNetwork
@@ -2033,44 +2085,42 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     model_update = copy.deepcopy(model)
 
     if isinstance(model['model'], (DirectLiNGAM, ICALiNGAM)):
-        # Get a copy of the model
         if verbose >= 3: print(f'[bnlearn] >Compute edge strength with {model["config"]["method"]}')
         test = 'direct-lingam'
 
         # Extract info from the independence_p_values
         p_value = pd.DataFrame(model_update['model'].get_error_independence_p_values(df), columns=df.columns.values, index=df.columns.values)
-        # Sort the correction_matrix index and columns to match adjmat
         p_value = p_value.reindex(index=model['adjmat'].index, columns=model['adjmat'].columns)
-        # Make sure the Pvalue matrix is consistent with the adjmat
         p_value = p_value[p_value * model['adjmat'].abs() > 0].fillna(value=1)
 
-        # out['independence_test'] = p_value
         independence_test = bn.adjmat2vec(p_value, min_weight=0)
         independence_test.rename(columns={'weight': 'p_value'}, inplace=True)
+        independence_test['stat_test'] = independence_test['p_value'] <= alpha
         independence_test['dof'] = 1
-        model_update['independence_test'] = independence_test
-        # Set the significant edges to True
-        model_update['independence_test']['stat_test'] = model_update['independence_test']['p_value'] <= alpha
+        # LiNGAM does not return a classical test statistic; keep column for schema parity
+        independence_test[test] = np.nan
+        model_update['independence_test'] = _normalize_independence_frame(independence_test, test_name=test)
     else:
         if verbose>=3: print(f'[bnlearn] >Compute edge strength with {test}')
-        # Get the statistical test
         statistical_test = eval(test)
-        # Compute significance
         results = []
         for i, j in model_update['model_edges']:
-            # test_result = power_divergence(i, j, [], df, boolean=False, lambda_="cressie-read", significance_level=0.05)
-            # chi, p_value, dof, expected = stats.chi2_contingency( df.groupby([i, j]).size().unstack(j, fill_value=0), lambda_="cressie-read" )
             test_result = statistical_test(X=i, Y=j, Z=[], data=df, boolean=False, significance_level=alpha)
-            results.append({"source": i, "target": j, "stat_test": test_result[1]<=alpha, 'p_value': test_result[1], test: test_result[0], 'dof': test_result[2]})
-
-        # Update model
-        model_update['independence_test'] = pd.DataFrame(results)
+            # test_result: (statistic, p_value, dof) when boolean=False
+            results.append({
+                'source': i,
+                'target': j,
+                'stat_test': test_result[1] <= alpha,
+                'p_value': test_result[1],
+                test: test_result[0],
+                'dof': test_result[2],
+            })
+        model_update['independence_test'] = _normalize_independence_frame(pd.DataFrame(results), test_name=test)
 
     # Remove not significant edges
     if prune and len(model_update['model_edges']) > 0:
         model_update = _prune(model_update, test, alpha, verbose=verbose)
 
-    # Return
     return model_update
 
 
