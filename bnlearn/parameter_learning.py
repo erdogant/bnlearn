@@ -35,7 +35,7 @@ warnings.filterwarnings("ignore")
 
 
 # %% Parameter learning
-def fit(model, df, methodtype='bayes', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
+def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
     """Learn the parameters given the DAG and data.
 
     Fit overview
