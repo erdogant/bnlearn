@@ -300,7 +300,7 @@ model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
 G = bn.plot(model, interactive=False)
-
+bn.plot_graphviz(model)
 
 #%%
 import bnlearn as bn

@@ -38,7 +38,7 @@ from bnlearn.utils import infer_data_type
 # %% Structure Learning
 def fit(df,
         methodtype='hc',
-        scoretype='bic',
+        scoretype='auto',
         black_list=None,
         white_list=None,
         bw_list_method=None,

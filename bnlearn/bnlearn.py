@@ -1012,11 +1012,6 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
         if verbose>=3: print('[bnlearn]> Set edge weights based on the [%s] test statistic.' %(model['independence_test'].columns[-2]))
         # Compute logp
         logp = compute_logp(model['independence_test']['p_value'])
-        # logp = -np.log10(model['independence_test']['p_value'])
-        # Iloc = np.isinf(logp)
-        # max_logp = np.max(logp[~Iloc]) * 1.5  # For visualization purposes, set the max higher then what is present to mark the difference.
-        # if np.isnan(max_logp): max_logp = 1
-        # logp.loc[Iloc] = max_logp
         # Rescale the weights
         weights = _normalize_weights(logp.values, minscale=minscale, maxscale=maxscale)
         # Add to adjmat
@@ -1177,12 +1172,6 @@ def plot_graphviz(model,
         target = model.get('independence_test')['target']
         # Compute logp
         logp = compute_logp(model['independence_test']['p_value'])
-        # logp = -np.log10(model.get('independence_test')['p_value'])
-        # Iloc = np.isinf(logp)
-        # For visualization purposes, set the max higher then what is present to mark the difference.
-        # max_logp = np.max(logp[~Iloc]) * 1.5
-        # if np.isnan(max_logp): max_logp = 1
-        # logp.loc[Iloc] = max_logp
         # Create new adjmat based on indepdence test
         adjmat = vec2adjmat(source, target, weights=logp, symmetric=True, aggfunc='sum', verbose=verbose)
     else:
@@ -1264,21 +1253,28 @@ def plot(model,
     Examples
     --------
     >>> import bnlearn as bn
+    >>>
     >>> # Load asia DAG
     >>> df = bn.import_example(data='asia')
+    >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)
+    >>>
     >>> # plot static
     >>> fig = bn.plot(model)
+    >>>
     >>> # plot interactive
     >>> fig = bn.plot(model, interactive=True)
+    >>>
     >>> # plot interactive with various settings
     >>> fig = bn.plot(model, interactive=True, node_color='#8A0707', node_size=35, params_interactive={'figsize':(800, 600), 'font_color': 'node_color', 'bgcolor':'#0f0f0f0f'})
+    >>>
     >>> # plot with node properties
     >>> node_properties = bn.get_node_properties(model)
     >>> node_properties['xray']['node_color'] = '#8A0707'
     >>> node_properties['xray']['node_size'] = 50
     >>> fig = bn.plot(model, interactive=True, node_properties=node_properties)
+    >>>
     """
     fig = None
     # Check whether edges are available
@@ -2080,20 +2076,6 @@ def _prune(model, test, alpha, verbose=3):
         Irem = ~model['independence_test']['stat_test']
         idxrem = np.where(Irem)[0]
 
-        # Set not-significant edges to False
-        # for idx in idxrem:
-        #     edge = list(model['independence_test'].iloc[idx][['source', 'target']])
-
-        #     if test=='direct-lingam':
-        #         pass
-        #     else:
-        #         model['adjmat'].loc[edge[0], edge[1]] = False
-        #         model['adjmat'].loc[edge[1], edge[0]] = False
-        #         # Remove edges
-        #         if np.any(np.isin(model['model_edges'], edge).sum(axis=1)==2) and (edge[0], edge[1]) in model['model_edges']:
-        #             model['model_edges'].remove((edge[0], edge[1]))
-        #             # Remove from list
-        #             if verbose >= 3: print('[bnlearn] >Edge [%s <-> %s] [P=%g] is excluded because it was not significant (P<%.2f) with [%s]' %(edge[0], edge[1], model['independence_test'].iloc[idx]['p_value'], alpha, test))
         if len(idxrem)>0:
             if verbose >= 3: print(f'[bnlearn] >{sum(Irem)} edges are removed with P-value > {alpha} based on {test}')
             # Keek only the significant edges from the test statistics
