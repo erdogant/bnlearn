@@ -8,17 +8,10 @@
 
 
 # %% Libraries
+import logging
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Note: pgmpy 1.1 deprecates the estimator-style HillClimbSearch/PC in favour of
-# sklearn-style classes in pgmpy.causal_discovery with a different interface.
-# The estimator-style classes remain until pgmpy 1.3; the <1.2 pin covers us,
-# and switching APIs is deferred until the causal_discovery interface settles.
-# The score classes must come from pgmpy.estimators too: pgmpy 1.1 keeps two
-# parallel score hierarchies, and the estimator-style search classes only
-# accept scores from their own (pgmpy.estimators.StructureScore) lineage.
 
 # from pgmpy.estimators import LogLikelihoodCondGauss, AICCondGauss, BICCondGauss
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
@@ -34,6 +27,8 @@ import bnlearn
 from bnlearn.utils import infer_data_type
 # from bnlearn.utils import default_ci_test
 
+logger = logging.getLogger('pgmpy')
+logger.setLevel(logging.WARNING)
 
 # %% Structure Learning
 def fit(df,
