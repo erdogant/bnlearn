@@ -352,7 +352,10 @@ A **Conditional Gaussian (CG)** network models this hybrid setting:
 * **Continuous nodes** are modelled as linear Gaussian regressions on their parents.
 * If a continuous node has discrete parents, it gets one set of regression coefficients and one residual standard deviation **per configuration** of those discrete parents.
 
-This is the natural model when you want coefficient-level insight among continuous variables and probability-level answers for discrete outcomes in the same graph.
+This is the natural model when you want coefficient-level insight among continuous
+variables, including under discrete regimes (e.g. sensor distributions given a
+failure flag). Discrete targets conditioned on continuous evidence are a different
+question — see the CG inference limitation below.
 
 Structure scores for hybrid data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -429,8 +432,6 @@ Inference on continuous and hybrid models
 * Linear-Gaussian models → conditional means (``fit_continuous``).
 * Conditional-Gaussian models → discrete VE for discrete query nodes and CG local regressions for continuous query nodes.
 
-Evidence may mix discrete states and continuous numbers. Interventions use the same ``do`` argument as in discrete inference.
-
 .. code-block:: python
 
     # Query continuous Y given X (linear-Gaussian model from above)
@@ -440,8 +441,42 @@ Evidence may mix discrete states and continuous numbers. Interventions use the s
     # Intervention: set X by do-operator
     q_do = bn.inference.fit(model, variables=['Y'], do={'X': 1.0})
 
-    # CG: continuous node given discrete evidence
+    # CG: continuous node given discrete evidence (supported)
     q_cg = bn.inference.fit(model_mix, variables=['torque'], evidence={'fail': 1})
+
+
+CG inference limitation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The CG engine is a **hybrid**: discrete nodes use Variable Elimination on
+TabularCPDs; continuous nodes use local Gaussian CPDs. The two sides do **not**
+fully communicate. There is no built-in step that evaluates a continuous parent
+value against a Gaussian CPD and then propagates that result into a **discrete**
+target.
+
+Supported combinations:
+
+* Continuous query with discrete and/or continuous evidence → conditional local Gaussian (correct).
+* Discrete query with discrete evidence → CPT / Variable Elimination (correct).
+* Discrete query with continuous evidence → **marginal** of the discrete node;
+  continuous evidence is **not** applied.
+
+Example of what is **not** a true conditional in CG:
+``P(Machine failure | Torque [Nm] = 40)`` when failure is discrete and torque is
+continuous. You obtain the marginal failure distribution, not the probability
+conditioned on that torque value.
+
+This is an architectural constraint, not a temporary bug. It is also an argument
+for discretization when the decision target is discrete (e.g. binary failure driven
+by operational thresholds):
+
+* **CG** — continuous sensor dynamics and continuous queries (including under discrete regimes).
+* **Discretized discrete BN** (``bn.discretize``) — binary / categorical targets that must
+  be conditioned on sensor-like evidence.
+
+The **target of the analysis** decides the approach. For failure-style questions,
+the discretized pipeline is not a weaker CG model; it is the appropriate inference path.
+See :doc:`Discretizing` and :doc:`Inference`.
 
 
 Sampling from continuous and hybrid models
