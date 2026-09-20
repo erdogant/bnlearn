@@ -110,7 +110,7 @@ Lets determine the best possible structure for the sprinkler dataset.
     # 3  Sprinkler  Wet_Grass  True         1.19692e-23       100.478      1
 
     # Plot
-    bn.plot(model, edge_labels='p_value')
+    bn.plot(model, edge_mode='p_value')
 
 
 .. |exh1| image:: ../figs/exhaustivesearch_example.png
@@ -144,7 +144,7 @@ Lets examine the results using the **alarm** example that contains 37 nodes.
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 
     # Plot detected DAG
-    G = bn.plot(model, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None)
+    G = bn.plot(model, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_mode=None)
 
     # Create graphviz
     dot = bn.plot_graphviz(model)
@@ -155,7 +155,7 @@ Lets examine the results using the **alarm** example that contains 37 nodes.
     model_2 = bn.independence_test(model, df, alpha=0.05, prune=False)
 
     # Plot
-    bn.plot(model_2, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
+    bn.plot(model_2, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_mode=None, pos=G['pos'])
 
     # Examine the output of the chi-square test. 53 edges are detected but not all P values are significant, i.e. those with stat_test=False
     print(tabulate(model_2['independence_test'], headers="keys"))
@@ -219,7 +219,7 @@ Lets examine the results using the **alarm** example that contains 37 nodes.
     # Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
     model3 = bn.independence_test(model, df, alpha=0.05, prune=True)
     # plot
-    bn.plot(model3, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_labels=None, pos=G['pos'])
+    bn.plot(model3, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_mode=None, pos=G['pos'])
 
 
 .. |hill0| image:: ../figs/Hillclimbsearch1_graphviz.png

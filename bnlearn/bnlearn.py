@@ -1110,7 +1110,7 @@ def _normalize_independence_frame(df_indep, test_name='stat'):
 
 # %% PLOT
 def plot_graphviz(model,
-                  edge_labels='logp',
+                  edge_mode='logp',
                   params = {'prediction_feature_indices': None,
                             'prediction_target_label': "Y(pred)",
                             'prediction_line_color': "red",
@@ -1132,7 +1132,7 @@ def plot_graphviz(model,
         A dictionary containing the network model.
         Must include an adjacency matrix under the key "adjmat". When independence_test
         has been run, edge numbers can show raw p-values or -log10(p) strength.
-    edge_labels : str or None
+    edge_mode : str or None
          None: Do not show numeric edge labels (node labels still applied when possible)
         'weight': Show the adjacency / coefficient values
         'p_value': Show raw edge p-values (requires model = bn.independence_test(...))
@@ -1220,16 +1220,16 @@ def plot_graphviz(model,
 
     # Choose matrix values shown on edges (make_dot uses matrix entries as edge numbers).
     # For p_value/logp labels, only significantly associated edges (stat_test=True) are drawn —
-    # same filter as plot() when edge_labels is 'p_value' or 'logp'.
-    if verbose >= 3: print(f'[bnlearn] >Setting edge labels to {edge_labels}.')
+    # same filter as plot() when edge_mode is 'p_value' or 'logp'.
+    if verbose >= 3: print(f'[bnlearn] >Setting edge mode to {edge_mode}.')
     indep = model.get('independence_test')
-    if indep is not None and edge_labels in ('logp', 'p_value') and 'stat_test' in indep.columns:
+    if indep is not None and edge_mode in ('logp', 'p_value') and 'stat_test' in indep.columns:
         Iloc = indep['stat_test'].astype(bool)
         source = indep['source'].loc[Iloc]
         target = indep['target'].loc[Iloc]
         if verbose >= 3:
             print(f'[bnlearn] >Number of significant edges detected: {int(Iloc.sum())}')
-        if edge_labels == 'logp':
+        if edge_mode == 'logp':
             logp = compute_logp(indep['p_value'])
             adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum', verbose=verbose)
         else:
@@ -1240,7 +1240,7 @@ def plot_graphviz(model,
         adjmat = model['adjmat'].copy()
 
     # make_dot `labels` are node names
-    node_labels = list(adjmat.T.columns) if edge_labels is not None else None
+    node_labels = list(adjmat.T.columns) if edge_mode is not None else None
 
     # Make the dot and output Directed graph source code in the DOT language.
     if node_labels is not None and len(node_labels) > 0:
@@ -1258,8 +1258,8 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         edge_labels='weight',
-         params_interactive={'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': '#000000', 'bgcolor': '#ffffff', 'show_slider': True, 'filepath': None},
+         edge_mode='weight',
+         params_interactive={'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None},
          params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
          verbose=3,
          ):
@@ -1289,8 +1289,8 @@ def plot(model,
         Example: {'node1':{'node_color':'#8A0707','node_size':10}, 'node2':{'node_color':'#000000','node_size':30}}
     edge_properties : dict, optional
         Dictionary containing custom edge_color and edge_size parameters for the network. The edge properties can be retrieved with: edge_properties = bn.get_edge_properties(model)
-    edge_labels : str or None, optional
-        None: Do not show edge labels.
+    edge_mode : str or None, optional
+        None: Do not annotate edges with numbers.
         'weight': Show the structure / coefficient values from the adjacency matrix
         (all structure edges; no significance filter).
         'p_value': Show raw edge p-values (requires independence_test). Only edges with
@@ -1352,15 +1352,15 @@ def plot(model,
         if verbose>=3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
-    if model.get('independence_test', None) is None and edge_labels in ('p_value', 'logp'):
-        if verbose>=2: print('[bnlearn] >Edge labels with p_value/logp require: model=bn.independence_test(model, df)')
-        edge_labels = None
+    if model.get('independence_test', None) is None and edge_mode in ('p_value', 'logp'):
+        if verbose>=2: print('[bnlearn] >edge_mode p_value/logp require: model=bn.independence_test(model, df)')
+        edge_mode = None
 
     model = copy.deepcopy(model)
     model['adjmat'] = model['adjmat'].astype(float)
 
     # Plot properties
-    defaults = {'minmax_distance': [100, 250], 'figsize': (1500, 800), 'notebook': False, 'font_color': '#000000', 'bgcolor': '#ffffff', 'directed': True, 'show_slider': True, 'filepath': None}
+    defaults = {'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None, 'directed': True,}
     params_interactive = {**defaults, **params_interactive}
     defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
     params_static = {**defaults, **params_static}
@@ -1388,7 +1388,7 @@ def plot(model,
 
     # Same filter as plot_graphviz: when labeling by p_value/logp, keep only
     # edges marked significant in independence_test (stat_test=True).
-    if edge_labels in ('p_value', 'logp') and model.get('independence_test') is not None:
+    if edge_mode in ('p_value', 'logp') and model.get('independence_test') is not None:
         indep = model['independence_test']
         if 'stat_test' in indep.columns and len(indep) > 0:
             sig = indep.loc[indep['stat_test'].astype(bool), ['source', 'target']]
@@ -1474,7 +1474,7 @@ def plot(model,
                            visible=params_static['visible'],
                            title=title,
                            dpi=params_static['dpi'],
-                           edge_labels=edge_labels,
+                           edge_mode=edge_mode,
                            )
 
     # Store
@@ -1488,7 +1488,7 @@ def plot(model,
 
 
 # %% Plot interactive
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_labels='weight'):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_mode='weight'):
 
     # Initialize
     fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
@@ -1500,15 +1500,15 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
 
     # Plot text of the edge attributes
-    if edge_labels == 'weight':
+    if edge_mode == 'weight':
         edge_label = nx.get_edge_attributes(G, 'value')
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-    elif edge_labels == 'p_value':
+    elif edge_mode == 'p_value':
         edge_label = nx.get_edge_attributes(G, 'p_value')
         edge_label = {key: float(f'{value:.2g}') for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-    elif edge_labels == 'logp':
+    elif edge_mode == 'logp':
         edge_label = nx.get_edge_attributes(G, 'logp')
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
@@ -2091,7 +2091,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     -----
     ``model['independence_test']`` is a DataFrame with columns
     ``source``, ``target``, ``stat_test``, ``p_value``, ``<test>``, ``dof``.
-    Plotting uses ``edge_labels='p_value'`` or ``'logp'``.
+    Plotting uses ``edge_mode='p_value'`` or ``'logp'``.
 
     """
     # Imports

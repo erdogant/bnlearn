@@ -209,9 +209,9 @@ model = bn.structure_learning.fit(df, methodtype='hc', scoretype=scoretype, verb
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_labels='logp')
+bn.plot(model, edge_mode='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_labels='logp')
+dotgraph = bn.plot_graphviz(model, edge_mode='logp')
 dotgraph
 
 # Parameter learning
@@ -413,9 +413,9 @@ model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 
 # Plot the best DAG
-# bn.plot(model, edge_labels='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+# bn.plot(model, edge_mode='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
-# dotgraph = bn.plot_graphviz(model, edge_labels='logp')
+# dotgraph = bn.plot_graphviz(model, edge_mode='logp')
 # dotgraph
 
 # Store to pdf
@@ -825,12 +825,12 @@ for cii_test in cii_tests:
     model = bn.independence_test(model, df, test='chi_square', prune=False)
 
     # Plot the best DAG
-    bn.plot(model, edge_labels='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+    bn.plot(model, edge_mode='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
     bn.plot(model)
 
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_labels='logp')
+dot = bn.plot_graphviz(model, edge_mode='logp')
 dot
 
 # %%
@@ -853,10 +853,10 @@ model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='b
 model = bn.independence_test(model, df, test='chi_square', prune=False)
 
 # Plot the best DAG
-bn.plot(model, edge_labels='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+bn.plot(model, edge_mode='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_labels='logp')
+dot = bn.plot_graphviz(model, edge_mode='logp')
 dot
 
 # %%
@@ -870,7 +870,7 @@ model = bn.structure_learning.fit(df)
 # Plot
 # bn.plot(model, params_static={'figsize': (5, 5), 'font_size': 8, 'arrowsize': 15, 'layout': 'spring_layout'}, node_size=1000)
 bn.plot(model);
-bn.plot(model, edge_labels='logp');
+bn.plot(model, edge_mode='logp');
 # bn.plot(model, interactive=True)
 
 # Dot graph
@@ -882,12 +882,12 @@ dotgraph
 # Compute edge strength with the chi_square test statistic
 model2 = bn.independence_test(model, df, test='chi_square', prune=False)
 bn.plot(model2)
-bn.plot(model2, edge_labels='logp');
+bn.plot(model2, edge_mode='logp');
 
 # Dot graph
 dotgraph2 = bn.plot_graphviz(model2)
 dotgraph2
-dotgraph2 = bn.plot_graphviz(model2, edge_labels='logp')
+dotgraph2 = bn.plot_graphviz(model2, edge_mode='logp')
 dotgraph2
 # dotgraph.view(filename=r'c:/temp/dotgraph2')
 
@@ -983,7 +983,7 @@ print(model['causal_order'])
 
 # We can draw a causal graph by utility funciton.
 G = bn.plot(model, pos=G['pos'])
-bn.plot(model, edge_labels='logp', pos=G['pos'])
+bn.plot(model, edge_mode='logp', pos=G['pos'])
 bn.plot_graphviz(model)
 
 # %% Continous and mixed
@@ -1000,9 +1000,9 @@ model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'pearsonr': 'c
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_labels='logp')
+bn.plot(model, edge_mode='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_labels='logp')
+dotgraph = bn.plot_graphviz(model, edge_mode='logp')
 dotgraph
 
 # Parameter learning
@@ -1089,9 +1089,9 @@ model = bn.structure_learning.fit(df, methodtype='ex')
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_labels='logp')
+bn.plot(model, edge_mode='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_labels='logp')
+dotgraph = bn.plot_graphviz(model, edge_mode='logp')
 dotgraph
 
 
@@ -1120,7 +1120,7 @@ import bnlearn as bn
 model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
 # model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
 bn.plot(model)
-bn.plot(model, edge_labels='logp')
+bn.plot(model, edge_mode='logp')
 
 # Compute edge strength with the chi_square test statistic
 model = bn.independence_test(model, df, prune=True)
@@ -1128,7 +1128,7 @@ model = bn.independence_test(model, df, prune=True)
 # Plot
 # bn.plot(model, params_static={'dpi': 100, 'figsize': (15, 10), 'font_size': 8, 'arrowsize': 15, 'arrowsize': 10, 'minscale': 1, 'maxscale': 5}, node_size=1000)
 bn.plot(model)
-bn.plot(model, edge_labels='logp');
+bn.plot(model, edge_mode='logp');
 # bn.plot(model, interactive=True)
 
 
@@ -1137,7 +1137,7 @@ dotgraph
 # Create pdf
 dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_ICALiNGAM')
 
-dotgraph2 = bn.plot_graphviz(model, edge_labels='logp')
+dotgraph2 = bn.plot_graphviz(model, edge_mode='logp')
 dotgraph2
 
 # Parameter learning
