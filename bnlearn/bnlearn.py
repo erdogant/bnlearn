@@ -1193,6 +1193,7 @@ def plot_graphviz(model,
     >>> dotgraph.view(filename=r'c:/temp/dotgraph')
 
     """
+    dot_graph = None
     # Check whether edges are available
     if model['adjmat'].sum().sum()==0:
         if verbose>=3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
@@ -1217,25 +1218,34 @@ def plot_graphviz(model,
     # Set a copy
     model = copy.deepcopy(model)
 
-    # Choose matrix values shown on edges (make_dot uses matrix entries as edge numbers)
+    # Choose matrix values shown on edges (make_dot uses matrix entries as edge numbers).
+    # For p_value/logp labels, only significantly associated edges (stat_test=True) are drawn —
+    # same filter as plot() when edge_labels is 'p_value' or 'logp'.
+    if verbose >= 3: print(f'[bnlearn] >Setting edge labels to {edge_labels}.')
     indep = model.get('independence_test')
-    if indep is not None and edge_labels == 'logp':
-        if verbose >= 3: print('[bnlearn] >Setting edge labels to logp (-log10(p_value)).')
-        logp = compute_logp(indep['p_value'])
-        adjmat = vec2adjmat(indep['source'], indep['target'], weights=logp, symmetric=True, aggfunc='sum', verbose=verbose)
-    elif indep is not None and edge_labels == 'p_value':
-        if verbose >= 3: print('[bnlearn] >Setting edge labels to p_value.')
-        adjmat = vec2adjmat(indep['source'], indep['target'], weights=indep['p_value'], symmetric=True, aggfunc='sum', verbose=verbose)
+    if indep is not None and edge_labels in ('logp', 'p_value') and 'stat_test' in indep.columns:
+        Iloc = indep['stat_test'].astype(bool)
+        source = indep['source'].loc[Iloc]
+        target = indep['target'].loc[Iloc]
+        if verbose >= 3:
+            print(f'[bnlearn] >Number of significant edges detected: {int(Iloc.sum())}')
+        if edge_labels == 'logp':
+            logp = compute_logp(indep['p_value'])
+            adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum', verbose=verbose)
+        else:
+            adjmat = vec2adjmat(source, target, weights=indep['p_value'].loc[Iloc], symmetric=True, aggfunc='sum', verbose=verbose)
     else:
+        edges = sum(1 for item in (model.get('model_edges') or []) if isinstance(item, tuple))
+        if verbose >= 3: print(f'[bnlearn] >Number of edges detected: {edges}')
         adjmat = model['adjmat'].copy()
 
     # make_dot `labels` are node names
     node_labels = list(adjmat.T.columns) if edge_labels is not None else None
 
     # Make the dot and output Directed graph source code in the DOT language.
-    dot_graph = make_dot(adjmat.T.values.astype(float), labels=node_labels, lower_limit=0, **params)
+    if node_labels is not None and len(node_labels) > 0:
+        dot_graph = make_dot(adjmat.T.values.astype(float), labels=node_labels, lower_limit=0, **params)
 
-    # Return
     return dot_graph
 
 # %% PLOT
@@ -1281,9 +1291,12 @@ def plot(model,
         Dictionary containing custom edge_color and edge_size parameters for the network. The edge properties can be retrieved with: edge_properties = bn.get_edge_properties(model)
     edge_labels : str or None, optional
         None: Do not show edge labels.
-        'weight': Show the structure / coefficient values from the adjacency matrix.
-        'p_value': Show raw edge p-values (requires independence_test).
-        'logp': Show -log10(p_value) strength (requires independence_test).
+        'weight': Show the structure / coefficient values from the adjacency matrix
+        (all structure edges; no significance filter).
+        'p_value': Show raw edge p-values (requires independence_test). Only edges with
+        ``stat_test=True`` are drawn (same filter as ``plot_graphviz``).
+        'logp': Show -log10(p_value) strength (requires independence_test). Only edges with
+        ``stat_test=True`` are drawn (same filter as ``plot_graphviz``).
     params_interactive : dict, optional
         Dictionary containing various settings for interactive plots.
     params_static : dict, optional
@@ -1372,6 +1385,18 @@ def plot(model,
         node_properties = bn.get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
         edge_properties = bn.get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+
+    # Same filter as plot_graphviz: when labeling by p_value/logp, keep only
+    # edges marked significant in independence_test (stat_test=True).
+    if edge_labels in ('p_value', 'logp') and model.get('independence_test') is not None:
+        indep = model['independence_test']
+        if 'stat_test' in indep.columns and len(indep) > 0:
+            sig = indep.loc[indep['stat_test'].astype(bool), ['source', 'target']]
+            sig_set = set(zip(sig['source'], sig['target']))
+            n_before = len(edge_properties)
+            edge_properties = {e: p for e, p in edge_properties.items() if e in sig_set}
+            if verbose >= 3:
+                print(f'[bnlearn] >Number of significant edges detected: {len(edge_properties)} (of {n_before})')
 
     # Set default node size based on interactive True/False
     for key in node_properties.keys():
