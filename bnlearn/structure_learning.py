@@ -86,11 +86,10 @@ def fit(df,
         'pc' or 'cs' or 'constraintsearch'
         # Score-Based
         'ex' or 'exhaustivesearch'
-        'hc' or 'hillclimbsearch' (default)
-        # Score-Based: Requires Root Node
-        'cl' or 'chow-liu' (requires setting root_node parameter)
-        'nb' or 'naivebayes' (requires <root_node>)
-        'tan' (requires <root_node> and <class_node> parameter)
+        'hc' or 'hillclimbsearch'   default
+        'cl' or 'chow-liu'          requires: <root_node>
+        'nb' or 'naivebayes'        requires: <root_node>
+        'tan'                       requires: <root_node> and <class_node>
         # Score-Based: For continuous and mixed datasets
         'direct-lingam'
         'ica-lingam'

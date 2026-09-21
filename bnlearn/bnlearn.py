@@ -2239,6 +2239,7 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     selected_score = None
     show_message = True
     scores = {}
+    
     # Get models and method
     if isinstance(model, dict):
         config = model.get('config', {})
@@ -2246,9 +2247,11 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
         selected_score = config.get('scoring')
         model = model.get('model', None)
     if isinstance(scoring_method, str): scoring_method = [scoring_method]
+    
     gaussian_scores = ['loglik-g', 'aic-g', 'bic-g']
     if selected_score in gaussian_scores and not np.any(np.isin(scoring_method, gaussian_scores)):
         scoring_method = [selected_score]
+
     if verbose>=3: print('[bnlearn] >Compute structure scores for model comparison (higher is better).' %(scoring_method))
 
     # Return if method not supported
