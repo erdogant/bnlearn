@@ -1248,6 +1248,54 @@ def plot_graphviz(model,
 
     return dot_graph
 
+# %% Hierarchical (top-down) layout helper
+def _hierarchical_layout(G, scale=1):
+    """Compute a top-down hierarchical node layout without requiring graphviz.
+
+    Nodes are arranged in topological generations (layer 0 at the top, the
+    deepest layer at the bottom).  Within each layer the nodes are spread
+    evenly along the X axis.  The result mimics the ``dot`` layout used by
+    ``plot_graphviz``.
+
+    Parameters
+    ----------
+    G : nx.DiGraph
+        The graph whose nodes must already be present (edges optional).
+    scale : float
+        Linear scale factor applied to all coordinates.
+
+    Returns
+    -------
+    dict
+        Mapping ``node -> np.ndarray([x, y])`` ready to pass as ``pos`` to
+        NetworkX drawing functions.
+    """
+    import numpy as np
+
+    # topological_generations covers every node, including isolated ones
+    generations = list(nx.topological_generations(G))
+    n_layers = len(generations)
+
+    pos = {}
+    for layer_idx, nodes in enumerate(generations):
+        nodes = sorted(nodes)          # deterministic left-to-right order
+        n = len(nodes)
+        # Y: layer 0 → top (y = 1), deepest layer → bottom (y = -1)
+        if n_layers > 1:
+            y = 1.0 - 2.0 * layer_idx / (n_layers - 1)
+        else:
+            y = 0.0
+        # X: spread nodes evenly; single node centred at 0
+        for i, node in enumerate(nodes):
+            if n > 1:
+                x = -1.0 + 2.0 * i / (n - 1)
+            else:
+                x = 0.0
+            pos[node] = np.array([x * scale, y * scale])
+
+    return pos
+
+
 # %% PLOT
 def plot(model,
          pos=None,
@@ -1260,7 +1308,7 @@ def plot(model,
          edge_properties=None,
          edge_mode='weight',
          params_interactive={'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None},
-         params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'spring_layout', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
+         params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout_custom', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
          verbose=3,
          ):
     """
@@ -1301,7 +1349,7 @@ def plot(model,
         Dictionary containing various settings for interactive plots.
     params_static : dict, optional
         Dictionary containing various settings for static plots.
-        layout: 'graphviz_layout', 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
+        layout: 'graphviz_layout_custom', 'graphviz_layout', 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
     verbose : int, optional
         Print progress to screen. The default is 3.
         0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace
@@ -1362,7 +1410,7 @@ def plot(model,
     # Plot properties
     defaults = {'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None, 'directed': True,}
     params_interactive = {**defaults, **params_interactive}
-    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'spring_layout', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
+    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None, 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout_custom', 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
     params_static = {**defaults, **params_static}
 
     # DEPRECATED IN LATER VERSION
@@ -1449,15 +1497,24 @@ def plot(model,
             if verbose>=3: print('[bnlearn] >Plot based on Bayesian model')
             # positions for all nodes
             # G = nx.DiGraph(model['adjmat'])
+            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
+                if verbose>=3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                pos = _hierarchical_layout(G, scale=scale)
             pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
         elif 'networkx' in str(type(bnmodel)):
             if verbose>=3: print('[bnlearn] >Plot based on networkx model')
             G = bnmodel
+            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
+                if verbose>=3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                pos = _hierarchical_layout(G, scale=scale)
             pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
         else:
             if verbose>=3: print('[bnlearn] >Plot based on adjacency matrix')
             G = bn.network.adjmat2graph(model['adjmat'].abs()>0)
             # Get positions
+            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
+                if verbose>=3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                pos = _hierarchical_layout(G, scale=scale)
             pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
 
         # Make static plot
