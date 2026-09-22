@@ -141,17 +141,17 @@ del df['origin']
 # Perform structure learning
 # model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam={'random_state': 2})
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
 
 # Compute edge strength
 model = bn.independence_test(model, df, prune=True)
 
 # Create visualizations
-bn.plot(model)
-dotgraph = bn.plot_graphviz(model)
-dotgraph
-dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
+G = bn.plot(model)
+# dotgraph = bn.plot_graphviz(model)
+# dotgraph
+# dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
 
 
 # %%
