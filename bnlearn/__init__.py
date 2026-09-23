@@ -41,26 +41,17 @@ from bnlearn.bnlearn import (
     import_example,
     to_undirected,
     compare_networks,
-    plot,
-    plot_graphviz,
-    adjmat2vec,
-    adjmat2dict,
-    vec2adjmat,
     dag2adjmat,
     df2onehot,
     topological_sort,
     predict,
     query2df,
-    vec2df,
-    get_node_properties,
-    get_edge_properties,
     _filter_df,
     independence_test,
     save,
     load,
     check_model,
     structure_scores,
-    compute_logp,
     get_parents,
     generate_cpt,
     build_cpts_from_structure,
@@ -69,6 +60,24 @@ from bnlearn.bnlearn import (
     sampling,
     # cpd_to_dataframe,
     # dataframe_to_cpd,
+)
+
+from bnlearn.utils import (
+    vec2adjmat,
+    adjmat2vec,
+    vec2df,
+    adjmat2dict,
+    _normalize_weights,
+)
+
+from bnlearn.plot import (
+    plot,
+    plot_graphviz,
+    get_node_properties,
+    get_edge_properties,
+    compute_logp,
+    hierarchical_layout,
+    normalize_independence_frame,
 )
 
 # Import functions

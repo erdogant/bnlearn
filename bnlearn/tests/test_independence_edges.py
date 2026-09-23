@@ -58,9 +58,9 @@ def test_edge_p_value_matches_independence_table(sprinkler_model):
             assert props['logp'] == pytest.approx(-np.log10(expected), rel=1e-5, abs=1e-5)
 
 
-def test_plot_edge_mode_p_value_no_error(sprinkler_model):
+def test_plot_edges_p_value_no_error(sprinkler_model):
     model, _ = sprinkler_model
-    fig = bn.plot(model, interactive=False, edge_mode='p_value', verbose=0,
+    fig = bn.plot(model, interactive=False, edge_filter='p_value', verbose=0,
                   params_static={'showplot': False, 'visible': False})
     assert fig is not None
 
@@ -68,8 +68,8 @@ def test_plot_edge_mode_p_value_no_error(sprinkler_model):
 def test_plot_requires_independence_for_p_value_labels():
     df = bn.import_example('sprinkler')
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
-    # No independence_test: edge_mode='p_value' should fall back (no crash)
-    fig = bn.plot(model, interactive=False, edge_mode='p_value', verbose=0,
+    # No independence_test: edge_filter='p_value' should fall back (no crash)
+    fig = bn.plot(model, interactive=False, edge_filter='p_value', verbose=0,
                   params_static={'showplot': False, 'visible': False})
     # May still plot structure without labels
     assert fig is not None or model.get('adjmat') is not None

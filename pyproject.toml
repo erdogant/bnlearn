@@ -52,7 +52,7 @@ dev = [
 ]
 
 [project.scripts]
-bnlearn = "bnlearn.skills:main"
+bnlearn = "bnlearn.skills_install:main"
 
 [project.urls]
 Homepage = "https://erdogant.github.io/bnlearn"
