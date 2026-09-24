@@ -1276,25 +1276,40 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     selected_score = None
     show_message = True
     scores = {}
-    
+    adjmat = None
+    model_edges = None
+
     # Get models and method
     if isinstance(model, dict):
         config = model.get('config', {})
         method = config.get('method')
         selected_score = config.get('scoring')
+        adjmat = model.get('adjmat', None)
+        model_edges = model.get('model_edges', None)
         model = model.get('model', None)
     if isinstance(scoring_method, str): scoring_method = [scoring_method]
-    
-    gaussian_scores = ['loglik-g', 'aic-g', 'bic-g']
-    if selected_score in gaussian_scores and not np.any(np.isin(scoring_method, gaussian_scores)):
-        scoring_method = [selected_score]
 
-    if verbose>=3: print('[bnlearn] >Compute structure scores for model comparison (higher is better).' %(scoring_method))
+    g_scores = ['loglik-g', 'aic-g', 'bic-g']
+    cg_scores = ['bic-cg', 'aic-cg', 'loglik-cg']
+    if selected_score in g_scores and not np.any(np.isin(scoring_method, g_scores)):
+        scoring_method = [selected_score]
+    if method in ('cg', 'conditional-gaussian') and not np.any(np.isin(scoring_method, cg_scores)):
+        scoring_method = cg_scores
+
+    if verbose>=3: print('[bnlearn] >Compute structure scores [%s] for model comparison (higher is better).' % (', '.join(scoring_method)))
 
     # Return if method not supported
     if np.any(np.isin(method, ['cs', 'constraintsearch'])):
         if verbose>=2: print('[bnlearn] >Warning: Structure scoring could not be computed. Method [%s] not supported.' %(method))
         return scores
+
+    # After parameter_learning.fit(..., methodtype='cg') the stored model is the
+    # discrete subgraph only. CG scores need the full mixed structure; rebuild
+    # from adjmat / model_edges when available.
+    if method in ('cg', 'conditional-gaussian') and adjmat is not None:
+        edges = model_edges if model_edges is not None else adjmat2vec(adjmat)[['source', 'target']].values.tolist()
+        model = DiscreteBayesianNetwork(edges)
+        model.add_nodes_from(adjmat.columns.values)
 
     if model is not None and np.all(np.isin(model.nodes, df.columns)):
         cols = list(model.nodes)
@@ -1306,14 +1321,20 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     if model is not None:
         for s in scoring_method:
             try:
-                if s in gaussian_scores:
+                if s in g_scores:
                     scoring_object = bn.structure_learning._SetScoringType(df, s, verbose=0, **kwargs)
                     scores[s] = scoring_object.score(model)
+                elif s in cg_scores:
+                    # _SetScoringType returns a plain string for CG scores (pgmpy HC
+                    # accepts strings natively). Score via StructureScore instead.
+                    # pgmpy names the CG log-likelihood score 'll-cg'.
+                    pgmpy_name = 'll-cg' if s == 'loglik-cg' else s
+                    scores[s] = StructureScore(scoring_method=pgmpy_name).evaluate(df, model)
                 else:
                     # pgmpy 1.x disambiguated 'bic'/'aic' into discrete ('-d') and
                     # gaussian ('-g') variants; keep accepting the historic names.
                     scores[s] = StructureScore(scoring_method={'bic': 'bic-d', 'aic': 'aic-d'}.get(s, s)).evaluate(df, model)
-            except (ValueError, TypeError, np.linalg.LinAlgError) as e:
+            except (ValueError, TypeError, np.linalg.LinAlgError, AttributeError) as e:
                 if verbose>=2 and show_message:
                     print(f'[bnlearn] >WARNING> {e}')
                     print(f'[bnlearn] >WARNING> Can not compute [{s}] score. <skip>')
