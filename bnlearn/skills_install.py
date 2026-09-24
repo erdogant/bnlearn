@@ -2,7 +2,9 @@
 
 from pathlib import Path
 import argparse
+import platform
 import shutil
+import sys
 
 
 KNOWN_HARNESSES = {
@@ -12,38 +14,81 @@ KNOWN_HARNESSES = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
 def skill_path():
     """Return the path to the bundled bnlearn Agent Skill."""
     return Path(__file__).resolve().parent / "skills" / "bnlearn"
 
 
-def install_skill(harness="claude"):
-    """Install the bnlearn Agent Skill into the current project.
+def _global_root() -> Path:
+    """Return the OS-appropriate home directory for global installs.
+
+    - Linux / macOS : ``~``  (``Path.home()``)
+    - Windows       : ``%USERPROFILE%``  (also ``Path.home()`` on modern Python,
+                      but we fall back to the env-var explicitly for clarity)
+    """
+    return Path.home()
+
+
+def _detect_installed_harnesses(root: Path) -> list[str]:
+    """Return the names of harnesses whose skill directories already exist
+    under *root*.
+
+    Only the harnesses listed in ``KNOWN_HARNESSES`` are considered.  A
+    harness is "installed" when its top-level dot-directory exists (e.g.
+    ``~/.claude``); the ``skills/`` sub-directory need not be present yet.
+    """
+    found = []
+    for name, dotdir in KNOWN_HARNESSES.items():
+        if (root / dotdir).exists():
+            found.append(name)
+    return found
+
+
+# ---------------------------------------------------------------------------
+# Core install logic
+# ---------------------------------------------------------------------------
+
+def install_skill(harness: str = "claude", *, global_install: bool = False) -> Path:
+    """Install the bnlearn Agent Skill.
 
     Parameters
     ----------
     harness : str, default='claude'
-        Name of the AI coding harness. The skill is installed to:
+        Name of the AI coding harness.  The skill is installed to::
 
-            ./.<harness>/skills/bnlearn/
+            [root]/.<harness>/skills/bnlearn/
 
-        Any harness name is accepted.
+        where *root* is the current working directory for a local install or
+        the user home directory for a global install.  Any harness name is
+        accepted; unknown names produce a warning.
+
+    global_install : bool, default=False
+        When ``True``, install into the user's home directory instead of the
+        current working directory.
+
+    Returns
+    -------
+    pathlib.Path
+        The resolved destination directory.
     """
     source = skill_path()
+    if not source.exists():
+        raise FileNotFoundError(f"Bundled bnlearn skill not found: {source}")
 
-    # Keep the harness generic. A leading dot is added automatically.
+    # Strip any leading dot — we add it ourselves.
     harness = harness.lstrip(".")
-    destination = Path.cwd() / f".{harness}" / "skills" / "bnlearn"
+
+    root = _global_root() if global_install else Path.cwd()
+    destination = root / f".{harness}" / "skills" / "bnlearn"
 
     if harness not in KNOWN_HARNESSES:
         print(
             f"Warning: '{harness}' is not a known AI harness. "
             f"Installing anyway to:\n{destination}"
-        )
-
-    if not source.exists():
-        raise FileNotFoundError(
-            f"Bundled bnlearn skill not found: {source}"
         )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -53,8 +98,56 @@ def install_skill(harness="claude"):
 
     shutil.copytree(source, destination)
 
-    print(f"bnlearn skill installed to:\n{destination}")
+    scope = "globally" if global_install else "locally"
+    print(f"bnlearn skill installed {scope} to:\n{destination}")
+    return destination
 
+
+def install_skill_auto(global_install: bool = False) -> list[Path]:
+    """Auto-detect installed harnesses and install the skill into all of them.
+
+    Detection checks which ``.<harness>`` directories exist under *root*
+    (the user home directory for a global install, or the current working
+    directory for a local install).  If none are found the function exits
+    with a helpful message rather than silently doing nothing.
+
+    Parameters
+    ----------
+    global_install : bool, default=False
+        When ``True``, detect and install relative to the user home directory.
+
+    Returns
+    -------
+    list of pathlib.Path
+        Destination directories that were written.
+    """
+    root = _global_root() if global_install else Path.cwd()
+    scope_label = f"global ({root})" if global_install else f"local ({root})"
+
+    detected = _detect_installed_harnesses(root)
+
+    if not detected:
+        known = ", ".join(KNOWN_HARNESSES)
+        print(
+            f"No known AI harness directories found under {root}.\n"
+            f"Looked for: {known}\n"
+            f"Use --harness <name> to install for a specific harness."
+        )
+        return []
+
+    print(f"Auto-detected harnesses ({scope_label}): {', '.join(detected)}")
+
+    destinations = []
+    for harness in detected:
+        dest = install_skill(harness, global_install=global_install)
+        destinations.append(dest)
+
+    return destinations
+
+
+# ---------------------------------------------------------------------------
+# CLI
+# ---------------------------------------------------------------------------
 
 def main():
     """Command-line interface for bnlearn."""
@@ -84,12 +177,39 @@ def main():
 
     skill_install_parser.add_argument(
         "--harness",
-        default="claude",
-        help="AI coding harness name (default: claude).",
+        default=None,
+        metavar="NAME",
+        help=(
+            "AI coding harness to install into (e.g. claude, opencode, agents). "
+            "Omit to use --auto detection."
+        ),
+    )
+
+    skill_install_parser.add_argument(
+        "--global",
+        dest="global_install",
+        action="store_true",
+        default=False,
+        help=(
+            "Install into the user home directory (~/.claude/skills/bnlearn/) "
+            "instead of the current project directory. "
+            f"Detected home: {_global_root()}"
+        ),
+    )
+
+    skill_install_parser.add_argument(
+        "--auto",
+        action="store_true",
+        default=False,
+        help=(
+            "Auto-detect all installed AI harnesses and install the skill into "
+            "each one. Uses the current directory by default; combine with "
+            "--global to detect and install into the home directory."
+        ),
     )
 
     # ------------------------------------------------------------------
-    # bnlearn skill ...
+    # bnlearn skill
     # ------------------------------------------------------------------
     skill_parser = subparsers.add_parser(
         "skill",
@@ -107,10 +227,18 @@ def main():
 
     args = parser.parse_args()
 
+    # ------------------------------------------------------------------
+    # Dispatch
+    # ------------------------------------------------------------------
+
     # bnlearn install skill
     if args.command == "install":
         if args.install_command == "skill":
-            install_skill(harness=args.harness)
+            if args.auto:
+                install_skill_auto(global_install=args.global_install)
+            else:
+                harness = args.harness or "claude"
+                install_skill(harness, global_install=args.global_install)
         else:
             install_parser.print_help()
 
