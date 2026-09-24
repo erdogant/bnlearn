@@ -121,9 +121,9 @@ Default: claude but opencode agents or any other name is allowed.
 
 .. code-block:: console
 
-bnlearn install skill --harness opencode
-bnlearn install skill --harness opencode --global
-bnlearn install skill --global
+    bnlearn install skill --harness opencode
+    bnlearn install skill --harness opencode --global
+    bnlearn install skill --global
 
 
 Troubleshooting Import Errors
