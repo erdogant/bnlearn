@@ -9,6 +9,7 @@
 
 # %% Libraries
 import logging
+logger = logging.getLogger("bnlearn")
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -127,7 +128,6 @@ def fit(df,
         params_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'},
         params_pc = {'ci_test': 'chi_square', 'alpha': 0.05},
         n_jobs=-1,
-        verbose=3,
         ):
     """Structure learning fit model.
 
@@ -224,8 +224,6 @@ def fit(df,
     params_pc : dict: {'ci_test': 'chi_square', 'alpha': 0.05}
         * 'ci_test': 'chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence'
         * 'alpha': 0.05
-    verbose : int, (default : 3)
-        0: None, 1: Error,  2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
     -------
@@ -301,16 +299,18 @@ def fit(df,
 
     out = []
     # Set config
-    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs, 'verbose': verbose}
+    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs}
     # Make some checks
-    config = _make_checks(df, config, verbose=verbose)
+    config = _make_checks(df, config)
     # Make sure columns are of type string
     df.columns = df.columns.astype(str)
     # Filter on white_list and black_list
-    df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'], verbose=verbose)
-    # Lets go!
-    if config['verbose']>=3: print('[bnlearn] >Computing best DAG using [%s]' %(config['method']))
+    df = _white_black_list_filter(df, white_list, black_list, bw_list_method=config['bw_list_method'])
+    # Set scoring type
+    _, config['scoring'] = SetScoringType(df, scoretype)
 
+    # Lets go!
+    logger.info('Computing best DAG using [%s]' %(config['method']))
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='nb' or config['method']=='naivebayes':
         out = _naivebayes(df,
@@ -318,16 +318,14 @@ def fit(df,
                           estimator_type=None,
                           feature_vars=None,
                           dependent_var=None,
-                          n_jobs=config['n_jobs'],
-                          verbose=config['verbose'])
+                          n_jobs=config['n_jobs'])
 
     # ExhaustiveSearch can be used to compute the score for every DAG and returns the best-scoring one:
     if config['method']=='ex' or config['method']=='exhaustivesearch':
         out = _exhaustivesearch(df,
                                 scoretype=config['scoring'],
                                 return_all_dags=config['return_all_dags'],
-                                n_jobs=config['n_jobs'],
-                                verbose=config['verbose'])
+                                n_jobs=config['n_jobs'])
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
@@ -343,7 +341,6 @@ def fit(df,
                                max_iter=config['max_iter'],
                                fixed_edges=config['fixed_edges'],
                                n_jobs=config['n_jobs'],
-                               verbose=config['verbose'],
                                )
 
     # Constraint-based Structure Learning
@@ -353,17 +350,17 @@ def fit(df,
         Identify independencies in the data set using hypothesis tests
         Construct DAG (pattern) according to identified independencies (Conditional) Independence Tests
         Independencies in the data can be identified using chi_square conditional independence tests."""
-        out = _constraintsearch(df, n_jobs=config['n_jobs'], significance_level=params_pc['alpha'], ci_test=params_pc['ci_test'], verbose=config['verbose'])
+        out = _constraintsearch(df, n_jobs=config['n_jobs'], significance_level=params_pc['alpha'], ci_test=params_pc['ci_test'])
 
     # TreeSearch-based Structure Learning
     if config['method']=='chow-liu' or config['method']=='tan':
         """TreeSearch based Structure Learning."""
-        out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], n_jobs=config['n_jobs'], verbose=config['verbose'])
+        out = _treesearch(df, config['method'], config['root_node'], class_node=config['class_node'], n_jobs=config['n_jobs'])
 
     # LiNGAM-based Structure Learning
     if config['method']=='direct-lingam' or config['method']=='ica-lingam':
         """LiNGAM-direct Structure Learning."""
-        out = _lingam(df, config, n_jobs=config['n_jobs'], verbose=config['verbose'], **params_lingam)
+        out = _lingam(df, config, n_jobs=config['n_jobs'], **params_lingam)
         # return
         return out
 
@@ -371,14 +368,14 @@ def fit(df,
     out['model_edges'] = list(out['model'].edges())
     out['adjmat'] = bnlearn.dag2adjmat(out['model'])
     out['config'] = config
-    out['structure_scores'] = bnlearn.structure_scores(out, df, verbose=verbose)
+    out['structure_scores'] = bnlearn.structure_scores(out, df)
 
     # return
     return out
 
 
 # %% Make Checks
-def _make_checks(df, config, verbose=3):
+def _make_checks(df, config):
     assert isinstance(pd.DataFrame(), type(df)), 'df must be of type pd.DataFrame()'
     if not np.isin(config['scoring'], ['bic', 'k2', 'bdeu', 'bds', 'aic', 'loglik-g', 'aic-g', 'bic-g', 'bic-cg', 'aic-cg', 'loglik-cg', 'auto']): raise Exception('"scoretype=%s" is invalid.' %(config['scoring']))
     if not np.isin(config['method'], ['ica-lingam', 'direct-lingam', 'naivebayes', 'nb', 'tan', 'cl', 'chow-liu', 'hc', 'ex', 'cs', 'pc', 'exhaustivesearch', 'hillclimbsearch', 'constraintsearch']): raise Exception('"methodtype=%s" is invalid.' %(config['method']))
@@ -404,10 +401,10 @@ def _make_checks(df, config, verbose=3):
 
     # Remove this block in future (21-10-2021)
     if config['bw_list_method']=='filter':
-        if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
+        logger.warning('Warning: The parameter bw_list_method="filter" is changed into bw_list_method="nodes". The old naming will be removed in future releases.')
         config['bw_list_method'] = "nodes"
     if config['bw_list_method']=='enforce':
-        if verbose>=2: print('[bnlearn] >Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
+        logger.warning('Warning: The parameter bw_list_method="enforce" is changed into bw_list_method="edges". The old naming will be removed in future releases.')
         config['bw_list_method'] = "edges"
     # End remove block
 
@@ -415,17 +412,16 @@ def _make_checks(df, config, verbose=3):
     if (config['bw_list_method'] is None) and ((config['black_list'] is not None) or (config['white_list'] is not None)):
         raise Exception('[bnlearn] >Error: The use of black_list or white_list requires setting bw_list_method.')
     if df.shape[1]>10 and df.shape[1]<15:
-        if verbose>=2: print('[bnlearn] >Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
+        logger.warning('Warning: Computing DAG with %d nodes can take a very long time!' %(df.shape[1]))
     if (config['max_indegree'] is not None) and config['method']!='hc':
-        if verbose>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="hc"')
+        logger.warning('Warning: max_indegree only works in case of methodtype="hc"')
     if (config['class_node'] is not None) and config['method']!='tan':
-        if verbose>=2: print('[bnlearn] >Warning: max_indegree only works in case of methodtype="tan"')
-
+        logger.warning('Warning: max_indegree only works in case of methodtype="tan"')
     return config
 
 
 # %% TreeSearch methods
-def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent_var=None, n_jobs=-1, verbose=3):
+def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent_var=None, n_jobs=-1):
     """Naive Bayesian model.
 
     Description
@@ -447,8 +443,6 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
         A list of variable predictor variables (i.e. the features) in the model.
     dependent_var: hashable object
         The dependent variable (i.e. the variable to be predicted) in the model.
-    verbose : int, (default : 3)
-        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
 
     Returns
     -------
@@ -460,7 +454,7 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
     * https://pgmpy.org/_modules/pgmpy/models/NaiveBayes.html#NaiveBayes
 
     """
-    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [NaiveBayes]')
+    if n_jobs>0: logger.debug('n_jobs is not supported for [NaiveBayes]')
     model = NaiveBayes(feature_vars=feature_vars, dependent_var=dependent_var)
     model.fit(df, parent_node=root_node, estimator=estimator_type)
 
@@ -472,30 +466,30 @@ def _naivebayes(df, root_node, estimator_type=None, feature_vars=None, dependent
 
 
 # %% white_list and black_list
-def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges', verbose=3):
+def _white_black_list_filter(df, white_list, black_list, bw_list_method='edges'):
     if bw_list_method=='nodes':
         # Keep only variables that are in white_list.
         if white_list is not None:
-            if verbose>=3: print('[bnlearn] >Filter variables (nodes) on white_list..')
+            logger.info('Filter variables (nodes) on white_list..')
             white_list = [x.lower() for x in white_list]
             Iloc = np.isin(df.columns.str.lower(), white_list)
             df = df.loc[:, Iloc]
 
         # Exclude variables that are in black_list.
         if black_list is not None:
-            if verbose>=3: print('[bnlearn] >Filter variables (nodes) on black_list..')
+            logger.info('Filter variables (nodes) on black_list..')
             black_list = [x.lower() for x in black_list]
             Iloc = ~np.isin(df.columns.str.lower(), black_list)
             df = df.loc[:, Iloc]
 
         if (white_list is not None) or (black_list is not None):
-            if verbose>=3: print('[bnlearn] >Number of features after white/black listing: %d' %(df.shape[1]))
+            logger.info('Number of features after white/black listing: %d' %(df.shape[1]))
         if df.shape[1]<=1: raise Exception('[bnlearn] >Error: [%d] variables are remaining. A minimum of 2 would be nice.' %(df.shape[1]))
     return df
 
 
 # %% TreeSearch methods
-def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbose=3):
+def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1):
     """Tree search methods.
 
     Description
@@ -515,7 +509,7 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 
 
 # %% Constraint-based Structure Learning
-# def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=-1, verbose=3):
+# def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=-1):
 #     """Constraint-based structure learning using pgmpy's causal_discovery.PC.
 
 #     The PC algorithm first identifies an undirected skeleton using conditional
@@ -542,7 +536,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #             - 'power_divergence'
 #     n_jobs : int, default=-1
 #         Number of parallel jobs. The PC implementation controls parallelism.
-#     verbose : int, default=3
 #         Verbosity level.
 
 #     Returns
@@ -551,7 +544,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #         Dictionary containing the undirected skeleton, PDAG, and DAG.
 #     """
     
-#     if verbose >= 3:print(f'[bnlearn] >Build skeleton with [{ci_test}] and alpha={significance_level}')
 
 #     # ------------------------------------------------------------------
 #     # PC structure learning
@@ -565,7 +557,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #     pdag = model.estimate(
 #         variant="parallel",
 #         return_type="pdag",
-#         show_progress=verbose >= 4)
 
 #     # ------------------------------------------------------------------
 #     # Skeleton
@@ -573,7 +564,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #     # The undirected version of the PDAG represents the learned skeleton.
 #     skel = pdag.to_undirected()
 
-#     if verbose >= 4:
 #         print("Undirected edges: ", list(skel.edges()))
 #         print("PDAG edges: ", list(pdag.edges()))
 
@@ -581,7 +571,6 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #     # Convert PDAG to DAG
 #     # ------------------------------------------------------------------
 #     dag = pdag.to_dag()
-#     if verbose >= 4: print("DAG edges: ", list(dag.edges()))
 
 #     # ------------------------------------------------------------------
 #     # Output
@@ -599,7 +588,7 @@ def _treesearch(df, estimator_type, root_node, class_node=None, n_jobs=-1, verbo
 #     return out
 
 # %% Constraint-based Structure Learning
-def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=-1, verbose=3):
+def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=-1):
     """Contrain search.
 
     PC PDAG construction is only guaranteed to work under the assumption that the
@@ -635,8 +624,8 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
         "power_divergence"
 
     """
-    if verbose>=4 and n_jobs>0: print('[bnlearn] >n_jobs is not supported for [constraintsearch]')
-    if verbose>=3: print(f'[bnlearn] >Build skeleton with [{ci_test}] and alpha={significance_level}')
+    if n_jobs>0: logger.debug('n_jobs is not supported for [constraintsearch]')
+    logger.info(f'Build skeleton with [{ci_test}] and alpha={significance_level}')
     out = {}
     # Set search algorithm
     model = ConstraintBasedEstimator(df)
@@ -644,14 +633,13 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
     # pgmpy 1.x removed skeleton_to_pdag; estimate() runs the whole
     # skeleton -> PDAG pipeline, so the conditional-independence tests happen here.
     # variant='stable' matches the pre-pgmpy-1.x default (1.x defaults to 'parallel').
-    pdag = model.estimate(significance_level=significance_level, ci_test=ci_test, variant='stable', return_type='pdag', show_progress=verbose>=4)
+    pdag = model.estimate(significance_level=significance_level, ci_test=ci_test, variant='stable', return_type='pdag', show_progress=logger.isEnabledFor(logging.DEBUG))
 
     skel = pdag.to_undirected()
-    if verbose>=4: print("Undirected edges: ", skel.edges())
-    if verbose>=4: print("PDAG edges: ", pdag.edges())
+    logger.debug("Undirected edges: ", skel.edges())
+    logger.debug("PDAG edges: ", pdag.edges())
     dag = pdag.to_dag()
-    if verbose>=4: print("DAG edges: ", dag.edges())
-
+    logger.debug("DAG edges: ", dag.edges())
     out['undirected'] = skel
     out['undirected_edges'] = skel.edges()
     out['pdag'] = pdag
@@ -677,8 +665,7 @@ def _hillclimbsearch(df,
                      max_iter=1e6, 
                      bw_list_method='edges', 
                      fixed_edges=set(), 
-                     n_jobs=-1, 
-                     verbose=3):
+                     n_jobs=-1):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
     Description
@@ -702,17 +689,17 @@ def _hillclimbsearch(df,
 
     """
     out = {}
-    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [hillclimbsearch]')
+    if n_jobs > 0: logger.debug('n_jobs is not supported for [hillclimbsearch]')
     if isinstance(start_dag, dict) and start_dag.get('model', None) is not None:
         start_dag = start_dag['model']
     if start_dag is not None and not 'bayesiannetwork' in str(type(start_dag)).lower():
-        if verbose >= 3: print('[bnlearn] >WARNING: start_dag is invalid. No DAG found of type BayesianNetwork. start_dag is set to None.')
+        logger.info('WARNING: start_dag is invalid. No DAG found of type BayesianNetwork. start_dag is set to None.')
         start_dag = None
     if start_dag is not None and 'bayesiannetwork' in str(type(start_dag)).lower():
-        if verbose >= 3: print('[bnlearn] >start_dag is set.')
+        logger.info('start_dag is set.')
 
     # Set scoring type
-    scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
+    scoring_method, _ = SetScoringType(df, scoretype)
     # Set search algorithm
     model = HillClimbSearch(df)
 
@@ -721,7 +708,7 @@ def _hillclimbsearch(df,
     expert_knowledge = None
     use_edge_lists = bw_list_method=='edges'
     if use_edge_lists and ((black_list is not None) or (white_list is not None)):
-        if verbose >= 3: print('[bnlearn] >Filter edges based on black_list/white_list')
+        logger.info('Filter edges based on black_list/white_list')
     if (use_edge_lists and (black_list or white_list)) or fixed_edges:
         expert_knowledge = ExpertKnowledge(
             forbidden_edges=black_list if use_edge_lists else None,
@@ -742,7 +729,7 @@ def _hillclimbsearch(df,
 
 
 # %% ExhaustiveSearch
-def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, verbose=3):
+def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1):
     """Exhaustivesearch.
 
     Description
@@ -763,21 +750,19 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
         'bic', 'k2', 'bdeu', 'loglik-g', 'aic-g', 'bic-g'
     return_all_dags : Bool, (default: False)
         Return all possible DAGs.
-    verbose : int, (default : 3)
-        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
 
     Returns
     -------
     None.
 
     """
-    if df.shape[1] > 15 and verbose >= 3:
-        print('[bnlearn] >Warning: Structure learning with more then 15 nodes is computationally not feasible with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
-    if verbose >= 4 and n_jobs > 0: print('[bnlearn] >n_jobs is not supported for [exhaustivesearch]')
+    if df.shape[1] > 15:
+        logger.warning('Structure learning with more then 15 nodes is computationally not feasible with exhaustivesearch. Use hillclimbsearch or constraintsearch instead!')  # noqa
+    if n_jobs > 0: logger.debug('n_jobs is not supported for [exhaustivesearch]')
 
     out = {}
     # Set scoring type
-    scoring_method = _SetScoringType(df, scoretype, verbose=verbose)
+    scoring_method, _ = SetScoringType(df, scoretype)
     # Exhaustive search across all dags
     model = ExhaustiveSearch(df, scoring_method=scoring_method)
     # Compute best DAG
@@ -805,7 +790,7 @@ def _exhaustivesearch(df, scoretype='bic', return_all_dags=False, n_jobs=-1, ver
 
 
 # %% Set scoring type
-def _SetScoringType(df, scoretype, verbose=3, **kwargs):
+def SetScoringType(df, scoretype, **kwargs):
     """Set scoring function.
 
     Parameters
@@ -828,8 +813,6 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
             * aic-cg       (mixed, Conditional Gaussian)
             * loglik-cg    (mixed, Conditional Gaussian; maps to pgmpy 'll-cg')
             * auto         (choose from data types automatically)
-    verbose : int, (default : 3)
-        0:None, 1:Error, 2:Warning, 3:Info (default), 4:Debug, 5:Trace
 
     Returns
     -------
@@ -840,7 +823,7 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
         * [1] Scutari, Marco. An Empirical-Bayes Score for Discrete Bayesian Networks. Journal of Machine Learning Research, 2016, pp. 438–48
 
     """
-    if verbose>=3: print('[bnlearn] >Set scoring type at [%s]' %(scoretype))
+    logger.info('Set scoring type at [%s]' %(scoretype))
 
     # Resolve 'auto' to the appropriate score based on detected column types.
     if scoretype == 'auto':
@@ -851,8 +834,8 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
             scoretype = 'bic-cg'
         else:
             scoretype = 'bic'
-        if verbose >= 3: print('[bnlearn] >scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
-
+        logger.info('scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
+    
     if scoretype == 'bic':
         scoring_method = BIC(df)
     elif scoretype == 'k2':
@@ -885,7 +868,7 @@ def _SetScoringType(df, scoretype, verbose=3, **kwargs):
     else:
         raise ValueError('[bnlearn] >Unknown scoretype: %s' % scoretype)
 
-    return scoring_method
+    return scoring_method, scoretype
 
 
 # %%
@@ -899,7 +882,6 @@ def _is_independent(model, X, Y, Zs=None, significance_level=0.05):
 def _lingam(df,
             config,
             n_jobs=-1,
-            verbose=3,
             random_state=None,
             prior_knowledge=None,
             apply_prior_knowledge_softly=False,

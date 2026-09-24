@@ -19,7 +19,7 @@ from bnlearn.structure_learning import (
     AICGauss,
     BICGauss,
     LogLikelihoodGauss,
-    _SetScoringType,
+    SetScoringType,
 )
 
 
@@ -168,7 +168,7 @@ def test_set_scoring_type_returns_gaussian_scorer(
     expected_class,
 ):
     """The internal score factory must expose all three Gaussian scores."""
-    scorer = _SetScoringType(gaussian_data, scoretype, verbose=0)
+    scorer, _ = SetScoringType(gaussian_data, scoretype)
 
     assert isinstance(scorer, expected_class)
 
@@ -182,7 +182,6 @@ def test_hillclimb_supports_gaussian_scores(gaussian_data, scoretype):
         scoretype=scoretype,
         max_indegree=2,
         max_iter=1000,
-        verbose=0,
     )
 
     assert model is not None
@@ -197,9 +196,9 @@ def test_parameter_learning_linear_gaussian(gaussian_data):
     """Pure continuous data: linear-gaussian parameter learning."""
     # Structure from HC with Gaussian score
     model = bn.structure_learning.fit(
-        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=500, verbose=0
+        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=500
     )
-    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='linear-gaussian', verbose=0)
+    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='linear-gaussian')
     assert fitted is not None
     assert 'model' in fitted
     assert fitted['config']['method'] in ('linear-gaussian', 'lg')
@@ -214,9 +213,9 @@ def test_parameter_learning_linear_gaussian(gaussian_data):
 
 def test_parameter_learning_auto_continuous(gaussian_data):
     model = bn.structure_learning.fit(
-        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0
+        gaussian_data, methodtype='hc', scoretype='bic-g', max_iter=300
     )
-    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='auto', verbose=0)
+    fitted = bn.parameter_learning.fit(model, gaussian_data, methodtype='auto')
     assert fitted['config']['method'] == 'linear-gaussian'
 
 
@@ -230,8 +229,8 @@ def test_parameter_learning_cg_mixed():
     wear = rng.normal(size=n)
     df = pd.DataFrame({'fail': fail, 'torque': torque, 'wear': wear})
 
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='cg', verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='cg')
     assert fitted is not None
     assert fitted['config']['data_type'] == 'mixed'
     assert 'continuous_cpds' in fitted
@@ -246,8 +245,8 @@ def test_parameter_learning_cg_mixed():
 def test_parameter_learning_discrete_keys_stable(gaussian_data):
     """Discrete bayes path must not populate continuous_cpds (package test compatibility)."""
     df = bn.import_example()
-    model = bn.import_DAG('sprinkler', CPD=False, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+    model = bn.import_DAG('sprinkler', CPD=False)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='bayes')
     # The key is present but must be None for the discrete path
     assert fitted.get('continuous_cpds') is None
     assert set(fitted.keys()) >= {

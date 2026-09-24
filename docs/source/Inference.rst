@@ -212,6 +212,7 @@ for discrete, continuous, and CG interventions within the type combinations belo
     import bnlearn as bn
     import numpy as np
     import pandas as pd
+    bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
 
     rng = np.random.default_rng(5)
     n = 300
@@ -219,15 +220,15 @@ for discrete, continuous, and CG interventions within the type combinations belo
     y = 1.5 * x + rng.normal(scale=0.4, size=n)
     df = pd.DataFrame({'X': x, 'Y': y})
 
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
-    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
 
     # Conditional mean of Y given X
-    q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+    q = bn.inference.fit(model, variables=['Y'], evidence={'X': 0.0})
     print(q.means)
 
     # Intervention do(X=1)
-    q_do = bn.inference.fit(model, variables=['Y'], do={'X': 1.0}, verbose=0)
+    q_do = bn.inference.fit(model, variables=['Y'], do={'X': 1.0})
     print(q_do.means)
 
 Continuous results are returned as a ``ContinuousQueryResult`` with attributes

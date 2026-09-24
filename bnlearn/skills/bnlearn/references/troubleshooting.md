@@ -1765,12 +1765,13 @@ When reporting a reproducible bug, always include package versions.
 
 ---
 
-# 57. Debugging With `verbose`
+# 57. Debugging With the Logger
 
 Use:
 
 ```python
-verbose=3
+import bnlearn as bn
+bn.set_logger('info')
 ```
 
 for normal diagnostic output.
@@ -1778,19 +1779,19 @@ for normal diagnostic output.
 Increase verbosity when deeper debugging is required:
 
 ```python
-verbose=4
+bn.set_logger('debug')
 ```
 
 or:
 
 ```python
-verbose=5
+bn.set_logger('trace')
 ```
 
 Use:
 
 ```python
-verbose=0
+bn.set_logger('silent')
 ```
 
 only when diagnostic output is intentionally suppressed.
@@ -1825,8 +1826,7 @@ Then run:
 model = bn.structure_learning.fit(
     df_small,
     methodtype='hc',
-    scoretype='bic',
-    verbose=3
+    scoretype='bic'
 )
 ```
 

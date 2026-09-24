@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Discritize module.
 
 # ------------------------------------
@@ -19,7 +21,6 @@ def discretize(
     edges: List[Tuple[str, str]],
     continuous_columns: List[str],
     max_iterations=8,
-    verbose=3,
     ) -> pd.DataFrame:
     """
     Discretize the continuous columns in a pandas DataFrame based on a given graph.
@@ -42,7 +43,7 @@ def discretize(
         into categories.
     """
     # Convert columns that are object into numerical
-    data = _convert_non_numerical_columns(data, verbose=verbose)
+    data = _convert_non_numerical_columns(data)
     nodes = list(data.columns)
     graph = _bayes_net_graph(nodes, edges)
     continuous_index = [nodes.index(c) for c in continuous_columns]
@@ -52,7 +53,6 @@ def discretize(
         graph,
         continuous_index,
         max_iterations,
-        verbose=verbose,
     )
 
     continuous_columns = sorted(continuous_columns, key=lambda x: data.columns.get_loc(x))
@@ -70,7 +70,7 @@ def discretize(
     return data_disc
 
 
-def _convert_non_numerical_columns(df: pd.DataFrame, verbose=3) -> pd.DataFrame:
+def _convert_non_numerical_columns(df: pd.DataFrame) -> pd.DataFrame:
     for column in df.columns:
         if not pd.api.types.is_numeric_dtype(df[column]):
             df[column] = pd.Categorical(df[column])

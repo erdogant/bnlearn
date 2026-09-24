@@ -19,7 +19,6 @@
 >     fixed_edges=None,
 >     params_pc={'ci_test': 'chi_square', 'alpha': 0.05},
 >     params_lingam={...},
->     verbose=3,
 > )
 > ```
 >
@@ -1220,46 +1219,21 @@ will make every structure-learning method parallel.
 
 ---
 
-# 30. Verbosity
+# 30. Logging
 
-The `verbose` parameter controls output:
-
-```text
-0 → None
-1 → Error
-2 → Warning
-3 → Info
-4 → Debug
-5 → Trace
-```
-
-Default:
+bnlearn uses the standard library logger. Control output with:
 
 ```python
-verbose=3
+import bnlearn as bn
+
+bn.set_logger('info')     # default
+bn.set_logger('warning')
+bn.set_logger('debug')
+bn.set_logger('trace')
+bn.set_logger('silent')   # no log output
 ```
 
-For normal use:
-
-```python
-verbose=3
-```
-
-is appropriate.
-
-For debugging:
-
-```python
-verbose=4
-```
-
-or:
-
-```python
-verbose=5
-```
-
-can provide additional information.
+Legacy integer levels `1` (error) … `5` (trace) are still accepted by `set_logger`.
 
 ---
 
@@ -1538,8 +1512,7 @@ result = bn.independence_test(
     result, df,
     test='chi_square',
     alpha=0.05,
-    prune=True,
-)
+    prune=True)
 ```
 
 Then pass the (possibly pruned) structure to parameter learning:

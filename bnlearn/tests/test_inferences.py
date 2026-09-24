@@ -22,7 +22,7 @@ def test_inference_sprinkler_example():
     DAG = model['model']
     CPDs = {}
     for cpd in DAG.get_cpds():
-        CPDs[cpd.variable] = bn.query2df(cpd, verbose=0)['p']
+        CPDs[cpd.variable] = bn.query2df(cpd)['p']
 
 
     # Check that the CPDs match the expected output (all probabilities 0.5)
@@ -61,7 +61,7 @@ def test_inference_sprinkler_example():
     DAG = model['model']
     CPDs = {}
     for cpd in DAG.get_cpds():
-        CPDs[cpd.variable] = bn.query2df(cpd, verbose=0)['p']
+        CPDs[cpd.variable] = bn.query2df(cpd)['p']
         
 
     # Check that the CPDs match the expected output (provided values)
@@ -90,31 +90,31 @@ def test_inference_do_operator():
     # Ground truth computed by hand from the sprinkler CPDs:
     # P(W=1|S=1) weights Cloudy by P(C|S=1) (observation), whereas
     # P(W=1|do(S=1)) cuts Cloudy->Sprinkler and weights by the prior P(C).
-    model = bn.import_DAG('sprinkler', verbose=0)
+    model = bn.import_DAG('sprinkler')
 
     def p1(query):
         return float(query.df.loc[query.df['Wet_Grass'] == 1, 'p'].iloc[0])
 
-    observational = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1}, verbose=0)
+    observational = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1})
     assert p1(observational) == pytest.approx(0.927, abs=1e-3)
 
-    interventional = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1}, verbose=0)
+    interventional = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1})
     assert p1(interventional) == pytest.approx(0.945, abs=1e-3)
     assert abs(interventional.df['p'].sum() - 1.0) < 1e-6
 
     # do and evidence combine: conditioning the intervened network on Cloudy=1
-    combined = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1}, evidence={'Cloudy': 1}, verbose=0)
+    combined = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1}, evidence={'Cloudy': 1})
     assert p1(combined) == pytest.approx(0.972, abs=1e-3)
 
     # Evidence on a variable outside the intervention's adjustment set: in the
     # mutilated network Wet_Grass depends only on its parents, so this is
     # exactly P(W=1|S=1,R=1)=0.99 from the CPT. (pgmpy's adjustment-based
     # CausalInference.query returns 0.9612 here.)
-    outside = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1}, evidence={'Rain': 1}, verbose=0)
+    outside = bn.inference.fit(model, variables=['Wet_Grass'], do={'Sprinkler': 1}, evidence={'Rain': 1})
     assert p1(outside) == pytest.approx(0.99, abs=1e-6)
 
     # The other query options keep working with do
-    marginals = bn.inference.fit(model, variables=['Wet_Grass', 'Rain'], do={'Sprinkler': 1}, joint=False, to_df=False, verbose=0)
+    marginals = bn.inference.fit(model, variables=['Wet_Grass', 'Rain'], do={'Sprinkler': 1}, joint=False, to_df=False)
     assert set(marginals.keys()) == {'Wet_Grass', 'Rain'}
 
     # interventions are labeled as do(X) in the readable summary
@@ -135,18 +135,18 @@ def test_inference_do_operator_related_targets():
                        values=[[0.5, 0.5, 0.5, 0.0],
                                [0.5, 0.5, 0.5, 1.0]],
                        evidence=['A', 'B'], evidence_card=[2, 2])
-    model = bn.make_DAG(edges, CPD=[cpt_a, cpt_b, cpt_c], verbose=0)
+    model = bn.make_DAG(edges, CPD=[cpt_a, cpt_b, cpt_c])
 
-    query = bn.inference.fit(model, variables=['C'], do={'A': 1, 'B': 1}, verbose=0)
+    query = bn.inference.fit(model, variables=['C'], do={'A': 1, 'B': 1})
     assert float(query.df.loc[query.df['C'] == 1, 'p'].iloc[0]) == pytest.approx(1.0, abs=1e-6)
 
 
 def test_inference_do_operator_validation():
-    model = bn.import_DAG('sprinkler', verbose=0)
+    model = bn.import_DAG('sprinkler')
     with pytest.raises(Exception, match='do'):
-        bn.inference.fit(model, variables=['Wet_Grass'], do={'NotANode': 1}, verbose=0)
+        bn.inference.fit(model, variables=['Wet_Grass'], do={'NotANode': 1})
     with pytest.raises(Exception, match='both'):
-        bn.inference.fit(model, variables=['Wet_Grass'], do={'Rain': 1}, evidence={'Rain': 1}, verbose=0)
+        bn.inference.fit(model, variables=['Wet_Grass'], do={'Rain': 1}, evidence={'Rain': 1})
 
 
 def test_make_DAG_naivebayes():
@@ -203,9 +203,9 @@ def test_inference_linear_gaussian_query():
     x = rng.normal(size=n)
     y = 1.5 * x + rng.normal(scale=0.4, size=n)
     df = pd.DataFrame({'X': x, 'Y': y})
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
-    q = bn.inference.fit(fitted, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
+    q = bn.inference.fit(fitted, variables=['Y'], evidence={'X': 0.0})
     assert hasattr(q, 'means')
     assert 'Y' in q.means
     assert np.isfinite(q.means['Y'])
@@ -218,9 +218,9 @@ def test_inference_linear_gaussian_do():
     x = rng.normal(size=n)
     y = 1.5 * x + rng.normal(scale=0.4, size=n)
     df = pd.DataFrame({'X': x, 'Y': y})
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
-    q = bn.inference.fit(fitted, variables=['Y'], do={'X': 1.0}, verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=300)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
+    q = bn.inference.fit(fitted, variables=['Y'], do={'X': 1.0})
     assert 'Y' in q.means
     assert np.isfinite(q.means['Y'])
 
@@ -233,9 +233,9 @@ def test_inference_sample_linear_gaussian():
     x = rng.normal(size=n)
     y = 0.5 * x + rng.normal(scale=0.5, size=n)
     df = pd.DataFrame({'X': x, 'Y': y})
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=200, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
-    samples = bn_sampling(fitted, methodtype='auto', n=50, seed=0, evidence=None, do=None, verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', max_iter=200)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
+    samples = bn_sampling(fitted, methodtype='auto', n=50, seed=0, evidence=None, do=None)
     assert isinstance(samples, pd.DataFrame)
     assert samples.shape[0] == 50
     assert set(samples.columns) >= {'X', 'Y'}
@@ -248,10 +248,10 @@ def test_inference_cg_continuous_query():
     fail = rng.integers(0, 2, size=n)
     torque = rng.normal(size=n) + fail * 2.0
     df = pd.DataFrame({'fail': fail, 'torque': torque})
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400, verbose=0)
-    fitted = bn.parameter_learning.fit(model, df, methodtype='cg', verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', max_iter=400)
+    fitted = bn.parameter_learning.fit(model, df, methodtype='cg')
     # Query continuous node given discrete evidence
-    q = bn.inference.fit(fitted, variables=['torque'], evidence={'fail': 1}, verbose=0)
+    q = bn.inference.fit(fitted, variables=['torque'], evidence={'fail': 1})
     if hasattr(q, 'means'):
         assert 'torque' in q.means
         assert np.isfinite(q.means['torque'])

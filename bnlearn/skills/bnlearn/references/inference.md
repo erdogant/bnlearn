@@ -10,7 +10,6 @@
 >     to_df=True,
 >     elimination_order='greedy',
 >     joint=True,
->     verbose=3,
 >     do=None,                     # interventional assignment, e.g. {'X': 1}
 > )
 > # Discrete: query.df → columns = variables + 'p'
@@ -116,8 +115,7 @@ bn.inference.fit(
     model,
     variables=None,
     evidence=None,
-    do=None,
-)
+    do=None)
 ```
 
 The most important arguments are:
@@ -155,8 +153,7 @@ For an intervention, pass `do` instead of (or in addition to) `evidence`:
 query = bn.inference.fit(
     model,
     variables=['Wet_Grass'],
-    do={'Sprinkler': 1},
-)
+    do={'Sprinkler': 1})
 # P(Wet_Grass | do(Sprinkler=1))
 ```
 
@@ -634,7 +631,7 @@ model_infer.query(
     evidence=evidence,
     elimination_order=elimination_order,
     joint=joint,
-    show_progress=(verbose >= 3)
+    show_progress=logger.isEnabledFor(logging.INFO)
 )
 ```
 
@@ -1142,35 +1139,20 @@ and the supplied evidence.
 
 ---
 
-# 34. Verbosity
+# 34. Logging
 
-The default is:
-
-```python
-verbose=3
-```
-
-The levels are:
-
-```text
-0: None
-1: ERROR
-2: WARN
-3: INFO
-4: DEBUG
-5: TRACE
-```
-
-At:
+Control diagnostic output with:
 
 ```python
-verbose >= 3
+import bnlearn as bn
+bn.set_logger('info')     # default
+bn.set_logger('silent')   # suppress log output
 ```
 
-the implementation prints:
+At INFO level the implementation logs:
 
 ```text
-[bnlearn] >Variable Elimination.
+Variable Elimination.
 ```
 
 and enables pgmpy's query progress display.
@@ -1432,8 +1414,7 @@ These are not generally the same quantity.
 query = bn.inference.fit(
     model,
     variables=['Wet_Grass'],
-    do={'Sprinkler': 1},
-)
+    do={'Sprinkler': 1})
 ```
 
 Internally the code:
@@ -1475,8 +1456,7 @@ q_mix = bn.inference.fit(
     model,
     variables=['Wet_Grass'],
     do={'Sprinkler': 1},
-    evidence={'Rain': 1},
-)
+    evidence={'Rain': 1})
 ```
 
 Rules:
@@ -1832,16 +1812,14 @@ query = bn.inference.fit(
 query = bn.inference.fit(
     model,
     variables=['Target'],
-    do={'X': 1},
-)
+    do={'X': 1})
 
 # Combined with evidence
 query = bn.inference.fit(
     model,
     variables=['Target'],
     do={'X': 1},
-    evidence={'Z': 0},
-)
+    evidence={'Z': 0})
 ```
 
 ---

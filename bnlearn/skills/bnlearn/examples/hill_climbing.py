@@ -42,9 +42,7 @@ print(df.dtypes)
 DAG = bn.structure_learning.fit(
     df,
     methodtype='hc',
-    scoretype='bic',
-    verbose=1,
-)
+    scoretype='bic')
 
 print('\n[bnlearn] > Hill Climbing DAG:')
 print(DAG['model_edges'])
@@ -61,9 +59,7 @@ DAG_tabu = bn.structure_learning.fit(
     df,
     methodtype='hc',
     scoretype='bic',
-    tabu_length=10,
-    verbose=1,
-)
+    tabu_length=10)
 print('\n[bnlearn] > Hill Climbing with tabu_length=10:')
 print(DAG_tabu['model_edges'])
 
@@ -73,9 +69,7 @@ DAG_indegree = bn.structure_learning.fit(
     df,
     methodtype='hc',
     scoretype='bic',
-    max_indegree=2,
-    verbose=1,
-)
+    max_indegree=2)
 print('\n[bnlearn] > Hill Climbing with max_indegree=2:')
 print(DAG_indegree['model_edges'])
 
@@ -89,17 +83,13 @@ start_dag = bn.make_DAG(
         ('Cloudy', 'Rain'),
         ('Sprinkler', 'Wet_Grass'),
         ('Rain', 'Wet_Grass'),
-    ],
-    verbose=0,
-)
+    ])
 
 DAG_start = bn.structure_learning.fit(
     df,
     methodtype='hc',
     scoretype='bic',
-    start_dag=start_dag,
-    verbose=1,
-)
+    start_dag=start_dag)
 print('\n[bnlearn] > Hill Climbing from start DAG:')
 print(DAG_start['model_edges'])
 
@@ -109,9 +99,7 @@ DAG_fixed = bn.structure_learning.fit(
     df,
     methodtype='hc',
     scoretype='bic',
-    fixed_edges=[('Cloudy', 'Rain')],
-    verbose=1,
-)
+    fixed_edges=[('Cloudy', 'Rain')])
 print('\n[bnlearn] > Hill Climbing with fixed_edges=[(Cloudy, Rain)]:')
 print(DAG_fixed['model_edges'])
 
@@ -128,9 +116,7 @@ DAG_white = bn.structure_learning.fit(
         ('Sprinkler', 'Wet_Grass'),
         ('Rain', 'Wet_Grass'),
     ],
-    bw_list_method='edges',
-    verbose=1,
-)
+    bw_list_method='edges')
 print('\n[bnlearn] > Hill Climbing with white_list:')
 print(DAG_white['model_edges'])
 
@@ -141,9 +127,7 @@ DAG_black = bn.structure_learning.fit(
     methodtype='hc',
     scoretype='bic',
     black_list=[('Wet_Grass', 'Cloudy')],
-    bw_list_method='edges',
-    verbose=1,
-)
+    bw_list_method='edges')
 print('\n[bnlearn] > Hill Climbing with black_list:')
 print(DAG_black['model_edges'])
 
@@ -157,9 +141,7 @@ for scoretype in scoretypes:
     result = bn.structure_learning.fit(
         df,
         methodtype='hc',
-        scoretype=scoretype,
-        verbose=0,
-    )
+        scoretype=scoretype)
     results[scoretype] = result
     print(f'{scoretype}: {result["model_edges"]}')
 
@@ -172,9 +154,7 @@ for scoretype, result in results.items():
 model = bn.parameter_learning.fit(
     DAG,
     df,
-    methodtype='bayes',
-    verbose=1,
-)
+    methodtype='bayes')
 
 print('\n[bnlearn] > Learned CPDs:')
 for cpd in model['model'].get_cpds():
@@ -183,13 +163,11 @@ for cpd in model['model'].get_cpds():
 query = bn.inference.fit(
     model,
     variables=['Wet_Grass'],
-    evidence={'Rain': 1},
-    verbose=1,
-)
+    evidence={'Rain': 1})
 print('\n[bnlearn] > P(Wet_Grass | Rain=1):')
 print(query.df)
 
-samples = bn.sampling(model, n=100, methodtype='bayes', verbose=0)
+samples = bn.sampling(model, n=100, methodtype='bayes')
 print('\n[bnlearn] > Synthetic sample shape:', samples.shape)
 
 

@@ -3,11 +3,13 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import numpy as np
 import itertools
+import logging
+logger = logging.getLogger("bnlearn")
 
 # %% confmatrix
 
 
-def twoclass(y_true, y_pred_proba, threshold=0.5, classnames=None, normalize=False, title='', cmap=plt.cm.Blues, showfig=True, verbose=3):
+def twoclass(y_true, y_pred_proba, threshold=0.5, classnames=None, normalize=False, title='', cmap=plt.cm.Blues, showfig=True):
     """
     This function prints and plots the confusion matrix.
     Normalization can be applied by setting `normalize=True`.
@@ -19,13 +21,10 @@ def twoclass(y_true, y_pred_proba, threshold=0.5, classnames=None, normalize=Fal
 
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-        if verbose>=3: print("Normalized confusion matrix")
+        logger.info("Normalized confusion matrix")
     else:
-        if verbose>=3: print('Confusion matrix, without normalization')
-
-    if verbose>=3:
-        print(cm)
-
+        logger.info('Confusion matrix, without normalization')
+    logger.info(cm)
     if showfig:
         makeplot(cm, classnames=classnames, title=title, normalize=normalize, cmap=cmap)
 

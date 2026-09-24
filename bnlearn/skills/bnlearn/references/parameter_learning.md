@@ -13,7 +13,6 @@
 >     scoretype='bdeu',       # discrete Bayesian prior (bdeu | k2 | ...)
 >     smooth=None,
 >     n_jobs=-1,
->     verbose=3,
 > )
 > ```
 >
@@ -84,8 +83,7 @@ fit(
     methodtype='bayes',
     scoretype='bdeu',
     smooth=None,
-    n_jobs=-1,
-    verbose=3
+    n_jobs=-1
 )
 ```
 
@@ -99,8 +97,6 @@ The parameters are:
 | `scoretype`  |  `'bdeu'` | Bayesian prior type                 |
 | `smooth`     |    `None` | Pseudo-count specification          |
 | `n_jobs`     |      `-1` | Parallelization setting             |
-| `verbose`    |       `3` | Logging level                       |
-
 ---
 
 # 2. Required Input
@@ -164,8 +160,7 @@ For standard Bayesian Networks, the implementation calls:
 ```python
 df = bnlearn._filter_df(
     adjmat,
-    copy.deepcopy(df),
-    verbose=config['verbose']
+    copy.deepcopy(df)
 )
 ```
 
@@ -259,8 +254,7 @@ If it is not already a pgmpy `BayesianNetwork`, it is converted using:
 
 ```python
 bnlearn.to_bayesiannetwork(
-    adjmat,
-    verbose=config['verbose']
+    adjmat
 )
 ```
 
@@ -967,13 +961,7 @@ model.get_cpds()
 
 after fitting.
 
-The CPDs are printed when:
-
-```text
-verbose >= 2
-```
-
-For example:
+Learned CPD tables are printed (via `print`) after fitting. For example:
 
 ```text
 CPD of A:
@@ -1150,7 +1138,6 @@ This represents the network structure used for parameter learning.
 The returned configuration contains:
 
 ```python
-config['verbose'] = verbose
 config['method'] = methodtype
 config['n_jobs'] = n_jobs
 ```
@@ -1206,8 +1193,7 @@ After CPD estimation, the implementation computes:
 ```python
 out['structure_scores'] = bnlearn.structure_scores(
     out,
-    df,
-    verbose=verbose
+    df
 )
 ```
 
@@ -1248,36 +1234,20 @@ None
 
 ---
 
-# 40. Verbosity
+# 40. Logging
 
-The `verbose` parameter controls output.
-
-The implementation creates:
+bnlearn uses the standard library logger. Control output with:
 
 ```python
-config['verbose'] = verbose
+import bnlearn as bn
+
+bn.set_logger('info')     # default — progress messages
+bn.set_logger('warning')  # warnings
+bn.set_logger('debug')
+bn.set_logger('silent')   # no log output
 ```
 
-The documented levels are:
-
-```text
-0: None
-1: ERROR
-2: WARN
-3: INFO
-4: DEBUG
-5: TRACE
-```
-
-The default is:
-
-```python
-verbose=3
-```
-
-At `verbose >= 3`, progress messages are printed.
-
-At `verbose >= 2`, learned CPDs are printed.
+CPD table dumps still use `print` and are independent of the logger level.
 
 ---
 

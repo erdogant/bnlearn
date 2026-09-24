@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Bayesian techniques for structure learning, parameter learning, inference and sampling."""
 # ------------------------------------
 # Name        : bnlearn.py
@@ -39,7 +41,7 @@ from bnlearn.plot import normalize_independence_frame
 
 
 # %%  Convert adjmat to bayesian model
-def to_bayesiannetwork(model, verbose=3):
+def to_bayesiannetwork(model):
     """Convert adjacency matrix to BayesianNetwork.
 
     Convert a adjacency to a Bayesian model. This is required as some of the
@@ -68,8 +70,7 @@ def to_bayesiannetwork(model, verbose=3):
         adjmat = model
     if adjmat is None: raise Exception('[bnlearn] >Error: input for "bayesiannetwork" should be adjmat or a dict containing a key "adjmat".')
 
-    if verbose>=3: print('[bnlearn] >Converting adjmat to BayesianNetwork.')
-
+    logger.info('Converting adjmat to BayesianNetwork.')
     # Convert to vector
     vec = adjmat2vec(adjmat)[['source', 'target']].values.tolist()
     # Make BayesianNetwork
@@ -83,7 +84,7 @@ def to_bayesiannetwork(model, verbose=3):
 
 
 # %% Make DAG
-def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=True, verbose=3):
+def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=True):
     """Create Directed Acyclic Graph based on list.
 
     Parameters
@@ -105,9 +106,6 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
         connected to anything. The default is None.
     checkmodel : bool
         Check the validity of the model. The default is True
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -163,7 +161,7 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
 
     """
     if methodtype is None:
-        if verbose>=2: print('[bnlearn] >Warning: methodtype can not be empty.')
+        logger.warning('Warning: methodtype can not be empty.')
         return None
 
     # Set names to lower
@@ -183,10 +181,10 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
 
     if isinstance(DAG, list) and CPD is None:
         # Automatically generate placeholder values for the CPTs
-        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, isolated_nodes=isolated_nodes, verbose=verbose)
+        CPD = build_cpts_from_structure(DAG, variable_card=2, methodtype=methodtype, isolated_nodes=isolated_nodes)
     elif isinstance(DAG, dict) and CPD is not None:
         # Extract the DAG from the model
-        if verbose>=3: print('[bnlearn] >Update current DAG with custom CPD.')
+        logger.info('Update current DAG with custom CPD.')
         DAG = list(DAG.get('model_edges'))
     elif isinstance(DAG, dict):
         # Extract the entire model
@@ -204,9 +202,9 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
             methodtype = 'bayes'
         elif ('naivebayes' in str(type(DAG)).lower()):
             methodtype = 'naivebayes'
-        if verbose>=3: print('[bnlearn] >No changes made to existing %s DAG.' %(methodtype))
+        logger.info('No changes made to existing %s DAG.' %(methodtype))
     elif isinstance(DAG, list) and methodtype == 'naivebayes':
-        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
+        logger.info('%s DAG created.' %(methodtype))
         try:
             edges = DAG
             DAG = NaiveBayes()
@@ -215,14 +213,14 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
             # DAG.add_nodes_from(CPD)
             for cpd in CPD: DAG.add_cpds(cpd)
         except ValueError as e:
-            if verbose>=1: print(f"[bnlearn] >Error: {e}")
-            if "Model can only have edges outgoing from:" in str(e) and verbose>=1:
-                print("[bnlearn] >Error: Invalid structure for NaiveBayes model.")
-                print("[bnlearn] >All nodes must have the same parent (the class variable).")
-                print("[bnlearn] >Use methodtype='bayes' instead if you have a more complex dependency structure.")
+            logger.error(f"Error: {e}")
+            if "Model can only have edges outgoing from:" in str(e):
+                logger.error("Invalid structure for NaiveBayes model.")
+                logger.error("All nodes must have the same parent (the class variable).")
+                logger.error("Use methodtype='bayes' instead if you have a more complex dependency structure.")
                 return None
     elif isinstance(DAG, list) and methodtype == 'bayes':
-        if verbose>=3: print('[bnlearn] >%s DAG created.' %(methodtype))
+        logger.info('%s DAG created.' %(methodtype))
         edges = DAG
         DAG = DiscreteBayesianNetwork()
         DAG.add_edges_from(edges)
@@ -230,8 +228,8 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
         # DAG.add_nodes_from(CPD)
         for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'markov':
-        if verbose>=3: print(f'[bnlearn] >[{methodtype}] DAG created.')
-        if verbose>=3: print(f'[bnlearn] >[{methodtype}] is not supported to store the CPTs in the model.')
+        logger.info(f'[{methodtype}] DAG created.')
+        logger.info(f'[{methodtype}] is not supported to store the CPTs in the model.')
         edges = DAG
         # DAG = MarkovNetwork(DAG)
         DAG = DiscreteMarkovNetwork()
@@ -240,10 +238,10 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
         # DAG.add_nodes_from(CPD)
         # for cpd in CPD: DAG.add_cpds(cpd)
     elif isinstance(DAG, list) and methodtype == 'DBN':
-        if verbose>=3: print('[bnlearn] >DynamicBayesianNetwork (DBN) DAG created.')
+        logger.info('DynamicBayesianNetwork (DBN) DAG created.')
         # Make edges with time slice
         if not has_valid_time_slice(DAG):
-            edges = convert_edges_with_time_slice(DAG, verbose=verbose)
+            edges = convert_edges_with_time_slice(DAG)
         else:
             edges = DAG
 
@@ -255,10 +253,10 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
 
     if CPD is not None:
         for cpd in CPD:
-            if verbose>=3: print(f'[bnlearn] >[CPD > Update  ] >[Node {cpd.variable}]')
+            logger.info(f'[CPD > Update  ] >[Node {cpd.variable}]')
         # Check model
         if checkmodel:
-            check_model(DAG, verbose=verbose)
+            check_model(DAG)
 
     # Create adjacency matrix from DAG
     out = {}
@@ -270,8 +268,8 @@ def make_DAG(DAG, CPD=None, methodtype='bayes', isolated_nodes=None, checkmodel=
 
 
 # %%
-def convert_edges_with_time_slice(edges, time_slice=0, verbose=3):
-    if verbose>=3: print('[bnlearn]> Converting edges to time slice.')
+def convert_edges_with_time_slice(edges, time_slice=0):
+    logger.info('Converting edges to time slice.')
     return [( (u, time_slice), (v, time_slice) ) for u, v in edges]
 
 def has_valid_time_slice(edges):
@@ -296,7 +294,7 @@ def has_valid_time_slice(edges):
     return True
 
 # %% Print DAG
-def print_CPD(DAG, checkmodel=False, verbose=3):
+def print_CPD(DAG, checkmodel=False):
     """Print DAG-model to screen.
 
     Parameters
@@ -330,7 +328,7 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
     >>> model = bn.parameter_learning.fit(DAG, df)
     >>>
     >>> # Gather and store the CPDs in dictionary contaning dataframes for each node.
-    >>> CPD = bn.print_CPD(model, verbose=0)
+    >>> CPD = bn.print_CPD(model)
     >>>
     >>> CPD['Cloudy']
     >>> CPD['Rain']
@@ -350,48 +348,42 @@ def print_CPD(DAG, checkmodel=False, verbose=3):
     if ('markovnetwork' in str(type(DAG)).lower()):
         # pgmpy 1.x removed MarkovNetwork.to_bayesian_model(); there is no
         # equivalent conversion left to print CPDs from.
-        if verbose>=2: print('[bnlearn] >Warning: printing CPDs of a MarkovNetwork is no longer supported by pgmpy>=1.0. <return>')
+        logger.warning('Warning: printing CPDs of a MarkovNetwork is no longer supported by pgmpy>=1.0. <return>')
         return CPDs
 
     if 'maximumlikelihood' in str(type(DAG)).lower():
         # print CPDs using Maximum Likelihood Estimators
         for node in DAG.state_names:
-            if verbose>=3: print(DAG.estimate_cpd(node))
+            logger.info(DAG.estimate_cpd(node))
     elif ('bayesiannetwork' in str(type(DAG)).lower()) or ('naivebayes' in str(type(DAG)).lower()):
         # print CPDs using Bayesian Parameter Estimation
         if len(DAG.get_cpds())==0:
-            if verbose>=2: print('[bnlearn] >No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bn.plot(DAG) to make a plot.')
+            logger.warning('No CPDs to print. Hint: Add CPDs as following: <bn.make_DAG(DAG, CPD=[cpd_A, cpd_B, etc])> and use bn.plot(DAG) to make a plot.')
             return CPDs
         for cpd in DAG.get_cpds():
-            CPDs[cpd.variable] = query2df(cpd, verbose=0)
-            if verbose>=3:
-                print("[bnlearn] >[CPD] >[Node {variable}]:".format(variable=cpd.variable))
-                print(cpd)
+            CPDs[cpd.variable] = query2df(cpd)
+            logger.info("[CPD] >[Node {variable}]:".format(variable=cpd.variable))
+            print(cpd)
         if ('bayesiannetwork' in str(type(DAG)).lower()):
-            if verbose>=3: print('[bnlearn] >Independencies:\n%s' %(DAG.get_independencies()))
-
-        if verbose>=3:
-            print('[bnlearn] >Nodes: %s' %(DAG.nodes()))
-            print('[bnlearn] >Edges: %s' %(DAG.edges()))
+            logger.info('Independencies:\n%s' %(DAG.get_independencies()))
+        logger.info('Nodes: %s' %(DAG.nodes()))
+        logger.info('Edges: %s' %(DAG.edges()))
 
     if checkmodel:
-        check_model(DAG, verbose=3)
+        check_model(DAG)
 
     # Returning dict with CPDs
     return CPDs
 
 
 # %% Check model CPDs
-def check_model(DAG, verbose=3):
+def check_model(DAG):
     """Check if the CPDs associated with the nodes are consistent.
 
     Parameters
     ----------
     DAG : Object.
         Object containing CPDs.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -406,28 +398,21 @@ def check_model(DAG, verbose=3):
     if DAG is not None and hasattr(DAG, 'get_cpds'):
         for cpd in DAG.get_cpds():
             if not np.all(cpd.values.astype(Decimal).sum(axis=0)==1):
-                if verbose>=3: print(f'[bnlearn] >[CPD > Validate] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
+                logger.info(f'[CPD > Validate] >[Node {cpd.variable}] >Table Error: Does not sum to 1 but is [{cpd.values.sum(axis=0)}]')
             else:
-                if verbose>=3: print(f'[bnlearn] >[CPD > Validate] >[Node {cpd.variable}] >OK')
-        # if verbose>=3: print('[bnlearn] >Check whether CPDs associated with the nodes are consistent: %s' %(DAG.check_model()))
+                logger.info(f'[CPD > Validate] >[Node {cpd.variable}] >OK')
     elif 'markovnetwork' in str(type(DAG)).lower():
         pass
-        # if verbose>=3: print(f'[bnlearn] >[CPD] >[Check Probabilities] >Unknown')
     else:
-        if verbose>=2: print('[bnlearn] >No model found containing CPDs.')
-
-
+        logger.warning('No model found containing CPDs.')
 # %% Convert DAG into adjacency matrix
-def dag2adjmat(model, verbose=3):
+def dag2adjmat(model):
     """Convert model into adjacency matrix.
 
     Parameters
     ----------
     model : object
         Model object.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -454,18 +439,18 @@ def dag2adjmat(model, verbose=3):
         adjmat.index.name='source'
         adjmat.columns.name='target'
     else:
-        if verbose>=1: print('[bnlearn] >Could not convert to adjmat because nodes and/or edges were missing.')
+        logger.error('Could not convert to adjmat because nodes and/or edges were missing.')
     return adjmat
 
 from bnlearn.utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
 
 # %%
-def sampling(DAG, n=1000, methodtype='bayes', evidence=None, verbose=0):
-    return bn_sampling(DAG, n=n, methodtype=methodtype, evidence=evidence, verbose=verbose)
+def sampling(DAG, n=1000, methodtype='bayes', evidence=None):
+    return bn_sampling(DAG, n=n, methodtype=methodtype, evidence=evidence)
 
 
 # %% Convert BIF model to bayesian model
-def _bif2bayesian(pathname, verbose=3):
+def _bif2bayesian(pathname):
     """Return the fitted bayesian model.
 
     Example
@@ -476,8 +461,7 @@ def _bif2bayesian(pathname, verbose=3):
     <pgmpy.models.BayesianNetwork object at 0x7f20af154320>
     """
     from pgmpy.readwrite import BIFReader
-    if verbose>=3: print('[bnlearn] >Loading bif file <%s>' %(pathname))
-
+    logger.info('Loading bif file <%s>' %(pathname))
     bifmodel = BIFReader(path=pathname)
 
     try:
@@ -506,7 +490,7 @@ def _bif2bayesian(pathname, verbose=3):
         raise AttributeError('[bnlearn] >First get states of variables, edges, parents and network names')
 
 
-def query2df(query, variables=None, groupby=None, verbose=3):
+def query2df(query, variables=None, groupby=None):
     """Convert query from inference model to a dataframe.
 
     Parameters
@@ -530,7 +514,7 @@ def query2df(query, variables=None, groupby=None, verbose=3):
         # Needs to be set to true.
         groupby = list(np.array(groupby)[np.isin(groupby, variables)])
     else:
-        if verbose>=2: print('[bnlearn] >Warning: variable(s) [%s] does not exists in DAG.' %(groupby))
+        logger.warning('Warning: variable(s) [%s] does not exists in DAG.' %(groupby))
         groupby=None
 
     states = []
@@ -558,9 +542,7 @@ def query2df(query, variables=None, groupby=None, verbose=3):
         df.reset_index(drop=True, inplace=True)
 
     # Print table to screen
-    if verbose>=3:
-        print(tabulate(df, tablefmt="grid", headers="keys"))
-
+    logger.info(tabulate(df, tablefmt="grid", headers="keys"))
     return df
 
 
@@ -637,7 +619,7 @@ def to_undirected(adjmat):
 
 
 # %% Comparison of two networks
-def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), verbose=3):
+def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8)):
     """Compare networks of two models.
 
     Parameters
@@ -652,9 +634,6 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
         plot figure. The default is True.
     figsize : tuple, optional
         Figure size.. The default is (15,8).
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -663,7 +642,7 @@ def compare_networks(model_1, model_2, pos=None, showfig=True, figsize=(15, 8), 
         adjmat_diff : Adjacency matrix depicting the differences between the two input models.
 
     """
-    scores, adjmat_diff = bn.network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], verbose=verbose)
+    scores, adjmat_diff = bn.network.compare_networks(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1])
     return(scores, adjmat_diff)
 
 # %%
@@ -689,7 +668,7 @@ def topological_sort(adjmat, start=None):
     Example
     -----------
     import bnlearn as bn
-    DAG = bn.import_DAG('sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler')
     bn.topological_sort(DAG, 'Rain')
     bn.topological_sort(DAG)
 
@@ -729,7 +708,7 @@ def topological_sort(adjmat, start=None):
 
 
 # %% Example data
-def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
+def import_example(data='sprinkler', url=None, sep=',', n=10000):
     """Load example dataset.
 
     Parameters
@@ -746,9 +725,6 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
             * 'auto_mpg'
     n: int, optional
         Number of samples to generate. The default is 10000.
-    verbose: int, (default: 3)
-        Print progress to screen.
-        0: None, 1: Error, 2: Warning, 3: Info, 4: Debug, 5: Trace
 
     Returns
     -------
@@ -758,20 +734,20 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000, verbose=3):
 
     if (data=='alarm') or (data=='andes') or (data=='asia') or (data=='sachs') or (data=='water'):
         try:
-            DAG = import_DAG(data, verbose=2)
-            df = bn.sampling(DAG, n=n, verbose=2)
+            DAG = import_DAG(data)
+            df = bn.sampling(DAG, n=n)
         except ValueError as e:
-            print(f'[bnlearn] >Error: Loading data not possible! - {e}')
+            logger.error(f'Error: Loading data not possible! - {e}')
             df = None
 
     else:
-        df = dz.get(data, url=url, sep=sep, n=n, verbose=0)
+        df = dz.get(data, url=url, sep=sep, n=n)
 
     return df
 
 
 # %% Make DAG
-def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
+def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True):
     """Import Directed Acyclic Graph.
 
     Parameters
@@ -783,9 +759,6 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
         Directed Acyclic Graph (DAG). The default is True.
     checkmodel : bool
         Check the validity of the model. The default is True
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -803,7 +776,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
     out = {}
     model = None
     # filepath= filepath.lower()
-    if verbose>=3: print('[bnlearn] >Import <%s>' %(filepath))
+    logger.info('Import <%s>' %(filepath))
     # Get the data properties
     dataproperties = dz.get_dataproperties(filepath)
     # Get path to data
@@ -819,12 +792,12 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
             PATH_TO_DATA = dz.download_from_url(dataproperties['filename'], url=dataproperties['url'])
             _ = dz.unzip(PATH_TO_DATA)
 
-        model = _bif2bayesian(getfile, verbose=verbose)
+        model = _bif2bayesian(getfile)
     else:
         if os.path.isfile(filepath):
-            model = _bif2bayesian(filepath, verbose=verbose)
+            model = _bif2bayesian(filepath)
         else:
-            if verbose>=3: print('[bnlearn] >filepath does not exist! <%s>' %(filepath))
+            logger.info('filepath does not exist! <%s>' %(filepath))
             return out
 
     # Setup adjacency matrix
@@ -836,15 +809,15 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True, verbose=3):
 
     # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
     if (model is not None) and CPD and checkmodel:
-        check_model(out['model'], verbose=verbose)
-        if verbose>=4:
+        check_model(out['model'])
+        if logger.isEnabledFor(logging.DEBUG):
             print_CPD(out)
 
     return out
 
 
 # %% Pre-processing of input raw dataset
-def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=None, verbose=3):
+def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=None):
     """Convert dataframe to one-hot matrix.
 
     Parameters
@@ -857,9 +830,6 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
         Minimal number of sampels that must be present in a group. All groups with less then y_min samples are labeled as _other_ and are not used in the enriching model. The default is None.
     perc_min_num : float [None, 0..1], optional
         Force column (int or float) to be numerical if unique non-zero values are above percentage. The default is None. Alternative can be 0.8
-    verbose : int, optional
-        Print message to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -870,7 +840,7 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     from df2onehot import df2onehot as df2hot
 
     # Convert dataframe to onehot by keeping only categorical variables.
-    out = df2hot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True, verbose=verbose)
+    out = df2hot(df, y_min=y_min, perc_min_num=perc_min_num, dtypes=dtypes, excl_background=excl_background, hot_only=True)
     # Numerical
     df_num = out['numeric'].iloc[:, out['dtypes']=='cat']
     df_num = df_num.astype(int)
@@ -885,17 +855,17 @@ def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=N
     return df_hot, df_num
 
 
-def _filter_df(adjmat, df, verbose=3):
+def _filter_df(adjmat, df):
     """Adjacency matrix and dataframe columns are checked for consistency."""
     remcols = df.columns[~np.isin(df.columns.values, adjmat.columns.values)].values
     if len(remcols)>0:
-        if verbose>=3: print('[bnlearn] >Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
+        logger.info('Removing columns from dataframe to make consistent with DAG [%s]' %(remcols))
         df.drop(labels=remcols, axis=1, inplace=True)
     return df
 
 
 # %% Make prediction in inference model
-def predict(model, df, variables, to_df=True, method='max', verbose=3):
+def predict(model, df, variables, to_df=True, method='max'):
     """Predict on data from a Bayesian network.
 
     Predict overview
@@ -917,9 +887,6 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
         The method that is used to select the for the inferences.
         'max' : Return the variable values based on the maximum probability.
         None : Returns all Probabilities
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -956,8 +923,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
     if isinstance(variables, str): variables=[variables]
     # Remove columns that are used as priors
     dfX = df.loc[:, ~np.isin(df.columns.values, variables)]
-    if verbose>=3: print('[bnlearn]> Remaining columns for inference: %d' %(dfX.shape[1]))
-
+    logger.info('Remaining columns for inference: %d' %(dfX.shape[1]))
     # Get only the unique records in the DataFrame to reduce computation time.
     dfU = dfX.drop_duplicates()
     dfU.reset_index(drop=True, inplace=True)
@@ -971,7 +937,7 @@ def predict(model, df, variables, to_df=True, method='max', verbose=3):
         # Get input data and create a dict.
         # evidence = dfU.iloc[i, :].to_dict()
         # Do the inference.
-        query = bn.inference.fit(model, variables=variables, evidence=evidence, to_df=False, verbose=0)
+        query = bn.inference.fit(model, variables=variables, evidence=evidence, to_df=False)
         # Find original location of the input data.
         # loc = np.sum((dfX==dfU.iloc[i, :]).values, axis=1)==dfU_shape
         loc = np.sum(dfX.values==[*evidence.values()], axis=1)==dfU_shape
@@ -1005,7 +971,7 @@ def _get_prob(query, method='max'):
 
 
 # %% Save model
-def save(model, filepath='bnlearn_model.pkl', overwrite=False, verbose=3):
+def save(model, filepath='bnlearn_model.pkl', overwrite=False):
     """Save learned model in pickle file.
 
     Parameters
@@ -1014,8 +980,6 @@ def save(model, filepath='bnlearn_model.pkl', overwrite=False, verbose=3):
         Pathname to store pickle files.
     overwrite : bool, (default=False)
         Overwite file if exists.
-    verbose : int, optional
-        Show message. A higher number gives more informatie. The default is 3.
 
     Returns
     -------
@@ -1033,21 +997,19 @@ def save(model, filepath='bnlearn_model.pkl', overwrite=False, verbose=3):
     # storedata = {}
     # storedata['model'] = model
     # Save
-    status = pypickle.save(filepath, model, overwrite=overwrite, verbose=convert_verbose_to_new(verbose))
+    status = pypickle.save(filepath, model, overwrite=overwrite)
     # return
     return status
 
 
 # %% Load model.
-def load(filepath='bnlearn_model.pkl', verbose=3):
+def load(filepath='bnlearn_model.pkl'):
     """Load learned model.
 
     Parameters
     ----------
     filepath : str
         Pathname to stored pickle files.
-    verbose : int, optional
-        Show message. A higher number gives more information. The default is 3.
 
     Returns
     -------
@@ -1062,7 +1024,7 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
 
     # Load
     # mods = pypickle.validate_modules(filepath)
-    model = pypickle.load(filepath, verbose=convert_verbose_to_new(verbose), validate=['builtins.int'])
+    model = pypickle.load(filepath, validate=['builtins.int'])
 
     # Models pickled under pgmpy 0.x (bnlearn<=0.13.x) resolve to pgmpy 1.x's bare
     # tombstone classes: unpickling succeeds silently but returns a half-broken
@@ -1070,18 +1032,16 @@ def load(filepath='bnlearn_model.pkl', verbose=3):
     if isinstance(model, dict):
         loaded_model = model.get('model', None)
         if type(loaded_model).__name__ in ('BayesianNetwork', 'MarkovNetwork') and type(loaded_model).__module__.startswith('pgmpy'):
-            if verbose>=1: print('[bnlearn] >Error: [%s] was saved with bnlearn<=0.13.x (pgmpy 0.x) and cannot be loaded under pgmpy>=1.0. Re-learn and re-save the model with the current version, or load it using an older release: <pip install "bnlearn<0.14">' %(filepath))
+            logger.error('Error: [%s] was saved with bnlearn<=0.13.x (pgmpy 0.x) and cannot be loaded under pgmpy>=1.0. Re-learn and re-save the model with the current version, or load it using an older release: <pip install "bnlearn<0.14">' %(filepath))
             return None
 
     # Store in self
     if model is not None:
         return model
     else:
-        if verbose>=2: print('[bnlearn] >WARNING: Could not load data from [%s]' %(filepath))
-
-
+        logger.warning('WARNING: Could not load data from [%s]' %(filepath))
 # %% Compute Pvalues using independence test.
-def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, verbose=3):
+def independence_test(model, df, test="chi_square", alpha=0.05, prune=False):
     """Compute edge strength using test statistic.
 
     Description
@@ -1157,7 +1117,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
     model_update = copy.deepcopy(model)
 
     if isinstance(model['model'], (DirectLiNGAM, ICALiNGAM)):
-        if verbose >= 3: print(f'[bnlearn] >Compute edge strength with {model["config"]["method"]}')
+        logger.info(f'Compute edge strength with {model["config"]["method"]}')
         test = 'direct-lingam'
 
         # Extract info from the independence_p_values
@@ -1173,7 +1133,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
         independence_test[test] = np.nan
         model_update['independence_test'] = normalize_independence_frame(independence_test, test_name=test)
     else:
-        if verbose>=3: print(f'[bnlearn] >Compute edge strength with {test}')
+        logger.info(f'Compute edge strength with {test}')
         statistical_test = eval(test)
         results = []
         for i, j in model_update['model_edges']:
@@ -1191,13 +1151,13 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False, ver
 
     # Remove not significant edges
     if prune and len(model_update['model_edges']) > 0:
-        model_update = _prune(model_update, test, alpha, verbose=verbose)
+        model_update = _prune(model_update, test, alpha)
 
     return model_update
 
 
 # %% Remove not significant edges.
-def _prune(model, test, alpha, verbose=3):
+def _prune(model, test, alpha):
 
     # Prune based on significance alpha
     if model.get('independence_test', None) is not None:
@@ -1206,7 +1166,7 @@ def _prune(model, test, alpha, verbose=3):
         idxrem = np.where(Irem)[0]
 
         if len(idxrem)>0:
-            if verbose >= 3: print(f'[bnlearn] >{sum(Irem)} edges are removed with P-value > {alpha} based on {test}')
+            logger.info(f'{sum(Irem)} edges are removed with P-value > {alpha} based on {test}')
             # Keek only the significant edges from the test statistics
             model['independence_test'] = model['independence_test'].loc[~Irem, :]
             model['independence_test'].reset_index(inplace=True, drop=True)
@@ -1225,7 +1185,7 @@ def _prune(model, test, alpha, verbose=3):
 
 
 # %% Compute structure scores.
-def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], verbose=3, **kwargs):
+def structure_scores(model, df, scoring_method='auto', **kwargs):
     """Compute structure scores.
 
     Each model can be scored based on its structure. However, the score doesn't have very straight forward
@@ -1279,6 +1239,10 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
     adjmat = None
     model_edges = None
 
+    d_scores = ['k2', 'bic', 'bdeu', 'bds']
+    g_scores = ['loglik-g', 'aic-g', 'bic-g']
+    cg_scores = ['bic-cg', 'aic-cg', 'loglik-cg']
+
     # Get models and method
     if isinstance(model, dict):
         config = model.get('config', {})
@@ -1287,20 +1251,21 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
         adjmat = model.get('adjmat', None)
         model_edges = model.get('model_edges', None)
         model = model.get('model', None)
-    if isinstance(scoring_method, str): scoring_method = [scoring_method]
-
-    g_scores = ['loglik-g', 'aic-g', 'bic-g']
-    cg_scores = ['bic-cg', 'aic-cg', 'loglik-cg']
-    if selected_score in g_scores and not np.any(np.isin(scoring_method, g_scores)):
-        scoring_method = [selected_score]
-    if method in ('cg', 'conditional-gaussian') and not np.any(np.isin(scoring_method, cg_scores)):
+    
+    if scoring_method is not None and isinstance(scoring_method, str) and scoring_method != 'auto':
+        scoring_method = [scoring_method]
+    if scoring_method=='auto' and (selected_score in g_scores):
+        # scoring_method = [selected_score]
+        scoring_method = g_scores
+    elif scoring_method=='auto' and (method in ('cg', 'conditional-gaussian') or (selected_score in cg_scores)):
         scoring_method = cg_scores
+    else:
+        scoring_method=d_scores
 
-    if verbose>=3: print('[bnlearn] >Compute structure scores [%s] for model comparison (higher is better).' % (', '.join(scoring_method)))
-
+    logger.info('Compute structure scores [%s] for model comparison (higher is better).' % (', '.join(scoring_method)))
     # Return if method not supported
     if np.any(np.isin(method, ['cs', 'constraintsearch'])):
-        if verbose>=2: print('[bnlearn] >Warning: Structure scoring could not be computed. Method [%s] not supported.' %(method))
+        logger.warning('Warning: Structure scoring could not be computed. Method [%s] not supported.' %(method))
         return scores
 
     # After parameter_learning.fit(..., methodtype='cg') the stored model is the
@@ -1315,29 +1280,24 @@ def structure_scores(model, df, scoring_method=['k2', 'bic', 'bdeu', 'bds'], ver
         cols = list(model.nodes)
         df = copy.deepcopy(df[cols])
     else:
-        if verbose>=1: print(f'[bnlearn] >Error: Nodes in model and Dataframe does not match: {set(list(model.nodes))-set(df.columns)}')
-
+        logger.error(f'Error: Nodes in model and Dataframe does not match: {set(list(model.nodes))-set(df.columns)}')
     # Compute structure scores
     if model is not None:
         for s in scoring_method:
             try:
                 if s in g_scores:
-                    scoring_object = bn.structure_learning._SetScoringType(df, s, verbose=0, **kwargs)
+                    scoring_object, _ = bn.structure_learning.SetScoringType(df, s, **kwargs)
                     scores[s] = scoring_object.score(model)
                 elif s in cg_scores:
-                    # _SetScoringType returns a plain string for CG scores (pgmpy HC
-                    # accepts strings natively). Score via StructureScore instead.
-                    # pgmpy names the CG log-likelihood score 'll-cg'.
                     pgmpy_name = 'll-cg' if s == 'loglik-cg' else s
                     scores[s] = StructureScore(scoring_method=pgmpy_name).evaluate(df, model)
                 else:
-                    # pgmpy 1.x disambiguated 'bic'/'aic' into discrete ('-d') and
-                    # gaussian ('-g') variants; keep accepting the historic names.
+                    # pgmpy 1.x disambiguated 'bic'/'aic' into discrete ('-d') and gaussian ('-g') variants; keep accepting the historic names.
                     scores[s] = StructureScore(scoring_method={'bic': 'bic-d', 'aic': 'aic-d'}.get(s, s)).evaluate(df, model)
             except (ValueError, TypeError, np.linalg.LinAlgError, AttributeError) as e:
-                if verbose>=2 and show_message:
-                    print(f'[bnlearn] >WARNING> {e}')
-                    print(f'[bnlearn] >WARNING> Can not compute [{s}] score. <skip>')
+                if show_message:
+                    logger.warning(f'{e}')
+                    logger.warning(f'Can not compute [{s}] score. <skip>')
                     show_message=False
     # Return
     return scores
@@ -1438,7 +1398,7 @@ def probs_rulebook(node, rulebook, variable_card, all_combos):
     return probs
 
 
-def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
+def generate_cpt(node, parents, variable_card=2, rulebook=None):
     """
     Generate a TabularCPD object for a given node.
 
@@ -1452,8 +1412,6 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
         Number of possible values the node can take (default is 2).
     rulebook : dict, optional
         Dictionary of {node: callable} to generate conditional probabilities.
-    verbose : int, optional
-        Verbosity level (default is 3). If >= 3, prints the CPT.
 
     Returns
     -------
@@ -1519,14 +1477,13 @@ def generate_cpt(node, parents, variable_card=2, rulebook=None, verbose=3):
                      evidence=parents if parents else None,
                      evidence_card=parent_card if parents else None)
 
-    if verbose >= 3:
-        print(f'[bnlearn] >CPT for {node}:')
-        print(cpt)
+    logger.info(f'CPT for {node}:')
+    print(cpt)
 
     return cpt
 
 
-def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, isolated_nodes=None, verbose=3):
+def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=None, isolated_nodes=None):
     """
     Automatically generates placeholder CPTs for all nodes in a network structure.
 
@@ -1542,8 +1499,6 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
     isolated_nodes : list, optional
         Nodes that have no incoming or outgoing edges but that should still be
         part of the model (and therefore need a placeholder marginal CPT).
-    verbose : int, optional
-        Verbosity level (default is 3).
 
     Returns
     -------
@@ -1566,10 +1521,10 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
     >>> CPD = bn.build_cpts_from_structure(edges, isolated_nodes=['Windy'])
 
     """
-    if verbose>=3: print('[bnlearn]> Auto generate placeholders for the CPTs.')
+    logger.info('Auto generate placeholders for the CPTs.')
     # Convert edges with time for DBN
     if methodtype=='DBN' and not has_valid_time_slice(edges):
-        edges = convert_edges_with_time_slice(edges, verbose=verbose)
+        edges = convert_edges_with_time_slice(edges)
         if isolated_nodes is not None:
             raise ValueError('[bnlearn] >isolated_nodes is not yet supported for methodtype="DBN".')
 
@@ -1577,31 +1532,10 @@ def build_cpts_from_structure(edges, variable_card=2, rulebook=None, methodtype=
     parents_map = get_parents(edges, isolated_nodes=isolated_nodes)
 
     for node, parents in parents_map.items():
-        cpt = generate_cpt(node, parents, variable_card=variable_card, rulebook=rulebook, verbose=verbose)
+        cpt = generate_cpt(node, parents, variable_card=variable_card, rulebook=rulebook)
         cpts.append(cpt)
 
     return cpts
-
-
-#%%
-def convert_verbose_to_new(verbose):
-    """Convert old verbosity to the new."""
-    # In case the new verbosity is used, convert to the old one.
-    if verbose is None: verbose=0
-    if not isinstance(verbose, str) and verbose<10:
-        status_map = {
-            'None': 'silent',
-            0: 'silent',
-            6: 'silent',
-            1: 'critical',
-            2: 'warning',
-            3: 'info',
-            4: 'debug',
-            5: 'debug'}
-        # if verbose>=2: print('[bnlearn] WARNING use the standardized verbose status. The status [1-6] will be deprecated in future versions.')
-        return status_map.get(verbose, 0)
-    else:
-        return verbose
 
 
 # %% System information helper
@@ -1707,13 +1641,10 @@ def system_info():
 #     return cpd
 
 # %%
-# def set_logger(verbose: [str, int] = 'info'):
 #     """Set the logger for verbosity messages.
 
 #     Parameters
 #     ----------
-#     verbose : [str, int], default is 'info' or 20
-#         Set the verbose messages using string or integer values.
 #         * [0, 60, None, 'silent', 'off', 'no']: No message.
 #         * [10, 'debug']: Messages from debug level and higher.
 #         * [20, 'info']: Messages from info level and higher.
@@ -1725,7 +1656,7 @@ def system_info():
 #     None.
 
 #     > # Set the logger to warning
-#     > set_logger(verbose='warning')
+#     > set_logger()
 #     > # Test with different messages
 #     > logger.debug("Hello debug")
 #     > logger.info("Hello info")
@@ -1734,10 +1665,7 @@ def system_info():
 
 #     """
 #     # Set 0 and None as no messages.
-#     if (verbose==0) or (verbose is None):
-#         verbose=60
 #     # Convert str to levels
-#     if isinstance(verbose, str):
 #         levels = {'silent': 60,
 #                   'off': 60,
 #                   'no': 60,
@@ -1745,10 +1673,8 @@ def system_info():
 #                   'info': 20,
 #                   'warning': 30,
 #                   'critical': 50}
-#         verbose = levels[verbose]
 
 #     # Show examples
-#     logger.setLevel(verbose)
 
 # # %%
 # def disable_tqdm():

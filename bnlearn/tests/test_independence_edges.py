@@ -11,8 +11,8 @@ import bnlearn as bn
 @pytest.fixture
 def sprinkler_model():
     df = bn.import_example('sprinkler')
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
-    model = bn.independence_test(model, df, test='chi_square', prune=False, verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
+    model = bn.independence_test(model, df, test='chi_square', prune=False)
     return model, df
 
 
@@ -29,7 +29,7 @@ def test_independence_test_columns(sprinkler_model):
 
 def test_edge_properties_use_p_value_not_pvalue(sprinkler_model):
     model, _ = sprinkler_model
-    edges = bn.get_edge_properties(model, verbose=0)
+    edges = bn.get_edge_properties(model)
     assert len(edges) > 0
     sample = next(iter(edges.values()))
     assert 'p_value' in sample
@@ -43,7 +43,7 @@ def test_edge_properties_use_p_value_not_pvalue(sprinkler_model):
 
 def test_edge_p_value_matches_independence_table(sprinkler_model):
     model, _ = sprinkler_model
-    edges = bn.get_edge_properties(model, verbose=0)
+    edges = bn.get_edge_properties(model)
     indep = model['independence_test']
     for (u, v), props in edges.items():
         rows = indep[(indep['source'] == u) & (indep['target'] == v)]
@@ -60,16 +60,16 @@ def test_edge_p_value_matches_independence_table(sprinkler_model):
 
 def test_plot_edges_p_value_no_error(sprinkler_model):
     model, _ = sprinkler_model
-    fig = bn.plot(model, interactive=False, edge_filter='p_value', verbose=0,
+    fig = bn.plot(model, interactive=False, edge_filter='p_value',
                   params_static={'showplot': False, 'visible': False})
     assert fig is not None
 
 
 def test_plot_requires_independence_for_p_value_labels():
     df = bn.import_example('sprinkler')
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     # No independence_test: edge_filter='p_value' should fall back (no crash)
-    fig = bn.plot(model, interactive=False, edge_filter='p_value', verbose=0,
+    fig = bn.plot(model, interactive=False, edge_filter='p_value',
                   params_static={'showplot': False, 'visible': False})
     # May still plot structure without labels
     assert fig is not None or model.get('adjmat') is not None
@@ -91,12 +91,12 @@ def test_independence_test_empty_edges():
         'adjmat': adj,
         'config': {'method': 'hc'},
     }
-    out = bn.independence_test(model, df, prune=False, verbose=0)
+    out = bn.independence_test(model, df, prune=False)
     indep = out['independence_test']
     assert indep is not None
     for col in ('source', 'target', 'stat_test', 'p_value', 'dof'):
         assert col in indep.columns
     assert len(indep) == 0
 
-    out2 = bn.independence_test(model, df, prune=True, verbose=0)
+    out2 = bn.independence_test(model, df, prune=True)
     assert len(out2['independence_test']) == 0

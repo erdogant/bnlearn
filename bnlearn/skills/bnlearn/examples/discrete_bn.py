@@ -41,9 +41,7 @@ print(df.dtypes)
 DAG = bn.structure_learning.fit(
     df,
     methodtype='hc',
-    scoretype='bic',
-    verbose=3,
-)
+    scoretype='bic')
 
 print('\n[bnlearn] > Learned DAG:')
 print(DAG['model_edges'])
@@ -60,9 +58,7 @@ bn.plot(DAG, params_static={'showplot': False})
 model = bn.parameter_learning.fit(
     DAG,
     df,
-    methodtype='bayes',
-    verbose=3,
-)
+    methodtype='bayes')
 
 print('\n[bnlearn] > Bayesian Network:')
 print(model['model'])
@@ -94,9 +90,7 @@ query = bn.inference.fit(
     evidence={
         'Rain': 1,
         'Sprinkler': 0,
-    },
-    verbose=3,
-)
+    })
 
 print('\n[bnlearn] > Inference result:')
 print(query)
@@ -113,9 +107,7 @@ query_joint = bn.inference.fit(
     variables=['Wet_Grass', 'Rain'],
     evidence={
         'Sprinkler': 1,
-    },
-    verbose=3,
-)
+    })
 
 print('\n[bnlearn] > Joint inference:')
 print(query_joint.df)
@@ -130,9 +122,7 @@ print(query_joint.df)
 samples = bn.sampling(
     model,
     n=1000,
-    methodtype='bayes',
-    verbose=3,
-)
+    methodtype='bayes')
 
 print('\n[bnlearn] > Synthetic samples:')
 print(samples.head())
@@ -156,9 +146,7 @@ conditional_samples = bn.sampling(
     evidence={
         'Rain': 1,
         'Cloudy': 0,
-    },
-    verbose=3,
-)
+    })
 
 print('\n[bnlearn] > Conditional synthetic samples:')
 print(conditional_samples.head())
@@ -173,9 +161,7 @@ print(conditional_samples.head())
 gibbs_samples = bn.sampling(
     model,
     n=100,
-    methodtype='gibbs',
-    verbose=3,
-)
+    methodtype='gibbs')
 
 print('\n[bnlearn] > Gibbs samples:')
 print(gibbs_samples.head())

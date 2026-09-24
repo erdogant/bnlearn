@@ -49,7 +49,7 @@ Lets create the underneath DAG and examine the topological ordering of 1. the en
          ]
 
     # Make the actual Bayesian DAG
-    DAG = bn.make_DAG(edges, verbose=0)
+    DAG = bn.make_DAG(edges)
 
     # Plot
     bn.plot(DAG)
@@ -88,7 +88,7 @@ It is also possible to examine the topological ordering of your learned DAG usin
     # Import DAG
     DAG = bn.import_DAG('sprinkler')
     # Generate data using the DAG
-    df = bn.sampling(DAG, n=1000, verbose=0)
+    df = bn.sampling(DAG, n=1000)
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
     G = bn.plot(model)

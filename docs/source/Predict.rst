@@ -39,7 +39,7 @@ Lets create a small example to understand how it exactly works..
              ('bronc', 'xray')]
 
     # With th edges, we can make a bayesian DAG by simply running the following line.
-    DAG = bn.make_DAG(edges, verbose=0)
+    DAG = bn.make_DAG(edges)
     # Plot DAG
     bn.plot(DAG)
 
@@ -52,7 +52,7 @@ Lets create a small example to understand how it exactly works..
 .. code-block:: python
 
     # With the bayesian DAG and the dataframe we can start learning the CPDs for each node
-    model = bn.parameter_learning.fit(DAG, df, verbose=3)
+    model = bn.parameter_learning.fit(DAG, df)
     # bn.print_CPD(model)
 
     # Lets create some data based on the learned model
@@ -74,7 +74,7 @@ Lets create a small example to understand how it exactly works..
     # Without the predict function we can only make a single inference at the time (see below).
     # To asses an entire dataframe, such as *Xtest*, it is a lot of work though.
 
-    query = bn.inference.fit(DAG, variables=['bronc','xray'], evidence={'smoke':1, 'lung':1}, verbose=3)
+    query = bn.inference.fit(DAG, variables=['bronc','xray'], evidence={'smoke':1, 'lung':1})
     query.df
 
     print(query)

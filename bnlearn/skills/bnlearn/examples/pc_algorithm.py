@@ -32,9 +32,7 @@ print(df.head())
 model_pc = bn.structure_learning.fit(
     df,
     methodtype='pc',
-    params_pc={'ci_test': 'chi_square', 'alpha': 0.05},
-    verbose=3,
-)
+    params_pc={'ci_test': 'chi_square', 'alpha': 0.05})
 
 print('\n[bnlearn] > PC return keys:', sorted(model_pc.keys()))
 print('[bnlearn] > model_edges:', model_pc.get('model_edges'))
@@ -47,9 +45,7 @@ print('[bnlearn] > undirected_edges:', model_pc.get('undirected_edges'))
 model_hc = bn.structure_learning.fit(
     df,
     methodtype='hc',
-    scoretype='bic',
-    verbose=0,
-)
+    scoretype='bic')
 print('\n[bnlearn] > HC (bic) edges:', model_hc['model_edges'])
 print('[bnlearn] > PC edges:      ', model_pc.get('model_edges'))
 
@@ -59,9 +55,7 @@ model_pruned = bn.independence_test(
     model_hc, df,
     test='chi_square',
     alpha=0.05,
-    prune=True,
-    verbose=0,
-)
+    prune=True)
 print('\n[bnlearn] > HC edges after independence_test(prune=True):')
 print(model_pruned.get('model_edges'))
 

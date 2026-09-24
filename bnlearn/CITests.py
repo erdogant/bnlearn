@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 # -*- coding: utf-8 -*-
 
 import numpy as np
@@ -427,7 +429,7 @@ def cressie_read(X, Y, Z, data, boolean=True, **kwargs):
     )
 
 
-def power_divergence(X, Y, Z, data, boolean=True, lambda_="cressie-read", verbose=3, **kwargs):
+def power_divergence(X, Y, Z, data, boolean=True, lambda_="cressie-read", **kwargs):
     """
     Computes the Cressie-Read power divergence statistic [1]. The null hypothesis
     for the test is X is independent of Y given Z. A lot of the frequency comparision
@@ -527,14 +529,14 @@ def power_divergence(X, Y, Z, data, boolean=True, lambda_="cressie-read", verbos
             except ValueError:
                 # If one of the values is 0 in the 2x2 table.
                 if isinstance(z_state, str):
-                    if verbose>=3: print(
+                    logger.info(
                         f"Skipping the test {X} \u27C2 {Y} | {Z[0]}={z_state}. Not enough samples"
                     )
                 else:
                     z_str = ", ".join(
                         [f"{var}={state}" for var, state in zip(Z, z_state)]
                     )
-                    if verbose>=3: print(
+                    logger.info(
                         f"Skipping the test {X} \u27C2 {Y} | {z_str}. Not enough samples"
                     )
         p_value = 1 - stats.chi2.cdf(chi, df=dof)

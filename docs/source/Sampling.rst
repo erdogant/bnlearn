@@ -85,13 +85,13 @@ Another example with Gibbs sampling but now by creating some user-defined edges
 	        ('Rain', 'Wet_Grass')]
 
 	# Make the actual Bayesian DAG
-	DAG = bn.make_DAG(edges, methodtype='bayes', verbose=3)
+	DAG = bn.make_DAG(edges, methodtype='bayes')
 
 	# Fit model
-	model = bn.parameter_learning.fit(DAG, df, verbose=3, methodtype='bayes')
+	model = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
 	# Sampling using gibbs
-	df = bn.sampling(model, n=100, methodtype='gibbs', verbose=3)
+	df = bn.sampling(model, n=100, methodtype='gibbs')
 
 
 
@@ -158,8 +158,8 @@ Optional ``do`` and ``seed`` apply on continuous and CG paths.
     y = 0.5 * x + rng.normal(scale=0.5, size=n)
     df = pd.DataFrame({'X': x, 'Y': y})
 
-    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
-    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian', verbose=0)
+    model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
+    model = bn.parameter_learning.fit(model, df, methodtype='linear-gaussian')
 
     # Unconditional samples from a linear-Gaussian network
     df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', seed=0)

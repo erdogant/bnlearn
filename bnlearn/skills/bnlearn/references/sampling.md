@@ -13,7 +13,6 @@
 >     evidence=None,           # optional conditioning dict
 >     do=None,                 # optional interventions (LG / CG)
 >     seed=None,               # continuous / CG sampling
->     verbose=0,
 > )
 > ```
 >
@@ -113,8 +112,7 @@ bn.sampling(
     DAG,
     n=1000,
     methodtype='bayes',
-    evidence=None,
-    verbose=0
+    evidence=None
 )
 ```
 
@@ -126,8 +124,6 @@ Parameters:
 | `n`          | `int`            |    `1000` | Number of samples to generate.                                         |
 | `methodtype` | `str`            | `'bayes'` | Sampling method: `'bayes'` or `'gibbs'`.                               |
 | `evidence`   | `dict` or `None` |    `None` | Evidence used for conditional sampling. Supported only with `'bayes'`. |
-| `verbose`    | `int`            |       `0` | Controls progress and diagnostic output.                               |
-
 ---
 
 # 4. Input Model Requirement
@@ -337,7 +333,7 @@ followed by:
 forward_sample(
     size=n,
     seed=None,
-    show_progress=(verbose >= 3)
+    show_progress=logger.isEnabledFor(logging.INFO)
 )
 ```
 
@@ -972,7 +968,6 @@ edges = [
 # Create Bayesian DAG
 DAG = bn.make_DAG(
     edges,
-    verbose=3,
     methodtype='bayes'
 )
 
@@ -980,7 +975,6 @@ DAG = bn.make_DAG(
 model = bn.parameter_learning.fit(
     DAG,
     df,
-    verbose=3,
     methodtype='bayes'
 )
 
@@ -1236,49 +1230,32 @@ samples.
 
 ---
 
-# 39. Verbosity
+# 39. Logging
 
-The function signature specifies:
-
-```python
-verbose=0
-```
-
-The documented levels are:
-
-```text
-0: None
-1: ERROR
-2: WARN
-3: INFO
-4: DEBUG
-5: TRACE
-```
-
-At:
+Control diagnostic output with:
 
 ```python
-verbose >= 3
+import bnlearn as bn
+bn.set_logger('info')     # default — sampling progress messages
+bn.set_logger('silent')   # suppress log output
 ```
 
-the implementation prints a description of the sampling operation.
-
-For example:
+At INFO level the implementation logs a description of the sampling operation, for example:
 
 ```text
-[bnlearn] >Bayesian forward sampling for 1000 samples..
+Bayesian forward sampling for 1000 samples..
 ```
 
 or:
 
 ```text
-[bnlearn] >Bayesian rejection sampling for 100 samples conditioned on 2 evidence variable(s)..
+Bayesian rejection sampling for 100 samples conditioned on 2 evidence variable(s)..
 ```
 
 or:
 
 ```text
-[bnlearn] >Gibbs sampling for 100 samples..
+Gibbs sampling for 100 samples..
 ```
 
 ---
@@ -1288,7 +1265,7 @@ or:
 For Bayesian forward sampling:
 
 ```python
-show_progress=(verbose >= 3)
+show_progress=logger.isEnabledFor(logging.INFO)
 ```
 
 is passed to pgmpy.

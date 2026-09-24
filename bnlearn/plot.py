@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Plot module.
 
 # ------------------------------------
@@ -23,7 +25,7 @@ from bnlearn.utils import vec2adjmat, adjmat2vec, _normalize_weights
 
 
 # %% Get node properties
-def get_node_properties(model, node_color='#ADD8E6', node_size=None, verbose=3):
+def get_node_properties(model, node_color='#ADD8E6', node_size=None):
     """Collect node properties.
 
     Parameters
@@ -66,7 +68,7 @@ def get_node_properties(model, node_color='#ADD8E6', node_size=None, verbose=3):
     adjmat = model.get('adjmat', None)
 
     if adjmat is not None:
-        if verbose >= 3: print('[bnlearn] >Set node properties.')
+        logger.info('Set node properties.')
         # For each node, use the default node properties.
         for node in adjmat.columns:
             node_property = defaults.copy()
@@ -77,7 +79,7 @@ def get_node_properties(model, node_color='#ADD8E6', node_size=None, verbose=3):
 
 
 # %% Get edge properties
-def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5, verbose=3):
+def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5):
     """Collect edge properties.
 
     Parameters
@@ -92,9 +94,6 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
         The minimum weight of the edge in case of test statistics are used.
     maxscale : float, (Default: 10)
         The maximum weight of the edge in case of test statistics are used.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -157,8 +156,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
             raise KeyError("[bnlearn] >independence_test must contain column 'p_value'.")
         stat_cols = [c for c in indep.columns if c not in ('source', 'target', 'stat_test', 'p_value', 'dof')]
         stat_name = stat_cols[0] if stat_cols else 'independence_test'
-        if verbose >= 3:
-            print('[bnlearn]> Set edge weights based on the [%s] test statistic.' % (stat_name))
+        logger.info('Set edge weights based on the [%s] test statistic.' % (stat_name))
         raw_p = indep['p_value']
         logp = compute_logp(raw_p)
         weights = _normalize_weights(logp.values, minscale=minscale, maxscale=maxscale)
@@ -177,8 +175,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
         return edges
     model_edges = adjmat2vec(adjmat_weight)[['source', 'target']].values
 
-    if verbose >= 3:
-        print('[bnlearn] >Set edge properties.')
+    logger.info('Set edge properties.')
     for u, v in model_edges:
         edge_property = defaults.copy()
         if not isinstance(adjmat_weight.loc[u, v], np.bool_):
@@ -354,8 +351,7 @@ def plot_graphviz(model,
                           'path_color': None,
                           'detect_cycle': False,
                           'ignore_shape': False},
-                  verify_certificate=True,
-                  verbose=3):
+                  verify_certificate=True):
     """Plot a causal or Bayesian network using Graphviz based on an adjacency matrix.
 
     This function visualizes the causal or Bayesian model structure in
@@ -373,7 +369,6 @@ def plot_graphviz(model,
     params : dict, optional
         Visualization parameters (see docstring of bnlearn.plot_graphviz).
     verify_certificate : bool (default: True)
-    verbose : int, optional
 
     Returns
     -------
@@ -383,16 +378,15 @@ def plot_graphviz(model,
 
     dot_graph = None
     if model['adjmat'].sum().sum() == 0:
-        if verbose >= 3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
+        logger.info('Nothing to plot because no edges are present between nodes. ')
         return None
     if model.get('config', {}).get('method') == 'DBN':
-        if verbose >= 3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        logger.info('DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
-    GraphvizPath = setgraphviz(verify_certificate=verify_certificate, verbose=verbose)
+    GraphvizPath = setgraphviz(verify_certificate=verify_certificate)
     if GraphvizPath is None:
-        if verbose >= 1: print('Graphviz is not found in path and can therefore cause an error in producing the dot image.')
-
+        logger.error('Graphviz is not found in path and can therefore cause an error in producing the dot image.')
     defaults = {'prediction_feature_indices': None, 'prediction_target_label': "Y(pred)",
                 'prediction_line_color': "red", 'prediction_coefs': None,
                 'prediction_feature_importance': None, 'path': None, 'path_color': None,
@@ -401,22 +395,21 @@ def plot_graphviz(model,
 
     model = copy.deepcopy(model)
 
-    if verbose >= 3: print(f'[bnlearn] >Setting edge mode to {edge_filter}.')
+    logger.info(f'Setting edge mode to {edge_filter}.')
     indep = model.get('independence_test')
     if indep is not None and edge_filter in ('logp', 'p_value') and 'stat_test' in indep.columns:
         Iloc = indep['stat_test'].astype(bool)
         source = indep['source'].loc[Iloc]
         target = indep['target'].loc[Iloc]
-        if verbose >= 3:
-            print(f'[bnlearn] >Number of significant edges detected: {int(Iloc.sum())}')
+        logger.info(f'Number of significant edges detected: {int(Iloc.sum())}')
         if edge_filter == 'logp':
             logp = compute_logp(indep['p_value'])
-            adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum', verbose=verbose)
+            adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum')
         else:
-            adjmat = vec2adjmat(source, target, weights=indep['p_value'].loc[Iloc], symmetric=True, aggfunc='sum', verbose=verbose)
+            adjmat = vec2adjmat(source, target, weights=indep['p_value'].loc[Iloc], symmetric=True, aggfunc='sum')
     else:
         edges = sum(1 for item in (model.get('model_edges') or []) if isinstance(item, tuple))
-        if verbose >= 3: print(f'[bnlearn] >Number of edges detected: {edges}')
+        logger.info(f'Number of edges detected: {edges}')
         adjmat = model['adjmat'].copy()
 
     node_labels = list(adjmat.T.columns) if edge_filter is not None else None
@@ -440,7 +433,6 @@ def plot(model,
          edge_properties=None,
          params_interactive={'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None},
          params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout_custom', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
-         verbose=3,
          ):
     """
     Plot the learned structure.
@@ -478,9 +470,6 @@ def plot(model,
         layout: 'graphviz_layout_custom', 'graphviz_layout', 'spring_layout',
         'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout',
         'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: Error, 2: Warning, 3: Info (default), 4: Debug, 5: Trace
 
     Returns
     -------
@@ -491,15 +480,15 @@ def plot(model,
 
     fig = None
     if model is None or (model.get('adjmat', None) is None) or model['adjmat'].sum().sum() == 0:
-        if verbose >= 3: print('[bnlearn]> Nothing to plot because no edges are present between nodes. ')
+        logger.info('Nothing to plot because no edges are present between nodes. ')
         return None
 
     if model.get('config', {}).get('method') == 'DBN' and interactive:
-        if verbose >= 3: print('[bnlearn]> DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        logger.info('DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
         return None
 
     if model.get('independence_test', None) is None and edge_filter in ('p_value', 'logp'):
-        if verbose >= 2: print('[bnlearn] >edge_filter p_value/logp require: model=bn.independence_test(model, df)')
+        logger.warning('edge_filter p_value/logp require: model=bn.independence_test(model, df)')
         edge_filter = None
 
     model = copy.deepcopy(model)
@@ -527,8 +516,7 @@ def plot(model,
 
     node_size_default = 10 if interactive else 800
     if (node_properties is not None) and (node_size is not None):
-        if verbose >= 2: print('[bnlearn]> Warning: if both "node_size" and "node_properties" are used, "node_size" will be used.')
-
+        logger.warning('Warning: if both "node_size" and "node_properties" are used, "node_size" will be used.')
     if node_properties is None:
         node_properties = get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
@@ -541,9 +529,7 @@ def plot(model,
             sig_set = set(zip(sig['source'], sig['target']))
             n_before = len(edge_properties)
             edge_properties = {e: p for e, p in edge_properties.items() if e in sig_set}
-            if verbose >= 3:
-                print(f'[bnlearn] >Number of significant edges detected: {len(edge_properties)} (of {n_before})')
-
+            logger.info(f'Number of significant edges detected: {len(edge_properties)} (of {n_before})')
     for key in node_properties.keys():
         if node_properties[key]['node_size'] is None:
             node_properties[key]['node_size'] = node_size_default
@@ -575,28 +561,28 @@ def plot(model,
                 tooltip.append(tip)
 
         fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes,
-                                edgelist, edge_colors, edge_weights, title, tooltip, verbose=verbose)
+                                edgelist, edge_colors, edge_weights, title, tooltip)
     else:
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()) or ('lingam' in model['config']['method']):
-            if verbose >= 3: print('[bnlearn] >Plot based on Bayesian model')
+            logger.info('Plot based on Bayesian model')
             if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                if verbose >= 3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
                 pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
         elif 'networkx' in str(type(bnmodel)):
-            if verbose >= 3: print('[bnlearn] >Plot based on networkx model')
+            logger.info('Plot based on networkx model')
             G = bnmodel
             if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                if verbose >= 3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
                 pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
         else:
-            if verbose >= 3: print('[bnlearn] >Plot based on adjacency matrix')
+            logger.info('Plot based on adjacency matrix')
             G = bn.network.adjmat2graph(model['adjmat'].abs() > 0)
             if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                if verbose >= 3: print('[bnlearn] >Using hierarchical top-down layout (graphviz_layout_custom).')
+                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
                 pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'], verbose=verbose)
+            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
 
         fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos,
                            edge_colors, edge_weights, showplot=params_static['showplot'],
@@ -654,13 +640,12 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
 # %% Interactive plot
 def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes,
-                      edgelist, edge_colors, edge_weights, title, tooltip, verbose=3):
+                      edgelist, edge_colors, edge_weights, title, tooltip):
     from packaging import version
     try:
         from d3blocks import D3Blocks
     except ModuleNotFoundError:
-        if verbose >= 1:
-            raise Exception('[bnlearn] >"d3blocks" library is not installed. Pip install first: "pip install d3blocks"')
+        raise Exception('[bnlearn] >"d3blocks" library is not installed. Pip install first: "pip install d3blocks"')
 
     import d3blocks as d3
     if version.parse(d3.__version__) < version.parse("1.4.9"):

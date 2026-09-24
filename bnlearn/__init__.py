@@ -6,6 +6,22 @@
 import sys
 import platform
 import warnings
+import logging
+
+# Package logger (standard library levels). Default = INFO.
+# set_logger / get_logger live in bnlearn.utils and are re-exported below.
+logging.TRACE = 5
+logging.addLevelName(logging.TRACE, 'TRACE')
+
+logger = logging.getLogger('bnlearn')
+_log_handler = logging.StreamHandler()
+_fmt = '[{asctime}] [{name}] [{levelname}] {message}'
+_formatter = logging.Formatter(fmt=_fmt, style='{', datefmt='%d-%m-%Y %H:%M:%S')
+_log_handler.setFormatter(_formatter)
+_log_handler.setLevel(logging.DEBUG)
+logger.addHandler(_log_handler)
+logger.setLevel(logging.INFO)
+logger.propagate = False
 
 _IS_WINDOWS = platform.system() == "Windows"
 _PYTHON_MAJOR = sys.version_info.major
@@ -68,6 +84,8 @@ from bnlearn.utils import (
     vec2df,
     adjmat2dict,
     _normalize_weights,
+    set_logger,
+    get_logger,
 )
 
 from bnlearn.plot import (
@@ -95,7 +113,7 @@ from packaging import version
 
 __author__ = 'Erdogan Tasksen'
 __email__ = 'erdogant@gmail.com'
-__version__ = '0.15.1'
+__version__ = '0.16.0'
 
 import pgmpy
 # Check version pgmpy
@@ -135,9 +153,13 @@ Example
 -------
 >>> # Import library
 >>> import bnlearn as bn
+>>> bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
+>>> 
 >>> model = bn.import_DAG('sprinkler')
+>>> 
 >>> # Print CPDs
 >>> bn.print_CPD(model)
+>>> 
 >>> # Plot DAG
 >>> bn.plot(model)
 >>>

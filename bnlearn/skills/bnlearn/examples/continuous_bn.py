@@ -41,27 +41,27 @@ print('\n[bnlearn] > Continuous data shape:', df.shape)
 
 
 # %% Structure learning (Gaussian BIC)
-DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=0)
+DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
 print('[bnlearn] > Continuous structure edges:', DAG['model_edges'])
 print('[bnlearn] > data_type:', DAG['config'].get('data_type'))
 
 
 # %% Parameter learning (linear-Gaussian)
-model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian', verbose=0)
+model = bn.parameter_learning.fit(DAG, df, methodtype='linear-gaussian')
 print('[bnlearn] > LG model type:', type(model['model']).__name__)
 print('[bnlearn] > LG CPDs:', len(model['model'].get_cpds()))
 
 
 # %% Inference (conditional mean)
-q = bn.inference.fit(model, variables=['X3'], evidence={'X1': 0.0}, verbose=0)
+q = bn.inference.fit(model, variables=['X3'], evidence={'X1': 0.0})
 print('[bnlearn] > P-mean(X3 | X1=0):', getattr(q, 'means', q))
 
-q_do = bn.inference.fit(model, variables=['X3'], do={'X1': 1.0}, verbose=0)
+q_do = bn.inference.fit(model, variables=['X3'], do={'X1': 1.0})
 print('[bnlearn] > P-mean(X3 | do(X1=1)):', getattr(q_do, 'means', q_do))
 
 
 # %% Sampling
-df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', seed=0, verbose=0)
+df_s = bn.sampling(model, n=100, methodtype='linear-gaussian', seed=0)
 print('[bnlearn] > LG samples shape:', df_s.shape)
 
 
@@ -71,24 +71,24 @@ fail = rng.integers(0, 2, size=n)
 torque = rng.normal(size=n) + fail * 2.0
 df_mix = pd.DataFrame({'fail': fail, 'torque': torque})
 
-DAG_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg', verbose=0)
+DAG_mix = bn.structure_learning.fit(df_mix, methodtype='hc', scoretype='bic-cg')
 print('\n[bnlearn] > Mixed structure edges:', DAG_mix['model_edges'])
 print('[bnlearn] > data_type:', DAG_mix['config'].get('data_type'))
 
-model_mix = bn.parameter_learning.fit(DAG_mix, df_mix, methodtype='cg', verbose=0)
+model_mix = bn.parameter_learning.fit(DAG_mix, df_mix, methodtype='cg')
 print('[bnlearn] > CG continuous_cpds nodes:',
       [c['variable'] for c in (model_mix.get('continuous_cpds') or [])])
 
-q_cg = bn.inference.fit(model_mix, variables=['torque'], evidence={'fail': 1}, verbose=0)
+q_cg = bn.inference.fit(model_mix, variables=['torque'], evidence={'fail': 1})
 print('[bnlearn] > CG torque | fail=1:', getattr(q_cg, 'means', q_cg))
 
-df_cg = bn.sampling(model_mix, n=100, methodtype='cg', seed=0, verbose=0)
+df_cg = bn.sampling(model_mix, n=100, methodtype='cg', seed=0)
 print('[bnlearn] > CG samples shape:', df_cg.shape)
 
 
 # %% Optional: LiNGAM (structure only)
 try:
-    DAG_lingam = bn.structure_learning.fit(df, methodtype='direct-lingam', verbose=0)
+    DAG_lingam = bn.structure_learning.fit(df, methodtype='direct-lingam')
     print('\n[bnlearn] > DirectLiNGAM edges:', DAG_lingam.get('model_edges'))
 except Exception as exc:
     print('\n[bnlearn] > DirectLiNGAM skipped:', type(exc).__name__, exc)

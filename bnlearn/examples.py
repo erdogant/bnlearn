@@ -1,4 +1,25 @@
 # %%
+import bnlearn as bn
+bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
+
+# Load dataset
+df = bn.import_example(data='auto_mpg')
+del df['origin']
+
+# Perform structure learning
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
+
+# Compute edge strength
+model = bn.independence_test(model, df, prune=True)
+
+# Create visualizations
+G = bn.plot(model, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph
+
+
+
+# %%
 # =============================================================================
 # DO CALCULUS
 # =============================================================================
@@ -174,18 +195,18 @@ df = pd.DataFrame({
     'C': C,
 })
 
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g', verbose=3)
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
 print(model['model_edges'])
 print(model['structure_scores'])
 bn.plot(model)
 
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g', verbose=3)
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
 print(model['model_edges'])
 print(model['structure_scores'])
 bn.plot(model)
 
 
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g', verbose=3)
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
 print(model['model_edges'])
 print(model['structure_scores'])
 bn.plot(model)
@@ -204,7 +225,7 @@ scoretype = 'bic-g'
 # scoretype = 'loglik-g'
 
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype=scoretype, verbose=3)
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype=scoretype)
 
 # Compute edge strength
 model = bn.independence_test(model, df)
@@ -221,7 +242,7 @@ model = bn.parameter_learning.fit(model, df)
 # bn.print_CPD(model)
 
 # Make inference
-q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
+q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70})
 
 
 # %%
@@ -328,7 +349,7 @@ model = bn.make_DAG(edges)
 DAG = model['model']
 CPDs = {}
 for cpd in DAG.get_cpds():
-    CPDs[cpd.variable] = bn.query2df(cpd, verbose=0)['p']
+    CPDs[cpd.variable] = bn.query2df(cpd)['p']
 
 # Plot the DAG
 # bn.plot(model)
@@ -816,7 +837,7 @@ cii_tests = ['chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey
 
 for cii_test in cii_tests:
     # Learn the DAG in data using hillclimbsearch and BIC
-    model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic', params_pc={'ci_test': cii_test,'alpha': 0.05}, verbose=3)
+    model = bn.structure_learning.fit(df, methodtype='pc', scoretype='bic', params_pc={'ci_test': cii_test,'alpha': 0.05})
     # model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'ci_test':'freeman_tuckey','alpha': 0.05})
 
     # Compute edge weights using ChiSquare independence test.
@@ -1011,7 +1032,7 @@ model = bn.parameter_learning.fit(model, df)
 bn.print_CPD(model)
 
 # Make inference
-q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70}, verbose=3)
+q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year': 70})
 
 
 # %% Get mpg dataset, and manually discritize dataset. Also use distfit for discritizing
@@ -1314,45 +1335,45 @@ G = bn.plot(model, interactive=True)
 # %% compute causalities
 import bnlearn as bn
 # Load asia DAG
-df = bn.import_example('asia', verbose=0)
+df = bn.import_example('asia')
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 # print(df)
 
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0, scoretype='bic', methodtype='hc')
-model = bn.structure_learning.fit(df, verbose=0, scoretype='k2', methodtype='hc')
+model = bn.structure_learning.fit(df, scoretype='bic', methodtype='hc')
+model = bn.structure_learning.fit(df, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
-DAG = bn.plot(model, verbose=0, interactive=False)
-bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+DAG = bn.plot(model, interactive=False)
+bn.plot(model, interactive=True, node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
-bn.plot(model, verbose=0, interactive=False, pos=DAG['pos'])
-bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+bn.plot(model, interactive=False, pos=DAG['pos'])
+bn.plot(model, interactive=True, node_color='#000000')
 
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
 
 # Learn its parameters from data and perform the inference.
-model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
-model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes')
+model = bn.parameter_learning.fit(model, df, methodtype='bayes')
 # Print the CPDs
 bn.print_CPD(model_with_CPD)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-bn.compare_networks(model_with_CPD, model, verbose=0)
+bn.compare_networks(model_with_CPD, model)
 
 # Make inference
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1}, verbose=3)
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1}, verbose=3)
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1})
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1})
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1})
 
-# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0}, verbose=3)
-# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1}, verbose=3)
+# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0})
+# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1})
 q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
 
 # pd.DataFrame(index=q4.variables, data=q4.values, columns=q4.variables)
@@ -1496,7 +1517,7 @@ Xy_train = Xy_train.dropna(axis=0)
 tarvar=['Survived']
 model = bn.structure_learning.fit(Xy_train, methodtype='tan', class_node = 'Survived')
 model = bn.parameter_learning.fit(model, Xy_train, methodtype='bayes', scoretype='bdeu')
-y_train_pred = bn.predict(model, Xy_train, variables = tarvar, verbose=4)
+y_train_pred = bn.predict(model, Xy_train, variables = tarvar)
 
 
 # %% issue #84
@@ -1561,7 +1582,7 @@ adjmat = bn.vec2adjmat(source, target, weights=repeats)
 df = bn.vec2df(source, target, weights=repeats)
 df = bn.adjmat2vec(adjmat)
 # Make DAG
-DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
+DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
 bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 # bn.plot(DAG, interactive=True)
@@ -1611,7 +1632,7 @@ print(model_mle["model"].get_cpds("mpg"))
 print("Weight categories: ", df_disc["weight"].dtype.categories)
 evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
 print(evidence)
-print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence, verbose=0))
+print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence))
 
 
 
@@ -1629,7 +1650,7 @@ for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofsw
 import bnlearn as bn
 df = bn.import_example()
 # df = pd.read_csv('sprinkler_data.csv')
-model = bn.structure_learning.fit(df, verbose=0)
+model = bn.structure_learning.fit(df)
 
 # Set some colors to the edges and nodes
 node_properties = bn.get_node_properties(model)
@@ -1808,11 +1829,11 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Rain', 'Wet_Grass')]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=3, methodtype='markov')
-model = bn.parameter_learning.fit(DAG, df, verbose=3, methodtype='bayes')
+DAG = bn.make_DAG(edges, , methodtype='markov')
+model = bn.parameter_learning.fit(DAG, df, , methodtype='bayes')
 
 # Sampling
-df = bn.sampling(model, n=100, methodtype='gibbs', verbose=3)
+df = bn.sampling(model, n=100, methodtype='gibbs')
 
 # Print CPDs
 bn.print_CPD(model)
@@ -1823,21 +1844,21 @@ bn.plot(model)
 
 # %%
 import bnlearn as bn
-model = bn.import_DAG('water', verbose=0)
+model = bn.import_DAG('water')
 # Sampling
-df = bn.sampling(model, n=1000, methodtype='bayes', verbose=3)
+df = bn.sampling(model, n=1000, methodtype='bayes')
 
 
 # %% Naive Bayesian model
 import bnlearn as bn
 df = bn.import_example('random_discrete')
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='hc', verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='cs', verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='cl', verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='tan', root_node="A", class_node="B", verbose=4, n_jobs=1)
-model = bn.structure_learning.fit(df, methodtype='ex', verbose=4, n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='hc', n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='cs', n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='cl', n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node="A", class_node="B", n_jobs=1)
+model = bn.structure_learning.fit(df, methodtype='ex', n_jobs=1)
 model = bn.independence_test(model, df, prune=True)
 # Plot
 bn.plot(model)
@@ -1856,7 +1877,7 @@ bn.plot(model)
  
 # %% LOAD BIF FILE
 import bnlearn as bn
-DAG = bn.import_DAG('water', verbose=0)
+DAG = bn.import_DAG('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -1885,11 +1906,11 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Rain', 'Wet_Grass')]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0, methodtype='bayes')
-model = bn.parameter_learning.fit(DAG, df, verbose=3)
+DAG = bn.make_DAG(edges, methodtype='bayes')
+model = bn.parameter_learning.fit(DAG, df)
 bn.print_CPD(DAG)
 
-model = bn.parameter_learning.fit(DAG, df, verbose=3)
+model = bn.parameter_learning.fit(DAG, df)
 bn.print_CPD(model)
 bn.plot(model)
 
@@ -1904,7 +1925,7 @@ weights=[1,2,1,3]
 # Convert into sparse datamatrix
 df = bn.vec2df(source, target, weights=weights)
 # Make DAG
-DAG = bn.make_DAG(list(zip(source, target)), verbose=0)
+DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
 bn.plot(DAG, interactive=True)
 bn.plot(DAG, interactive=False)
@@ -1918,13 +1939,13 @@ raw = bn.import_example('stormofswords')
 df = bn.vec2adjmat(raw['source'], raw['target'], raw['weight'])
 # df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])), verbose=0)
+DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])))
 # Make plot
 bn.plot(DAG, interactive=True)
 bn.plot(DAG, interactive=False)
 
 # Parameter learning
-model = bn.parameter_learning.fit(DAG, df, verbose=3)
+model = bn.parameter_learning.fit(DAG, df)
 # Structure learning
 DAG_learned = bn.structure_learning.fit(df.iloc[:, 0:50])
 # Keep only significant edges
@@ -1951,13 +1972,13 @@ query.df
 import bnlearn as bn
 df = bn.import_example()
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
 bn.plot(model, interactive=False, node_size=10)
 
 
 # %% Check the stochastic component of bnlearn
-DAG = bn.import_DAG('sprinkler', verbose=0)
+DAG = bn.import_DAG('sprinkler')
 df = bn.import_example('sprinkler')
 adjmats = []
 
@@ -1979,7 +2000,7 @@ print(adjmat.sum(axis=0))
 # %% LOAD BIF FILE
 
 # Example 1: Plot the TRUE DAG
-DAG_1 = bn.import_DAG('sprinkler', verbose=0)
+DAG_1 = bn.import_DAG('sprinkler')
 graph = bn.plot(DAG_1)
 
 graph = bn.plot(DAG_1, params_static={'layout':'kamada_kawai_layout'})
@@ -1998,7 +2019,7 @@ bn.plot(DAG_3, pos=graph['pos'])
 
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('water', verbose=0)
+DAG = bn.import_DAG('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2212,7 +2233,7 @@ bn.plot(model, interactive=False, node_properties=node_properties, edge_properti
 
 df = bn.import_example()
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
 bn.plot(model, interactive=True, node_size=10)
 
@@ -2387,7 +2408,7 @@ bn.plot(model, node_color='#000000')
 
 df = bn.import_example()
 # Structure learning
-model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain', verbose=0)
+model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
 bn.plot(model, interactive=True, node_size=10)
 
@@ -2411,13 +2432,13 @@ edges = [('smoke', 'lung'),
 
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0, methodtype='bayes')
-model = bn.parameter_learning.fit(DAG, df, verbose=3)
+DAG = bn.make_DAG(edges, methodtype='bayes')
+model = bn.parameter_learning.fit(DAG, df)
 # Generate some data based on DAG
 df = bn.sampling(model, n=1000)
 # Make predictions
 Pout = bn.predict(model, df, variables=['bronc', 'xray'])
-# query = bnlearn.inference.fit(model, variables=['bronc','xray'], evidence=evidence, to_df=False, verbose=0)
+# query = bnlearn.inference.fit(model, variables=['bronc','xray'], evidence=evidence, to_df=False)
 # print(query)
 
 
@@ -2431,7 +2452,7 @@ edges = [('1', '2'),
          ]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0)
+DAG = bn.make_DAG(edges)
 # Plot
 bn.plot(DAG, node_size=2000)
 # Topological ordering
@@ -2440,7 +2461,7 @@ bn.topological_sort(DAG)
 bn.topological_sort(DAG, '3')
 
 # %%
-DAG = bn.import_DAG('sprinkler', verbose=0)
+DAG = bn.import_DAG('sprinkler')
 
 bn.topological_sort(DAG, 'Rain')
 bn.topological_sort(DAG)
@@ -2452,7 +2473,7 @@ bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
 # %%
 
 DAG = bn.import_DAG('sprinkler')
-df = bn.sampling(DAG, n=1000, verbose=0)
+df = bn.sampling(DAG, n=1000)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
 bn.topological_sort(model, 'Rain')
@@ -2465,41 +2486,41 @@ model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_DAG('sprinkler', verbose=0)
-df = bn.sampling(DAG, n=1000, verbose=0)
+DAG = bn.import_DAG('sprinkler')
+df = bn.sampling(DAG, n=1000)
 
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0)
+model = bn.structure_learning.fit(df)
 # Plot
 node_properties = bn.get_node_properties(model)
 G = bn.plot(model)
-model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 
 node_properties['Cloudy']['node_size']=2000
 node_properties['Cloudy']['node_color']='r'
 G = bn.plot(model, node_properties=node_properties)
 
 # %% Chow-Liu algorithm
-DAG = bn.import_DAG('sprinkler', verbose=0)
-df = bn.sampling(DAG, n=1000, verbose=0)
+DAG = bn.import_DAG('sprinkler')
+df = bn.sampling(DAG, n=1000)
 
 # Structure learning
-model_hc_bic = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy', verbose=0)
+model_hc_bic = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_DAG('alarm', verbose=0)
+DAG = bn.import_DAG('alarm')
 to_vector = bn.adjmat2vec(DAG['adjmat'])
 to_adjmat = bn.vec2adjmat(to_vector['source'], to_vector['target'])
 
 # %% Load example dataframe from sprinkler
 df = bn.import_example('sprinkler')
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0)
+model = bn.structure_learning.fit(df)
 # Plot
-G = bn.plot(model, verbose=0)
+G = bn.plot(model)
 
-model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic', verbose=0)
+model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 
 # %% Try all methods vs score types
 df = bn.import_example()
@@ -2514,17 +2535,17 @@ model_cs_k2 = bn.structure_learning.fit(df, methodtype='cs', scoretype='k2')
 model_cs_bdeu = bn.structure_learning.fit(df, methodtype='cs', scoretype='bdeu')
 model_cl = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 
-G = bn.plot(model_hc_bic, verbose=0)
+G = bn.plot(model_hc_bic)
 
-bn.compare_networks(model_hc_bic, model_cl, pos=G['pos'], verbose=0)
+bn.compare_networks(model_hc_bic, model_cl, pos=G['pos'])
 
 # %% Example with dataset
-DAG = bn.import_DAG('sprinkler', verbose=3)
+DAG = bn.import_DAG('sprinkler')
 # Print cpds
 bn.print_CPD(DAG)
 # plot ground truth
-G = bn.plot(DAG, verbose=0)
-df = bn.sampling(DAG, n=100, verbose=3)
+G = bn.plot(DAG)
+df = bn.sampling(DAG, n=100)
 
 # %% Inference using custom DAG
 # Load asia DAG
@@ -2542,12 +2563,12 @@ edges = [('smoke', 'lung'),
 # ('bronc', 'lung')]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, verbose=0)
+DAG = bn.make_DAG(edges)
 bn.save(DAG, overwrite=True)
 DAG1 = bn.load()
 
 # Plot the DAG
-bn.plot(DAG1, verbose=0)
+bn.plot(DAG1)
 # Print the CPDs
 bn.print_CPD(DAG)
 
@@ -2555,7 +2576,7 @@ bn.print_CPD(DAG)
 # df_sampling = bn.sampling(DAG, n=1000)
 
 # Learn its parameters from data and perform the inference.
-DAG = bn.parameter_learning.fit(DAG, df, verbose=3)
+DAG = bn.parameter_learning.fit(DAG, df)
 # Print the CPDs
 bn.print_CPD(DAG)
 
@@ -2563,8 +2584,8 @@ bn.print_CPD(DAG)
 df_sampling = bn.sampling(DAG, n=1000)
 
 # Make inference
-q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke': 1}, verbose=3)
-q2 = bn.inference.fit(DAG, variables=['bronc'], evidence={'smoke': 1}, verbose=0)
+q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke': 1})
+q2 = bn.inference.fit(DAG, variables=['bronc'], evidence={'smoke': 1})
 q3 = bn.inference.fit(DAG, variables=['lung'], evidence={'smoke': 1, 'bronc': 1})
 q4 = bn.inference.fit(DAG, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0})
 q4 = bn.inference.fit(DAG, variables=['bronc', 'lung'], evidence={'smoke': 0, 'xray': 0})
@@ -2598,42 +2619,42 @@ print(out)
 
 # %% compute causalities
 # Load asia DAG
-df = bn.import_example('asia', verbose=0)
+df = bn.import_example('asia')
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 # print(df)
 
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0, scoretype='bic', methodtype='hc')
-model = bn.structure_learning.fit(df, verbose=0, scoretype='k2', methodtype='hc')
+model = bn.structure_learning.fit(df, scoretype='bic', methodtype='hc')
+model = bn.structure_learning.fit(df, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
-bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+bn.plot(model, interactive=True, node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
-bn.plot(model, verbose=0, interactive=True, node_color='#000000')
+bn.plot(model, interactive=True, node_color='#000000')
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
 
 # Learn its parameters from data and perform the inference.
-model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
-model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
+model_with_CPD = bn.parameter_learning.fit(model, df, methodtype='bayes')
+model = bn.parameter_learning.fit(model, df, methodtype='bayes')
 # Print the CPDs
 bn.print_CPD(model_with_CPD)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-bn.compare_networks(model_with_CPD, model, verbose=0)
+bn.compare_networks(model_with_CPD, model)
 
 # Make inference
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1}, verbose=3)
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1}, verbose=3)
-q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1}, verbose=3)
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1})
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1})
+q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1, 'bronc':1, 'xray':1})
 
-# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0}, verbose=3)
-# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1}, verbose=3)
+# q4 = bn.inference.fit(model_with_CPD, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0})
+# q4 = bn.inference.fit(DAG, variables=['bronc','lung','xray'], evidence={'smoke':1})
 q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
 
 # pd.DataFrame(index=q4.variables, data=q4.values, columns=q4.variables)
@@ -2647,7 +2668,7 @@ G = bn.plot(DAG)
 df = bn.sampling(DAG, n=10000)
 
 # Structure learning
-model = bn.structure_learning.fit(df, verbose=0)
+model = bn.structure_learning.fit(df)
 # Structure learning of sampled dataset
 model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
@@ -2681,7 +2702,7 @@ DAG = bn.import_DAG('sprinkler')
 
 # Read raw data and process
 df_raw = bn.import_example(data='sprinkler')
-df = bn.df2onehot(df_raw, verbose=0)[1]
+df = bn.df2onehot(df_raw)[1]
 df.columns=df.columns.str.replace('_1.0', '')
 
 # Learn structure
@@ -2699,7 +2720,7 @@ q2.name_to_no
 q2.no_to_name,
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('asia', verbose=0)
+DAG = bn.import_DAG('asia')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2765,8 +2786,8 @@ G = bn.plot(DAG, interactive=True)
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, dfnum)
 # Make inference
-q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': True, 'Pclass': True}, verbose=0)
-q2 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': 0}, verbose=0)
+q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': True, 'Pclass': True})
+q2 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': 0})
 
 print(q1)
 print(q1.df)

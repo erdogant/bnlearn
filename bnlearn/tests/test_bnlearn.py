@@ -20,25 +20,25 @@ def test_get_parents():
     assert result == expected
 
 def test_generate_cpt_no_parents():
-    cpt = bn.generate_cpt('X', parents=[], variable_card=2, verbose=0)
+    cpt = bn.generate_cpt('X', parents=[], variable_card=2)
     assert isinstance(cpt, TabularCPD)
     assert cpt.variable == 'X'
     assert cpt.variable_card == 2
 
 def test_generate_cpt_with_parents_uniform():
-    cpt = bn.generate_cpt('Y', parents=['X'], variable_card=3, verbose=0)
+    cpt = bn.generate_cpt('Y', parents=['X'], variable_card=3)
     assert cpt.variable_card == 3
     expected = [[1/3]*3 for _ in range(3)]
     np.testing.assert_array_almost_equal(cpt.values, expected)
 
 def test_generate_cpt_with_rulebook_binary():
     rulebook = {'Z': lambda x: 0.9 if x == 1 else 0.2}
-    cpt = bn.generate_cpt('Z', parents=['X'], variable_card=2, rulebook=rulebook, verbose=0)
+    cpt = bn.generate_cpt('Z', parents=['X'], variable_card=2, rulebook=rulebook)
     np.testing.assert_array_almost_equal(cpt.values, [[0.8, 0.1], [0.2, 0.9]])
 
 def test_build_cpts_from_structure():
     edges = [('A', 'B'), ('A', 'C')]
-    cpts = bn.build_cpts_from_structure(edges, variable_card=2, verbose=0)
+    cpts = bn.build_cpts_from_structure(edges, variable_card=2)
     assert len(cpts) == 3
     assert all(isinstance(cpt, TabularCPD) for cpt in cpts)
 
@@ -98,12 +98,12 @@ def test_QUERY():
     i = 0
     for variables in variables_list:
         for evidences in evidences_list:
-            query = bn.inference.fit(model_as_p, variables=variables, evidence=evidences, to_df=True, verbose=0)
+            query = bn.inference.fit(model_as_p, variables=variables, evidence=evidences, to_df=True)
             assert query.df.shape == sizes[i]
             assert list(query.df.columns) == variables + ['p']
             i = i + 1
 
-    query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'SibSp'], evidence={'Survived': 0, 'Pclass': 1}, to_df=True, verbose=0)
+    query = bn.inference.fit(model_as_p, variables=['Sex', 'Parch', 'SibSp'], evidence={'Survived': 0, 'Pclass': 1}, to_df=True)
     q = bn.query2df(query, variables=['SibSp', 'Sex'])
     assert q.shape == (48, 3)
     assert list(q.columns) == ['SibSp', 'Sex', 'p']
@@ -119,11 +119,11 @@ def test_import_DAG():
     # TEST 3:
     assert 'bayesiannetwork' in str(type(DAG['model'])).lower()
     # TEST 4:
-    # DAG = bn.import_DAG('alarm', verbose=0)
+    # DAG = bn.import_DAG('alarm')
     # assert DAG.keys() == {'model', 'adjmat'}
-    # DAG = bn.import_DAG('andes', verbose=0)
+    # DAG = bn.import_DAG('andes')
     # assert DAG.keys() == {'model', 'adjmat'}
-    # DAG = bn.import_DAG('asia', verbose=0)
+    # DAG = bn.import_DAG('asia')
     # assert DAG.keys() == {'model', 'adjmat'}
 
 
@@ -155,7 +155,7 @@ def test_print_cpd_propagates_conversion_errors(monkeypatch):
 
     monkeypatch.setattr(bnlearn_module, 'query2df', fail_conversion)
     with pytest.raises(RuntimeError, match='conversion failed'):
-        bn.print_CPD(model, verbose=0)
+        bn.print_CPD(model)
 
 
 @pytest.fixture
@@ -250,24 +250,24 @@ def test_sampling_evidence_possibility_check_does_not_underflow(monkeypatch):
 #     # TEST 1:
 #     randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
 #     n = np.random.randint(0, len(randdata))
-#     DAG = bn.import_DAG(randdata[n], CPD=False, verbose=0)
+#     DAG = bn.import_DAG(randdata[n], CPD=False)
 #     assert (DAG['adjmat'].sum().sum() * 2) == bn.to_undirected(DAG['adjmat']).sum().sum()
 
 
 def test_compare_networks():
-    DAG = bn.import_DAG('sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler')
     G = bn.compare_networks(DAG, DAG, showfig=False)
     assert np.all(G[0] == [[12, 0], [0, 4]])
 
 
 def test_adjmat2vec():
-    DAG = bn.import_DAG('sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler')
     out = bn.adjmat2vec(DAG['adjmat'])
     assert np.all(out['source'] == ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain'])
 
 
 def test_vec2adjmat():
-    DAG = bn.import_DAG('sprinkler', verbose=0)
+    DAG = bn.import_DAG('sprinkler')
     out = bn.adjmat2vec(DAG['adjmat'])
     # TEST: conversion
     assert bn.vec2adjmat(out['source'], out['target']).shape == DAG['adjmat'].shape
@@ -288,20 +288,20 @@ def test_parameter_learning():
 
 def test_inference():
     DAG = bn.import_DAG('sprinkler')
-    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
     assert q1.df is None
-    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=True, verbose=0)
+    q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=True)
     assert q1.df is not None
 
 
 def test_query2df():
     DAG = bn.import_DAG('sprinkler')
-    query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False, verbose=0)
+    query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False)
     df = bn.query2df(query)
     assert df.shape == (2, 2)
     assert np.all(df.columns == ['Wet_Grass', 'p'])
-    query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain': 1, 'Cloudy': 1}, to_df=False, verbose=0)
+    query = bn.inference.fit(DAG, variables=['Wet_Grass', 'Sprinkler'], evidence={'Rain': 1, 'Cloudy': 1}, to_df=False)
     df = bn.query2df(query)
     assert np.all(np.isin(df.columns, ['Sprinkler', 'Wet_Grass', 'p']))
     assert df.shape == (4, 3)
@@ -317,7 +317,7 @@ def test_query2df():
     # Parameter learning
     model = bn.parameter_learning.fit(DAG, dfnum)
     # Make inference
-    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': True, 'Pclass': True}, verbose=0)
+    q1 = bn.inference.fit(model, variables=['Survived'], evidence={'Sex': True, 'Pclass': True})
     df = bn.query2df(q1)
     assert np.all(df == q1.df)
     assert df.shape == (3, 2)
@@ -331,8 +331,8 @@ def test_query2df():
 #              ('bronc', 'xray')]
 
 #     # Make the actual Bayesian DAG
-#     DAG = bn.make_DAG(edges, verbose=0)
-#     model = bn.parameter_learning.fit(DAG, df, verbose=3)
+#     DAG = bn.make_DAG(edges)
+#     model = bn.parameter_learning.fit(DAG, df)
 #     # Generate some data based on DAG
 #     Xtest = bn.sampling(model, n=100)
 #     out = bn.predict(model, Xtest, variables=['bronc', 'xray'])
@@ -378,7 +378,7 @@ def test_topological_sort():
 #              ('bronc', 'xray')]
 
 #     # Make the actual Bayesian DAG
-#     DAG = bn.make_DAG(edges, verbose=0)
+#     DAG = bn.make_DAG(edges)
 #     # Save the DAG
 #     bn.save(DAG, overwrite=True)
 #     # Load the DAG
@@ -390,7 +390,7 @@ def test_topological_sort():
 #             assert np.all(DAG[key] == DAGload[key])
 
 #     # Learn its parameters from data and perform the inference.
-#     model = bn.parameter_learning.fit(DAG, df, verbose=0)
+#     model = bn.parameter_learning.fit(DAG, df)
 #     # Save the DAG
 #     bn.save(model, overwrite=True)
 #     # Load the DAG

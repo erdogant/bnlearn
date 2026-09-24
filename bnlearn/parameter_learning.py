@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Parameter learning.
 
 Overview
@@ -35,7 +37,7 @@ warnings.filterwarnings("ignore")
 
 
 # %% Parameter learning
-def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
+def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1):
     """Learn the parameters given the DAG and data.
 
     Fit overview
@@ -104,8 +106,6 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
         The smoothing value (α) for Bayesian parameter estimation. Should be Nonnegative.
     n_jobs : int, (default: -1)
         Parallel jobs where supported.
-    verbose : int, (default: 3)
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -133,7 +133,6 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
 
     """
     config = {}
-    config['verbose'] = verbose
     config['method'] = methodtype
     config['n_jobs'] = n_jobs
     adjmat = model['adjmat']
@@ -146,14 +145,12 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
     # Automatically set methodtype for DBN
     if structure_config.get('method') == 'DBN' or model.get('methodtype', {}) == 'DBN':
         config['method'] = 'DBN'
-        if verbose >= 3:
-            print('[bnlearn] >Methodtype is set to DynamicBayesianNetwork (DBN)')
-
+        logger.info('Methodtype is set to DynamicBayesianNetwork (DBN)')
     # Filter dataframe to adjacency variables (except DBN)
     if config['method'] == 'DBN':
         df = adjmat
     else:
-        df = bnlearn._filter_df(adjmat, copy.deepcopy(df), verbose=config['verbose'])
+        df = bnlearn._filter_df(adjmat, copy.deepcopy(df))
 
     # Detect data types for auto / routing
     var_types = infer_data_type(df) if config['method'] != 'DBN' else {'dtype': 'discrete', 'discrete': [], 'continuous': []}
@@ -169,12 +166,8 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
             config['method'] = 'cg'
         else:
             config['method'] = 'bayes'
-        if verbose >= 3:
-            print('[bnlearn] >methodtype="auto" -> [%s] for %s data' % (config['method'], config['data_type']))
-
-    if config['verbose'] >= 3:
-        print('[bnlearn] >Parameter learning> Computing parameters using [%s]' % (config['method']))
-
+        logger.info('methodtype="auto" -> [%s] for %s data' % (config['method'], config['data_type']))
+    logger.info('Parameter learning> Computing parameters using [%s]' % (config['method']))
     # Extract underlying graph object when still a bnlearn dict
     model_obj = model['model'] if isinstance(model, dict) else model
 
@@ -184,22 +177,19 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
     # --- Discrete MLE ---
     if config['method'] in ('ml', 'maximumlikelihood'):
         if 'BayesianNetwork' not in str(type(model_obj)):
-            if config['verbose'] >= 3:
-                print('[bnlearn] >Converting [%s] to BayesianNetwork model.' % (str(type(model_obj))))
-            model_obj = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
+            logger.info('Converting [%s] to BayesianNetwork model.' % (str(type(model_obj))))
+            model_obj = bnlearn.to_bayesiannetwork(adjmat)
         model_obj.fit(df, estimator=None)
         for cpd in model_obj.get_cpds():
-            if config['verbose'] >= 2:
-                print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+            logger.info("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
         out_model = model_obj
 
     # --- Discrete Bayesian ---
     elif config['method'] == 'bayes':
         if 'BayesianNetwork' not in str(type(model_obj)):
-            if config['verbose'] >= 3:
-                print('[bnlearn] >Converting [%s] to BayesianNetwork model.' % (str(type(model_obj))))
-            model_obj = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
+            logger.info('Converting [%s] to BayesianNetwork model.' % (str(type(model_obj))))
+            model_obj = bnlearn.to_bayesiannetwork(adjmat)
         estimator = DiscreteBayesianEstimator(
             prior_type=scoretype,
             equivalent_sample_size=1000,
@@ -208,43 +198,38 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
         )
         model_obj.fit(df, estimator=estimator)
         for cpd in model_obj.get_cpds():
-            if config['verbose'] >= 2:
-                print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+            logger.info("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
         out_model = model_obj
 
     # --- Dynamic BN ---
     elif config['method'] == 'DBN':
         model_obj.fit(df, estimator='MLE')
         for cpd in model_obj.get_cpds():
-            if config['verbose'] >= 2:
-                print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+            logger.info("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
         out_model = model_obj
 
     # --- Pure continuous: Linear Gaussian ---
     elif config['method'] in ('linear-gaussian', 'lg'):
-        if config['data_type'] != 'continuous' and verbose >= 2:
-            print('[bnlearn] >Warning: linear-gaussian expects all-continuous data; detected %s.' % config['data_type'])
-        out_model = _fit_linear_gaussian(adjmat, df, verbose=verbose)
+        if config['data_type'] != 'continuous':
+            logger.warning('linear-gaussian expects all-continuous data; detected %s.' % config['data_type'])
+        out_model = _fit_linear_gaussian(adjmat, df)
         for cpd in out_model.get_cpds():
-            if config['verbose'] >= 2:
-                print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+            logger.info("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
 
     # --- Mixed: Conditional Gaussian ---
     elif config['method'] in ('cg', 'conditional-gaussian'):
         if config['data_type'] == 'continuous':
-            if verbose >= 2:
-                print('[bnlearn] >Data are fully continuous; using linear-gaussian instead of cg.')
+            logger.warning('Data are fully continuous; using linear-gaussian instead of cg.')
             config['method'] = 'linear-gaussian'
-            out_model = _fit_linear_gaussian(adjmat, df, verbose=verbose)
+            out_model = _fit_linear_gaussian(adjmat, df)
         elif config['data_type'] == 'discrete':
-            if verbose >= 2:
-                print('[bnlearn] >Data are fully discrete; using bayes instead of cg.')
+            logger.warning('Data are fully discrete; using bayes instead of cg.')
             config['method'] = 'bayes'
             if 'BayesianNetwork' not in str(type(model_obj)):
-                model_obj = bnlearn.to_bayesiannetwork(adjmat, verbose=config['verbose'])
+                model_obj = bnlearn.to_bayesiannetwork(adjmat)
             estimator = DiscreteBayesianEstimator(
                 prior_type=scoretype,
                 equivalent_sample_size=1000,
@@ -263,12 +248,10 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
                 scoretype=scoretype,
                 smooth=smooth,
                 n_jobs=config['n_jobs'],
-                verbose=verbose,
             )
 
     else:
-        if config['verbose'] >= 2:
-            print("[bnlearn] >Warning: methodtype [%s] is unknown. Returning None." % (config['method']))
+        logger.warning("Warning: methodtype [%s] is unknown. Returning None." % (config['method']))
         return None
 
     out = {}
@@ -286,22 +269,18 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1, 
 
     # structure_scores expects a discrete-style model for some scorers; skip on pure LG/CG failures
     try:
-        out['structure_scores'] = bnlearn.structure_scores(out, df, verbose=verbose)
+        out['structure_scores'] = bnlearn.structure_scores(out, df)
     except Exception:
         out['structure_scores'] = None
-        if verbose >= 4:
-            print('[bnlearn] >structure_scores not available for this model type.')
-
+        logger.debug('structure_scores not available for this model type.')
     return out
 
 
 # %% Linear-Gaussian parameter learning (pure continuous)
-def _fit_linear_gaussian(adjmat, df, verbose=3):
+def _fit_linear_gaussian(adjmat, df):
     """Fit a LinearGaussianBayesianNetwork on continuous data."""
     edges, nodes = edges_and_nodes_from_adjmat(adjmat)
-    if verbose >= 3:
-        print('[bnlearn] >Fitting LinearGaussianBayesianNetwork (%d nodes, %d edges)' % (len(nodes), len(edges)))
-
+    logger.info('Fitting LinearGaussianBayesianNetwork (%d nodes, %d edges)' % (len(nodes), len(edges)))
     model = LinearGaussianBayesianNetwork(edges)
     model.add_nodes_from(nodes)
     # Ensure numeric continuous data
@@ -310,16 +289,16 @@ def _fit_linear_gaussian(adjmat, df, verbose=3):
         raise ValueError('[bnlearn] >Linear-Gaussian parameter learning requires finite numeric values.')
 
     model.fit(df_num, estimator=LinearGaussianMLE())
-    _validate_linear_gaussian(model, verbose=verbose)
+    _validate_linear_gaussian(model)
     return model
 
 
-def _validate_linear_gaussian(model, verbose=3):
+def _validate_linear_gaussian(model):
     """Check LinearGaussianBayesianNetwork parameter consistency."""
     try:
         ok = model.check_model()
-        if verbose >= 3 and ok:
-            print('[bnlearn] >Linear-Gaussian model check: OK')
+        if ok:
+            logger.info('Linear-Gaussian model check: OK')
     except Exception as err:
         raise ValueError('[bnlearn] >Linear-Gaussian model validation failed: %s' % err)
 
@@ -412,7 +391,7 @@ def _fit_cg_continuous_node(variable, parents, df, discrete_cols, continuous_col
     }
 
 
-def _fit_conditional_gaussian(adjmat, df, discrete_cols, continuous_cols, method_discrete='bayes', scoretype='bdeu', smooth=None, n_jobs=-1, verbose=3):
+def _fit_conditional_gaussian(adjmat, df, discrete_cols, continuous_cols, method_discrete='bayes', scoretype='bdeu', smooth=None, n_jobs=-1):
     """Fit mixed / Conditional Gaussian parameters.
 
     Discrete nodes: standard TabularCPDs on the discrete subgraph (parents must be discrete).
@@ -427,10 +406,10 @@ def _fit_conditional_gaussian(adjmat, df, discrete_cols, continuous_cols, method
     # Warn on discrete nodes with continuous parents (not standard CG)
     for node in discrete_cols:
         cont_pars = [p for p in parent_map.get(node, []) if p in continuous_cols]
-        if cont_pars and verbose >= 2:
-            print('[bnlearn] >Warning: discrete node "%s" has continuous parents %s; '
-                  'standard CG assumes discrete nodes have only discrete parents. '
-                  'Those edges are ignored for the discrete CPT.' % (node, cont_pars))
+        if cont_pars:
+            logger.warning('discrete node "%s" has continuous parents %s; '
+                           'standard CG assumes discrete nodes have only discrete parents. '
+                           'Those edges are ignored for the discrete CPT.' % (node, cont_pars))
 
     # Discrete sub-model
     disc_edges = [(u, v) for u, v in edges if u in discrete_cols and v in discrete_cols]
@@ -449,12 +428,10 @@ def _fit_conditional_gaussian(adjmat, df, discrete_cols, continuous_cols, method
                 n_jobs=n_jobs,
             )
             discrete_model.fit(df_disc, estimator=estimator)
-        if verbose >= 3:
-            print('[bnlearn] >Fitted discrete CPTs for %d nodes' % len(discrete_cols))
+        logger.info('Fitted discrete CPTs for %d nodes' % len(discrete_cols))
         for cpd in discrete_model.get_cpds():
-            if verbose >= 2:
-                print("[bnlearn] >CPD of {variable}:".format(variable=cpd.variable))
-                print(cpd)
+            logger.info("CPD of {variable}:".format(variable=cpd.variable))
+            print(cpd)
 
     # Continuous / CG local parameters
     continuous_cpds = []
@@ -462,17 +439,16 @@ def _fit_conditional_gaussian(adjmat, df, discrete_cols, continuous_cols, method
         parents = parent_map.get(node, [])
         local = _fit_cg_continuous_node(node, parents, df, discrete_cols, continuous_cols)
         continuous_cpds.append(local)
-        if verbose >= 2:
-            n_cfg = len(local['configs'])
-            print('[bnlearn] >CG CPD of %s: %d configuration(s), cont_parents=%s, disc_parents=%s'
-                  % (node, n_cfg, local['cont_parents'], local['disc_parents']))
+        n_cfg = len(local['configs'])
+        logger.info('CG CPD of %s: %d configuration(s), cont_parents=%s, disc_parents=%s'
+                    % (node, n_cfg, local['cont_parents'], local['disc_parents']))
 
-    _validate_cg_parameters(continuous_cpds, verbose=verbose)
+    _validate_cg_parameters(continuous_cpds)
 
     return discrete_model, continuous_cpds
 
 
-def _validate_cg_parameters(continuous_cpds, verbose=3):
+def _validate_cg_parameters(continuous_cpds):
     """Validate CG local continuous parameters."""
     for local in continuous_cpds:
         var = local['variable']
@@ -487,7 +463,6 @@ def _validate_cg_parameters(continuous_cpds, verbose=3):
                     '[bnlearn] >CG beta length mismatch for %s config %s: expected %d, got %d'
                     % (var, key, n_beta_expected, len(beta))
                 )
-    if verbose >= 3:
-        print('[bnlearn] >Conditional-Gaussian parameter check: OK (%d continuous nodes)' % len(continuous_cpds))
+    logger.info('Conditional-Gaussian parameter check: OK (%d continuous nodes)' % len(continuous_cpds))
     return True
 

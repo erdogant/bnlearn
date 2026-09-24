@@ -384,7 +384,7 @@ Making inferences can be performed using the fitted model. Note that the evidenc
     # {'weight': Interval(2959.5, 3657.5, closed='right')}
 
     # Perform inference
-    print(bn.inference.fit(model, variables=["mpg"], evidence=evidence, verbose=0))
+    print(bn.inference.fit(model, variables=["mpg"], evidence=evidence))
 
 .. table::
 

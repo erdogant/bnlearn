@@ -6,9 +6,71 @@
 # Licence     : See licences
 # ------------------------------------
 
+import logging
 import numpy as np
 import pandas as pd
 from ismember import ismember
+
+logger = logging.getLogger('bnlearn')
+
+# Optional TRACE level (also registered in bnlearn.__init__)
+if not hasattr(logging, 'TRACE'):
+    logging.TRACE = 5
+    logging.addLevelName(logging.TRACE, 'TRACE')
+
+
+def set_logger(verbose='info'):
+    """Set the bnlearn logger level.
+
+    Parameters
+    ----------
+    verbose : str or int or None
+        * None, 0, 'silent', 'off' -> nothing
+        * 'error' / 40
+        * 'warning' / 30
+        * 'info' / 20  (default)
+        * 'debug' / 10
+        * 'trace' / 5
+        Legacy ints 1..5 (error..trace) are still accepted.
+    """
+    if verbose is None or verbose in (0, 'silent', 'off', 'no', 'None'):
+        level = logging.CRITICAL + 1
+    elif isinstance(verbose, str):
+        name = verbose.strip().lower()
+        mapping = {
+            'critical': logging.CRITICAL,
+            'error': logging.ERROR,
+            'warning': logging.WARNING,
+            'warn': logging.WARNING,
+            'info': logging.INFO,
+            'debug': logging.DEBUG,
+            'trace': getattr(logging, 'TRACE', 5),
+        }
+        if name not in mapping:
+            raise ValueError(f'[bnlearn] Unknown log level: {verbose}')
+        level = mapping[name]
+    elif isinstance(verbose, int):
+        if verbose >= 10:
+            level = verbose
+        else:
+            legacy = {
+                1: logging.ERROR,
+                2: logging.WARNING,
+                3: logging.INFO,
+                4: logging.DEBUG,
+                5: getattr(logging, 'TRACE', 5),
+                6: logging.CRITICAL + 1,
+            }
+            level = legacy.get(verbose, logging.INFO)
+    else:
+        raise TypeError(f'[bnlearn] verbose must be str, int, or None; got {type(verbose)}')
+    logger.setLevel(level)
+    return level
+
+
+def get_logger():
+    """Return the bnlearn package logger."""
+    return logger
 
 # %%  Convert vector into sparse dataframe
 def vec2df(source, target, weights=None):
@@ -66,7 +128,7 @@ def vec2df(source, target, weights=None):
 
 
 # %%  Convert source/target vectors into adjacency matrix
-def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='sum', verbose=3) -> pd.DataFrame:
+def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='sum') -> pd.DataFrame:
     """Convert source and target into adjacency matrix.
 
     Parameters
@@ -103,17 +165,13 @@ def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='su
         raise ValueError('[bnlearn] >Source and Target should have equal elements.')
     if weights is None:
         weights = [1] * len(source)
-    if verbose >= 3:
-        print('[bnlearn] >Converting source-target into adjacency matrix..')
-
+    logger.info('Converting source-target into adjacency matrix..')
     df = pd.DataFrame(np.c_[source, target], columns=['source', 'target'])
     adjmat = pd.crosstab(df['source'], df['target'], values=weights, aggfunc=aggfunc).fillna(0)
     nodes = np.unique(list(adjmat.columns.values) + list(adjmat.index.values))
 
     if symmetric:
-        if verbose >= 3:
-            print('[bnlearn] >Making the matrix symmetric..')
-
+        logger.info('Making the matrix symmetric..')
         IA, _ = ismember(nodes, adjmat.columns.values)
         node_columns = nodes[~IA]
         if len(node_columns) > 0:
@@ -126,8 +184,7 @@ def vec2adjmat(source, target, weights=None, symmetric: bool = True, aggfunc='su
             df_new_rows = pd.DataFrame(0, index=node_rows, columns=adjmat.columns)
             adjmat = pd.concat([adjmat, df_new_rows], axis=0)
 
-        if verbose >= 4:
-            print('[bnlearn] >Order columns and rows.')
+        logger.debug('Order columns and rows.')
         _, IB = ismember(adjmat.columns.values, adjmat.index.values)
         adjmat = adjmat.iloc[IB, :]
         adjmat.index.name = 'source'

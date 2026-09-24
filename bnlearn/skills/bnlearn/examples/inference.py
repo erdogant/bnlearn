@@ -33,7 +33,7 @@ edges = [
 ]
 
 # make_DAG installs default (uniform) TabularCPDs when CPD is omitted.
-model = bn.make_DAG(edges, verbose=0)
+model = bn.make_DAG(edges)
 print('[bnlearn] > Nodes:', list(model['model'].nodes()))
 print('[bnlearn] > Edges:', list(model['model'].edges()))
 print('[bnlearn] > CPDs:', len(model['model'].get_cpds()))
@@ -45,9 +45,7 @@ print('[bnlearn] > CPDs:', len(model['model'].get_cpds()))
 query = bn.inference.fit(
     model,
     variables=['D'],
-    evidence={},
-    verbose=0,
-)
+    evidence={})
 print('\nP(D):')
 print(query.df)
 
@@ -56,9 +54,7 @@ print(query.df)
 query = bn.inference.fit(
     model,
     variables=['D'],
-    evidence={'A': 1},
-    verbose=0,
-)
+    evidence={'A': 1})
 print('\nP(D | A=1):')
 print(query.df)
 
@@ -67,18 +63,16 @@ print(query.df)
 query = bn.inference.fit(
     model,
     variables=['D'],
-    evidence={'A': 1, 'B': 1},
-    verbose=0,
-)
+    evidence={'A': 1, 'B': 1})
 print('\nP(D | A=1, B=1):')
 print(query.df)
 
 
 # %% Note
 # To estimate CPDs from data instead of default uniforms:
-#   df = bn.sampling(model, n=2000, methodtype='bayes', verbose=0)
-#   model = bn.parameter_learning.fit(model, df, methodtype='bayes', verbose=0)
-#   query = bn.inference.fit(model, variables=['D'], evidence={'A': 1}, verbose=0)
+#   df = bn.sampling(model, n=2000, methodtype='bayes')
+#   model = bn.parameter_learning.fit(model, df, methodtype='bayes')
+#   query = bn.inference.fit(model, variables=['D'], evidence={'A': 1})
 
 # %% Continuous (linear-Gaussian) inference
 import numpy as np
@@ -89,11 +83,11 @@ n = 300
 x = rng.normal(size=n)
 y = 1.5 * x + rng.normal(scale=0.4, size=n)
 df_c = pd.DataFrame({'X': x, 'Y': y})
-DAG_c = bn.structure_learning.fit(df_c, methodtype='hc', scoretype='bic-g', verbose=0)
-model_c = bn.parameter_learning.fit(DAG_c, df_c, methodtype='linear-gaussian', verbose=0)
-q_c = bn.inference.fit(model_c, variables=['Y'], evidence={'X': 0.0}, verbose=0)
+DAG_c = bn.structure_learning.fit(df_c, methodtype='hc', scoretype='bic-g')
+model_c = bn.parameter_learning.fit(DAG_c, df_c, methodtype='linear-gaussian')
+q_c = bn.inference.fit(model_c, variables=['Y'], evidence={'X': 0.0})
 print('\nContinuous P-mean(Y | X=0):', getattr(q_c, 'means', q_c))
-q_do = bn.inference.fit(model_c, variables=['Y'], do={'X': 1.0}, verbose=0)
+q_do = bn.inference.fit(model_c, variables=['Y'], do={'X': 1.0})
 print('Continuous P-mean(Y | do(X=1)):', getattr(q_do, 'means', q_do))
 
 

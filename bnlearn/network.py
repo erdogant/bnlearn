@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Functionalities for network creation, clustering and plotting."""
 # ------------------------------------
 # Name        : network.py
@@ -19,13 +21,11 @@ from ismember import ismember
 import bnlearn
 
 # %% Make graph from adjacency matrix
-def to_graph(adjmat, verbose=3):
+def to_graph(adjmat):
     assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
     config = dict()
-    config['verbose'] = verbose
-
     adjmat = is_DataFrame(adjmat)
-    if config['verbose']>=3: print('[bnlearn] >Making graph')
+    logger.info('Making graph')
     G=nx.from_pandas_adjacency(adjmat)
 
     return(G)
@@ -61,9 +61,8 @@ def adjmat2graph(adjmat):
     return(G)
 
 # %% Compute similarity matrix
-def compute_centrality(G, centrality='betweenness', verbose=3):
-    if verbose>=3: print('[bnlearn] >Computing centrality %s' %(centrality))
-
+def compute_centrality(G, centrality='betweenness'):
+    logger.info('Computing centrality %s' %(centrality))
     if centrality=='betweenness':
         bb=nx.centrality.betweenness_centrality(G)
     elif centrality=='closeness':
@@ -93,8 +92,7 @@ def compute_centrality(G, centrality='betweenness', verbose=3):
     elif centrality=='information':
         bb=nx.centrality.information_centrality(G)
     else:
-        print('[bnlearn] >Error: Centrality <%s> does not exist!' %(centrality))
-
+        logger.error('Error: Centrality <%s> does not exist!' %(centrality))
     # Set the attributes
     score=np.array([*bb.values()])
     nx.set_node_attributes(G, bb, centrality)
@@ -102,8 +100,8 @@ def compute_centrality(G, centrality='betweenness', verbose=3):
     return(G, score)
 
 # %% compute clusters
-def cluster(G, verbose=3):
-    if verbose>=3: print('[bnlearn] >Clustering using best partition')
+def cluster(G):
+    logger.info('Clustering using best partition')
     # Partition
     partition=community.best_partition(G)
     # Set property to node
@@ -115,15 +113,12 @@ def cluster(G, verbose=3):
     return(G, labx)
 
 # %% Compute cluster comparison
-def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', layout='spring_layout', verbose=3):
+def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', layout='spring_layout'):
     config=dict()
     config['showfig']=showfig
     config['width']=width
     config['height']=height
-    config['verbose']=verbose
-
-    if verbose>=3: print('[bnlearn] >Compute a dozen of centralities and clusterlabels')
-
+    logger.info('Compute a dozen of centralities and clusterlabels')
     # compute labx for each of the centralities
     centralities=['betweenness', 'closeness', 'eigenvector', 'degree', 'edge', 'harmonic', 'katz', 'local', 'out_degree', 'percolation', 'second_order', 'subgraph', 'subgraph_exp', 'information']
 
@@ -150,20 +145,18 @@ def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodt
     return(G, df)
 
 # %% Make plot
-def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype=None, layout='spring_layout', verbose=3):
+def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype=None, layout='spring_layout'):
     # https://networkx.github.io/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html
     config = {}
     config['filename']=filename
     config['width']=width
     config['height']=height
-    config['verbose']=verbose
     config['node_size_scale']=node_size_scale
 
-    if verbose>=3: print('[bnlearn] >Creating network plot')
-
+    logger.info('Creating network plot')
     ##### DEPRECATED IN LATER VERSION #####
     if methodtype is not None:
-        if verbose>=2: print('[bnlearn] >Methodtype will be removed in future version. Please use "layout" instead')
+        logger.warning('Methodtype will be removed in future version. Please use "layout" instead')
         if methodtype=='circular':
             layout = 'draw_circular'
         elif methodtype=='kawai':
@@ -177,7 +170,7 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
 
     # scaling node sizes
     if config['node_size_scale']!=None and 'numpy' in str(type(node_size)):
-        if verbose>=3: print('[bnlearn] >Scaling node sizes')
+        logger.info('Scaling node sizes')
         node_size=minmax_scale(node_size, feature_range=(node_size_scale[0], node_size_scale[1]))
 
     # Setup figure
@@ -189,7 +182,7 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
         layout_func = getattr(nx, layout)
         layout_func(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
     except:
-        if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The [spring_layout] is used instead.' %(layout))
+        logger.warning('Warning: [%s] layout not found. The [spring_layout] is used instead.' %(layout))
         nx.spring_layout(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
 
     # if methodtype=='circular':
@@ -205,7 +198,7 @@ def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25
 
     # Savefig
     if not isinstance(config['filename'], type(None)):
-        if verbose>=3: print('[bnlearn] >Saving figure')
+        logger.info('Saving figure')
         plt.savefig(config['filename'])
 
     return(fig)
@@ -216,7 +209,7 @@ def normalize_size(getsizes, minscale=0.1, maxscale=4):
     return(getsizes)
 
 # %% Convert dataframe to Graph
-def df2G(df_nodes, df_edges, verbose=3):
+def df2G(df_nodes, df_edges):
     # Put edge information in G
     #    G = nx.from_pandas_edgelist(df_edges, 'source', 'target', ['weight', 'edge_weight','edge_width','source_label','target_label'])
 
@@ -233,7 +226,7 @@ def df2G(df_nodes, df_edges, verbose=3):
     return(G)
 
 # %% Convert Graph to dataframe
-def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minmax=[1, 100], verbose=3):
+def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minmax=[1, 100]):
     # Nodes
     df_node_names=pd.DataFrame([*G.nodes], columns=['node_name'])
     df_node_props=pd.DataFrame([*G.nodes.values()])
@@ -293,7 +286,7 @@ def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minma
     return(df_nodes, df_edges)
 
 # %% Make plot
-def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default', verbose=3):
+def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default'):
     import networkx as nx
     from bokeh.io import show, output_file
     from bokeh.models import Plot, Range1d, MultiLine, Circle, HoverTool, BoxZoomTool, ResetTool
@@ -327,7 +320,7 @@ def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[2
     show(plot)
 
 # %% Comparison of two networks
-def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, layout='spring_layout', verbose=3):
+def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, layout='spring_layout'):
     # Make sure columns and indices to match
     [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
     [IAcol, IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
@@ -354,8 +347,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
         classnames=['Disconnected', 'Connected'],
         title='',
         cmap=plt.cm.Blues,
-        showfig=showfig,
-        verbose=0
+        showfig=showfig
     )
 
     # Setup graph
@@ -368,7 +360,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
         #    G_true = adjmat2graph(adjmat_true)
         G_diff = adjmat2graph(adjmat_diff)
         # Graph layout
-        pos = graphlayout(G_diff, pos=pos, scale=1, layout=layout, verbose=verbose)
+        pos = graphlayout(G_diff, pos=pos, scale=1, layout=layout)
         # Bootup figure
         plt.figure(figsize=(width, height))
         # nodes
@@ -393,7 +385,7 @@ def compare_networks(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15,
     return(scores, adjmat_diff)
 
 # %% Make graph layout
-def graphlayout(G, pos, scale=1, layout='graphviz_layout', verbose=3):
+def graphlayout(G, pos, scale=1, layout='graphviz_layout'):
     if pos is None:
         if layout is not None:
             try:
@@ -412,17 +404,16 @@ def graphlayout(G, pos, scale=1, layout='graphviz_layout', verbose=3):
                     layout_func = getattr(nx, layout)
                     pos = layout_func(G, scale=scale)
             except:
-                if verbose>=2: print('[bnlearn] >Warning: [%s] layout not found. The layout [spring_layout] is used instead.' %(layout))
+                logger.warning('Warning: [%s] layout not found. The layout [spring_layout] is used instead.' %(layout))
                 pos = nx.spring_layout(G, scale=scale)
         else:
             pos = nx.spring_layout(G, scale=scale)
     else:
-        if verbose>=3: print('[bnlearn] >Existing coordinates from <pos> are used.')
-
+        logger.info('Existing coordinates from <pos> are used.')
     return pos
 
 # %% Convert to pandas dataframe
-def is_DataFrame(data, verbose=0):
+def is_DataFrame(data):
     if isinstance(data, list):
         data=pd.DataFrame(data)
     elif isinstance(data, np.ndarray):

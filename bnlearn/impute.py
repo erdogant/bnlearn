@@ -4,10 +4,12 @@ from sklearn.impute import KNNImputer
 from sklearn.neighbors import NearestNeighbors
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
+import logging
+logger = logging.getLogger("bnlearn")
 
 
 # %% Impute
-def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True, verbose=3):
+def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True):
     """Impute missing values.
 
     Impute missing values in a DataFrame using KNN imputation for numeric columns. String columns are not included in the encoding.
@@ -32,8 +34,6 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
     scaling : bool
         True: standardize numerical variables before learning NN model to determine the missing category.
         False: Use data as is.
-    verbose : int, optional
-        Level of verbosity to control printed messages during execution. Higher values give more detailed logs (default is 3).
 
     Returns
     -------
@@ -45,7 +45,6 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
     -----
     - String columns are encoded to numerical values using LabelEncoder for imputation and decoded back after the imputation process.
     - The function automatically identifies numeric columns and handles conversion to appropriate data types if necessary.
-    - The `verbose` parameter allows controlling how much detail is printed out for tracking the progress of imputation.
 
     Examples
     --------
@@ -87,7 +86,7 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
     return df_imputed
 
 
-def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=True, verbose=3):
+def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=True):
     """Impute missing values using Multiple Imputation by Chained Equations (MICE).
 
     Impute missing values in a DataFrame using MICE imputation for numeric columns. String columns are not included in the encoding.
@@ -107,8 +106,6 @@ def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=T
     scaling : bool
         True: standardize numerical variables before learning NN model to determine the missing category.
         False: Use data as is.
-    verbose : int, optional
-        Level of verbosity to control printed messages during execution. Higher values give more detailed logs (default is 3).
 
     Returns
     -------
@@ -120,7 +117,6 @@ def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=T
     -----
     - String columns are encoded to numerical values using LabelEncoder for imputation and decoded back after the imputation process.
     - The function automatically identifies numeric columns and handles conversion to appropriate data types if necessary.
-    - The `verbose` parameter allows controlling how much detail is printed out for tracking the progress of imputation.
     - MICE is an iterative imputation method that models each feature with missing values as a function of other features.
 
     Examples
@@ -241,7 +237,7 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, scaling=True):
     return df
 
 
-def _typing(df, string_columns, verbose=3):
+def _typing(df, string_columns):
     # Convert string columns to categorical and then encode them
     if string_columns is not None:
         if isinstance(string_columns, str):
@@ -255,9 +251,9 @@ def _typing(df, string_columns, verbose=3):
         try:
             if (string_columns is None) or (not np.isin(col, string_columns)):
                 df[col] = df[col].astype(float)
-                if verbose>=4: print(f'[bnlearn] >float: {col}')
+                logger.debug(f'float: {col}')
         except (TypeError, ValueError):
-            if verbose>=4: print(f'[bnlearn] >Category forced: {col}')
+            logger.debug(f'Category forced: {col}')
             if string_columns is None: string_columns = []
             string_columns = string_columns + [col]
             df[col] = df[col].astype(str)

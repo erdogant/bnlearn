@@ -244,8 +244,7 @@ bn.structure_learning.fit(
         'ci_test': 'chi_square',
         'alpha': 0.05
     },
-    n_jobs=-1,
-    verbose=3
+    n_jobs=-1
 )
 ```
 
@@ -1570,8 +1569,7 @@ The implementation calls:
 ```python
 bnlearn.structure_scores(
     out,
-    df,
-    verbose=verbose
+    df
 )
 ```
 
@@ -2207,9 +2205,6 @@ This is often the easiest representation for inspecting a discovered graph.
 
 The default is:
 
-```python
-verbose=3
-```
 
 The supported levels are:
 

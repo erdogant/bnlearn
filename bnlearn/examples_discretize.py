@@ -60,6 +60,6 @@ print(model_mle["model"].get_cpds("mpg"))
 print("Weight categories: ", df_disc["weight"].dtype.categories)
 evidence = {"weight": bn.discretize_value(df_disc["weight"], 3000.0)}
 print(evidence)
-print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence, verbose=0))
+print(bn.inference.fit(model_mle, variables=["mpg"], evidence=evidence))
 
 # %%

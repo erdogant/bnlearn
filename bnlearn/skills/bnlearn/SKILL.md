@@ -361,8 +361,7 @@ relationships.
 model = bn.structure_learning.fit(
     df,
     methodtype='pc',                 # or 'cs'
-    params_pc={'ci_test': 'chi_square', 'alpha': 0.05},
-)
+    params_pc={'ci_test': 'chi_square', 'alpha': 0.05})
 ```
 
 Use this approach when conditional independence testing is central to the
@@ -523,8 +522,7 @@ query = bn.inference.fit(
     model,
     variables=['Y'],
     evidence={'X': 1},
-    to_df=True,
-)
+    to_df=True)
 # query.df has columns = variables + 'p'
 ```
 
@@ -544,8 +542,7 @@ Interventional problem (Pearl's do-operator):
 query = bn.inference.fit(
     model,
     variables=['Y'],
-    do={'X': 1},
-)
+    do={'X': 1})
 # P(Y | do(X = 1))
 ```
 
@@ -712,8 +709,7 @@ q_mix = bn.inference.fit(
     model,
     variables=['Wet_Grass'],
     do={'Sprinkler': 1},
-    evidence={'Rain': 1},
-)
+    evidence={'Rain': 1})
 ```
 
 Rules:
@@ -832,9 +828,7 @@ model = bn.structure_learning.fit(
     params_pc={'ci_test': 'chi_square', 'alpha': 0.05},
     params_lingam={'random_state': None, 'prior_knowledge': None,
                    'apply_prior_knowledge_softly': False, 'measure': 'pwling'},
-    n_jobs=-1,
-    verbose=3,
-)
+    n_jobs=-1)
 ```
 
 ### Supported `methodtype` values
@@ -900,9 +894,7 @@ model = bn.parameter_learning.fit(
     methodtype='bayes',    # 'bayes' | 'ml' | 'maximumlikelihood'
     scoretype='bdeu',      # used by some estimators
     smooth=None,
-    n_jobs=-1,
-    verbose=3,
-)
+    n_jobs=-1)
 ```
 
 - `methodtype='bayes'` → Bayesian parameter estimation (recommended when counts are low).
@@ -925,7 +917,6 @@ query = bn.inference.fit(
     joint=True,
     groupby=None,
     plot=False,
-    verbose=3,
     do=None,                   # interventional assignment, e.g. {'Sprinkler': 1}
 )
 ```
@@ -972,8 +963,7 @@ DAG = bn.make_DAG(edges, CPD=CPD)
 query = bn.inference.fit(
     DAG,
     variables=['Wet_Grass'],
-    evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1},
-)
+    evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 ```
 
 ---
@@ -986,7 +976,6 @@ df_samples = bn.sampling(
     n=1000,
     methodtype='bayes',        # 'bayes' | 'gibbs'
     evidence=None,             # optional conditioning dict
-    verbose=0,
 )
 ```
 
@@ -1005,7 +994,6 @@ yhat = bn.predict(
     variables,       # target variable name(s) but must be in of df.columns
     to_df=True,
     method='max',    # 'max' (MAP) or probability
-    verbose=3,
 )
 ```
 
@@ -1019,9 +1007,7 @@ DAG = bn.make_DAG(
     edges,                     # list of (parent, child) tuples
     CPD=None,                  # optional list of TabularCPD
     methodtype='bayes',        # 'bayes' | 'naivebayes' | 'DBN' | 'markov'
-    checkmodel=True,
-    verbose=3,
-)
+    checkmodel=True)
 
 # Generate uniform placeholder CPDs for a structure
 CPDs = bn.build_cpts_from_structure(edges, variable_card=2)
@@ -1046,8 +1032,7 @@ model = bn.independence_test(
     model, df,
     test='chi_square',   # also: 'pearsonr', 'g_sq', 'log_likelihood', ...
     alpha=0.05,
-    prune=True,
-)
+    prune=True)
 
 # Discretize continuous columns given a structure
 # continuous_columns must be a list of column names that are continuous
@@ -1055,8 +1040,7 @@ df_disc = bn.discretize(
     df,
     edges,
     continuous_columns=['Age', 'Income'],
-    max_iterations=8,
-)
+    max_iterations=8)
 
 # One-hot / numeric encoding helper
 dfhot, dfnum = bn.df2onehot(df)

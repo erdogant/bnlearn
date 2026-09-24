@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """Learning Discrete Bayesian Networks from Continuous Data.
 
 This paper introduces a principled Bayesian discretization method for continuous
@@ -492,8 +494,7 @@ def bn_discretizer_iteration_converge(
     discrete_index: List[int],
     continuous_index: List[int],
     cut_time: int,
-    approx=False,
-    verbose=3):
+    approx=False):
 
     # initial the first data_integer
     l_card: int = data.iloc[:, discrete_index].nunique().max()
@@ -507,7 +508,7 @@ def bn_discretizer_iteration_converge(
     disc_edge_collect = [[] for _ in continuous_index]
 
     for times in range(cut_time):
-        if verbose>=3: print('[bnlearn] >Discretizer for continuous values. Iteration [%d].' %(times))
+        logger.info('Discretizer for continuous values. Iteration [%d].' %(times))
         disc_edge_previous = disc_edge_collect
 
         data_integer, disc_edge_collect = one_iteration(data, data_integer, graph, discrete_index, continuous_index, l_card, approx)
@@ -535,7 +536,7 @@ def K2_w_discretization():
     pass
 
 
-def discretize_all(data_matrix: pd.DataFrame, graph: Graph, continuous_index: List[int], cut_time: int, verbose=3):
+def discretize_all(data_matrix: pd.DataFrame, graph: Graph, continuous_index: List[int], cut_time: int):
     """
     discretize continuous variables in a Bayesian network for which
     the network structure is known in advance
@@ -571,7 +572,6 @@ def discretize_all(data_matrix: pd.DataFrame, graph: Graph, continuous_index: Li
         sort_continuous,
         cut_time,
         False,
-        verbose=verbose,
     )
 
     reorder_edge = sort_disc_by_vorder(sort_continuous, edge)

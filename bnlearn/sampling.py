@@ -1,3 +1,5 @@
+import logging
+logger = logging.getLogger("bnlearn")
 """This is a module of bnlearn for the generation of synthetic data."""
 # ------------------------------------
 # Name        : sampling.py
@@ -33,7 +35,7 @@ def _patched_from_records(cls, data, *args, **kwargs):
 pd.DataFrame.from_records = _patched_from_records
 
 # %% Sampling from model
-def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None, verbose=0):
+def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None):
     """Generate synthetic data using the joint distribution of the network.
 
     Parameters
@@ -62,9 +64,6 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None,
         underlying model supports it). The default is None.
     seed : int, optional
         Random seed for continuous / CG sampling.
-    verbose : int, optional
-        Print progress to screen. The default is 3.
-        0: None, 1: ERROR, 2: WARN, 3: INFO (default), 4: DEBUG, 5: TRACE
 
     Returns
     -------
@@ -92,11 +91,11 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None,
     >>>         ('Rain', 'Wet_Grass')]
     >>>
     >>> # Make the actual Bayesian DAG
-    >>> DAG = bn.make_DAG(edges, verbose=3, methodtype='bayes')
+    >>> DAG = bn.make_DAG(edges, methodtype='bayes')
     >>> # Fit model
-    >>> model = bn.parameter_learning.fit(DAG, df, verbose=3, methodtype='bayes')
+    >>> model = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
     >>> # Sampling using gibbs
-    >>> df = bn.sampling(model, n=100, methodtype='gibbs', verbose=0)
+    >>> df = bn.sampling(model, n=100, methodtype='gibbs')
     >>>
     >>> # Example 3: Conditional sampling
     >>>
@@ -119,11 +118,11 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None,
 
     # --- Continuous: Linear Gaussian ---
     if methodtype in ('linear-gaussian', 'lg'):
-        return _sample_linear_gaussian(DAG, n=n, evidence=evidence, do=do, seed=seed, verbose=verbose)
+        return _sample_linear_gaussian(DAG, n=n, evidence=evidence, do=do, seed=seed)
 
     # --- Mixed: Conditional Gaussian ---
     if methodtype in ('cg', 'conditional-gaussian'):
-        return _sample_cg(DAG, n=n, evidence=evidence, do=do, seed=seed, verbose=verbose)
+        return _sample_cg(DAG, n=n, evidence=evidence, do=do, seed=seed)
 
     # --- Discrete (original path) ---
     if 'bayesiannetwork' not in str(type(DAG['model'])).lower():
@@ -135,18 +134,18 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None,
     if methodtype=='bayes':
         infer_model = BayesianModelSampling(DAG['model'])
         if evidence is None:
-            if verbose>=3: print('[bnlearn] >Bayesian forward sampling for %.0d samples..' %(n))
-            df = infer_model.forward_sample(size=n, seed=None, show_progress=(verbose>=3))
+            logger.info('Bayesian forward sampling for %.0d samples..' %(n))
+            df = infer_model.forward_sample(size=n, seed=None, show_progress=logger.isEnabledFor(logging.INFO))
         else:
             states = _evidence_as_states(evidence, DAG['model'])
             if not _evidence_is_possible(evidence, DAG['model']):
                 raise ValueError('[bnlearn] >evidence %s has zero probability under the model. Rejection sampling cannot produce matching samples.' %(evidence))
-            if verbose>=3: print('[bnlearn] >Bayesian rejection sampling for %.0d samples conditioned on %.0d evidence variable(s)..' %(n, len(states)))
-            df = infer_model.rejection_sample(evidence=states, size=n, seed=None, show_progress=(verbose>=3))
+            logger.info('Bayesian rejection sampling for %.0d samples conditioned on %.0d evidence variable(s)..' %(n, len(states)))
+            df = infer_model.rejection_sample(evidence=states, size=n, seed=None, show_progress=logger.isEnabledFor(logging.INFO))
     elif methodtype=='gibbs':
         if evidence is not None:
             raise ValueError("[bnlearn] >Gibbs sampling does not support conditioning on evidence. Use methodtype='bayes' together with evidence=... for conditional (rejection) sampling.")
-        if verbose>=3: print('[bnlearn] >Gibbs sampling for %.0d samples..' %(n))
+        logger.info('Gibbs sampling for %.0d samples..' %(n))
         # Gibbs sampling
         gibbs = GibbsSampling(DAG['model'])
         df = gibbs.sample(size=n, seed=None)
@@ -155,17 +154,16 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None,
     return df
 
 
-def _sample_linear_gaussian(DAG, n=1000, evidence=None, do=None, seed=None, verbose=0):
+def _sample_linear_gaussian(DAG, n=1000, evidence=None, do=None, seed=None):
     """Sample from a fitted LinearGaussianBayesianNetwork."""
     lg = DAG['model']
     if not isinstance(lg, LinearGaussianBayesianNetwork) and 'LinearGaussian' not in type(lg).__name__:
         raise ValueError('[bnlearn] >linear-gaussian sampling requires a LinearGaussianBayesianNetwork.')
-    if verbose >= 3:
-        print('[bnlearn] >Linear-Gaussian sampling for %.0d samples..' % n)
+    logger.info('Linear-Gaussian sampling for %.0d samples..' % n)
     return lg.simulate(n_samples=n, do=do or None, evidence=evidence or None, seed=seed)
 
 
-def _sample_cg(DAG, n=1000, evidence=None, do=None, seed=None, verbose=0):
+def _sample_cg(DAG, n=1000, evidence=None, do=None, seed=None):
     """Sample mixed CG: discrete forward/rejection, then continuous local Gaussians."""
     from bnlearn.inference import _cg_cpd_map, _cg_mean_std
 
@@ -179,9 +177,7 @@ def _sample_cg(DAG, n=1000, evidence=None, do=None, seed=None, verbose=0):
     discrete_cols = list(cfg.get('discrete_cols') or [])
     continuous_cols = list(cfg.get('continuous_cols') or list(cpd_map.keys()))
 
-    if verbose >= 3:
-        print('[bnlearn] >Conditional-Gaussian sampling for %.0d samples..' % n)
-
+    logger.info('Conditional-Gaussian sampling for %.0d samples..' % n)
     # Discrete part
     if disc_model is not None and discrete_cols:
         disc_do = {k: v for k, v in do.items() if k in discrete_cols}
@@ -194,13 +190,13 @@ def _sample_cg(DAG, n=1000, evidence=None, do=None, seed=None, verbose=0):
         if samp_ev:
             try:
                 states = _evidence_as_states(samp_ev, m)
-                df_disc = sampler.rejection_sample(evidence=states, size=n, seed=seed, show_progress=verbose >= 3)
+                df_disc = sampler.rejection_sample(evidence=states, size=n, seed=seed, show_progress=logger.isEnabledFor(logging.INFO))
             except Exception:
-                df_disc = sampler.forward_sample(size=n, seed=seed, show_progress=verbose >= 3)
+                df_disc = sampler.forward_sample(size=n, seed=seed, show_progress=logger.isEnabledFor(logging.INFO))
                 for k, v in samp_ev.items():
                     df_disc[k] = v
         else:
-            df_disc = sampler.forward_sample(size=n, seed=seed, show_progress=verbose >= 3)
+            df_disc = sampler.forward_sample(size=n, seed=seed, show_progress=logger.isEnabledFor(logging.INFO))
     else:
         df_disc = pd.DataFrame(index=range(n))
 
@@ -247,8 +243,7 @@ def _sample_cg(DAG, n=1000, evidence=None, do=None, seed=None, verbose=0):
             break
 
     for v in pending:
-        if verbose >= 2:
-            print('[bnlearn] >Warning: could not sample CG node "%s".' % v)
+        logger.warning('Warning: could not sample CG node "%s".' % v)
         df[v] = np.nan
     return df
 
