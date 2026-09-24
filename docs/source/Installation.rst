@@ -114,16 +114,18 @@ The simplest way to install bnlearn skills in your working directory is:
 
 .. code-block:: console
 
-    bnlearn install skill 
+    bnlearn install skill
 
 Change the harness with the -harness argument:
 Default: claude but opencode agents or any other name is allowed.
 
 .. code-block:: console
-     
-     bnlearn install skill --harness opencode
-    
-    
+
+bnlearn install skill --harness opencode
+bnlearn install skill --harness opencode --global
+bnlearn install skill --global
+
+
 Troubleshooting Import Errors
 -----------------------------
 
@@ -139,7 +141,7 @@ If you're using Jupyter Notebook or Google Colab, you might encounter a NumPy ve
 This error occurs because ``bnlearn`` requires NumPy version 1.24.1 or higher. To resolve this:
 
 1. To fix this, you need an installation of *numpy version=>1.24.1* which is installed during the ``bnlearn`` installation.
-   However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work. 
+   However, when you are using colab or a jupyter notebook, you need to reset your kernel first to let it work.
 2. If using Colab or Jupyter Notebook:
    - Go to the menu
    - Click **Runtime -> Restart runtime**
