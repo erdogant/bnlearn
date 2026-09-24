@@ -8,9 +8,14 @@ bnlearn/data/
 julia/
 bnlearn/RESOURCES/
 blogs/
-.claude
-CLAUDE.md
 howto
+
+# ignore skill-related files
+CLAUDE.md
+MEMORY.md
+.claude/
+.opencode/
+.agents/
 
 *.pkl
 .pypirc
