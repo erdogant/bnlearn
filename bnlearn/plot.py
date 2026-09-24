@@ -1,16 +1,14 @@
-import logging
-logger = logging.getLogger("bnlearn")
-"""Plot module.
-
+"""Plot module."""
 # ------------------------------------
 # Name        : plot.py
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ------------------------------------
-"""
 
 # %% Libraries
+import logging
+logger = logging.getLogger("bnlearn")
 import os
 import copy
 

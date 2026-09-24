@@ -1,3 +1,11 @@
+"""Impute methods."""
+# ------------------------------------
+# Name        : impute.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See licences
+# ------------------------------------
+
 import numpy as np
 import pandas as pd
 from sklearn.impute import KNNImputer

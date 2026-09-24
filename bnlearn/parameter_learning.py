@@ -1,5 +1,10 @@
-import logging
-logger = logging.getLogger("bnlearn")
+# ------------------------------------
+# Name        : parameter_learning.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See licences
+# ------------------------------------
+
 """Parameter learning.
 
 Overview
@@ -15,15 +20,10 @@ Supported model families:
     * Mixed / Conditional Gaussian: discrete CPTs + configuration-specific linear Gaussians
     * Dynamic Bayesian Networks (DBN)
 """
-# ------------------------------------
-# Name        : parameter_learning.py
-# Author      : E.Taskesen
-# Contact     : erdogant@gmail.com
-# Licence     : See licences
-# ------------------------------------
-
 
 # %% Libraries
+import logging
+logger = logging.getLogger("bnlearn")
 from pgmpy.parameter_estimator import DiscreteBayesianEstimator, LinearGaussianMLE
 from pgmpy.models import LinearGaussianBayesianNetwork, DiscreteBayesianNetwork
 # from pgmpy.factors.continuous import LinearGaussianCPD

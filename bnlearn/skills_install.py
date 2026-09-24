@@ -1,4 +1,10 @@
 """Manage the bnlearn Agent Skill."""
+# ------------------------------------
+# Name        : skills_install.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See licences
+# ------------------------------------
 
 from pathlib import Path
 import argparse

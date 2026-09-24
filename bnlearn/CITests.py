@@ -1,7 +1,13 @@
+"""CI tests"""
+# ------------------------------------
+# Name        : CITests.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See LICENSE
+# ------------------------------------
+
 import logging
 logger = logging.getLogger("bnlearn")
-# -*- coding: utf-8 -*-
-
 import numpy as np
 import pandas as pd
 from scipy import stats

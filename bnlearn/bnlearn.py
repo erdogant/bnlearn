@@ -1,5 +1,3 @@
-import logging
-logger = logging.getLogger("bnlearn")
 """Bayesian techniques for structure learning, parameter learning, inference and sampling."""
 # ------------------------------------
 # Name        : bnlearn.py
@@ -9,6 +7,8 @@ logger = logging.getLogger("bnlearn")
 # ------------------------------------
 
 # %% Libraries
+import logging
+logger = logging.getLogger("bnlearn")
 import os
 import copy
 import itertools
@@ -1581,102 +1581,3 @@ def system_info():
         print("Forced threading backend (Windows + Python ≥ 3.12 hotfix active)")
 
     print("--------------------------------------------------\n")
-
-
-#%%
-# def cpd_to_dataframe(cpd):
-#     variable = cpd.variable
-#     variable_states = cpd.state_names[variable]
-#     values = cpd.get_values()
-
-#     evidences = cpd.get_evidence()
-#     state_names = cpd.state_names
-
-#     # Get the states of all evidence variables
-#     if evidences:
-#         evidence_states = [state_names[ev] for ev in evidences]
-#         columns = list(product(*evidence_states))
-#         col_index = pd.MultiIndex.from_tuples(columns, names=evidences)
-#     else:
-#         col_index = None
-
-#     # Create DataFrame
-#     df = pd.DataFrame(values, index=variable_states, columns=col_index)
-#     df.index.name = variable
-#     return df
-
-
-# def dataframe_to_cpd(df):
-#     # Extract variable name and states
-#     variable = df.index.name
-#     variable_states = list(df.index)
-
-#     # Extract evidence info from MultiIndex
-#     if isinstance(df.columns, pd.MultiIndex):
-#         evidence = list(df.columns.names)
-#         evidence_states = [list(level) for level in df.columns.levels]
-#         evidence_card = [len(states) for states in evidence_states]
-#     else:
-#         evidence = []
-#         evidence_card = []
-
-#     # Get flat values
-#     values = df.values.tolist()
-
-#     # Create state_names dictionary
-#     state_names = {variable: variable_states}
-#     if evidence:
-#         for i, ev in enumerate(evidence):
-#             state_names[ev] = df.columns.levels[i].tolist()
-
-#     # Construct the TabularCPD
-#     cpd = TabularCPD(
-#         variable=variable,
-#         variable_card=len(variable_states),
-#         values=values,
-#         evidence=evidence if evidence else None,
-#         evidence_card=evidence_card if evidence else None,
-#         state_names=state_names
-#     )
-#     return cpd
-
-# %%
-#     """Set the logger for verbosity messages.
-
-#     Parameters
-#     ----------
-#         * [0, 60, None, 'silent', 'off', 'no']: No message.
-#         * [10, 'debug']: Messages from debug level and higher.
-#         * [20, 'info']: Messages from info level and higher.
-#         * [30, 'warning']: Messages from warning level and higher.
-#         * [50, 'critical']: Messages from critical level and higher.
-
-#     Returns
-#     -------
-#     None.
-
-#     > # Set the logger to warning
-#     > set_logger()
-#     > # Test with different messages
-#     > logger.debug("Hello debug")
-#     > logger.info("Hello info")
-#     > logger.warning("Hello warning")
-#     > logger.critical("Hello critical")
-
-#     """
-#     # Set 0 and None as no messages.
-#     # Convert str to levels
-#         levels = {'silent': 60,
-#                   'off': 60,
-#                   'no': 60,
-#                   'debug': 10,
-#                   'info': 20,
-#                   'warning': 30,
-#                   'critical': 50}
-
-#     # Show examples
-
-# # %%
-# def disable_tqdm():
-#     """Set the logger for verbosity messages."""
-#     return (True if (logger.getEffectiveLevel()>=30) else False)

@@ -1,5 +1,10 @@
-import logging
-logger = logging.getLogger("bnlearn")
+# ------------------------------------
+# Name        : inference.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See licences
+# ------------------------------------
+
 """Learning Discrete Bayesian Networks from Continuous Data.
 
 This paper introduces a principled Bayesian discretization method for continuous
@@ -25,14 +30,9 @@ References
 .. [2] Julia 0.4 implementation:
        https://github.com/sisl/LearnDiscreteBayesNets.jl
 
-# ------------------------------------
-# Name        : inference.py
-# Author      : E.Taskesen
-# Contact     : erdogant@gmail.com
-# Licence     : See licences
-# ------------------------------------
-
 """
+import logging
+logger = logging.getLogger("bnlearn")
 
 import math
 from typing import List, Tuple, Union

@@ -1,5 +1,3 @@
-import logging
-logger = logging.getLogger("bnlearn")
 """This is a module of bnlearn for the generation of synthetic data."""
 # ------------------------------------
 # Name        : sampling.py
@@ -7,7 +5,8 @@ logger = logging.getLogger("bnlearn")
 # Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ------------------------------------
-
+import logging
+logger = logging.getLogger("bnlearn")
 from pgmpy.sampling import BayesianModelSampling, GibbsSampling
 from pgmpy.factors.discrete import State
 from pgmpy.inference import VariableElimination

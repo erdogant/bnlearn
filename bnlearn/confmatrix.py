@@ -1,10 +1,17 @@
 """confmatrix."""
+# ------------------------------------
+# Name        : confmatrix.py
+# Author      : E.Taskesen
+# Contact     : erdogant@gmail.com
+# Licence     : See licences
+# ------------------------------------
+
+import logging
+logger = logging.getLogger("bnlearn")
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import numpy as np
 import itertools
-import logging
-logger = logging.getLogger("bnlearn")
 
 # %% confmatrix
 

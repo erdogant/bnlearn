@@ -1,14 +1,13 @@
-import logging
-logger = logging.getLogger("bnlearn")
-"""Discritize module.
-
+"""Discritize module."""
 # ------------------------------------
-# Name        : inference.py
+# Name        : discretize.py
 # Author      : E.Taskesen
 # Contact     : erdogant@gmail.com
 # Licence     : See licences
 # ------------------------------------
-"""
+
+import logging
+logger = logging.getLogger("bnlearn")
 
 from typing import Tuple, List
 import pandas as pd

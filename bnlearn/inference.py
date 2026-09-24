@@ -1,7 +1,4 @@
-import logging
-logger = logging.getLogger("bnlearn")
-"""Inference is same as asking conditional probability questions to the models.
-
+"""Inference is same as asking conditional probability questions to the models."""
 # ------------------------------------
 # Name        : inference.py
 # Author      : E.Taskesen
@@ -9,8 +6,9 @@ logger = logging.getLogger("bnlearn")
 # Licence     : See licences
 # ------------------------------------
 
-"""
 # %% Libraries
+import logging
+logger = logging.getLogger("bnlearn")
 import matplotlib.pyplot as plt
 from pgmpy.inference import VariableElimination
 from pgmpy.models import LinearGaussianBayesianNetwork

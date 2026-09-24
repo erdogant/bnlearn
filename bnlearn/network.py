@@ -1,5 +1,3 @@
-import logging
-logger = logging.getLogger("bnlearn")
 """Functionalities for network creation, clustering and plotting."""
 # ------------------------------------
 # Name        : network.py
@@ -10,6 +8,8 @@ logger = logging.getLogger("bnlearn")
 
 
 # %% Libraries
+import logging
+logger = logging.getLogger("bnlearn")
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
