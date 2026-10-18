@@ -11,6 +11,11 @@ import logging
 logger = logging.getLogger("bnlearn")
 import os
 import copy
+import re
+import json
+import html as _html
+import itertools
+import webbrowser
 from packaging import version
 
 import numpy as np
@@ -627,7 +632,13 @@ def plot(model,
         if params_interactive['type']=='d3graph':
             fig = _plot_interactive_d3graph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip)
         elif params_interactive['type']=='flowgraph':
-            fig = _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip)
+            # Neat CPD (of the target node) shown when hovering over an edge
+            edge_tooltip = _edge_cpd_tooltips(model, edgelist)
+            # Same neat CPD table for the nodes (instead of the ASCII table of str(cpd))
+            node_tooltip = _node_cpd_tooltips(model, nodelist)
+            if node_tooltip:
+                tooltip = [node_tooltip.get(n, None) for n in nodelist]
+            fig = _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=edge_tooltip)
         else:
             logger.warning(f"D3Block for {params_interactive['type']} not implemented in bnlearn.")
 
@@ -703,8 +714,12 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
     return fig
 
 # %% Interactive flowgraph
-def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip):
-    """Create an interactive flowgraph (layered process diagram) with d3blocks."""
+def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=None):
+    """Create an interactive flowgraph (layered process diagram) with d3blocks.
+
+    ``edge_tooltip`` is an optional dict ``{(source, target): html}``. d3blocks only
+    supports plain-text edge hovers, so the HTML is injected into the generated file.
+    """
     try:
         from d3blocks import D3Blocks
         import d3blocks as d3
@@ -754,6 +769,16 @@ def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_
             'tooltip': tooltip[i] if tooltip is not None else None,
         }
 
+    # Edge tooltips need a post-processed HTML file, so the browser/notebook is
+    # opened by us after patching instead of by d3blocks.
+    edge_html = {}
+    if edge_tooltip:
+        for (u, v), h in edge_tooltip.items():
+            edge_html[str(u).replace(' ', '_') + '->' + str(v).replace(' ', '_')] = h
+    node_has_html = any(isinstance(t, str) and 'bn-cpd' in t for t in (tooltip or []))
+    patch = len(edge_html) > 0 or node_has_html
+    show_notebook = params_interactive['notebook']
+
     d3b = D3Blocks()
     d3b.flowgraph(
         X,
@@ -765,15 +790,289 @@ def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_
         title=title,
         filepath=params_interactive['filepath'],
         figsize=params_interactive['figsize'],
-        notebook=params_interactive['notebook'],
-        showfig=True,
+        notebook=False if patch else show_notebook,
+        showfig=False if patch else True,
         show_side_panel=params_interactive['show_side_panel'],
         show_top_panel=params_interactive['show_top_panel'],
         dark_mode=params_interactive['dark_mode'],
         color_background=params_interactive['bgcolor'],
     )
 
-    return os.path.abspath(d3b.config['filepath'])
+    filepath = os.path.abspath(d3b.config['filepath'])
+    if patch:
+        # If patching fails (d3blocks changed?), the plain graph is still shown.
+        _inject_edge_tooltips(filepath, edge_html)
+        _open_html(filepath, notebook=show_notebook, figsize=params_interactive['figsize'])
+    return filepath
+
+
+# %% Edge CPD tooltips
+_EDGE_TOOLTIP_CSS = """
+<style>
+#fg-tooltip { max-width: 520px !important; }
+#fg-tooltip table.bn-cpd { border-collapse: collapse; margin-top: 5px; font-size: 11px; }
+#fg-tooltip table.bn-cpd th, #fg-tooltip table.bn-cpd td { padding: 2px 7px; text-align: right; border: 1px solid rgba(128,128,128,.35); white-space: nowrap; }
+#fg-tooltip table.bn-cpd th { font-weight: 600; background: rgba(128,128,128,.18); }
+#fg-tooltip table.bn-cpd th.s, #fg-tooltip table.bn-cpd th.e { text-align: left; }
+#fg-tooltip table.bn-cpd th.hl, #fg-tooltip table.bn-cpd td.hl { outline: 1.5px solid #f0b429; outline-offset: -1.5px; }
+#fg-tooltip .bn-cpd-title { font-family: Georgia, serif; font-style: italic; margin-top: 4px; }
+#fg-tooltip .bn-cpd-eq { font-family: Consolas, monospace; font-size: 11px; margin-top: 5px; }
+#fg-tooltip .bn-cpd-note { color: var(--text-muted); font-size: 10.5px; margin-top: 3px; }
+</style>
+"""
+
+_EDGE_TOOLTIP_JS_OLD = re.compile(r"if \(d\.label\) html \+= '<div>' \+ escapeHtml\(d\.label\) \+ '</div>';")
+_EDGE_TOOLTIP_JS_NEW = ("if (d.label) html += '<div>' + escapeHtml(d.label) + '</div>';"
+                        " var __cpd = (window.__BN_EDGE_CPD || {})[d.source + '->' + d.target];"
+                        " if (__cpd) html += __cpd;")
+
+
+def _inject_edge_tooltips(filepath, edge_html):
+    """Patch a d3blocks flowgraph HTML file so edge hovers also show ``edge_html``."""
+    try:
+        with open(filepath, 'r', encoding='utf-8') as f:
+            page = f.read()
+        block = _EDGE_TOOLTIP_CSS
+        if edge_html:
+            if _EDGE_TOOLTIP_JS_OLD.search(page):
+                page = _EDGE_TOOLTIP_JS_OLD.sub(lambda m: _EDGE_TOOLTIP_JS_NEW, page, count=1)
+                data = json.dumps(edge_html, ensure_ascii=False).replace('</', '<\\/')
+                block += '<script>window.__BN_EDGE_CPD = ' + data + ';</script>\n'
+            else:
+                logger.warning('Edge CPD tooltips are not supported by this d3blocks version; skipped.')
+        if '</head>' in page:
+            page = page.replace('</head>', block + '</head>', 1)
+        else:
+            page = block + page
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(page)
+        return True
+    except Exception as err:
+        logger.warning('Could not add edge CPD tooltips: %s' % err)
+        return False
+
+
+def _open_html(filepath, notebook=False, figsize=(None, None)):
+    """Show an HTML file inline (notebook) or in the browser."""
+    if notebook:
+        try:
+            from IPython.display import IFrame, display
+            width = figsize[0] if figsize and figsize[0] else '100%'
+            height = figsize[1] if figsize and figsize[1] else 650
+            display(IFrame(src=filepath, width=width, height=height))
+            return
+        except Exception:
+            pass
+    webbrowser.open('file://' + filepath)
+
+
+def _fmt_num(x, nd=3):
+    """Compact number formatting for tooltips."""
+    try:
+        x = float(x)
+    except (TypeError, ValueError):
+        return _html.escape(str(x))
+    if x != 0 and abs(x) < 10 ** (-nd):
+        return '%.1e' % x
+    if abs(x) >= 1e5:
+        return '%.3g' % x
+    return '%.*f' % (nd, x)
+
+
+def _cpd_title(variable, evidence, parent):
+    """P(variable | e1, e2, ...) with the hovered parent in bold."""
+    if evidence:
+        ev = ', '.join('<b>%s</b>' % _html.escape(str(e)) if e == parent else _html.escape(str(e)) for e in evidence)
+        return '<div class="bn-cpd-title">P(%s | %s)</div>' % (_html.escape(str(variable)), ev)
+    return '<div class="bn-cpd-title">P(%s)</div>' % _html.escape(str(variable))
+
+
+def _tabular_cpd_html(cpd, parent=None, max_rows=8, max_cols=6):
+    """HTML table for a (pgmpy) TabularCPD: states as rows, parent configurations as columns."""
+    var = cpd.variable
+    evidence = list(cpd.variables[1:])
+    values = np.asarray(cpd.get_values(), dtype=float)
+    names = cpd.state_names
+    var_states = list(names[var])
+    combos = list(itertools.product(*[list(names[e]) for e in evidence])) if evidence else [()]
+    n_rows, n_cols = values.shape
+    show_r, show_c = min(n_rows, max_rows), min(n_cols, max_cols)
+
+    h = [_cpd_title(var, evidence, parent), '<table class="bn-cpd">']
+    if evidence:
+        for i, e in enumerate(evidence):
+            cls = 'e hl' if e == parent else 'e'
+            h.append('<tr><th class="%s">%s</th>' % (cls, _html.escape(str(e))))
+            h.extend('<th>%s</th>' % _html.escape(str(combos[j][i])) for j in range(show_c))
+            h.append('<th>…</th></tr>' if show_c < n_cols else '</tr>')
+    else:
+        h.append('<tr><th class="e"></th><th>P</th></tr>')
+    for r in range(show_r):
+        h.append('<tr><th class="s">%s=%s</th>' % (_html.escape(str(var)), _html.escape(str(var_states[r]))))
+        for c in range(show_c):
+            p = float(values[r, c])
+            h.append('<td style="background:rgba(66,133,244,%.2f)">%s</td>' % (0.05 + 0.55 * min(max(p, 0.0), 1.0), _fmt_num(p)))
+        h.append('<td>…</td></tr>' if show_c < n_cols else '</tr>')
+    if show_r < n_rows:
+        h.append('<tr><th class="s">…</th>' + '<td>…</td>' * (show_c + (1 if show_c < n_cols else 0)) + '</tr>')
+    h.append('</table>')
+    notes = []
+    if show_c < n_cols:
+        notes.append('showing %d of %d parent configurations' % (show_c, n_cols))
+    if show_r < n_rows:
+        notes.append('showing %d of %d states' % (show_r, n_rows))
+    if parent is not None and parent not in evidence:
+        notes.append('edge from %s is not used in this discrete CPT' % _html.escape(str(parent)))
+    if notes:
+        h.append('<div class="bn-cpd-note">%s</div>' % '; '.join(notes))
+    return ''.join(h)
+
+
+def _gaussian_cpd_html(variable, disc_parents, cont_parents, configs, parent=None, max_rows=8):
+    """HTML for a (conditional) linear Gaussian: one regression row per discrete-parent configuration.
+
+    configs : dict {tuple(discrete states): {'beta': [intercept, b1, ...], 'std': float, 'n': int | None}}
+    """
+    all_parents = list(disc_parents) + list(cont_parents)
+    items = list(configs.items())
+    show = items[:max_rows]
+    has_n = any(c.get('n') is not None for _, c in items)
+
+    h = [_cpd_title(variable, all_parents, parent)]
+    # Equation for the common single-regression case
+    if len(items) == 1 and len(disc_parents) == 0:
+        c = items[0][1]
+        terms = [_fmt_num(c['beta'][0])] + ['%s·%s' % (_fmt_num(b), _html.escape(str(p))) for b, p in zip(c['beta'][1:], cont_parents)]
+        h.append('<div class="bn-cpd-eq">%s = %s + ε,&nbsp; ε ~ N(0, %s²)</div>' % (
+            _html.escape(str(variable)), ' + '.join(terms), _fmt_num(c['std'])))
+
+    h.append('<table class="bn-cpd"><tr>')
+    for p in disc_parents:
+        h.append('<th class="e%s">%s</th>' % (' hl' if p == parent else '', _html.escape(str(p))))
+    h.append('<th>intercept</th>')
+    for p in cont_parents:
+        h.append('<th%s>β(%s)</th>' % (' class="hl"' if p == parent else '', _html.escape(str(p))))
+    h.append('<th>σ</th>' + ('<th>n</th>' if has_n else '') + '</tr>')
+    for key, c in show:
+        h.append('<tr>')
+        for k in key:
+            h.append('<th class="s">%s</th>' % _html.escape(str(k)))
+        beta = list(c['beta'])
+        h.append('<td>%s</td>' % _fmt_num(beta[0]))
+        for i, p in enumerate(cont_parents):
+            h.append('<td%s>%s</td>' % (' class="hl"' if p == parent else '', _fmt_num(beta[i + 1]) if i + 1 < len(beta) else ''))
+        h.append('<td>%s</td>' % _fmt_num(c['std']))
+        if has_n:
+            h.append('<td>%s</td>' % (int(c['n']) if c.get('n') is not None else ''))
+        h.append('</tr>')
+    h.append('</table>')
+    if len(items) > len(show):
+        h.append('<div class="bn-cpd-note">showing %d of %d configurations</div>' % (len(show), len(items)))
+    return ''.join(h)
+
+
+def _linear_gaussian_cpd_html(cpd, parent=None):
+    """HTML for a pgmpy LinearGaussianCPD (version tolerant)."""
+    beta = getattr(cpd, 'beta', None)
+    if beta is None:
+        beta = getattr(cpd, 'mean', None)
+    std = getattr(cpd, 'std', None)
+    if std is None and getattr(cpd, 'variance', None) is not None:
+        std = float(np.sqrt(cpd.variance))
+    if beta is None or std is None:
+        return None
+    evidence = list(getattr(cpd, 'evidence', []) or [])
+    configs = {(): {'beta': [float(b) for b in np.ravel(beta)], 'std': float(std), 'n': None}}
+    return _gaussian_cpd_html(cpd.variable, [], evidence, configs, parent=parent)
+
+
+def _node_cpd_tooltips(model, nodelist, max_rows=8, max_cols=6):
+    """Create a neat HTML CPD for every node that has learned parameters.
+
+    Returns
+    -------
+    dict
+        ``{node: html}``. Nodes without a CPD are left out.
+    """
+    out = {}
+    if not isinstance(model, dict):
+        return out
+    cpds = {}
+    bnmodel = model.get('model', None)
+    if hasattr(bnmodel, 'get_cpds'):
+        try:
+            cpds = {c.variable: c for c in bnmodel.get_cpds()}
+        except Exception as err:
+            logger.debug('Could not collect CPDs: %s' % err)
+    cg = {c['variable']: c for c in (model.get('continuous_cpds') or []) if isinstance(c, dict) and 'variable' in c}
+    for node in nodelist:
+        h = None
+        try:
+            if node in cg:
+                c = cg[node]
+                configs = {k: {'beta': d['beta'], 'std': d['std'], 'n': d.get('n')} for k, d in c['configs'].items()}
+                h = _gaussian_cpd_html(node, c.get('disc_parents', []), c.get('cont_parents', []), configs, max_rows=max_rows)
+            elif node in cpds:
+                cpd = cpds[node]
+                if hasattr(cpd, 'state_names') and hasattr(cpd, 'get_values'):
+                    h = _tabular_cpd_html(cpd, max_rows=max_rows, max_cols=max_cols)
+                else:
+                    h = _linear_gaussian_cpd_html(cpd)
+        except Exception as err:
+            logger.debug('No CPD tooltip for node %s: %s' % (node, err))
+        if h:
+            out[node] = h
+    return out
+
+
+def _edge_cpd_tooltips(model, edgelist, max_rows=8, max_cols=6):
+    """Create a neat HTML CPD for every edge.
+
+    For an edge ``A -> B`` the CPD of the target ``B`` is shown, because ``B`` is the node whose
+    distribution is conditioned on ``A``. Supports discrete (tabular), linear-gaussian and
+    conditional-gaussian (``model['continuous_cpds']``) models. Edges without learned parameters
+    get no entry, so the default hover is kept.
+
+    Returns
+    -------
+    dict
+        ``{(source, target): html}``
+    """
+    out = {}
+    if not isinstance(model, dict):
+        return out
+
+    cpds = {}
+    bnmodel = model.get('model', None)
+    if hasattr(bnmodel, 'get_cpds'):
+        try:
+            cpds = {c.variable: c for c in bnmodel.get_cpds()}
+        except Exception as err:
+            logger.debug('Could not collect CPDs: %s' % err)
+    cg = {c['variable']: c for c in (model.get('continuous_cpds') or []) if isinstance(c, dict) and 'variable' in c}
+
+    if not cpds and not cg:
+        logger.info('No learned parameters found: use bn.parameter_learning.fit() first to show CPDs on edge hover.')
+        return out
+
+    for u, v in edgelist:
+        h = None
+        try:
+            if v in cg:
+                c = cg[v]
+                configs = {k: {'beta': d['beta'], 'std': d['std'], 'n': d.get('n')} for k, d in c['configs'].items()}
+                h = _gaussian_cpd_html(v, c.get('disc_parents', []), c.get('cont_parents', []), configs, parent=u, max_rows=max_rows)
+            elif v in cpds:
+                cpd = cpds[v]
+                if hasattr(cpd, 'state_names') and hasattr(cpd, 'get_values'):
+                    h = _tabular_cpd_html(cpd, parent=u, max_rows=max_rows, max_cols=max_cols)
+                else:
+                    h = _linear_gaussian_cpd_html(cpd, parent=u)
+        except Exception as err:
+            logger.debug('No CPD tooltip for edge %s -> %s: %s' % (u, v, err))
+        if h:
+            out[(str(u), str(v))] = h
+    return out
 
 # %% Interactive d3graph
 def _plot_interactive_d3graph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip):
