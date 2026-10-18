@@ -261,7 +261,15 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1):
     out['independence_test'] = independence_test
     out['continuous_cpds'] = continuous_cpds  # CG local params when method is cg
 
-    if out_model is not None and hasattr(out_model, 'edges'):
+    # For CG the stored model is only the discrete sub-network, so its edges are
+    # incomplete (often empty). The full mixed structure lives in the adjmat, so
+    # always take the edges from there for CG. Otherwise downstream functions
+    # (independence_test, plot, structure_scores) lose all edges between/to the
+    # continuous nodes.
+    if continuous_cpds is not None or config['method'] in ('cg', 'conditional-gaussian'):
+        edges, _ = edges_and_nodes_from_adjmat(adjmat)
+        out['model_edges'] = edges
+    elif out_model is not None and hasattr(out_model, 'edges'):
         out['model_edges'] = list(out_model.edges())
     else:
         edges, _ = edges_and_nodes_from_adjmat(adjmat)
