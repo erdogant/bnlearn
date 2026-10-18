@@ -195,7 +195,6 @@ Cloudy  Sprinkler  Rain  Wet_Grass
   <img src="https://github.com/erdogant/bnlearn/blob/master/docs/figs/fig_sprinkler_sl.png" width="600" />
 </p>
 
-
 ```python
 
 # Example: Structure Learning
