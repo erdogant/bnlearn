@@ -449,7 +449,22 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
-         params_interactive={'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False, 'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None},
+         params_interactive={
+             'type': 'flowgraph',       # choose between 'd3graph' or 'flowgraph'
+             'figsize': [None, None],
+             'notebook': False,
+             'filepath': None,
+             'direction': 'LR',          # 'LR' | 'TB' | 'RL' | 'BT'
+             'layout': 'dagre',          # 'dagre' | 'elk'
+             'animate': False,
+             'show_side_panel': True,
+             'show_top_panel': True,
+             'dark_mode': True,
+             'bgcolor': None,
+             # d3graph
+             'minmax_distance': [50, 100],
+             'font_color': None,
+             'show_slider': True},
          params_static={'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10, 'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout_custom', 'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200},
          ):
     """
@@ -510,9 +525,26 @@ def plot(model,
     model = copy.deepcopy(model)
     model['adjmat'] = model['adjmat'].astype(float)
 
-    defaults = {'minmax_distance': [50, 100], 'figsize': [None, None], 'notebook': False,
-                'font_color': None, 'bgcolor': None, 'show_slider': True, 'filepath': None, 'directed': True}
+    defaults = {
+        'type': 'flowgraph',        # 'flowgraph' or 'd3graph'
+        'direction': 'TB',          # 'LR' | 'TB' | 'RL' | 'BT'
+        'layout': 'dagre',          # 'dagre' | 'elk'
+        'animate': False,
+        # generic
+        'figsize': [None, None],
+        'show_side_panel': True,
+        'show_top_panel': True,
+        'dark_mode': True,
+        'filepath': None,
+        'bgcolor': None,            # maps to color_background if you want
+        'notebook': False,
+        # d3graph
+        'minmax_distance': [50, 100],
+        'font_color': None,
+        'show_slider': True,
+    }
     params_interactive = {**defaults, **params_interactive}
+
     defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None,
                 'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout_custom',
                 'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8,
@@ -564,20 +596,41 @@ def plot(model,
     else:
         bnmodel = copy.deepcopy(model)
 
-    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value = \
-        _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value =  _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     tooltip = nodelist
-
+    
+    # print(model["model"], 'get_cpds')
+    
     if interactive:
         if hasattr(model["model"], 'get_cpds'):
             tooltip = []
+            # Collect model nodes if available to avoid ValueError when node is missing
+            try:
+                model_nodes = set(model["model"].nodes())
+            except Exception:
+                model_nodes = None
             for node in nodelist:
-                tip = model["model"].get_cpds(node)
-                if tip is None: tip = node
+                # Only call get_cpds if the node is present in the underlying model
+                if model_nodes is not None and node not in model_nodes:
+                    tip = node
+                else:
+                    try:
+                        tip = model["model"].get_cpds(node)
+                        if tip is None:
+                            tip = node
+                    except Exception:
+                        # Fall back to the node label if anything goes wrong
+                        tip = node
                 tooltip.append(tip)
 
-        fig = _plot_interactive(params_interactive, nodelist, node_colors, node_sizes,
-                                edgelist, edge_colors, edge_weights, title, tooltip)
+        # Make d3block
+        if params_interactive['type']=='d3graph':
+            fig = _plot_interactive_d3graph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip)
+        elif params_interactive['type']=='flowgraph':
+            fig = _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip)
+        else:
+            logger.warning(f"D3Block for {params_interactive['type']} not implemented in bnlearn.")
+
     else:
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()) or ('lingam' in model['config']['method']):
             logger.info('Plot based on Bayesian model')
@@ -615,18 +668,15 @@ def plot(model,
 
 
 # %% Static plot
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos,
-                 edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_filter='weight'):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_filter='weight'):
 
+    # Create figure
     fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
     fig.set_visible(visible)
 
-    nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes,
-                           alpha=params_static['alpha'], node_color=node_colors,
-                           node_shape=params_static['node_shape'])
-    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'],
-                           arrowsize=params_static['arrowsize'], edge_color=edge_colors,
-                           width=edge_weights, alpha=params_static['edge_alpha'])
+    # Make networkx
+    nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
+    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
 
     if edge_filter == 'weight':
         edge_label = nx.get_edge_attributes(G, 'value')
@@ -641,9 +691,8 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
 
-    nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'],
-                            font_family=params_static['font_family'],
-                            font_color=params_static['font_color'])
+    # Draw final figure
+    nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'])
 
     # Making figure nice
     # fig = plt.gca()
@@ -653,33 +702,112 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
         plt.show()
     return fig
 
-
-# %% Interactive plot
-def _plot_interactive(params_interactive, nodelist, node_colors, node_sizes,
-                      edgelist, edge_colors, edge_weights, title, tooltip):
-    from packaging import version
+# %% Interactive flowgraph
+def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip):
+    """Create an interactive flowgraph (layered process diagram) with d3blocks."""
     try:
         from d3blocks import D3Blocks
+        import d3blocks as d3
+    except ModuleNotFoundError:
+        raise Exception(
+            '[bnlearn] >"d3blocks" library is not installed. '
+            'Pip install first: "pip install d3blocks"'
+        )
+
+    if version.parse(d3.__version__) < version.parse("2.0.0"):
+        raise ImportError(
+            '[bnlearn] >Error: d3blocks version should be >= 2.0.0. '
+            'Pip install: "pip install -U d3blocks"'
+        )
+
+    defaults = {
+        'figsize': [None, None],
+        'notebook': False,
+        'filepath': None,
+        'direction': 'TB',
+        'layout': 'dagre',
+        'animate': False,
+        'show_side_panel': True,
+        'show_top_panel': True,
+        'dark_mode': True,
+        'bgcolor': None,
+    }
+    params_interactive = {**defaults, **params_interactive}
+
+    if params_interactive['filepath'] is None:
+        params_interactive['filepath'] = title.strip().replace(' ', '_') + '.html'
+
+    nodelist = [
+        x.encode('ascii', 'ignore').decode('utf-8').replace(' ', '_')
+        for x in list(nodelist)
+    ]
+
+    X = pd.DataFrame(data=edgelist, columns=['source', 'target'])
+    X['source'] = X['source'].astype(str).str.replace(' ', '_')
+    X['target'] = X['target'].astype(str).str.replace(' ', '_')
+    X['weight'] = edge_weights
+
+    nodes = {}
+    for i, name in enumerate(nodelist):
+        nodes[name] = {
+            'color': node_colors[i] if node_colors is not None else None,
+            'tooltip': tooltip[i] if tooltip is not None else None,
+        }
+
+    d3b = D3Blocks()
+    d3b.flowgraph(
+        X,
+        nodes=nodes,
+        direction=params_interactive['direction'],
+        layout=params_interactive['layout'],
+        # edge_color=edge_color,
+        animate=params_interactive['animate'],
+        title=title,
+        filepath=params_interactive['filepath'],
+        figsize=params_interactive['figsize'],
+        notebook=params_interactive['notebook'],
+        showfig=True,
+        show_side_panel=params_interactive['show_side_panel'],
+        show_top_panel=params_interactive['show_top_panel'],
+        dark_mode=params_interactive['dark_mode'],
+        color_background=params_interactive['bgcolor'],
+    )
+
+    return os.path.abspath(d3b.config['filepath'])
+
+# %% Interactive d3graph
+def _plot_interactive_d3graph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip):
+    try:
+        from d3blocks import D3Blocks
+        import d3blocks as d3
     except ModuleNotFoundError:
         raise Exception('[bnlearn] >"d3blocks" library is not installed. Pip install first: "pip install d3blocks"')
 
-    import d3blocks as d3
-    if version.parse(d3.__version__) < version.parse("1.4.9"):
-        raise ImportError('[bnlearn] >Error: d3blocks version should be >= 1.4.9. Pip install: "pip install -U d3blocks"')
+    # Check version
+    if version.parse(d3.__version__) < version.parse("2.0.0"):
+        raise ImportError('[bnlearn] >Error: d3blocks version should be >= 2.0.0. Pip install: "pip install -U d3blocks"')
 
     if params_interactive['filepath'] is None:
         params_interactive['filepath'] = title.strip().replace(' ', '_') + '.html'
 
     nodelist = list(map(lambda x: x.encode('ascii', 'ignore').decode("utf-8").replace(' ', '_'), list(nodelist)))
 
+    # Initialize
     d3 = D3Blocks()
 
     X = pd.DataFrame(data=edgelist, columns=['source', 'target'])
     X['weight'] = edge_weights
 
+    # If there are no edges or all weights are non-positive, d3graph/d3blocks
+    # will raise an exception. Handle this case gracefully by logging and
+    # returning None so callers can proceed (or fall back to a static plot).
+    if X.shape[0] == 0 or (X['weight'] <= 0).all():
+        logger.info('No edges with positive weight for interactive d3graph; skipping interactive plot.')
+        return None
+
     d3.d3graph(X, showfig=False, title=title, notebook=params_interactive['notebook'])
 
-    d3.D3graph.set_edge_properties(directed=params_interactive['directed'],
+    d3.D3graph.set_edge_properties(directed=True,
                                    minmax_distance=params_interactive['minmax_distance'],
                                    marker_color=edge_colors)
 
