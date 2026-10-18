@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plotting &mdash; bnlearn bnlearn documentation</title>
+  <title>Interactive Plotting &mdash; bnlearn bnlearn documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=e0179649" />
@@ -108,24 +108,21 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Plot</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Plotting</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#interactive-plotting">Interactive Plotting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#customizing-node-properties">Customizing Node Properties</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Interactive Plotting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-node-properties">Customizing Node Properties</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#static-plotting">Static Plotting</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#networkx-static-plots">Networkx Static Plots</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#graphviz-static-plots">Graphviz Static Plots</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#static-plotting">Static Plotting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#networkx-static-plots">Networkx Static Plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#graphviz-static-plots">Graphviz Static Plots</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#network-comparison">Network Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#advanced-customization">Advanced Customization</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#node-properties">Node Properties</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#edge-properties">Edge Properties</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="#network-comparison">Network Comparison</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#advanced-customization">Advanced Customization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#node-properties">Node Properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#edge-properties">Edge Properties</a></li>
 </ul>
 </li>
 </ul>
@@ -188,7 +185,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Plotting</li>
+      <li class="breadcrumb-item active">Interactive Plotting</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Plot.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -198,20 +195,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="plotting">
-<h1>Plotting<a class="headerlink" href="#plotting" title="Link to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> provides both <strong>interactive</strong> and <strong>static</strong> plotting capabilities through the <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code> function. These visualization tools allow for extensive customization of network and figure properties, including node colors, sizes, and layout configurations. Interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">D3Blocks</span></code> library, while static plots utilize matplotlib and networkx.</p>
+  <p><code class="docutils literal notranslate"><span class="pre">bnlearn</span></code> provides both <strong>interactive</strong> and <strong>static</strong> plotting capabilities through the <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.plot()</span></code> function. These visualization tools allow for extensive customization of network and figure properties, including node colors, sizes, and layout configurations. Interactive plots are created using the <code class="docutils literal notranslate"><span class="pre">D3Blocks</span></code> library, while static plots utilize matplotlib and networkx.</p>
 <section id="interactive-plotting">
-<h2>Interactive Plotting<a class="headerlink" href="#interactive-plotting" title="Link to this heading"></a></h2>
+<h1>Interactive Plotting<a class="headerlink" href="#interactive-plotting" title="Link to this heading"></a></h1>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h3>
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading"></a></h2>
 <p>Before creating interactive plots, you need to install the <code class="docutils literal notranslate"><span class="pre">d3blocks</span></code> library:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>d3blocks
 </pre></div>
 </div>
 </section>
 <section id="basic-usage">
-<h3>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h3>
+<h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Link to this heading"></a></h2>
 <p>The simplest way to create an interactive plot is by setting <code class="docutils literal notranslate"><span class="pre">interactive=True</span></code> in the plot function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 
@@ -221,23 +216,30 @@
 <span class="c1"># Learn the network structure</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">structure_learning</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
-<span class="c1"># Create interactive plot with default settings</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Measure edge weights</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">independence_test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">prune</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Customize the interactive plot with specific parameters</span>
-<span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
-       <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-       <span class="n">params_interactive</span><span class="o">=</span><span class="p">{</span>
-           <span class="s1">&#39;height&#39;</span><span class="p">:</span> <span class="s1">&#39;800px&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="s1">&#39;70%&#39;</span><span class="p">,</span>
-           <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-           <span class="s1">&#39;bgcolor&#39;</span><span class="p">:</span> <span class="s1">&#39;#0f0f0f0f&#39;</span>
-       <span class="p">})</span>
+<span class="c1"># Make normal static plot</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">edge_filter</span><span class="o">=</span><span class="s1">&#39;logp&#39;</span><span class="p">)</span>
+
+<span class="c1"># Create interactive plot with default settings</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span>
+            <span class="n">edge_filter</span><span class="o">=</span><span class="s1">&#39;logp&#39;</span><span class="p">,</span>
+            <span class="n">interactive</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">params_interactive</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;filepath&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;d:\temp\dag.html&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;layout&#39;</span><span class="p">:</span> <span class="s1">&#39;dagre&#39;</span><span class="p">,</span>
+                                <span class="p">})</span>
 </pre></div>
 </div>
-<iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe></section>
+<iframe
+    src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/bnlearn_asia_causal_network.html"
+    width="850"
+    height="1300"
+    frameborder="0"
+    style="border: none;">
+</iframe></section>
 <section id="customizing-node-properties">
-<h3>Customizing Node Properties<a class="headerlink" href="#customizing-node-properties" title="Link to this heading"></a></h3>
+<h2>Customizing Node Properties<a class="headerlink" href="#customizing-node-properties" title="Link to this heading"></a></h2>
 <p>You can customize the appearance of nodes in several ways:</p>
 <ol class="arabic simple">
 <li><p><strong>Uniform Node Properties</strong>:
@@ -285,9 +287,9 @@ Customize specific nodes with different colors and sizes:</p></li>
 </section>
 </section>
 <section id="static-plotting">
-<h2>Static Plotting<a class="headerlink" href="#static-plotting" title="Link to this heading"></a></h2>
+<h1>Static Plotting<a class="headerlink" href="#static-plotting" title="Link to this heading"></a></h1>
 <section id="networkx-static-plots">
-<h3>Networkx Static Plots<a class="headerlink" href="#networkx-static-plots" title="Link to this heading"></a></h3>
+<h2>Networkx Static Plots<a class="headerlink" href="#networkx-static-plots" title="Link to this heading"></a></h2>
 <p>Networkx provides a flexible way to create static network visualizations:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create basic static plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">interactive</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -316,7 +318,7 @@ Customize specific nodes with different colors and sizes:</p></li>
 </table>
 </section>
 <section id="graphviz-static-plots">
-<h3>Graphviz Static Plots<a class="headerlink" href="#graphviz-static-plots" title="Link to this heading"></a></h3>
+<h2>Graphviz Static Plots<a class="headerlink" href="#graphviz-static-plots" title="Link to this heading"></a></h2>
 <p>Graphviz provides a more structured and hierarchical visualization style:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create graphviz plot</span>
 <span class="n">bn</span><span class="o">.</span><span class="n">plot_graphviz</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -332,7 +334,7 @@ Customize specific nodes with different colors and sizes:</p></li>
 </section>
 </section>
 <section id="network-comparison">
-<h2>Network Comparison<a class="headerlink" href="#network-comparison" title="Link to this heading"></a></h2>
+<h1>Network Comparison<a class="headerlink" href="#network-comparison" title="Link to this heading"></a></h1>
 <p>The library provides tools to compare different networks, which is particularly useful when comparing learned structures against ground truth or different learning methods:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load ground truth network</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">bn</span><span class="o">.</span><span class="n">import_DAG</span><span class="p">(</span><span class="s1">&#39;asia&#39;</span><span class="p">)</span>
@@ -376,9 +378,9 @@ Customize specific nodes with different colors and sizes:</p></li>
 </table>
 </section>
 <section id="advanced-customization">
-<h2>Advanced Customization<a class="headerlink" href="#advanced-customization" title="Link to this heading"></a></h2>
+<h1>Advanced Customization<a class="headerlink" href="#advanced-customization" title="Link to this heading"></a></h1>
 <section id="node-properties">
-<h3>Node Properties<a class="headerlink" href="#node-properties" title="Link to this heading"></a></h3>
+<h2>Node Properties<a class="headerlink" href="#node-properties" title="Link to this heading"></a></h2>
 <p>Node properties can be customized using the <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.get_node_properties()</span></code> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 <span class="c1"># Load example data</span>
@@ -407,7 +409,7 @@ Customize specific nodes with different colors and sizes:</p></li>
 </table>
 </section>
 <section id="edge-properties">
-<h3>Edge Properties<a class="headerlink" href="#edge-properties" title="Link to this heading"></a></h3>
+<h2>Edge Properties<a class="headerlink" href="#edge-properties" title="Link to this heading"></a></h2>
 <p>Edge properties can be customized using the <code class="xref py py-func docutils literal notranslate"><span class="pre">bnlearn.bnlearn.get_edge_properties()</span></code> function. These customizations can be combined with node properties for comprehensive network visualization.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bnlearn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">bn</span>
 <span class="c1"># Load asia DAG</span>
@@ -449,7 +451,6 @@ Customize specific nodes with different colors and sizes:</p></li>
         <div data-ea-publisher="erdogantgithubio" data-ea-type="image" data-ea-style="stickybox"></div>
 </center>
 <hr></section>
-</section>
 </section>
 
 

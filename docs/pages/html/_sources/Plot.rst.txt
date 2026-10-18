@@ -1,10 +1,8 @@
-Plotting
-=========================================
 
 ``bnlearn`` provides both **interactive** and **static** plotting capabilities through the :func:`bnlearn.bnlearn.plot` function. These visualization tools allow for extensive customization of network and figure properties, including node colors, sizes, and layout configurations. Interactive plots are created using the ``D3Blocks`` library, while static plots utilize matplotlib and networkx.
 
 Interactive Plotting
-----------------------------------------
+=========================================
 
 Prerequisites
 ^^^^^^^^^^^^^
@@ -21,31 +19,38 @@ Basic Usage
 The simplest way to create an interactive plot is by setting ``interactive=True`` in the plot function:
 
 .. code-block:: python
-    
-   import bnlearn as bn
 
-   # Load example dataset
-   df = bn.import_example(data='asia')
+    import bnlearn as bn
 
-   # Learn the network structure
-   model = bn.structure_learning.fit(df)
+    # Load example dataset
+    df = bn.import_example(data='asia')
 
-   # Create interactive plot with default settings
-   bn.plot(model, interactive=True)
+    # Learn the network structure
+    model = bn.structure_learning.fit(df)
 
-   # Customize the interactive plot with specific parameters
-   bn.plot(model, 
-          interactive=True, 
-          params_interactive={
-              'height': '800px',
-              'width': '70%',
-              'layout': None,
-              'bgcolor': '#0f0f0f0f'
-          })
+    # Measure edge weights
+    model = bn.independence_test(model, df, prune=True)
+
+    # Make normal static plot
+    G = bn.plot(model, edge_filter='logp')
+
+    # Create interactive plot with default settings
+    G = bn.plot(model,
+                edge_filter='logp',
+                interactive=True,
+                params_interactive={'filepath': r'd:\temp\dag.html',
+                                    'layout': 'dagre',
+                                    })
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe>
+      <iframe
+          src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/bnlearn_asia_causal_network.html"
+          width="850"
+          height="1300"
+          frameborder="0"
+          style="border: none;">
+      </iframe>
 
 Customizing Node Properties
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -59,7 +64,7 @@ You can customize the appearance of nodes in several ways:
 
    # Set uniform node color
    bn.plot(model, interactive=True, node_color='#8A0707')
-   
+
    # Set uniform node color and size
    bn.plot(model, interactive=True, node_color='#8A0707', node_size=25)
 
@@ -100,7 +105,7 @@ You can customize the appearance of nodes in several ways:
    +----------+
 
 Static Plotting
-----------------------------------------
+=========================================
 
 Networkx Static Plots
 ^^^^^^^^^^^^^^^^^^^^^
@@ -111,10 +116,10 @@ Networkx provides a flexible way to create static network visualizations:
 
     # Create basic static plot
     bn.plot(model, interactive=False)
-    
+
     # Customize static plot with specific parameters
-    bn.plot(model, 
-           interactive=False, 
+    bn.plot(model,
+           interactive=False,
            params_static={
                'width': 15,
                'height': 8,
@@ -155,7 +160,7 @@ Graphviz provides a more structured and hierarchical visualization style:
    +----------+
 
 Network Comparison
-----------------------------------------
+=========================================
 
 The library provides tools to compare different networks, which is particularly useful when comparing learned structures against ground truth or different learning methods:
 
@@ -166,19 +171,19 @@ The library provides tools to compare different networks, which is particularly 
 
    # Plot ground truth
    G = bn.plot(model)
-   
+
    # Generate synthetic data
    df = bn.sampling(model, n=10000)
-   
+
    # Learn structure from data
    model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
-   
+
    # Compute edge strengths
    model_sl = bn.independence_test(model_sl, df, test='chi_square', prune=True)
-   
+
    # Plot learned structure
    bn.plot(model_sl, pos=G['pos'])
-   
+
    # Compare networks
    bn.compare_networks(model, model_sl, pos=G['pos'])
 
@@ -207,7 +212,7 @@ The library provides tools to compare different networks, which is particularly 
    +----------+
 
 Advanced Customization
-----------------------------------------
+=========================================
 
 Node Properties
 ^^^^^^^^^^^^^^^
@@ -268,7 +273,7 @@ Edge properties can be customized using the :func:`bnlearn.bnlearn.get_edge_prop
     edge_properties['either', 'xray']['weight']=4
     edge_properties['bronc', 'smoke']['weight']=15
     edge_properties['bronc', 'smoke']['color']='#8A0707'
-    
+
     # Plot
     params_static={'edge_alpha':0.6, 'arrowstyle':'->', 'arrowsize':60}
     bn.plot(model, interactive=False, edge_properties=edge_properties, params_static=params_static)

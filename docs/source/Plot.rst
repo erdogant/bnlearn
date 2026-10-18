@@ -1,10 +1,8 @@
-Plotting
-=========================================
 
 ``bnlearn`` provides both **interactive** and **static** plotting capabilities through the :func:`bnlearn.bnlearn.plot` function. These visualization tools allow for extensive customization of network and figure properties, including node colors, sizes, and layout configurations. Interactive plots are created using the ``D3Blocks`` library, while static plots utilize matplotlib and networkx.
 
 Interactive Plotting
-----------------------------------------
+=========================================
 
 Prerequisites
 ^^^^^^^^^^^^^
@@ -44,10 +42,15 @@ The simplest way to create an interactive plot is by setting ``interactive=True`
                                     'layout': 'dagre',
                                     })
 
-
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/pyvis/bnlearn_asia_causal_network.html" height="1300px" width="800px", frameBorder="0"></iframe>
+      <iframe
+          src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/bnlearn_asia_causal_network.html"
+          width="850"
+          height="1300"
+          frameborder="0"
+          style="border: none;">
+      </iframe>
 
 Customizing Node Properties
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -102,7 +105,7 @@ You can customize the appearance of nodes in several ways:
    +----------+
 
 Static Plotting
-----------------------------------------
+=========================================
 
 Networkx Static Plots
 ^^^^^^^^^^^^^^^^^^^^^
@@ -157,7 +160,7 @@ Graphviz provides a more structured and hierarchical visualization style:
    +----------+
 
 Network Comparison
-----------------------------------------
+=========================================
 
 The library provides tools to compare different networks, which is particularly useful when comparing learned structures against ground truth or different learning methods:
 
@@ -209,7 +212,7 @@ The library provides tools to compare different networks, which is particularly 
    +----------+
 
 Advanced Customization
-----------------------------------------
+=========================================
 
 Node Properties
 ^^^^^^^^^^^^^^^
