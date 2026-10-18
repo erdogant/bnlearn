@@ -272,8 +272,17 @@ def _normalize_weights(weights, minscale=1, maxscale=5):
     """
     from sklearn.preprocessing import MinMaxScaler
 
-    if len(weights.shape) == 1:
+    # Ensure we operate on a numpy array
+    weights = np.asarray(weights)
+    # If the input is empty, return an empty 1-D float array.
+    if weights.size == 0:
+        return np.array([], dtype=float)
+
+    # Reshape 1-D array into column vector expected by sklearn
+    if weights.ndim == 1:
         weights = weights.reshape(-1, 1)
+
+    # Fit-transform into the requested feature range and return 1-D array
     weights = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(weights).flatten()
     return weights
 
