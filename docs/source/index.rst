@@ -51,8 +51,13 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
-
+        <iframe
+            src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/sprinkler.html"
+            width="850"
+            height="600"
+            frameborder="0"
+            style="border: none;">
+        </iframe>
 
 
 -----------------------------------

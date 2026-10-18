@@ -317,7 +317,7 @@ We will learn the structure on the discretized continuous data. Note that the da
         <iframe
             src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/fig2b.html"
             width="850"
-            height="1300"
+            height="600"
             frameborder="0"
             style="border: none;">
         </iframe>
@@ -349,21 +349,15 @@ After fitting the model on the DAG and dataframe, we can perform the independenc
     bn.plot_graphviz(model, edge_filter='p_value')
     bn.plot(model, interactive=True)
 
-.. |fig3a| image:: ../figs/fig_cont_1.png
 .. |fig3b| image:: ../figs/fig_cont_1b.png
 
 .. table::
    :align: center
 
    +----------+
-   | |fig3a|  |
-   +----------+
    | |fig3b|  |
    +----------+
 
-.. raw:: html
-
-   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_2.html" height="700px" width="750px", frameBorder="0"></iframe>
 
 There are various ways to investigate the results further, such as examining the CPDs.
 
