@@ -12,7 +12,7 @@ del df['origin']
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
 model = bn.parameter_learning.fit(model, df, methodtype='cg')
 # Compute edge strength
-model = bn.independence_test(model, df, prune=True)
+# model = bn.independence_test(model, df, prune=True)
 
 # DAG = model['model']
 # CPDs = {}
@@ -28,6 +28,45 @@ dotgraph
 G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'type':'flowgraph', 'filepath':r'd:\temp\out1.html'})
 
 
+# %%
+
+from distfit import distfit
+import pandas as pd
+import bnlearn as bn
+
+# Load the predictive maintenance dataset
+df = bn.import_example('predictive_maintenance')
+print(df.head())
+
+del df['UDI']
+del df['Product ID']
+del df['Type']
+
+# bnlearn's infer_data_type automatically classifies each column:
+# continuous: Air temperature, Process temperature, Rotational speed, Torque, Tool wear
+# discrete:   Machine failure, TWF, HDF, PWF, OSF, RNF
+
+# Learn causal structure on mixed dataset
+model_cg = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
+model_cg = bn.parameter_learning.fit(model_cg, df, methodtype='cg')
+
+# Remove edges that are not significant (optional)
+model_cg= bn.independence_test(model_cg, df, prune=True)
+
+# Visualize
+_ = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', edge_filter='logp')
+G = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', interactive=True, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model_cg)
+dotgraph
+
+# Inspect discrete CPTs
+cpd_dict = bn.print_CPD(model_cg)
+
+# Inspect continuous regression parameters
+for cpd in model_cg['continuous_cpds']:
+    print(f"\nNode: {cpd['variable']}")
+    print(f"  Parents: {cpd['disc_parents']} (discrete), {cpd['cont_parents']} (continuous)")
+    
 
 # %%
 # =============================================================================
@@ -134,14 +173,17 @@ model = bn.structure_learning.fit(df, methodtype='direct-lingam')
 # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
 # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
 # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
+# model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
 
 print(model['adjmat'])
-bn.plot(model)
-model = bn.independence_test(model, df, prune=True)
-fig = bn.plot(model, edge_filter='weight')
+_ = bn.plot(model)
+_ = bn.plot(model, interactive=True)
 
-dotgraph = bn.plot_graphviz(model, edge_filter='weight')
-dotgraph
+# model = bn.independence_test(model, df, prune=True)
+# fig = bn.plot(model, edge_filter='weight')
+
+# dotgraph = bn.plot_graphviz(model, edge_filter='weight')
+# dotgraph
 
 
 # %%
@@ -868,14 +910,15 @@ import bnlearn as bn
 
 # Load sprinkler dataset
 df = bn.import_example('asia')
+df.columns
 
 # Learn the DAG in data using hillclimbsearch and BIC
 model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='bic')
-# model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
-# model = bn.structure_learning.fit(df, methodtype='tan', class_node='BP')
-# model = bn.structure_learning.fit(df, methodtype='cl', root_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='tan', class_node='smoke')
+# model = bn.structure_learning.fit(df, methodtype='tan', class_node='smoke')
+# model = bn.structure_learning.fit(df, methodtype='cl', root_node='smoke')
 # model = bn.structure_learning.fit(df, methodtype='cl')
-# model = bn.structure_learning.fit(df, methodtype='nb', root_node='BP')
+# model = bn.structure_learning.fit(df, methodtype='nb', root_node='smoke')
 
 
 # Compute edge weights using ChiSquare independence test.
@@ -1246,7 +1289,7 @@ print(model.causal_order_)
 print(model.adjacency_matrix_)
 
 make_dot(model.adjacency_matrix_, labels=labels)
-
+bn.plot(model, interactive=True, edge_filter='logp')
 
 
 # %% issue #98
