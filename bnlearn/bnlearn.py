@@ -34,10 +34,18 @@ import datazets as dz
 import pypickle
 
 import bnlearn as bn
-from bnlearn.sampling import sampling as bn_sampling
-from bnlearn.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
-from bnlearn.plot import plot, plot_graphviz, get_node_properties, get_edge_properties, hierarchical_layout
-from bnlearn.plot import normalize_independence_frame
+try:
+    from bnlearn.sampling import sampling as bn_sampling
+    from bnlearn.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
+    from bnlearn.plot import plot, plot_graphviz, get_node_properties, get_edge_properties, hierarchical_layout
+    from bnlearn.plot import normalize_independence_frame
+    from bnlearn.utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
+except:
+    from sampling import sampling as bn_sampling
+    from CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
+    from plot import plot, plot_graphviz, get_node_properties, get_edge_properties, hierarchical_layout
+    from plot import normalize_independence_frame
+    from utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
 
 
 # %%  Convert adjmat to bayesian model
@@ -442,7 +450,6 @@ def dag2adjmat(model):
         logger.error('Could not convert to adjmat because nodes and/or edges were missing.')
     return adjmat
 
-from bnlearn.utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
 
 # %%
 def sampling(DAG, n=1000, methodtype='bayes', evidence=None):
