@@ -48,7 +48,7 @@ from ismember import ismember
 
 
 # %% Entry point
-def plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title):
+def plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=None, edge_filter=None):
     """Create the interactive plot.
 
     Parameters
@@ -63,6 +63,11 @@ def plot_interactive(model, params_interactive, nodelist, node_colors, node_size
         Edges as (source, target) and their properties (same order).
     title : str
         Title of the plot.
+    edge_properties : dict, optional
+        ``{(source, target): {'p_value', 'logp', 'value', ...}}`` from ``get_edge_properties``.
+    edge_filter : str or None, optional
+        'weight', 'p_value' or 'logp'. The matching value is highlighted in the edge hover.
+        'p_value' and 'logp' require ``bn.independence_test`` to be applied on the model.
 
     Returns
     -------
@@ -78,7 +83,7 @@ def plot_interactive(model, params_interactive, nodelist, node_colors, node_size
 
     if chart_type == 'flowgraph':
         # Neat CPD tables for edges (CPD of the target) and nodes (own CPD)
-        edge_tooltip = _edge_cpd_tooltips(model, edgelist)
+        edge_tooltip = _edge_tooltips(model, edgelist, edge_properties=edge_properties, edge_filter=edge_filter)
         node_tooltip = _node_cpd_tooltips(model, nodelist)
         tooltip = [node_tooltip.get(n, None) for n in nodelist] if node_tooltip else nodelist
         return _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=edge_tooltip)
@@ -225,6 +230,7 @@ _EDGE_TOOLTIP_CSS = """
 #fg-tooltip .bn-cpd-title { font-family: Georgia, serif; font-style: italic; margin-top: 4px; }
 #fg-tooltip .bn-cpd-eq { font-family: Consolas, monospace; font-size: 11px; margin-top: 5px; }
 #fg-tooltip .bn-cpd-warn { margin-top: 6px; padding: 4px 6px; border-left: 3px solid #f0b429; background: rgba(240,180,41,.14); font-size: 11px; white-space: normal; max-width: 330px; }
+#fg-tooltip .bn-sep { height: 1px; margin: 8px 0 2px; background: rgba(128,128,128,.35); }
 #fg-tooltip .bn-cpd-note { color: var(--text-muted); font-size: 10.5px; margin-top: 3px; }
 </style>
 """
@@ -411,6 +417,83 @@ def _node_cpd_tooltips(model, nodelist, max_rows=8, max_cols=6):
         h = _cpd_html_for_node(node, cpds, cg, max_rows=max_rows, max_cols=max_cols)
         if h:
             out[node] = h
+    return out
+
+
+def _edge_stat_html(model, edge, edge_properties=None, edge_filter=None):
+    """Small table with the edge strength from ``bn.independence_test`` (None if unavailable).
+
+    The value of ``edge_filter`` ('logp', 'p_value' or 'weight') is highlighted.
+    """
+    indep = model.get('independence_test', None) if isinstance(model, dict) else None
+    props = (edge_properties or {}).get(edge, {}) or {}
+    row = None
+    if isinstance(indep, pd.DataFrame) and len(indep) > 0:
+        match = indep[(indep['source'] == edge[0]) & (indep['target'] == edge[1])]
+        if len(match) > 0:
+            row = match.iloc[0]
+
+    rows = []  # (key, label, text)
+
+    def num(x, fmt):
+        try:
+            x = float(x)
+        except (TypeError, ValueError):
+            return None
+        return None if not np.isfinite(x) else fmt % x
+
+    if row is not None:
+        logp = num(props.get('logp'), '%.2f')
+        if logp is not None:
+            rows.append(('logp', '-log10(p)', logp))
+        p = num(row['p_value'], '%.3g')
+        if p is not None:
+            rows.append(('p_value', 'p-value', p))
+        stat_cols = [c for c in indep.columns if c not in ('source', 'target', 'stat_test', 'p_value', 'dof')]
+        if stat_cols:
+            st = num(row[stat_cols[0]], '%.3g')
+            if st is not None:
+                rows.append(('stat', _html.escape(str(stat_cols[0])), st))
+        if 'dof' in indep.columns:
+            dof = num(row['dof'], '%.0f')
+            if dof is not None:
+                rows.append(('dof', 'dof', dof))
+        if 'stat_test' in indep.columns:
+            rows.append(('sig', 'significant', 'yes' if bool(row['stat_test']) else 'no'))
+
+    # 'weight' is the edge value in the adjacency matrix; only informative when not trivially 1.
+    value = num(props.get('value'), '%.2f')
+    if value is not None and (edge_filter == 'weight' or float(props.get('value')) != 1):
+        rows.append(('weight', 'weight', value))
+
+    if not rows:
+        return None
+    # Columns: one column per statistic (header row = labels, single row = values)
+    head, vals = [], []
+    for key, label, text in rows:
+        hl = ' hl' if key == edge_filter else ''
+        head.append('<th class="%s">%s</th>' % (hl.strip(), label))
+        vals.append('<td class="%s">%s</td>' % (hl.strip(), text))
+    return ('<div class="bn-cpd-title">Edge strength</div><table class="bn-cpd"><tr>%s</tr><tr>%s</tr></table>'
+            % (''.join(head), ''.join(vals)))
+
+
+def _edge_tooltips(model, edgelist, edge_properties=None, edge_filter=None, max_rows=8, max_cols=6):
+    """Edge hover HTML: edge strength (independence test) followed by the CPD of the target node.
+
+    Returns
+    -------
+    dict
+        ``{(source, target): html}``. Edges with neither get no entry (default hover is kept).
+    """
+    cpd_html = _edge_cpd_tooltips(model, edgelist, max_rows=max_rows, max_cols=max_cols)
+    out = {}
+    for edge in edgelist:
+        key = (str(edge[0]), str(edge[1]))
+        parts = [_edge_stat_html(model, (edge[0], edge[1]), edge_properties=edge_properties, edge_filter=edge_filter), cpd_html.get(key)]
+        parts = [x for x in parts if x]
+        if parts:
+            out[key] = '<div class="bn-sep"></div>'.join(parts)
     return out
 
 

@@ -597,7 +597,8 @@ def plot(model,
 
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value =  _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     if interactive:
-        fig = plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title)
+        fig = plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title,
+                                edge_properties=edge_properties, edge_filter=edge_filter)
 
     else:
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()) or ('lingam' in model['config']['method']):
