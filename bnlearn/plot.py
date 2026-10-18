@@ -11,6 +11,7 @@ import logging
 logger = logging.getLogger("bnlearn")
 import os
 import copy
+from packaging import version
 
 import numpy as np
 import pandas as pd
@@ -19,8 +20,12 @@ import matplotlib.pyplot as plt
 
 from ismember import ismember
 from setgraphviz import setgraphviz
-from bnlearn.utils import vec2adjmat, adjmat2vec, _normalize_weights
 
+import bnlearn as bn
+try:
+    from bnlearn.utils import vec2adjmat, adjmat2vec, _normalize_weights
+except:
+    from utils import vec2adjmat, adjmat2vec, _normalize_weights
 
 # %% Get node properties
 def get_node_properties(model, node_color='#ADD8E6', node_size=None):
@@ -190,12 +195,27 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
 
 
 # %% Internal helpers
+# def compute_logp(p_value):
+#     logp = -np.log10(p_value)
+#     if logp.empty:
+#         return logp
+
+#     Iloc = np.isinf(logp)
+#     max_logp = np.max(logp[~Iloc]) * 1.5
+#     if np.isnan(max_logp): max_logp = 1
+#     logp.loc[Iloc] = max_logp
+#     return logp
 
 def compute_logp(p_value):
     logp = -np.log10(p_value)
+
+    if logp.empty:
+        return logp
+
     Iloc = np.isinf(logp)
-    max_logp = np.max(logp[~Iloc]) * 1.5
-    if np.isnan(max_logp): max_logp = 1
+    valid = logp[~Iloc & np.isfinite(logp)]
+    max_logp = valid.max() * 1.5 if not valid.empty else 1
+    if not np.isfinite(max_logp): max_logp = 1
     logp.loc[Iloc] = max_logp
     return logp
 
@@ -474,8 +494,6 @@ def plot(model,
     dict
         pos, G, node_properties, edge_properties, fig/ax.
     """
-    import bnlearn as bn
-
     fig = None
     if model is None or (model.get('adjmat', None) is None) or model['adjmat'].sum().sum() == 0:
         logger.info('Nothing to plot because no edges are present between nodes. ')
