@@ -12,7 +12,7 @@ del df['origin']
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
 model = bn.parameter_learning.fit(model, df, methodtype='cg')
 # Compute edge strength
-# model = bn.independence_test(model, df, prune=True)
+model = bn.independence_test(model, df, prune=True)
 
 # DAG = model['model']
 # CPDs = {}
@@ -25,7 +25,7 @@ G = bn.plot(model, edge_filter='logp', interactive=False)
 dotgraph = bn.plot_graphviz(model, edge_filter='logp')
 dotgraph
 # Interactive graph
-G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'type':'flowgraph', 'filepath':r'd:\temp\out1.html'})
+G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html'})
 
 
 # %%
