@@ -443,7 +443,7 @@ def plot(model,
          pos=None,
          scale=1,
          interactive=False,
-         title='bnlearn Directed Acyclic Graph (DAG)',
+         title='bnlearn_DAG',
          node_color=None,
          node_size=None,
          node_properties=None,
@@ -453,7 +453,7 @@ def plot(model,
              'figsize': [None, None],
              'notebook': False,
              'filepath': None,
-             'direction': 'LR',          # 'LR' | 'TB' | 'RL' | 'BT'
+             'direction': 'TB',          # 'LR' | 'TB' | 'RL' | 'BT'
              'layout': 'dagre',          # 'dagre' | 'elk'
              'animate': False,
              'show_side_panel': True,

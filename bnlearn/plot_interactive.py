@@ -224,6 +224,7 @@ _EDGE_TOOLTIP_CSS = """
 #fg-tooltip table.bn-cpd th.hl, #fg-tooltip table.bn-cpd td.hl { outline: 1.5px solid #f0b429; outline-offset: -1.5px; }
 #fg-tooltip .bn-cpd-title { font-family: Georgia, serif; font-style: italic; margin-top: 4px; }
 #fg-tooltip .bn-cpd-eq { font-family: Consolas, monospace; font-size: 11px; margin-top: 5px; }
+#fg-tooltip .bn-cpd-warn { margin-top: 6px; padding: 4px 6px; border-left: 3px solid #f0b429; background: rgba(240,180,41,.14); font-size: 11px; white-space: normal; max-width: 330px; }
 #fg-tooltip .bn-cpd-note { color: var(--text-muted); font-size: 10.5px; margin-top: 3px; }
 </style>
 """
@@ -328,10 +329,13 @@ def _tabular_cpd_html(cpd, parent=None, max_rows=8, max_cols=6):
         notes.append('showing %d of %d parent configurations' % (show_c, n_cols))
     if show_r < n_rows:
         notes.append('showing %d of %d states' % (show_r, n_rows))
-    if parent is not None and parent not in evidence:
-        notes.append('edge from %s is not used in this discrete CPT' % _html.escape(str(parent)))
     if notes:
         h.append('<div class="bn-cpd-note">%s</div>' % '; '.join(notes))
+    if parent is not None and parent not in evidence:
+        h.append('<div class="bn-cpd-warn">⚠ <b>%s</b> is not a parent in this CPD. Conditional Gaussian models '
+                 'cannot condition a discrete node on a continuous one, so the table is the marginal '
+                 'P(%s) and the edge %s → %s has no learned parameters.</div>'
+                 % (_html.escape(str(parent)), _html.escape(str(var)), _html.escape(str(parent)), _html.escape(str(var))))
     return ''.join(h)
 
 
