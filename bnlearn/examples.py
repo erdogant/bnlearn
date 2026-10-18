@@ -1,21 +1,31 @@
 # %%
 import bnlearn as bn
-bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
+
+# 'info', 'warning', 'error', 'trace', None
+bn.set_logger('info')
 
 # Load dataset
 df = bn.import_example(data='auto_mpg')
 del df['origin']
 
 # Perform structure learning
-model = bn.structure_learning.fit(df, methodtype='hc', scoretype='auto')
-
+model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
+model = bn.parameter_learning.fit(model, df, methodtype='cg')
 # Compute edge strength
 model = bn.independence_test(model, df, prune=True)
 
-# Create visualizations
-G = bn.plot(model, edge_filter='logp')
+# DAG = model['model']
+# CPDs = {}
+# for cpd in DAG.get_cpds():
+#     CPDs[cpd.variable] = bn.query2df(cpd)['p']
+
+# Static plot
+G = bn.plot(model, edge_filter='logp', interactive=False)
+# dotgraph
 dotgraph = bn.plot_graphviz(model, edge_filter='logp')
 dotgraph
+# Interactive graph
+G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'type':'flowgraph', 'filepath':r'd:\temp\out1.html'})
 
 
 
@@ -320,7 +330,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-G = bn.plot(model, interactive=False)
+G = bn.plot(model, interactive=True)
 bn.plot_graphviz(model)
 
 #%%
@@ -1829,8 +1839,8 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Rain', 'Wet_Grass')]
 
 # Make the actual Bayesian DAG
-DAG = bn.make_DAG(edges, , methodtype='markov')
-model = bn.parameter_learning.fit(DAG, df, , methodtype='bayes')
+DAG = bn.make_DAG(edges, methodtype='markov')
+model = bn.parameter_learning.fit(DAG, df, methodtype='bayes')
 
 # Sampling
 df = bn.sampling(model, n=100, methodtype='gibbs')
