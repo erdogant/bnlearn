@@ -287,31 +287,42 @@ We will learn the structure on the discretized continuous data. Note that the da
     # Learn the structure
     model = bn.structure_learning.fit(df_discrete, methodtype='hc', scoretype='bic')
 
+    # Learn the parameters
+    model = bn.parameter_learning.fit(model, df_discrete)
+
     # Perform independence test
-    model = bn.independence_test(model, df, prune=True)
+    model = bn.independence_test(model, df_discrete, prune=True)
     # [bnlearn] >Compute edge strength with [chi_square]
     # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
 
-    # Create visualizations
-    bn.plot(model, edge_filter='p_value')
-    bn.plot_graphviz(model, edge_filter='p_value')
-    bn.plot(model, interactive=True)
+    # Create 3 types of visualizations
+    # Static
+    bn.plot(model, edge_filter='logp')
+    # Static but with graphviz
+    bn.plot_graphviz(model, edge_filter='logp')
+    # Interactive
+    G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'filepath': r'c:\auto_mpg.html'})
 
-.. |fig2a| image:: ../figs/fig2a.png
 .. |fig2b| image:: ../figs/fig2b.png
 
 .. table::
    :align: center
 
    +----------+
-   | |fig2a|  |
-   +----------+
    | |fig2b|  |
    +----------+
 
 .. raw:: html
 
-   <iframe src="https://erdogant.github.io/docs/d3blocks/bnlearn_continous_example_1.html" height="700px" width="750px", frameBorder="0"></iframe>
+        <iframe
+            src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/fig2b.html"
+            width="850"
+            height="1300"
+            frameborder="0"
+            style="border: none;">
+        </iframe>
+
+
 
 Parameter Learning (discretized data)
 *************************************
