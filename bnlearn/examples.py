@@ -372,7 +372,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, interactive=True, edge_filter='logp')
 bn.plot_graphviz(model)
 
 #%%
@@ -404,7 +404,8 @@ for cpd in DAG.get_cpds():
     CPDs[cpd.variable] = bn.query2df(cpd)['p']
 
 # Plot the DAG
-# bn.plot(model)
+bn.plot(model)
+G = bn.plot(model, interactive=True)
 # 
 # q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler':0})
 # print(q1.df)

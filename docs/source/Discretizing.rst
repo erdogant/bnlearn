@@ -43,7 +43,7 @@ After all continuous variables are categorized, the normal structure learning pr
     # Import libraries
     import bnlearn as bn
     import pandas as pd
-    
+
     # Load dataset
     df = bn.import_example(data='auto_mpg')
 
@@ -61,7 +61,7 @@ After all continuous variables are categorized, the normal structure learning pr
     # 389  32.0          4         135.0  ...          11.6          82       1
     # 390  28.0          4         120.0  ...          18.6          82       1
     # 391  31.0          4         119.0  ...          19.4          82       1
-    # 
+    #
     # [392 rows x 8 columns]
 
     # Define horsepower bins based on domain knowledge
@@ -79,6 +79,7 @@ After all continuous variables are categorized, the normal structure learning pr
     # 2       150.0              medium
     # 3       150.0              medium
     # 4       140.0              medium
+
 
 Automatic Discretization: Probability Density
 =============================================
@@ -104,15 +105,15 @@ It is always wise to have a visual inspection of the distribution plots with the
     plt.show()
 
     # Define bins based on distribution
-    bins = [df['acceleration'].min(), 
-            dist.model['CII_min_alpha'], 
-            dist.model['CII_max_alpha'], 
+    bins = [df['acceleration'].min(),
+            dist.model['CII_min_alpha'],
+            dist.model['CII_max_alpha'],
             df['acceleration'].max()]
-   
+
     # Discretize acceleration using the defined bins
-    df['acceleration_category'] = pd.cut(df['acceleration'], 
-                                       bins=bins, 
-                                       labels=['fast', 'normal', 'slow'], 
+    df['acceleration_category'] = pd.cut(df['acceleration'],
+                                       bins=bins,
+                                       labels=['fast', 'normal', 'slow'],
                                        include_lowest=True)
     del df['acceleration']
 
@@ -141,17 +142,17 @@ For multiple continuous variables, we can automate the distribution fitting:
         # Create visualization
         dist.plot()
         plt.show()
-        
+
         # Define bins based on distribution
-        bins = [df[col].min(), 
-                dist.model['CII_min_alpha'], 
-                dist.model['CII_max_alpha'], 
+        bins = [df[col].min(),
+                dist.model['CII_min_alpha'],
+                dist.model['CII_max_alpha'],
                 df[col].max()]
 
         # Discretize using the defined bins
-        df[col + '_category'] = pd.cut(df[col], 
-                                     bins=bins, 
-                                     labels=['low', 'medium', 'high'], 
+        df[col + '_category'] = pd.cut(df[col],
+                                     bins=bins,
+                                     labels=['low', 'medium', 'high'],
                                      include_lowest=True)
         del df[col]
 
@@ -166,8 +167,9 @@ After all continuous variables are categorized, the causal discovery approach fo
     model = bn.independence_test(model, df)
 
     # Create visualizations
-    bn.plot(model, edge_mode='p_value')
-    dotgraph = bn.plot_graphviz(model, edge_mode='p_value')
+    bn.plot(model, edge_filter='logp')
+    bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'filepath': r'c:\temp\auto_mpg_distfit.html'})
+    dotgraph = bn.plot_graphviz(model, edge_filter='logp')
     dotgraph
 
 .. |figd2a| image:: ../figs/auto_mpg_distfit.png
@@ -178,6 +180,18 @@ After all continuous variables are categorized, the causal discovery approach fo
    +-----------+
    | |figd2a|  |
    +-----------+
+
+
+.. raw:: html
+
+        <iframe
+            src="https://raw.githack.com/erdogant/bnlearn/master/docs/figs/auto_mpg_distfit.html"
+            width="850"
+            height="600"
+            frameborder="0"
+            style="border: none;">
+        </iframe>
+
 
 Automatic Discretization: Principled Bayesian
 =============================================
@@ -190,10 +204,10 @@ A limitation of this approach is that you need to pre-define the edges before ap
 
     # Import libraries
     import bnlearn as bn
-    
+
     # Load dataset
     df = bn.import_example(data='auto_mpg')
-    
+
     # Print dataset overview
     print(df)
     #       mpg  cylinders  displacement  ...  acceleration  model_year  origin
@@ -208,7 +222,7 @@ A limitation of this approach is that you need to pre-define the edges before ap
     # 389  32.0          4         135.0  ...          11.6          82       1
     # 390  28.0          4         120.0  ...          18.6          82       1
     # 391  31.0          4         119.0  ...          19.4          82       1
-    # 
+    #
     # [392 rows x 8 columns]
 
     # Define the edges
@@ -258,7 +272,7 @@ We can now discretize the continuous columns as follows:
     # 389    (28.9, 46.6]          4  ...         82      1
     # 390   (25.65, 28.9]          4  ...         82      1
     # 391    (28.9, 46.6]          4  ...         82      1
-    # 
+    #
     # [392 rows x 8 columns]
 
 At this point, the dataset is no different from any other discrete dataset. We can specify the DAG together with the discrete dataframe and fit a model using ``bnlearn``.
@@ -279,8 +293,8 @@ We will learn the structure on the discretized continuous data. Note that the da
     # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
 
     # Create visualizations
-    bn.plot(model, edge_mode='p_value')
-    bn.plot_graphviz(model, edge_mode='p_value')
+    bn.plot(model, edge_filter='p_value')
+    bn.plot_graphviz(model, edge_filter='p_value')
     bn.plot(model, interactive=True)
 
 .. |fig2a| image:: ../figs/fig2a.png
@@ -308,7 +322,7 @@ Let's continue with parameter learning on the continuous dataset and see whether
 
     # Fit model based on DAG and discretized continuous columns
     model = bn.parameter_learning.fit(DAG, df_discrete)
-    
+
     # Alternative: Use MLE method
     # model_mle = bn.parameter_learning.fit(DAG, df_discrete, methodtype="maximumlikelihood")
 
@@ -320,8 +334,8 @@ After fitting the model on the DAG and dataframe, we can perform the independenc
     model = bn.independence_test(model, df, prune=True)
 
     # Create visualizations
-    bn.plot(model, edge_mode='p_value')
-    bn.plot_graphviz(model, edge_mode='p_value')
+    bn.plot(model, edge_filter='p_value')
+    bn.plot_graphviz(model, edge_filter='p_value')
     bn.plot(model, interactive=True)
 
 .. |fig3a| image:: ../figs/fig_cont_1.png
