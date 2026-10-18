@@ -41,6 +41,9 @@ Blog Posts
      * - **LLMs and Causal Discovery** – Benchmark large language models against Bayesian methods for discovering cause-and-effect relationships.
        - `Read <https://medium.com/data-science-collective/can-llms-discover-cause-and-effect-a-benchmark-against-bayesian-models-33ed35a26028>`_
 
+    * - **LLMs and Causal Discovery** – Do-Calculus and Causal Interventions: A Practical Guide to Asking “What If” Questions.
+        - `Read <https://medium.com/data-science-collective/do-calculus-and-causal-interventions-a-practical-guide-to-asking-what-if-questions-f6783bbfb28d>`_
+
 
 GitHub Repository
 -----------------

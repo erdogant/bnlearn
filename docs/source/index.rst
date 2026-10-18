@@ -50,6 +50,7 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 	* `Can LLMs Discover Cause and Effect? A Benchmark Against Bayesian Models. <https://medium.com/data-science-collective/can-llms-discover-cause-and-effect-a-benchmark-against-bayesian-models-33ed35a26028>`_
 	* `Six Causal Libraries Compared: Which Bayesian Approach Finds Hidden Causes in Your Data? <https://medium.com/data-science-collective/six-causal-libraries-compared-which-bayesian-approach-finds-hidden-causes-in-your-data-9fa66fd02825>`_
 	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
+	* `Do-Calculus and Causal Interventions: A Practical Guide to Asking “What If” Questions. <https://medium.com/data-science-collective/do-calculus-and-causal-interventions-a-practical-guide-to-asking-what-if-questions-f6783bbfb28d>`_
 
 
 -----------------------------------
