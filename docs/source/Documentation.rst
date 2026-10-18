@@ -17,29 +17,29 @@ Blog Posts
    * - Topic
      - Medium
 
-   * - **Causal Discovery – Overview and Starters Guide** – Foundations of causal modelling.
-     - `Read <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
+     * - **Causal Discovery – Overview and Starters Guide** – Foundations of causal modelling.
+       - `Read <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
 
-   * - **Structure Learning** – Learn structure from data or expert knowledge.
-     - `Read <https://medium.com/data-science-collective/the-complete-starter-guide-for-causal-discovery-using-bayesian-modeling-8853eb860d02>`_
+     * - **Structure Learning** – Learn causal structure from data or expert knowledge.
+       - `Read <https://medium.com/data-science-collective/the-complete-starter-guide-for-causal-discovery-using-bayesian-modeling-8853eb860d02>`_
 
-   * - **Causal Predictions** – Move beyond prediction to intervention.
-     - `Read <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
+     * - **Causal Predictions** – Explore how causal models support interventions and outcome optimization.
+       - `Read <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
 
-   * - **Parameter Learning** – Estimate CPDs from observed data.
-     - `Read <https://medium.com/data-science-collective/human-machine-collaboration-with-bayesian-modeling-learn-to-combine-knowledge-with-data-1ee9bcd67745>`_
+     * - **Parameter Learning** – Combine domain knowledge with data to estimate Bayesian network parameters.
+       - `Read <https://medium.com/data-science-collective/human-machine-collaboration-with-bayesian-modeling-learn-to-combine-knowledge-with-data-1ee9bcd67745>`_
 
-   * - **Causal Inference** – Interventional & counterfactual reasoning.
-     - `Read <https://medium.com/data-science-collective/chat-with-your-dataset-using-bayesian-inferences-1afdbfd4bada>`_
+     * - **Causal Inference** – Explore Bayesian inference and reason about relationships in your dataset.
+       - `Read <https://medium.com/data-science-collective/chat-with-your-dataset-using-bayesian-inferences-1afdbfd4bada>`_
 
-   * - **Generate Synthetic Data** – Forward sampling & data generation.
-     - `Read <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
+     * - **Generate Synthetic Data** – Learn forward sampling and synthetic data generation using Bayesian networks.
+       - `Read <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
 
-   * - **Discretize Data** – Convert continuous variables for BN modelling.
-     - —
+     * - **Comparisons** – Compare causal discovery libraries and evaluate their approaches to finding hidden causal relationships.
+       - `Read <https://medium.com/data-science-collective/six-causal-libraries-compared-which-bayesian-approach-finds-hidden-causes-in-your-data-9fa66fd02825>`_
 
-   * - **Comparisons** – Evaluate Bayesian causal libraries.
-     - `Read <https://medium.com/data-science-collective/six-causal-libraries-compared-which-bayesian-approach-finds-hidden-causes-in-your-data-9fa66fd02825>`_
+     * - **LLMs and Causal Discovery** – Benchmark large language models against Bayesian methods for discovering cause-and-effect relationships.
+       - `Read <https://medium.com/data-science-collective/can-llms-discover-cause-and-effect-a-benchmark-against-bayesian-models-33ed35a26028>`_
 
 
 GitHub Repository

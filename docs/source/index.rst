@@ -42,9 +42,14 @@ Yes! This library is entirely free but it runs on `coffee <https://buymeacoffee.
 -----------------------------------
 
 .. tip::
+	* `The Complete Starter Guide For Causal Discovery Using Bayesian Modeling. <https://medium.com/data-science-collective/the-complete-starter-guide-for-causal-discovery-using-bayesian-modeling-8853eb860d02>`_
 	* `The Starters Guide to Causal Structure Learning with Bayesian Methods in Python. <https://medium.com/data-science-collective/the-starters-guide-to-causal-structure-learning-with-bayesian-methods-in-python-e3b90f49c99c>`_
-	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-584ad0dd6ab5>`_
-	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-in-python-82fb7d2ecb19>`_
+	* `Chat with Your Dataset using Bayesian Inferences. <https://medium.com/data-science-collective/chat-with-your-dataset-using-bayesian-inferences-1afdbfd4bada>`_
+	* `Human-Machine Collaboration with Bayesian Modeling: Learn To Combine Knowledge With Data. <https://medium.com/data-science-collective/human-machine-collaboration-with-bayesian-modeling-learn-to-combine-knowledge-with-data-1ee9bcd67745>`_
+	* `Synthetic Data: The Essentials Of Data Generation Using Bayesian Sampling. <https://medium.com/data-science-collective/synthetic-data-the-essentials-of-data-generation-using-bayesian-sampling-6d072e97e09d>`_
+	* `Can LLMs Discover Cause and Effect? A Benchmark Against Bayesian Models. <https://medium.com/data-science-collective/can-llms-discover-cause-and-effect-a-benchmark-against-bayesian-models-33ed35a26028>`_
+	* `Six Causal Libraries Compared: Which Bayesian Approach Finds Hidden Causes in Your Data? <https://medium.com/data-science-collective/six-causal-libraries-compared-which-bayesian-approach-finds-hidden-causes-in-your-data-9fa66fd02825>`_
+	* `Why Prediction Isn’t Enough: Using Bayesian Models to Change the Outcome. <https://medium.com/data-science-collective/why-prediction-isnt-enough-using-bayesian-models-to-change-the-outcome-5c9cf9f65a75>`_
 
 
 -----------------------------------
