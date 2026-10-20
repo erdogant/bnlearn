@@ -45,7 +45,7 @@ def _detect_installed_harnesses(root: Path) -> list[str]:
 
     Only the harnesses listed in ``KNOWN_HARNESSES`` are considered.  A
     harness is "installed" when its top-level dot-directory exists (e.g.
-    ``~/.claude``); the ``skills/`` sub-directory need not be present yet.
+    ``~/.agents``); the ``skills/`` sub-directory need not be present yet.
     """
     found = []
     for name, dotdir in KNOWN_HARNESSES.items():
@@ -58,12 +58,12 @@ def _detect_installed_harnesses(root: Path) -> list[str]:
 # Core install logic
 # ---------------------------------------------------------------------------
 
-def install_skill(harness: str = "claude", *, global_install: bool = False) -> Path:
+def install_skill(harness: str = "agents", *, global_install: bool = False) -> Path:
     """Install the bnlearn Agent Skill.
 
     Parameters
     ----------
-    harness : str, default='claude'
+    harness : str, default='agents'
         Name of the AI coding harness.  The skill is installed to::
 
             [root]/.<harness>/skills/bnlearn/
@@ -197,7 +197,7 @@ def main():
         action="store_true",
         default=False,
         help=(
-            "Install into the user home directory (~/.claude/skills/bnlearn/) "
+            "Install into the user home directory (~/.agents/skills/bnlearn/) "
             "instead of the current project directory. "
             f"Detected home: {_global_root()}"
         ),
@@ -243,7 +243,7 @@ def main():
             if args.auto:
                 install_skill_auto(global_install=args.global_install)
             else:
-                harness = args.harness or "claude"
+                harness = args.harness or "agents"
                 install_skill(harness, global_install=args.global_install)
         else:
             install_parser.print_help()
