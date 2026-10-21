@@ -12,6 +12,7 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/erdogant/bnlearn)
 [![Donate](https://img.shields.io/badge/Support%20this%20project-grey.svg?logo=github%20sponsors)](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#)
 [![Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://erdogant.github.io/bnlearn/pages/html/Documentation.html#colab-notebook)
+[![skills.sh](https://skills.sh/b/erdogant/bnlearn)](https://skills.sh/erdogant/bnlearn)
 
 
 ### 
