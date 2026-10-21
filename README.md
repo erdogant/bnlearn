@@ -15,7 +15,7 @@
 [![skills.sh](https://skills.sh/b/erdogant/bnlearn)](https://skills.sh/erdogant/bnlearn)
 
 
-### 
+###
 
 <div>
 
@@ -140,19 +140,10 @@ pip install -e ".[dev]"
 pytest -v
 ```
 
-## Installation of bnlearn skills
-Installation of bnlearn skills for various harnesses. Default is .claude
-
-##### Install skill (default claude)
+##### Install skill:
 
 ```bash
-bnlearn install skill 
-```
-
-##### Install skill: harnass options {claude, opencode agents or any other name}
-
-```bash
-bnlearn install skill --harness opencode
+npx skills add erdogant/bnlearn --skill bnlearn
 ```
 
 
@@ -169,7 +160,7 @@ import bnlearn as bn
 ```python
 
     import bnlearn as bn
-    # Example dataframe sprinkler_data.csv can be loaded with: 
+    # Example dataframe sprinkler_data.csv can be loaded with:
     df = bn.import_example()
     # df = pd.read_csv('sprinkler_data.csv')
 
@@ -229,7 +220,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
     query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
     print(query)
     print(query.df)
-    
+
     # Lets try another inference
     query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1})
     print(query)

@@ -110,20 +110,11 @@ Then run the following code, which should generate a figure:
 Install SKILLS
 -----------------------
 
-The simplest way to install bnlearn skills in your working directory is:
+Install the bnlearn skill with the Skills CLI:
 
 .. code-block:: console
 
-    bnlearn install skill
-
-Change the harness with the -harness argument:
-Default: claude but opencode agents or any other name is allowed.
-
-.. code-block:: console
-
-    bnlearn install skill --harness opencode
-    bnlearn install skill --harness opencode --global
-    bnlearn install skill --global
+    npx skills add erdogant/bnlearn --skill bnlearn
 
 
 Troubleshooting Import Errors
