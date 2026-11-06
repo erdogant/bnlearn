@@ -62,7 +62,7 @@ def test_inference_sprinkler_example():
     CPDs = {}
     for cpd in DAG.get_cpds():
         CPDs[cpd.variable] = bn.query2df(cpd)['p']
-        
+
 
     # Check that the CPDs match the expected output (provided values)
     expected_cpds = {
@@ -90,7 +90,7 @@ def test_inference_do_operator():
     # Ground truth computed by hand from the sprinkler CPDs:
     # P(W=1|S=1) weights Cloudy by P(C|S=1) (observation), whereas
     # P(W=1|do(S=1)) cuts Cloudy->Sprinkler and weights by the prior P(C).
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
 
     def p1(query):
         return float(query.df.loc[query.df['Wet_Grass'] == 1, 'p'].iloc[0])
@@ -142,7 +142,7 @@ def test_inference_do_operator_related_targets():
 
 
 def test_inference_do_operator_validation():
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     with pytest.raises(Exception, match='do'):
         bn.inference.fit(model, variables=['Wet_Grass'], do={'NotANode': 1})
     with pytest.raises(Exception, match='both'):

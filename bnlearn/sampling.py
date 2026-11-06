@@ -76,7 +76,7 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None)
     >>> # Import library
     >>> import bnlearn as bn
     >>> # Load DAG with model
-    >>> DAG = bn.import_DAG('sprinkler')
+    >>> DAG = bn.import_BIF('sprinkler')
     >>> # Sampling
     >>> df = bn.sampling(DAG, n=1000, methodtype='bayes')
     >>>

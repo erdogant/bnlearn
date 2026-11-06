@@ -240,7 +240,7 @@ def fit(df,
     >>> import bnlearn as bn
     >>>
     >>> # Load DAG
-    >>> model = bn.import_DAG('asia')
+    >>> model = bn.import_BIF('asia')
     >>>
     >>> # plot ground truth
     >>> G = bn.plot(model)
@@ -250,7 +250,7 @@ def fit(df,
     >>> # Sampling example
     >>>
     >>> # Load DAG
-    >>> model = bn.import_DAG('asia')
+    >>> model = bn.import_BIF('asia')
     >>> # Sampling
     >>> df = bn.sampling(model, n=10000)
     >>>

@@ -405,7 +405,7 @@ Use the following decision logic:
 ```text
 Is the network structure already known?
 │
-├── Yes → bn.make_DAG / bn.import_DAG → parameter_learning.fit
+├── Yes → bn.make_DAG / bn.import_BIF → parameter_learning.fit
 │
 └── No
     │
@@ -507,7 +507,7 @@ Fitted Bayesian Network
 
 Do not use parameter learning as a substitute for structure learning when the
 network structure is unknown. Always run it **after** `structure_learning.fit`
-(or after `make_DAG` / `import_DAG`) before inference, prediction, or sampling.
+(or after `make_DAG` / `import_BIF`) before inference, prediction, or sampling.
 
 See:
 
@@ -688,7 +688,7 @@ exact and works together with ordinary evidence, `elimination_order`, and
 import bnlearn as bn
 
 # Example data
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 
 #  print(model)
 #  {'model': <pgmpy.models.DiscreteBayesianNetwork.DiscreteBayesianNetwork at 0x2cf90df3410>,
@@ -892,7 +892,7 @@ Do not assume attributes that are not in the returned dictionary.
 
 ```python
 model = bn.parameter_learning.fit(
-    model,                 # output of structure_learning.fit or make_DAG / import_DAG
+    model,                 # output of structure_learning.fit or make_DAG / import_BIF
     df,                    # same DataFrame (or compatible)
     methodtype='bayes',    # 'bayes' | 'ml' | 'maximumlikelihood'
     scoretype='bdeu',      # used by some estimators
@@ -938,7 +938,7 @@ query = bn.inference.fit(
 **Observational vs interventional (sprinkler)**
 
 ```python
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 
 # P(Wet_Grass | Sprinkler=1)  ≈ 0.927
 bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler': 1})
@@ -1020,7 +1020,7 @@ DAG = bn.make_DAG(edges, CPD=CPDs)
 cpt = bn.generate_cpt('Y', parents=['X'], variable_card=2)
 
 # From built-in example network
-DAG = bn.import_DAG('sprinkler')   # also: 'asia', 'alarm', ...
+DAG = bn.import_BIF('sprinkler')   # also: 'asia', 'alarm', ...
 df  = bn.import_example('sprinkler')
 ```
 

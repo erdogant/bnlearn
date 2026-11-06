@@ -109,9 +109,9 @@ def test_QUERY():
     assert list(q.columns) == ['SibSp', 'Sex', 'p']
 
 
-def test_import_DAG():
+def test_import_BIF():
     import bnlearn as bn
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     # TEST 1: check output is unchanged
     assert DAG.keys() == {'model', 'adjmat'}
     # TEST 2: Check model output is unchanged
@@ -119,11 +119,11 @@ def test_import_DAG():
     # TEST 3:
     assert 'bayesiannetwork' in str(type(DAG['model'])).lower()
     # TEST 4:
-    # DAG = bn.import_DAG('alarm')
+    # DAG = bn.import_BIF('alarm')
     # assert DAG.keys() == {'model', 'adjmat'}
-    # DAG = bn.import_DAG('andes')
+    # DAG = bn.import_BIF('andes')
     # assert DAG.keys() == {'model', 'adjmat'}
-    # DAG = bn.import_DAG('asia')
+    # DAG = bn.import_BIF('asia')
     # assert DAG.keys() == {'model', 'adjmat'}
 
 
@@ -147,7 +147,7 @@ def test_make_DAG():
 
 
 def test_print_cpd_propagates_conversion_errors(monkeypatch):
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     bnlearn_module = importlib.import_module('bnlearn.bnlearn')
 
     def fail_conversion(*args, **kwargs):
@@ -160,19 +160,19 @@ def test_print_cpd_propagates_conversion_errors(monkeypatch):
 
 @pytest.fixture
 def sprinkler_dag():
-    return bn.import_DAG('Sprinkler')
+    return bn.import_BIF('Sprinkler')
 
 
 def test_sampling_bayes(sprinkler_dag):
     n = np.random.randint(10, 1000)
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     df = bn.sampling(model, n=n, methodtype='bayes')
     assert df.shape == (n, 4)
 
 
 def test_sampling_gibbs(sprinkler_dag):
     n = np.random.randint(10, 1000)
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     df = bn.sampling(DAG, n=n, methodtype='gibbs')
     assert df.shape == (n, 4)
 
@@ -180,7 +180,7 @@ def test_sampling_gibbs(sprinkler_dag):
 def test_sampling_conditional():
     # Conditional (rejection) sampling: every returned sample must satisfy the evidence.
     n = np.random.randint(10, 500)
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     df = bn.sampling(model, n=n, evidence={'Rain': 1, 'Cloudy': 0})
     assert df.shape == (n, 4)
     assert (df['Rain'] == 1).all()
@@ -188,7 +188,7 @@ def test_sampling_conditional():
 
 
 def test_sampling_evidence_errors():
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     # Evidence variable not in the model
     with pytest.raises(ValueError):
         bn.sampling(model, n=10, evidence={'DoesNotExist': 1})
@@ -250,24 +250,24 @@ def test_sampling_evidence_possibility_check_does_not_underflow(monkeypatch):
 #     # TEST 1:
 #     randdata = ['sprinkler', 'alarm', 'andes', 'asia', 'sachs']
 #     n = np.random.randint(0, len(randdata))
-#     DAG = bn.import_DAG(randdata[n], CPD=False)
+#     DAG = bn.import_BIF(randdata[n], CPD=False)
 #     assert (DAG['adjmat'].sum().sum() * 2) == bn.to_undirected(DAG['adjmat']).sum().sum()
 
 
 def test_compare():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     G = bn.compare(DAG, DAG, showfig=False)
     assert np.all(G[0] == [[12, 0], [0, 4]])
 
 
 def test_adjmat2vec():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     out = bn.adjmat2vec(DAG['adjmat'])
     assert np.all(out['source'] == ['Cloudy', 'Cloudy', 'Sprinkler', 'Rain'])
 
 
 def test_vec2adjmat():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     out = bn.adjmat2vec(DAG['adjmat'])
     # TEST: conversion
     assert bn.vec2adjmat(out['source'], out['target']).shape == DAG['adjmat'].shape
@@ -275,7 +275,7 @@ def test_vec2adjmat():
 
 def test_parameter_learning():
     df = bn.import_example()
-    model = bn.import_DAG('sprinkler', CPD=False)
+    model = bn.import_BIF('sprinkler', CPD=False)
     model_update = bn.parameter_learning.fit(model, df)
     assert [*model_update.keys()] == ['model',
      'adjmat',
@@ -287,7 +287,7 @@ def test_parameter_learning():
 
 
 def test_inference():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False)
     assert 'pgmpy.factors.discrete.DiscreteFactor.DiscreteFactor' in str(type(q1))
     assert q1.df is None
@@ -296,7 +296,7 @@ def test_inference():
 
 
 def test_query2df():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     query = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1}, to_df=False)
     df = bn.query2df(query)
     assert df.shape == (2, 2)
@@ -347,7 +347,7 @@ def test_query2df():
 
 
 def test_topological_sort():
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     # Check DAG input
     assert bn.topological_sort(DAG, 'Rain') == ['Rain', 'Wet_Grass']
     assert bn.topological_sort(DAG) == ['Cloudy', 'Sprinkler', 'Rain', 'Wet_Grass']

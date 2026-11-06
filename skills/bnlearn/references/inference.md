@@ -1202,7 +1202,7 @@ required learned CPDs.
 ```python
 import bnlearn as bn
 
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 
 query = bn.inference.fit(
     model,
@@ -1432,7 +1432,7 @@ and works with `evidence`, `elimination_order`, and `joint`.
 ```python
 import bnlearn as bn
 
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 
 # Observational: P(Wet_Grass | Sprinkler=1) ≈ 0.927
 q_obs = bn.inference.fit(

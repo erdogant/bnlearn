@@ -31,7 +31,7 @@ Lets create the underneath DAG and examine the topological ordering of 1. the en
 **Topological ordering example 1**
 
 .. code-block:: python
-    
+
     # Import bnlearn
     import bnlearn as bn
 
@@ -76,7 +76,7 @@ Lets create the underneath DAG and examine the topological ordering of 1. the en
 
 
 
-It is also possible to examine the topological ordering of your learned DAG using structure learning. 
+It is also possible to examine the topological ordering of your learned DAG using structure learning.
 
 **Topological ordering example 2**
 
@@ -84,9 +84,9 @@ It is also possible to examine the topological ordering of your learned DAG usin
 
     # Import bnlearn
     import bnlearn as bn
-    
+
     # Import DAG
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     # Generate data using the DAG
     df = bn.sampling(DAG, n=1000)
     # Structure learning

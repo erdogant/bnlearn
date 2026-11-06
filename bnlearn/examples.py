@@ -83,7 +83,7 @@ for cpd in model_cg['continuous_cpds']:
 import bnlearn as bn
 
 # Load the classic sprinkler DAG + CPDs
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 bn.plot(model)   # optional visualization
 
 # -------------------------------------------------
@@ -310,7 +310,7 @@ q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year':
 # bn.system_info()
 
 import bnlearn as bn
-model = bn.import_DAG('sprinkler')
+model = bn.import_BIF('sprinkler')
 
 # every returned row has Rain=1 and Cloudy=0
 df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})
@@ -322,7 +322,7 @@ import bnlearn as bn
 import numpy as np
 
 n = np.random.randint(10, 1000)
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.sampling(DAG, n=n, methodtype='gibbs')
 model = bn.structure_learning.fit(df, start_dag=DAG)
 model = bn.structure_learning.fit(df, start_dag='test')
@@ -357,13 +357,13 @@ bn.plot(model)
 import bnlearn as bn
 import numpy as np
 
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 n = np.random.randint(10, 1000)
 df = bn.sampling(DAG, n=n, methodtype='gibbs')
 assert df.shape == (n, 4)
 
 n = np.random.randint(10, 1000)
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.sampling(DAG, n=n, methodtype='bayes')
 assert df.shape == (n, 4)
 
@@ -700,7 +700,7 @@ q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprink
 import bnlearn as bn
 
 # Load asia DAG
-model = bn.import_DAG('asia')
+model = bn.import_BIF('asia')
 # plot ground truth
 G = bn.plot(model)
 
@@ -741,7 +741,7 @@ query = bn.inference.fit(model_as_p, variables=['Parch', 'Sex', 'Survived'], evi
 
 #%%
 import bnlearn as bn
-model = bn.import_DAG('asia')
+model = bn.import_BIF('asia')
 G = bn.plot(model)
 bn.plot_graphviz(model)
 
@@ -1507,7 +1507,7 @@ Xtest = bn.sampling(model, n=100)
 # %%
 import bnlearn as bn
 # Load asia DAG
-model = bn.import_DAG('asia')
+model = bn.import_BIF('asia')
 # plot ground truth
 G = bn.plot(model)
 
@@ -1655,7 +1655,7 @@ bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn
 import bnlearn as bn
 df = bn.import_example(data='sprinkler', n=1000)
 
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 
 # %% Working with continues data
 import bnlearn as bn
@@ -1733,7 +1733,7 @@ G = bn.plot(model,
 
 # %%
 import bnlearn as bn
-model = bn.import_DAG('asia')
+model = bn.import_BIF('asia')
 
 # Make single inference
 query = bn.inference.fit(model, variables=['lung', 'bronc', 'xray'], evidence={'smoke': 1})
@@ -1756,7 +1756,7 @@ print(Pout)
 
 # %%
 import bnlearn as bn
-model = bn.import_DAG('asia', CPD=True)
+model = bn.import_BIF('asia', CPD=True)
 CPDs = bn.print_CPD(model)
 CPDs.keys()
 # dict_keys(['asia', 'bronc', 'dysp', 'either', 'lung', 'smoke', 'tub', 'xray'])
@@ -1770,7 +1770,7 @@ print(model["model"].get_cpds(np.array(list(CPDs.keys()))[1]))
 
 # %% Issue 65: return (fig, ax)
 import bnlearn as bn
-model = bn.import_DAG('sprinkler', CPD=True)
+model = bn.import_BIF('sprinkler', CPD=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
 fig = bn.plot(model, params_static={'visible': True})
 fig2 = bn.plot(model, interactive=True)
@@ -1906,7 +1906,7 @@ bn.plot(model)
 
 # %%
 import bnlearn as bn
-model = bn.import_DAG('water')
+model = bn.import_BIF('water')
 # Sampling
 df = bn.sampling(model, n=1000, methodtype='bayes')
 
@@ -1939,7 +1939,7 @@ bn.plot(model)
  
 # %% LOAD BIF FILE
 import bnlearn as bn
-DAG = bn.import_DAG('water')
+DAG = bn.import_BIF('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2040,7 +2040,7 @@ bn.plot(model, interactive=False, node_size=10)
 
 
 # %% Check the stochastic component of bnlearn
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.import_example('sprinkler')
 adjmats = []
 
@@ -2062,7 +2062,7 @@ print(adjmat.sum(axis=0))
 # %% LOAD BIF FILE
 
 # Example 1: Plot the TRUE DAG
-DAG_1 = bn.import_DAG('sprinkler')
+DAG_1 = bn.import_BIF('sprinkler')
 graph = bn.plot(DAG_1)
 
 graph = bn.plot(DAG_1, params_static={'layout':'kamada_kawai_layout'})
@@ -2081,7 +2081,7 @@ bn.plot(DAG_3, pos=graph['pos'])
 
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('water')
+DAG = bn.import_BIF('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2452,7 +2452,7 @@ model = bn.structure_learning.fit(df.iloc[:, 0:100], methodtype='cs')
 bn.plot(model)
 
 # %% White_list edges
-DAG = bn.import_DAG('asia')
+DAG = bn.import_BIF('asia')
 # plot ground truth
 df = bn.sampling(DAG, n=1000)
 
@@ -2523,7 +2523,7 @@ bn.topological_sort(DAG)
 bn.topological_sort(DAG, '3')
 
 # %%
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 
 bn.topological_sort(DAG, 'Rain')
 bn.topological_sort(DAG)
@@ -2534,7 +2534,7 @@ bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
 
 # %%
 
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.sampling(DAG, n=1000)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
@@ -2548,7 +2548,7 @@ model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.sampling(DAG, n=1000)
 
 # Structure learning
@@ -2563,7 +2563,7 @@ node_properties['Cloudy']['node_color']='r'
 G = bn.plot(model, node_properties=node_properties)
 
 # %% Chow-Liu algorithm
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 df = bn.sampling(DAG, n=1000)
 
 # Structure learning
@@ -2571,7 +2571,7 @@ model_hc_bic = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy'
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_DAG('alarm')
+DAG = bn.import_BIF('alarm')
 to_vector = bn.adjmat2vec(DAG['adjmat'])
 to_adjmat = bn.vec2adjmat(to_vector['source'], to_vector['target'])
 
@@ -2602,7 +2602,7 @@ G = bn.plot(model_hc_bic)
 bn.compare(model_hc_bic, model_cl, pos=G['pos'])
 
 # %% Example with dataset
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 # Print cpds
 bn.print_CPD(DAG)
 # plot ground truth
@@ -2723,7 +2723,7 @@ q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
 
 # %% Example compare networks
 # Load asia DAG
-DAG = bn.import_DAG('asia')
+DAG = bn.import_BIF('asia')
 # plot ground truth
 G = bn.plot(DAG)
 # Sampling
@@ -2752,15 +2752,15 @@ bn.compare(model_bl, model_wl, pos=G['pos'])
 
 # %% PARAMETER LEARNING
 df = bn.import_example()
-DAG = bn.import_DAG('sprinkler', CPD=False)
+DAG = bn.import_BIF('sprinkler', CPD=False)
 model_update = bn.parameter_learning.fit(DAG, df)
 bn.plot(model_update)
 
-model_true = bn.import_DAG('sprinkler', CPD=True)
+model_true = bn.import_BIF('sprinkler', CPD=True)
 
 # %% Example with one-hot RAW dataset: sprinkler.
 # Load processed data
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 
 # Read raw data and process
 df_raw = bn.import_example(data='sprinkler')
@@ -2782,7 +2782,7 @@ q2.name_to_no
 q2.no_to_name,
 
 # %% LOAD BIF FILE
-DAG = bn.import_DAG('asia')
+DAG = bn.import_BIF('asia')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2806,7 +2806,7 @@ bn.print_CPD(model_update)
 
 
 # %% INFERENCE
-DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('sprinkler')
 bn.plot(DAG)
 q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 q2 = bn.inference.fit(DAG, variables=['Wet_Grass', 'Rain'], evidence={'Sprinkler': 1})
@@ -2818,8 +2818,8 @@ print(q2.df)
 
 
 # %% INFERENCE 2
-DAG = bn.import_DAG('asia')
-# DAG = bn.import_DAG('sprinkler')
+DAG = bn.import_BIF('asia')
+# DAG = bn.import_BIF('sprinkler')
 bn.plot(DAG)
 q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'bronc': 1, 'smoke': 1})
 q2 = bn.inference.fit(DAG, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0, 'tub': 1})
@@ -2862,8 +2862,8 @@ Pout = bn.predict(model, Xtest, variables=['Survived'])
 
 
 # %%
-DAG = bn.import_DAG('sprinkler', CPD=True)
-# DAG = bn.import_DAG('asia')
+DAG = bn.import_BIF('sprinkler', CPD=True)
+# DAG = bn.import_BIF('asia')
 bn.plot(DAG)
 bn.print_CPD(DAG)
 
@@ -2911,7 +2911,7 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Sprinkler', 'Wet_Grass'),
          ('Rain', 'Wet_Grass')]
 
-# DAG = bn.import_DAG('sprinkler')
+# DAG = bn.import_BIF('sprinkler')
 DAG = bn.make_DAG(edges)
 bn.plot(DAG)
 bn.print_CPD(DAG)

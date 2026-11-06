@@ -14,7 +14,7 @@ def sprinkler():
 
 @pytest.fixture
 def asia_sampling():
-    asia_dag = bn.import_DAG('sprinkler')
+    asia_dag = bn.import_BIF('sprinkler')
     return bn.sampling(asia_dag, n=1000)
 
 

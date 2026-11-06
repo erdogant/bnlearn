@@ -431,7 +431,7 @@ def dag2adjmat(model):
     --------
     >>> import bnlearn as bn
     >>> # Load DAG
-    >>> DAG = bn.import_DAG('sprinkler')
+    >>> DAG = bn.import_BIF('sprinkler')
     >>> # Extract edges from model and store in adjacency matrix
     >>> adjmat=bn.dag2adjmat(DAG['model'])
 
@@ -554,7 +554,7 @@ def query2df(query, variables=None, groupby=None):
 
 
 # %% Model Sprinkler
-def _DAG_sprinkler(CPD=True):
+def _example_sprinkler_model(CPD=True):
     """Create DAG-model for the sprinkler example.
 
     Parameters
@@ -675,7 +675,7 @@ def topological_sort(adjmat, start=None):
     Example
     -----------
     import bnlearn as bn
-    DAG = bn.import_DAG('sprinkler')
+    DAG = bn.import_BIF('sprinkler')
     bn.topological_sort(DAG, 'Rain')
     bn.topological_sort(DAG)
 
@@ -741,7 +741,7 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000):
 
     if (data=='alarm') or (data=='andes') or (data=='asia') or (data=='sachs') or (data=='water'):
         try:
-            DAG = import_DAG(data)
+            DAG = import_BIF(data)
             df = bn.sampling(DAG, n=n)
         except ValueError as e:
             logger.error(f'Error: Loading data not possible! - {e}')
@@ -755,6 +755,10 @@ def import_example(data='sprinkler', url=None, sep=',', n=10000):
 
 # %% Make DAG
 def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True):
+    logger.warning("import_DAG() is deprecated and will be removed in a future version. Use import_BIF() instead.")
+    return import_BIF(filepath=filepath, CPD=CPD, checkmodel=checkmodel)
+
+def import_BIF(filepath='sprinkler', CPD=True, checkmodel=True):
     """Import Directed Acyclic Graph.
 
     Parameters
@@ -776,7 +780,7 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True):
     Examples
     --------
     >>> import bnlearn as bn
-    >>> model = bn.import_DAG('sprinkler')
+    >>> model = bn.import_BIF('sprinkler')
     >>> fig = bn.plot(model)
 
     """
@@ -784,16 +788,17 @@ def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True):
     model = None
     # filepath= filepath.lower()
     logger.info('Import <%s>' %(filepath))
-    # Get the data properties
-    dataproperties = dz.get_dataproperties(filepath)
-    # Get path to data
-    # PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-    PATH_TO_DATA = dataproperties['curpath']
 
     # Load data
     if filepath=='sprinkler':
-        model = _DAG_sprinkler(CPD=CPD)
+        # example data for sprinkler
+        model = _example_sprinkler_model(CPD=CPD)
     elif (filepath=='asia') or (filepath=='alarm') or (filepath=='andes') or (filepath=='sachs') or (filepath=='water'):
+        # Get the data properties
+        dataproperties = dz.get_dataproperties(filepath)
+        # Get path to data
+        # PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+        PATH_TO_DATA = dataproperties['curpath']
         getfile = os.path.join(PATH_TO_DATA, filepath +'.bif')
         if not os.path.isfile(getfile):
             PATH_TO_DATA = dz.download_from_url(dataproperties['filename'], url=dataproperties['url'])
@@ -903,7 +908,7 @@ def predict(model, df, variables, to_df=True, method='max'):
     Examples
     --------
     >>> import bnlearn as bn
-    >>> model = bn.import_DAG('sprinkler')
+    >>> model = bn.import_BIF('sprinkler')
     >>>
     >>> # Make single inference
     >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})

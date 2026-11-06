@@ -167,7 +167,7 @@ The library provides tools to compare different networks, which is particularly 
 .. code-block:: python
 
    # Load ground truth network
-   model = bn.import_DAG('asia')
+   model = bn.import_BIF('asia')
 
    # Plot ground truth
    G = bn.plot(model)

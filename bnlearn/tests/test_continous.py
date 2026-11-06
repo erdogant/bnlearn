@@ -245,7 +245,7 @@ def test_parameter_learning_cg_mixed():
 def test_parameter_learning_discrete_keys_stable(gaussian_data):
     """Discrete bayes path must not populate continuous_cpds (package test compatibility)."""
     df = bn.import_example()
-    model = bn.import_DAG('sprinkler', CPD=False)
+    model = bn.import_BIF('sprinkler', CPD=False)
     fitted = bn.parameter_learning.fit(model, df, methodtype='bayes')
     # The key is present but must be None for the discrete path
     assert fitted.get('continuous_cpds') is None

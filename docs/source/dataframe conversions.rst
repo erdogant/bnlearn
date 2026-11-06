@@ -16,7 +16,7 @@ Adjacency matrix
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The adjacency matrix is used to store relationships across source-target variables (nodes) with its edges.
-In graph theory, a square matrix is used to represent a finite graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph. 
+In graph theory, a square matrix is used to represent a finite graph. The elements of the matrix indicate whether pairs of vertices are adjacent or not in the graph.
 ``bnlearn`` outputs an adjacency matrix in some functionalities. Values 0 or False indicate that nodes are not connected whereas pairs of vertices with value >0 or True are connected.
 
 
@@ -25,18 +25,18 @@ In graph theory, a square matrix is used to represent a finite graph. The elemen
 Extracting adjacency matrix from imported DAG:
 
 .. code-block:: python
-   
+
    # Import library
    import bnlearn as bn
    # Import DAG
-   model = bn.import_DAG('sachs')
+   model = bn.import_BIF('sachs')
    # Show the retrieved adjacency matrix for Sachs:
    model['adjmat']
 
    # print
    print(model['adjmat'])
 
-Reading the table from left to right, we see that gene Erk is connected to Akt in a directed manner. 
+Reading the table from left to right, we see that gene Erk is connected to Akt in a directed manner.
 This indicates that Erk influences gene Ark but not the otherway arround because gene Akt does not show a edge with Erk. In this example form, there may be a connection at the "...".
 
 .. table::
@@ -93,10 +93,10 @@ adjmat2vec
 Converting an adjacency matrix into vector with :func:`bnlearn.bnlearn.adjmat2vec`
 
 .. code-block:: python
-   
+
    import bnlearn as bn
    # Load DAG
-   DAG = bn.import_DAG('Sprinkler')
+   DAG = bn.import_BIF('Sprinkler')
    # Convert adjmat to vector:
    vector = bn.adjmat2vec(DAG['adjmat'])
 
@@ -122,7 +122,7 @@ Converting the created vector in the example above back into an adjacency matrix
 
 
 .. code-block:: python
-   
+
    import bnlearn as bn
    # Convert vector back to adjmat.
    adjmat = bn.vec2adjmat(vector['source'], vector['target'], weights=vector['weight'])
@@ -148,11 +148,11 @@ Convert adjacency matrix to dictionary with :func:`bnlearn.bnlearn.adjmat2dict`
 
 
 .. code-block:: python
-   
+
    # Import library
    import bnlearn as bn
    # Load DAG
-   DAG = bn.import_DAG('Sprinkler')
+   DAG = bn.import_BIF('Sprinkler')
    # Convert adjmat to vector:
    adjmat_dict = bn.adjmat2dict(DAG['adjmat'])
    # print
@@ -169,11 +169,11 @@ dag2adjmat
 Convert model into adjacency matrix with :func:`bnlearn.bnlearn.dag2adjmat`
 
 .. code-block:: python
-   
+
    # Import library
    import bnlearn as bn
    # Load DAG
-   DAG = bn.import_DAG('Sprinkler')
+   DAG = bn.import_BIF('Sprinkler')
    # Extract edges from model and store in adjacency matrix
    adjmat=bn.dag2adjmat(DAG['model'])
 
@@ -197,7 +197,7 @@ Convert edges between source and taget into a dataframe based on the weight with
 For demonstration purposes, A small example is created below for which can be seen that the weights are indicative for the number of rows; a weight of 2 will result that a row with the edge is created 2 times.
 
 .. code-block:: python
-   
+
    # Import library
    import bnlearn as bn
    # Create source-target edges with its weights
@@ -232,10 +232,10 @@ To demonstrate the full functionality A larger example can be loaded containing 
 The results is that 107 unique names are extracted with 4324 edges. This dataframe can for example be an input for structure learning approaches.
 
 .. code-block:: python
-   
+
    # Import library
    import bnlearn as bn
-   # Load large example with source-target edges from the book A Storm of Swords 
+   # Load large example with source-target edges from the book A Storm of Swords
    vec = bn.import_example("stormofswords")
    # Convert into sparse dataframe.
    df = bn.vec2df(vec['source'], vec['target'], weights=vec['weight'])

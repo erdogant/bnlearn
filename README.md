@@ -76,7 +76,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [Plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html) | ```bn.plot()``` |
 | [Plot Graphviz](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz) | ```bn.plot_graphviz()``` |
 | [Compare 2 Networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks) | ```bn.compare()``` |
-| [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG) | ```bn.import_DAG()``` |
+| [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_BIF) | ```bn.import_BIF()``` |
 | [Load Examples](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example) | ```bn.import_example()``` |
 | **Transformation Functions** | |
 | [Convert DAG to Undirected](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.to_undirected) | ```bn.to_undirected()``` |
@@ -207,7 +207,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
     # Import dataframe
     df = bn.import_example()
     # As an example we set the CPD at False which returns an "empty" DAG
-    model = bn.import_DAG('sprinkler', CPD=False)
+    model = bn.import_BIF('sprinkler', CPD=False)
     # Now we learn the parameters of the DAG using the df
     model_update = bn.parameter_learning.fit(model, df)
     # Make plot
@@ -216,7 +216,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 # Example: Inference
 
     import bnlearn as bn
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
     query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
     print(query)
     print(query.df)

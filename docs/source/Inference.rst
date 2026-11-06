@@ -37,7 +37,7 @@ What is the probability of *wet grass* given that it *Rains*, and the *sprinkler
    # Import library
    import bnlearn as bn
 
-   model = bn.import_DAG('sprinkler')
+   model = bn.import_BIF('sprinkler')
    q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
 
@@ -89,7 +89,7 @@ P(lung | smoker=1, xray=0)
    import bnlearn as bn
 
    # Lets create the dataset
-   model = bn.import_DAG('asia')
+   model = bn.import_BIF('asia')
 
 Lets make the inference:
 
@@ -145,7 +145,7 @@ therefore differ:
 
    import bnlearn as bn
 
-   model = bn.import_DAG('sprinkler')
+   model = bn.import_BIF('sprinkler')
 
    # Observational: P(Wet_Grass | Sprinkler=1) ≈ 0.927
    q_obs = bn.inference.fit(

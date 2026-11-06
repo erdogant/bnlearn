@@ -3,7 +3,7 @@
 Installation (Quickstart)
 =========================
 
-Installing bnlearn is straightforward. 
+Installing bnlearn is straightforward.
 It is recommended to create a new environment for the installation.
 
 .. code-block:: console
@@ -40,7 +40,7 @@ Here's another example demonstrating a complete workflow:
     import bnlearn as bn
 
     # Import a predefined DAG (Sprinkler network)
-    model = bn.import_DAG('sprinkler')
+    model = bn.import_BIF('sprinkler')
 
     # Import example dataset
     df = bn.import_example()
@@ -214,7 +214,7 @@ Comparison between Bayesian Libraries
      - No structure learning
      - Verbose syntax
      - Time-series only
-     
+
 
 .. list-table:: Bayesian/Causal Python Libraries Comparison
    :header-rows: 1

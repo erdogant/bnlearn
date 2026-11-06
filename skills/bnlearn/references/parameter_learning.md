@@ -4,7 +4,7 @@
 >
 > ```python
 > model = bn.parameter_learning.fit(
->     model,                  # output of structure_learning.fit / make_DAG / import_DAG
+>     model,                  # output of structure_learning.fit / make_DAG / import_BIF
 >     df,                     # DataFrame
 >     methodtype='bayes',     # discrete: 'bayes' | 'ml' | 'maximumlikelihood'
 >                             # continuous: 'linear-gaussian' | 'lg'
@@ -1284,7 +1284,7 @@ import bnlearn as bn
 
 df = bn.import_example()
 
-model = bn.import_DAG(
+model = bn.import_BIF(
     'sprinkler',
     CPD=False
 )
@@ -1307,7 +1307,7 @@ import bnlearn as bn
 
 df = bn.import_example()
 
-model = bn.import_DAG(
+model = bn.import_BIF(
     'sprinkler',
     CPD=False
 )
@@ -1429,7 +1429,7 @@ import bnlearn as bn
 
 df = bn.import_example()
 
-model = bn.import_DAG(
+model = bn.import_BIF(
     'sprinkler',
     CPD=False
 )
@@ -1556,7 +1556,7 @@ bn.parameter_learning.fit(
 Correct:
 
 ```python
-model = bn.import_DAG(
+model = bn.import_BIF(
     'sprinkler',
     CPD=False
 )

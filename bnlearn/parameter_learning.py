@@ -119,7 +119,7 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1):
     >>> import bnlearn as bn
     >>>
     >>> df = bn.import_example()
-    >>> model = bn.import_DAG('sprinkler', CPD=False)
+    >>> model = bn.import_BIF('sprinkler', CPD=False)
     >>>
     >>> # Parameter learning
     >>> model_update = bn.parameter_learning.fit(model, df)

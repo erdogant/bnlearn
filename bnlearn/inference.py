@@ -133,7 +133,7 @@ def fit_discrete(model,
     >>> import bnlearn as bn
     >>>
     >>> # Load example data
-    >>> model = bn.import_DAG('sprinkler')
+    >>> model = bn.import_BIF('sprinkler')
     >>> bn.plot(model)
     >>>
     >>> # Do the inference

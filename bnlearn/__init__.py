@@ -53,7 +53,7 @@ from bnlearn.bnlearn import (
     to_bayesiannetwork,
     make_DAG,
     print_CPD,
-    import_DAG,
+    import_BIF,
     import_example,
     to_undirected,
     compare,
@@ -155,7 +155,7 @@ Example
 >>> import bnlearn as bn
 >>> bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
 >>> 
->>> model = bn.import_DAG('sprinkler')
+>>> model = bn.import_BIF('sprinkler')
 >>> 
 >>> # Print CPDs
 >>> bn.print_CPD(model)

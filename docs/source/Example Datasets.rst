@@ -32,7 +32,7 @@ The **sprinkler** dataset is one of the few internal datasets to import a pandas
 Import DAG/BIF
 ^^^^^^^^^^^^^^^
 
-Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
+Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_BIF` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
 
 
 .. code-block:: python
@@ -49,7 +49,7 @@ Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_DAG` i
 	bif_file= 'filepath/to/model.bif'
 
 	# Loading DAG with model parameters from bif file.
-	model = bn.import_DAG(bif_file)
+	model = bn.import_BIF(bif_file)
 
 
 

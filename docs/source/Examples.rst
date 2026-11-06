@@ -14,13 +14,13 @@ The function :func:`bnlearn.bnlearn.df2onehot` helps convert the mixed dataset i
     import bnlearn as bn
     # Load Titanic dataset containing mixed variables
     df_raw = bn.import_example(data='titanic')
-    
+
     # Pre-process the input dataset
     dfhot, dfnum = bn.df2onehot(df_raw)
-    
+
     # Structure learning
     DAG = bn.structure_learning.fit(dfnum)
-    
+
     # Plot
     G = bn.plot(DAG)
     bn.plot_graphviz(DAG)
@@ -44,7 +44,7 @@ Finally, we can start making inferences. Note that the variable and evidence nam
     CPDs = bn.print_CPD(model)
     # Make inference
     q = bn.inference.fit(model, variables=['Survived'], evidence={'Sex':0, 'Pclass':1})
-    
+
     print(q.df)
     print(q._str())
 
@@ -187,7 +187,7 @@ Let's learn the structure of a more complex dataset and compare it to another on
 
     import bnlearn as bn
     # Load Asia DAG
-    model_true = bn.import_DAG('asia')
+    model_true = bn.import_BIF('asia')
     # Plot ground truth
     G = bn.plot(model_true)
     dot = bn.plot_graphviz(model_true)
@@ -238,7 +238,7 @@ Extracting adjacency matrix after Parameter learning:
     # Load dataframe
     df = bnlearn.import_example()
     # Import DAG
-    DAG = bnlearn.import_DAG('sprinkler', CPD=False)
+    DAG = bnlearn.import_BIF('sprinkler', CPD=False)
     # Learn parameters
     model = bnlearn.parameter_learning.fit(DAG, df)
     # adjacency matrix:
@@ -248,7 +248,7 @@ Extracting adjacency matrix after Parameter learning:
     print(model['adjmat'])
 
 .. table::
-  
+
   +-----------+--------+-----------+-------+-----------+
   |           | Cloudy | Sprinkler | Rain  | Wet_Grass |
   +===========+========+===========+=======+===========+
@@ -267,7 +267,7 @@ Extracting adjacency matrix after Parameter learning:
 Create a Bayesian Network, learn its parameters from data and perform the inference
 ===================================================================================
 
-Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes. 
+Lets make an example were we have data with many measurements, and we have expert information of the relations between nodes.
 Our goal is to create DAG on the expert knowledge and learn the CPDs. To showcase this, I will use the sprinkler example.
 
 Import example dataset of the sprinkler dataset.
@@ -316,7 +316,7 @@ Define the network structure. This can be based on expert knowledge.
 Make the actual Bayesian DAG
 
 .. code-block:: python
-    
+
     import bnlearn as bn
     DAG = bn.make_DAG(edges)
     # [BNLEARN] Bayesian DAG created.
@@ -339,7 +339,7 @@ Plot the DAG
 Parameter learning on the user-defined DAG and input data using maximumlikelihood.
 
 .. code-block:: python
-    
+
     DAG = bn.parameter_learning.fit(DAG, df, methodtype='maximumlikelihood')
 
 
@@ -348,7 +348,7 @@ Lets print the learned CPDs:
 .. code-block:: python
 
     CPDs = bn.print_CPD(DAG)
-    
+
     # [BNLEARN.print_CPD] Independencies:
     # (Cloudy _|_ Wet_Grass | Rain, Sprinkler)
     # (Sprinkler _|_ Rain | Cloudy)
@@ -396,7 +396,7 @@ CPD of Wet_Grass:
 Lets make an inference:
 
 .. code-block:: python
-    
+
     q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain':1, 'Sprinkler':0, 'Cloudy':1})
 
     +--------------+------------------+
@@ -410,7 +410,7 @@ Lets make an inference:
 Print the values:
 
 .. code-block:: python
-    
+
     print(q1.df)
     # array([0.25588235, 0.74411765])
 
