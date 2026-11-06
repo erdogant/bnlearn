@@ -56,7 +56,7 @@ from bnlearn.bnlearn import (
     import_DAG,
     import_example,
     to_undirected,
-    compare_networks,
+    compare,
     dag2adjmat,
     df2onehot,
     topological_sort,
@@ -185,7 +185,7 @@ Example
 >>> bn.plot(model_pl)
 >>>
 >>> # Compare networks
->>> scores, adjmat = bn.compare_networks(model_sl, model)
+>>> scores, adjmat = bn.compare(model_sl, model)
 
 References
 ----------

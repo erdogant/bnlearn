@@ -266,7 +266,7 @@ def fit(df,
     Examples
     --------
     >>> # Compare networks and make plot
-    >>> bn.compare_networks(model, model_sl, pos=G['pos'])
+    >>> bn.compare(model, model_sl, pos=G['pos'])
 
     Examples
     --------

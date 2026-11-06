@@ -185,7 +185,7 @@ The library provides tools to compare different networks, which is particularly 
    bn.plot(model_sl, pos=G['pos'])
 
    # Compare networks
-   bn.compare_networks(model, model_sl, pos=G['pos'])
+   bn.compare(model, model_sl, pos=G['pos'])
 
 .. |fig_cn1| image:: ../figs/fig2a_asia_groundtruth.png
 .. |fig_cn2| image:: ../figs/fig2b_asia_structurelearning.png

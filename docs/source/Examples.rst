@@ -216,7 +216,7 @@ Let's learn the structure of a more complex dataset and compare it to another on
     # Plot based on structure learning of sampled data
     bn.plot(model_learned, pos=G['pos'])
     # Compare networks and make plot
-    bn.compare_networks(model_true, model_learned, pos=G['pos'])
+    bn.compare(model_true, model_learned, pos=G['pos'])
 
 .. _fig2c_asia_comparion:
 

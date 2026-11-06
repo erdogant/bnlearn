@@ -384,7 +384,7 @@ Lets plot the learned DAG and examine the structure!
     bn.plot(model, interactive=True)
 
     # Plot differences between expert-DAG and the computed-DAG
-    bn.compare_networks(model, DAG)
+    bn.compare(model, DAG)
 
 
 .. _fig_asia_structurelearning:

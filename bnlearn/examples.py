@@ -1,3 +1,11 @@
+import bnlearn as bn
+df = bn.import_example(data='titanic')
+df.to_csv(r'd:\temp\titanic.csv', index=False)
+df = bn.import_example(data='asia')
+df.to_csv(r'd:\temp\asia.csv', index=False)
+df = bn.import_example(data='alarm')
+df.to_csv(r'd:\temp\alarm.csv', index=False)
+
 # %%
 import bnlearn as bn
 
@@ -342,7 +350,7 @@ model = bn.structure_learning.fit(df, start_dag=DAG)
 bn.plot(model)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-# bn.compare_networks(DAG, model)
+# bn.compare(DAG, model)
 
 
 # %%
@@ -1419,7 +1427,7 @@ model = bn.parameter_learning.fit(model, df, methodtype='bayes')
 bn.print_CPD(model_with_CPD)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-bn.compare_networks(model_with_CPD, model)
+bn.compare(model_with_CPD, model)
 
 # Make inference
 q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1})
@@ -2591,7 +2599,7 @@ model_cl = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy')
 
 G = bn.plot(model_hc_bic)
 
-bn.compare_networks(model_hc_bic, model_cl, pos=G['pos'])
+bn.compare(model_hc_bic, model_cl, pos=G['pos'])
 
 # %% Example with dataset
 DAG = bn.import_DAG('sprinkler')
@@ -2658,8 +2666,8 @@ bn.query2df(q4)
 # q3 = bn.inference.fit(DAGmle, variables=['lung'], evidence={'smoke':1, 'bronc':1})
 # q4 = bn.inference.fit(DAGmle, variables=['bronc','lung'], evidence={'smoke':1, 'xray':0})
 
-# bn.compare_networks(DAGbay, DAGnew)
-# bn.compare_networks(DAGnew, DAGbay)
+# bn.compare(DAGbay, DAGnew)
+# bn.compare(DAGnew, DAGbay)
 
 # %% predict
 
@@ -2700,7 +2708,7 @@ model = bn.parameter_learning.fit(model, df, methodtype='bayes')
 bn.print_CPD(model_with_CPD)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-bn.compare_networks(model_with_CPD, model)
+bn.compare(model_with_CPD, model)
 
 # Make inference
 q1 = bn.inference.fit(model_with_CPD, variables=['lung'], evidence={'smoke': 1})
@@ -2728,7 +2736,7 @@ model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
 bn.plot(model_sl, pos=G['pos'], interactive=True, params_interactive={'height': '800px'})
 # Compare networks and make plot
-bn.compare_networks(model, model_sl, pos=G['pos'])
+bn.compare(model, model_sl, pos=G['pos'])
 
 
 # Structure learning with black list
@@ -2739,7 +2747,7 @@ model_bl = bn.structure_learning.fit(df, methodtype='hc', black_list=['asia', 't
 bn.plot(model_bl, pos=G['pos'])
 
 # Compare models
-bn.compare_networks(model_bl, model_wl, pos=G['pos'])
+bn.compare(model_bl, model_wl, pos=G['pos'])
 
 
 # %% PARAMETER LEARNING

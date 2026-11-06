@@ -75,7 +75,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | **Make Plots** | |
 | [Plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html) | ```bn.plot()``` |
 | [Plot Graphviz](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz) | ```bn.plot_graphviz()``` |
-| [Compare 2 Networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks) | ```bn.compare_networks()``` |
+| [Compare 2 Networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks) | ```bn.compare()``` |
 | [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_DAG) | ```bn.import_DAG()``` |
 | [Load Examples](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example) | ```bn.import_example()``` |
 | **Transformation Functions** | |

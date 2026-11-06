@@ -59,7 +59,7 @@ Here's another example demonstrating a complete workflow:
     model_pl = bn.parameter_learning.fit(model_sl, df)
 
     # Compare networks
-    scores, adjmat = bn.compare_networks(model_sl, model)
+    scores, adjmat = bn.compare(model_sl, model)
 
 
 

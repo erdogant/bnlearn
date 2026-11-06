@@ -254,9 +254,9 @@ def test_sampling_evidence_possibility_check_does_not_underflow(monkeypatch):
 #     assert (DAG['adjmat'].sum().sum() * 2) == bn.to_undirected(DAG['adjmat']).sum().sum()
 
 
-def test_compare_networks():
+def test_compare():
     DAG = bn.import_DAG('sprinkler')
-    G = bn.compare_networks(DAG, DAG, showfig=False)
+    G = bn.compare(DAG, DAG, showfig=False)
     assert np.all(G[0] == [[12, 0], [0, 4]])
 
 

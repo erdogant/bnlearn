@@ -274,7 +274,7 @@ When you already have a DAG, you can also start with that.
     bn.plot(model)
 
     # make comparison.
-    bn.compare_networks(DAG, model)
+    bn.compare(DAG, model)
 
 
 
