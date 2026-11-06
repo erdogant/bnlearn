@@ -151,7 +151,7 @@ def fit(df,
     variable counts. This adjustment involves using a value called "equivalent sample size" divided by the number of
     parent configurations with observed variable counts. The score-method evaluates how effectively a model can describe the provided dataset.
 
-    The Direct-LiNGAM method or also named 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. 
+    The Direct-LiNGAM method or also named 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic.
     Or in other words, the lingam-direct method allows you to model continuous and mixed datasets.
 
     Parameters
@@ -575,17 +575,17 @@ def _constraintsearch(df, significance_level=0.05, ci_test='chi_square', n_jobs=
 
 
 # %% hillclimbsearch
-def _hillclimbsearch(df, 
+def _hillclimbsearch(df,
                      scoretype='bic',
                      black_list=None,
                      white_list=None,
                      start_dag=None,
-                     max_indegree=None, 
-                     tabu_length=100, 
-                     epsilon=1e-4, 
-                     max_iter=1e6, 
-                     bw_list_method='edges', 
-                     fixed_edges=set(), 
+                     max_indegree=None,
+                     tabu_length=100,
+                     epsilon=1e-4,
+                     max_iter=1e6,
+                     bw_list_method='edges',
+                     fixed_edges=set(),
                      n_jobs=-1):
     """Heuristic hill climb searches for DAGs, to learn network structure from data. `estimate` attempts to find a model with optimal score.
 
@@ -756,7 +756,7 @@ def SetScoringType(df, scoretype, **kwargs):
         else:
             scoretype = 'bic'
         logger.info('scoretype="auto" -> [%s] for %s data' % (scoretype, dtype))
-    
+
     if scoretype == 'bic':
         scoring_method = BIC(df)
     elif scoretype == 'k2':
@@ -812,7 +812,7 @@ def _lingam(df,
 
     Description
     -----------
-    The Direct-LiNGAM method or 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic. 
+    The Direct-LiNGAM method or 'direct-lingam' is a semi-parametric approach that assumes a linear relationship among observed variables while ensuring that the error terms follow a non-Gaussian distribution, with the constraint that the graph remains acyclic.
     This method involves repeated regression analysis and independence assessments using linear regression with least squares. In each regression, one variable serves as the dependent variable (outcome), while the other acts as the independent variable (predictor). This process is applied to each type of variable.
     When regression analysis is conducted in the correct causal order, the independent variables and error terms will exhibit independence. Conversely, if the regression is performed under an incorrect causal order, the independence of the explanatory variables and error terms is disrupted. By leveraging the dependency properties (where both residuals and explanatory variables share common error terms), it becomes possible to infer the causal order among the variables.
     Furthermore, for a given observed variable, any explanatory variable that remains independent of the residuals, regardless of the other variables considered, can be inferred as the first in the causal hierarchy.
