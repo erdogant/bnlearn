@@ -749,7 +749,9 @@ bn.plot_graphviz(model)
 import bnlearn as bn
 import pandas as pd
 import numpy as np
-# from impute import knn_imputer, mice_imputer
+# bn.impute.knn
+# bn.impute.mice
+
 
 # Load the dataset
 df = pd.read_fwf('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', header=None)
@@ -770,26 +772,26 @@ df['car_name'].loc[index_nan]=None
 df.isna().sum()
 
 # KNN imputer
-dfnew = bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns=['car_name'])
+dfnew = bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns=['car_name'])
 # Results
 np.all(dfnew['car_name'].loc[index_nan].values==carnames.values)
 
 # MICE imputer
-dfnew = bn.mice_imputer(df, max_iter=5, string_columns='car_name')
+dfnew = bn.impute.mice(df, max_iter=5, string_columns='car_name')
 # Results
 np.all(dfnew['car_name'].loc[index_nan].values==carnames.values)
 
 
 
 df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
-# bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
-# bn.mice_imputer(df, max_iter=5, string_columns='city')
-bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
-bn.mice_imputer(df, max_iter=5, string_columns='city')
+# bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns='city')
+# bn.impute.mice(df, max_iter=5, string_columns='city')
+bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns='city')
+bn.impute.mice(df, max_iter=5, string_columns='city')
 
 
 # %% Issue 81
-# It implements MICE using the function mice_imputer function that performs Multiple Imputation by Chained Equations (MICE) on numeric columns while handling string/categorical columns.
+# It implements MICE using the function bn.impute.mice function that performs Multiple Imputation by Chained Equations (MICE) on numeric columns while handling string/categorical columns.
 # The code is based on the already implemented code by Erdogan on imputation using knn.
 
 # Key features include:
@@ -803,18 +805,17 @@ bn.mice_imputer(df, max_iter=5, string_columns='city')
 # Key changes include:
 
 # Created a new file impute.py for imputation related functions
-# Moved the existing code for imputation and renamed it to knn_imputer
+# Moved the existing code for imputation and renamed it to bn.impute.knn
 # Implemented the MICE function
 # Updated the impute.rst file to include examples of both types of imputation
 
 import bnlearn as bn
 import pandas as pd
 import numpy as np
-# from impute import knn_imputer, mice_imputer
 
 df = pd.DataFrame({'age': [25, np.nan, 27], 'income': [50000, 60000, np.nan], 'city': ['New York', np.nan, 'Los Angeles']})
-bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
-bn.mice_imputer(df, max_iter=5, string_columns='city')
+bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns='city')
+bn.impute.mice(df, max_iter=5, string_columns='city')
 
 
 # %%

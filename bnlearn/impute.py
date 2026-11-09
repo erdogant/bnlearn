@@ -18,6 +18,10 @@ logger = logging.getLogger("bnlearn")
 
 # %% Impute
 def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True):
+    logger.warning("knn_imputer() is deprecated and will be removed in a future version > 1.2.0. Use bn.impute.knn() instead.")
+    return knn(df, n_neighbors=n_neighbors, weights=weights, metric=metric, string_columns=string_columns, scaling=scaling)
+
+def knn(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True):
     """Impute missing values.
 
     Impute missing values in a DataFrame using KNN imputation for numeric columns. String columns are not included in the encoding.
@@ -56,13 +60,13 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
 
     Examples
     --------
-    >>> from sklearn.impute import knn_imputer, mice_imputer
+    >>> import bnlearn as bn
     >>> df = pd.DataFrame({
     ...    'age': [25, np.nan, 27],
     ...    'income': [50000, 60000, np.nan],
     ...    'city': ['New York', np.nan, 'Los Angeles']
     ... })
-    >>> knn_imputer(df, n_neighbors=3, weights='distance', string_columns='city')
+    >>> bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns='city')
          age   income          city
     0  25.0  50000.0      New York
     1  25.0  60000.0      New York
@@ -88,86 +92,13 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
             df_imputed[col] = df[col]
 
     # Impute categorical columns with the most frequent value
-    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, scaling=scaling)
+    df_imputed = _knn_catagorical(df_imputed, string_columns, numeric_cols, scaling=scaling)
 
     # Return
     return df_imputed
 
 
-def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=True):
-    """Impute missing values using Multiple Imputation by Chained Equations (MICE).
-
-    Impute missing values in a DataFrame using MICE imputation for numeric columns. String columns are not included in the encoding.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        The input DataFrame containing both numeric and string columns.
-    max_iter : int, optional
-        Maximum number of imputation rounds to perform (default is 10).
-    estimator : estimator object, optional
-        The estimator to use at each step of the round-robin imputation. If None, BayesianRidge() is used.
-    string_columns : list or str, optional
-        A list of column names or a single column name (string) that contains string/categorical data.
-        These columns will be removed using LabelEncoder before imputation (default is None).
-        ['car name', 'origin']
-    scaling : bool
-        True: standardize numerical variables before learning NN model to determine the missing category.
-        False: Use data as is.
-
-    Returns
-    -------
-    pandas.DataFrame
-        A DataFrame with imputed values. Numeric columns will have missing values filled using MICE imputation,
-        and original string columns (if any) will be retained.
-
-    Notes
-    -----
-    - String columns are encoded to numerical values using LabelEncoder for imputation and decoded back after the imputation process.
-    - The function automatically identifies numeric columns and handles conversion to appropriate data types if necessary.
-    - MICE is an iterative imputation method that models each feature with missing values as a function of other features.
-
-    Examples
-    --------
-    >>> from impute import knn_imputer, mice_imputer
-    >>> df = pd.DataFrame({
-    ...    'age': [25, np.nan, 27],
-    ...    'income': [50000, 60000, np.nan],
-    ...    'city': ['New York', np.nan, 'Los Angeles']
-    ... })
-    >>> mice_imputer(df, max_iter=5, string_columns='city')
-         age   income          city
-    0  25.0  50000.0      New York
-    1  29.0  60000.0      Los Angeles
-    2  27.0  55123.7  Los Angeles
-
-    """
-    # Set columsn to categorical or float
-    df, string_columns = _typing(df, string_columns)
-
-    # Initialize the MICE imputer
-    imputer = IterativeImputer(max_iter=max_iter, estimator=estimator, random_state=0)
-
-    # Impute only the numeric columns
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    imputed_values = imputer.fit_transform(df[numeric_cols])
-
-    # Create a new DataFrame for imputed numeric values
-    df_imputed = pd.DataFrame(imputed_values, columns=numeric_cols)
-
-    # Add the original string columns back to the imputed DataFrame if any
-    if string_columns is not None:
-        for col in string_columns:
-            df_imputed[col] = df[col]
-
-    # Impute categorical columns with the most frequent value
-    df_imputed = impute_catagorical_knn(df_imputed, string_columns, numeric_cols, scaling=scaling)
-
-    # Return
-    return df_imputed
-
-
-def impute_catagorical_knn(df, string_columns, numeric_cols, scaling=True):
+def _knn_catagorical(df, string_columns, numeric_cols, scaling=True):
     """
     Impute missing values in categorical columns using K-Nearest Neighbors (KNN) based on numeric columns.
 
@@ -206,7 +137,7 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, scaling=True):
     ...     'income': [50000, 60000, 65000, 7000],
     ...     'city': ['New York', np.nan, 'Los Angeles', 'San Francisco']
     ... })
-    >>> impute_catagorical_knn(df, string_columns=['city'], numeric_cols=['age', 'income'])
+    >>> _knn_catagorical(df, string_columns=['city'], numeric_cols=['age', 'income'])
           age  income           city
     0   25   50000        New York
     1   25   60000        New York
@@ -244,7 +175,85 @@ def impute_catagorical_knn(df, string_columns, numeric_cols, scaling=True):
     # Return
     return df
 
+# %%
+def mice_imputer(df, max_iter=10, estimator=None, string_columns=None, scaling=True):
+    logger.warning("mice_imputer() is deprecated and will be removed in a future version > 1.2.0. Use bn.impute.mice() instead.")
+    return mice(df=df, max_iter=max_iter, estimator=estimator, string_columns=string_columns, scaling=scaling)
 
+def mice(df, max_iter=10, estimator=None, string_columns=None, scaling=True):
+    """Impute missing values using Multiple Imputation by Chained Equations (MICE).
+
+    Impute missing values in a DataFrame using MICE imputation for numeric columns. String columns are not included in the encoding.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The input DataFrame containing both numeric and string columns.
+    max_iter : int, optional
+        Maximum number of imputation rounds to perform (default is 10).
+    estimator : estimator object, optional
+        The estimator to use at each step of the round-robin imputation. If None, BayesianRidge() is used.
+    string_columns : list or str, optional
+        A list of column names or a single column name (string) that contains string/categorical data.
+        These columns will be removed using LabelEncoder before imputation (default is None).
+        ['car name', 'origin']
+    scaling : bool
+        True: standardize numerical variables before learning NN model to determine the missing category.
+        False: Use data as is.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame with imputed values. Numeric columns will have missing values filled using MICE imputation,
+        and original string columns (if any) will be retained.
+
+    Notes
+    -----
+    - String columns are encoded to numerical values using LabelEncoder for imputation and decoded back after the imputation process.
+    - The function automatically identifies numeric columns and handles conversion to appropriate data types if necessary.
+    - MICE is an iterative imputation method that models each feature with missing values as a function of other features.
+
+    Examples
+    --------
+    >>> impor bnlearn as bn
+    >>> df = pd.DataFrame({
+    ...    'age': [25, np.nan, 27],
+    ...    'income': [50000, 60000, np.nan],
+    ...    'city': ['New York', np.nan, 'Los Angeles']
+    ... })
+    >>> bn.impute.mice(df, max_iter=5, string_columns='city')
+         age   income          city
+    0  25.0  50000.0      New York
+    1  29.0  60000.0      Los Angeles
+    2  27.0  55123.7  Los Angeles
+
+    """
+    # Set columsn to categorical or float
+    df, string_columns = _typing(df, string_columns)
+
+    # Initialize the MICE imputer
+    imputer = IterativeImputer(max_iter=max_iter, estimator=estimator, random_state=0)
+
+    # Impute only the numeric columns
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
+    imputed_values = imputer.fit_transform(df[numeric_cols])
+
+    # Create a new DataFrame for imputed numeric values
+    df_imputed = pd.DataFrame(imputed_values, columns=numeric_cols)
+
+    # Add the original string columns back to the imputed DataFrame if any
+    if string_columns is not None:
+        for col in string_columns:
+            df_imputed[col] = df[col]
+
+    # Impute categorical columns with the most frequent value
+    df_imputed = _knn_catagorical(df_imputed, string_columns, numeric_cols, scaling=scaling)
+
+    # Return
+    return df_imputed
+
+
+# %%
 def _typing(df, string_columns):
     # Convert string columns to categorical and then encode them
     if string_columns is not None:

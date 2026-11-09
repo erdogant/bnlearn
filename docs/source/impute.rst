@@ -35,7 +35,7 @@ Let's load a dataframe with missing values and perform the imputation:
     df.isna().sum()
 
     # KNN imputer
-    dfnew = bn.knn_imputer(df, n_neighbors=3, weights='distance', string_columns=['car name'])
+    dfnew = bn.impute.knn(df, n_neighbors=3, weights='distance', string_columns=['car name'])
     # Results
     np.all(dfnew['car name'].loc[index_nan].values == carnames.values)
 
@@ -79,7 +79,7 @@ Let's load a dataframe with missing values and perform the imputation:
     df.isna().sum()
 
     # MICE imputer
-    dfnew = bn.mice_imputer(df, max_iter=5, string_columns='car name')
+    dfnew = bn.impute.mice(df, max_iter=5, string_columns='car name')
     # Results
     np.all(dfnew['car name'].loc[index_nan].values == carnames.values)
 

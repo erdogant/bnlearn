@@ -63,7 +63,7 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [Generate Synthetic Data](https://erdogant.github.io/bnlearn/pages/html/Sampling.html) | ```bn.sampling()``` |
 | [Compute Edge Strength](https://erdogant.github.io/bnlearn/pages/html/independence_test.html) | ```bn.independence_test()``` |
 | **Key Functions** | |
-| [Imputations](https://erdogant.github.io/bnlearn/pages/html/impute.html#) | ```bn.knn_imputer()``` |
+| [Imputations](https://erdogant.github.io/bnlearn/pages/html/impute.html#) | ```bn.impute.knn()``` |
 | [Discretizing](https://erdogant.github.io/bnlearn/pages/html/Discretizing.html#) | ```bn.discretize()``` |
 | [Check Model Parameters](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.check_model) | ```bn.check_model()``` |
 | [Create DAG](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.make_DAG) | ```bn.make_DAG()``` |

@@ -104,6 +104,7 @@ import bnlearn.parameter_learning as parameter_learning
 import bnlearn.inference as inference
 import bnlearn.network as network
 import bnlearn.confmatrix as confmatrix
+import bnlearn.impute as impute
 from bnlearn.impute import knn_imputer, mice_imputer
 from bnlearn.discretize import discretize, discretize_value
 from bnlearn.learn_discrete_bayes_net import discretize_all
@@ -154,12 +155,12 @@ Example
 >>> # Import library
 >>> import bnlearn as bn
 >>> bn.set_logger('info')   # or 'info', 'warning', 'error', 'trace', None
->>> 
+>>>
 >>> model = bn.import_BIF('sprinkler')
->>> 
+>>>
 >>> # Print CPDs
 >>> bn.print_CPD(model)
->>> 
+>>>
 >>> # Plot DAG
 >>> bn.plot(model)
 >>>
