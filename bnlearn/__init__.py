@@ -7,6 +7,7 @@ import sys
 import platform
 import warnings
 import logging
+logging.getLogger('pgmpy').setLevel(logging.ERROR)
 
 # Package logger (standard library levels). Default = INFO.
 # set_logger / get_logger live in bnlearn.utils and are re-exported below.
