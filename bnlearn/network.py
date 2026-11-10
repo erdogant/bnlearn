@@ -193,6 +193,11 @@ def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minma
 
 
 # %% Comparison of two networks
+# Missing edges: thicker line with a long dash pattern (offset, (dash, gap)); the pattern scales with the line width.
+# The default 'dashed' pattern at the default edge width looks almost solid on diagonal lines.
+_DASHED = (0, (3, 2.5))
+_DASHED_WIDTH = 2
+
 def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height=None, layout='graphviz_layout_custom',
             scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None):
     """Compare two networks and plot the differences.
@@ -306,7 +311,9 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
     arrow = params_static['arrowstyle']
     for (u, v), props in edge_properties.items():
         value = adjmat_diff.loc[u, v]
-        props['color'], props['style'], props['arrowstyle'] = {1: ('k', 'solid', arrow), 2: ('r', 'solid', arrow), -1: ('k', 'dashed', arrow)}[value]
+        props['color'], props['style'], props['arrowstyle'] = {1: ('k', 'solid', arrow), 2: ('r', 'solid', arrow), -1: ('k', _DASHED, arrow)}[value]
+        if value == -1:
+            props['weight'] = _DASHED_WIDTH
     for (u, v) in list(edge_properties.keys()):
         if (u, v) in edge_properties and (v, u) in edge_properties and u != v:
             if adjmat_diff.loc[u, v] == 2 and adjmat_diff.loc[v, u] == -1:
@@ -341,7 +348,7 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
     # Legend
     handles = [Line2D([0], [0], color='k', lw=2, label='Correct edge'),
                Line2D([0], [0], color='r', lw=2, label='Extra edge (false positive)'),
-               Line2D([0], [0], color='k', lw=2, linestyle='--', label='Missing edge (false negative)'),
+               Line2D([0], [0], color='k', lw=2, linestyle=_DASHED, label='Missing edge (false negative)'),
                Line2D([0], [0], color='g', lw=2, label='Reversed edge')]
     plt.legend(handles=handles, loc='best', frameon=False)
     if params_static['showplot']:
