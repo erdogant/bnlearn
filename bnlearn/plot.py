@@ -22,9 +22,11 @@ import bnlearn as bn
 try:
     from bnlearn.utils import vec2adjmat, adjmat2vec, _normalize_weights
     from bnlearn.plot_interactive import plot_interactive
+    from bnlearn.mermaid import to_mermaid, write_mermaid
 except:
     from utils import vec2adjmat, adjmat2vec, _normalize_weights
     from plot_interactive import plot_interactive
+    from mermaid import to_mermaid, write_mermaid
 
 # %% Get node properties
 def get_node_properties(model, node_color='#ADD8E6', node_size=None):
@@ -559,14 +561,7 @@ def plot(model,
     if edge_properties is None:
         edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
 
-    if edge_filter in ('p_value', 'logp') and model.get('independence_test') is not None:
-        indep = model['independence_test']
-        if 'stat_test' in indep.columns and len(indep) > 0:
-            sig = indep.loc[indep['stat_test'].astype(bool), ['source', 'target']]
-            sig_set = set(zip(sig['source'], sig['target']))
-            n_before = len(edge_properties)
-            edge_properties = {e: p for e, p in edge_properties.items() if e in sig_set}
-            logger.info(f'Number of significant edges detected: {len(edge_properties)} (of {n_before})')
+    edge_properties = _filter_significant_edges(model, edge_properties, edge_filter)
     for key in node_properties.keys():
         if node_properties[key]['node_size'] is None:
             node_properties[key]['node_size'] = node_size_default
@@ -617,6 +612,30 @@ def plot(model,
     return out
 
 
+# %% Shared helpers (static plot and mermaid)
+_EDGE_LABEL_ATTR = {'weight': 'value', 'p_value': 'p_value', 'logp': 'logp'}
+
+
+def _format_edge_label(value, edge_filter):
+    """Format the value of an edge label according to edge_filter."""
+    if edge_filter == 'p_value':
+        return float(f'{value:.2g}')
+    return float(f'{value:.2f}'[:4])
+
+
+def _filter_significant_edges(model, edge_properties, edge_filter):
+    """Keep only the significant edges when edge_filter is 'p_value' or 'logp'."""
+    if edge_filter in ('p_value', 'logp') and model.get('independence_test') is not None:
+        indep = model['independence_test']
+        if 'stat_test' in indep.columns and len(indep) > 0:
+            sig = indep.loc[indep['stat_test'].astype(bool), ['source', 'target']]
+            sig_set = set(zip(sig['source'], sig['target']))
+            n_before = len(edge_properties)
+            edge_properties = {e: p for e, p in edge_properties.items() if e in sig_set}
+            logger.info(f'Number of significant edges detected: {len(edge_properties)} (of {n_before})')
+    return edge_properties
+
+
 # %% Shared static-plot helpers
 def _static_defaults():
     """Default parameters of the static plot (shared by plot() and network.compare())."""
@@ -659,6 +678,90 @@ def compute_static_layout(G, pos=None, scale=1, layout='graphviz_layout_custom')
     return bn.network.graphlayout(G, pos=pos, scale=scale, layout=layout)
 
 
+# %% Mermaid
+def plot_mermaid(model,
+                 edge_filter='weight',
+                 direction='TB',
+                 title='Directed Acyclic Graph',
+                 node_color=None,
+                 node_properties=None,
+                 edge_properties=None,
+                 params_static=None,
+                 filepath=None):
+    """Create mermaid code of the learned structure.
+
+    The nodes, edges, edge labels, colors and thickness are derived with the same logic as the static
+    plot of bn.plot(). Mermaid positions the nodes itself (automatic layout), so the exact node coordinates
+    of the static plot can not be reproduced.
+
+    Parameters
+    ----------
+    model : dict
+        Learned model from the .fit() function.
+    edge_filter : str or None
+        None: no edge labels. 'weight': structure / coefficient values. 'p_value': raw edge p-values.
+        'logp': -log10(p_value) (the last two require independence_test).
+    direction : str
+        'TB' (top-bottom, default), 'BT', 'LR' or 'RL'.
+    title : str
+        Title of the diagram.
+    node_color : str, optional
+        Overrule the color of all nodes.
+    node_properties, edge_properties : dict, optional
+        Same as in plot().
+    params_static : dict, optional
+        Only minscale and maxscale (edge thickness scaling) are used.
+    filepath : str, optional
+        Save the code to disk. '.md' saves it in a ```mermaid fence, '.mmd' (or other) saves the raw code.
+
+    Returns
+    -------
+    str or None
+        Mermaid code. None when there are no edges to plot.
+
+    Examples
+    --------
+    >>> import bnlearn as bn
+    >>> model = bn.import_DAG('sprinkler')
+    >>> code = bn.plot_mermaid(model, filepath='sprinkler.md')
+    >>> print(code)
+    """
+    if model is None or (model.get('adjmat', None) is None) or model['adjmat'].sum().sum() == 0:
+        logger.info('Nothing to plot because no edges are present between nodes. ')
+        return None
+
+    if model.get('independence_test', None) is None and edge_filter in ('p_value', 'logp'):
+        logger.warning('edge_filter p_value/logp require: model=bn.independence_test(model, df)')
+        edge_filter = None
+
+    model = copy.deepcopy(model)
+    model['adjmat'] = model['adjmat'].astype(float)
+    params_static = resolve_static_params(params_static)
+
+    if node_properties is None:
+        node_properties = get_node_properties(model)
+    if edge_properties is None:
+        edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+    edge_properties = _filter_significant_edges(model, edge_properties, edge_filter)
+
+    nodes = []
+    for node in model['adjmat'].columns:
+        color = node_color if node_color is not None else node_properties.get(node, {}).get('node_color', '#ADD8E6')
+        nodes.append({'name': node, 'color': color})
+
+    edges = []
+    for (u, v), props in edge_properties.items():
+        label = None
+        if edge_filter in _EDGE_LABEL_ATTR:
+            label = _format_edge_label(props.get(_EDGE_LABEL_ATTR[edge_filter], 0), edge_filter)
+        edges.append({'source': u, 'target': v, 'label': label, 'color': props.get('color', '#000000'),
+                      'width': 1.5 * props.get('weight', 1)})
+
+    code = to_mermaid(nodes, edges, direction=direction, title=title)
+    write_mermaid(code, filepath)
+    return code
+
+
 # %% Static plot
 def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_filter='weight', edge_labels=None, edge_styles=None, edge_arrowstyles=None):
 
@@ -685,17 +788,9 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
         # Custom labels, e.g., provided by network.compare()
         if len(edge_labels) > 0:
             nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
-    elif edge_filter == 'weight':
-        edge_label = nx.get_edge_attributes(G, 'value')
-        edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-    elif edge_filter == 'p_value':
-        edge_label = nx.get_edge_attributes(G, 'p_value')
-        edge_label = {key: float(f'{value:.2g}') for key, value in edge_label.items()}
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
-    elif edge_filter == 'logp':
-        edge_label = nx.get_edge_attributes(G, 'logp')
-        edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
+    elif edge_filter in _EDGE_LABEL_ATTR:
+        edge_label = nx.get_edge_attributes(G, _EDGE_LABEL_ATTR[edge_filter])
+        edge_label = {key: _format_edge_label(value, edge_filter) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
 
     # Draw final figure

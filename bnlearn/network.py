@@ -198,6 +198,57 @@ def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minma
 _DASHED = (0, (3, 2.5))
 _DASHED_WIDTH = 2
 
+# Style per edge status: (color, dashed). Used by the static plot and the mermaid output.
+_EDGE_STATUS_STYLE = {'correct': ('k', False), 'extra': ('r', False), 'missing': ('k', True), 'reversed': ('g', False)}
+_EDGE_STATUS_LEGEND = {'correct': 'Correct edge', 'extra': 'Extra edge (false positive)',
+                       'missing': 'Missing edge (false negative)', 'reversed': 'Reversed edge'}
+
+
+def _diff_adjmat(adjmat_true, adjmat_pred):
+    """Match two adjacency matrices and compute the difference.
+
+    Returns the boolean true and predicted adjacency matrices and adjmat_diff:
+    1: correct edge, 2: extra edge (false positive), -1: missing edge (false negative).
+    """
+    # Make sure columns and indices to match
+    [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
+    [IAcol, IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
+    adjmat_true = adjmat_true.loc[IArow, IAcol]
+    adjmat_pred = adjmat_pred.iloc[IBrow, IBcol]
+
+    # Make sure it is boolean adjmat
+    adjmat_true = adjmat_true>0
+    adjmat_pred = adjmat_pred>0
+
+    # Check whether order is correct
+    assert np.all(adjmat_true.columns.values==adjmat_pred.columns.values), 'Column order of both input values could not be matched'
+    assert np.all(adjmat_true.index.values==adjmat_pred.index.values), 'Row order of both input values could not be matched'
+
+    # Setup graph
+    adjmat_diff = adjmat_true.astype(int)
+    adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))<0]=2
+    adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))>0]=-1
+    return adjmat_true, adjmat_pred, adjmat_diff
+
+
+def _edge_status(adjmat_diff):
+    """Status of each edge: 'correct', 'extra' (FP), 'missing' (FN) or 'reversed'.
+
+    Reversed: a FP and a FN between the same two nodes. This is ONE edge that points in the predicted (wrong)
+    direction; the FN edge in the true direction is removed. Returns {(source, target): status}.
+    """
+    names = {1: 'correct', 2: 'extra', -1: 'missing'}
+    status = {}
+    for (u, v), value in adjmat_diff.stack().items():
+        if value != 0:
+            status[(u, v)] = names[int(value)]
+    for (u, v) in list(status.keys()):
+        if u != v and status.get((u, v)) == 'extra' and status.get((v, u)) == 'missing':
+            status[(u, v)] = 'reversed'
+            del status[(v, u)]
+    return status
+
+
 def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height=None, layout='graphviz_layout_custom',
             scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None):
     """Compare two networks and plot the differences.
@@ -240,19 +291,8 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
     adjmat_diff : pd.DataFrame
         1: correct edge, 2: extra edge (false positive), -1: missing edge (false negative).
     """
-    # Make sure columns and indices to match
-    [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
-    [IAcol, IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
-    adjmat_true = adjmat_true.loc[IArow, IAcol]
-    adjmat_pred = adjmat_pred.iloc[IBrow, IBcol]
-
-    # Make sure it is boolean adjmat
-    adjmat_true = adjmat_true>0
-    adjmat_pred = adjmat_pred>0
-
-    # Check whether order is correct
-    assert np.all(adjmat_true.columns.values==adjmat_pred.columns.values), 'Column order of both input values could not be matched'
-    assert np.all(adjmat_true.index.values==adjmat_pred.index.values), 'Row order of both input values could not be matched'
+    # Match the two adjacency matrices and compute the difference
+    adjmat_true, adjmat_pred, adjmat_diff = _diff_adjmat(adjmat_true, adjmat_pred)
 
     # Get edges
     y_true = adjmat_true.stack().reset_index()[0].values
@@ -270,11 +310,6 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
         xlabel='Predicted network',
         ylabel='True network'
     )
-
-    # Setup graph
-    adjmat_diff = adjmat_true.astype(int)
-    adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))<0]=2
-    adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))>0]=-1
 
     if showfig:
         _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height,
@@ -309,17 +344,16 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
     # reversed (FP and FN between the same two nodes): ONE green edge with only the arrow of the wrong
     # (predicted) direction. The FN edge in the true direction is not drawn.
     arrow = params_static['arrowstyle']
-    for (u, v), props in edge_properties.items():
-        value = adjmat_diff.loc[u, v]
-        props['color'], props['style'], props['arrowstyle'] = {1: ('k', 'solid', arrow), 2: ('r', 'solid', arrow), -1: ('k', _DASHED, arrow)}[value]
-        if value == -1:
-            props['weight'] = _DASHED_WIDTH
-    for (u, v) in list(edge_properties.keys()):
-        if (u, v) in edge_properties and (v, u) in edge_properties and u != v:
-            if adjmat_diff.loc[u, v] == 2 and adjmat_diff.loc[v, u] == -1:
-                edge_properties[(u, v)].update({'color': 'g', 'style': 'solid', 'arrowstyle': arrow})
-                del edge_properties[(v, u)]
-                G.remove_edge(v, u)
+    status = _edge_status(adjmat_diff)
+    for edge in list(edge_properties.keys()):
+        if edge not in status:
+            del edge_properties[edge]
+            G.remove_edge(*edge)
+            continue
+        color, dashed = _EDGE_STATUS_STYLE[status[edge]]
+        edge_properties[edge].update({'color': color, 'style': _DASHED if dashed else 'solid', 'arrowstyle': arrow})
+        if status[edge] == 'missing':
+            edge_properties[edge]['weight'] = _DASHED_WIDTH
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     edge_styles = [edge_properties[e]['style'] for e in edgelist]
     edge_arrowstyles = [edge_properties[e]['arrowstyle'] for e in edgelist]
@@ -346,14 +380,67 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
                        edge_styles=edge_styles, edge_arrowstyles=edge_arrowstyles)
 
     # Legend
-    handles = [Line2D([0], [0], color='k', lw=2, label='Correct edge'),
-               Line2D([0], [0], color='r', lw=2, label='Extra edge (false positive)'),
-               Line2D([0], [0], color='k', lw=2, linestyle=_DASHED, label='Missing edge (false negative)'),
-               Line2D([0], [0], color='g', lw=2, label='Reversed edge')]
+    handles = [Line2D([0], [0], color=_EDGE_STATUS_STYLE[s][0], lw=2, linestyle=_DASHED if _EDGE_STATUS_STYLE[s][1] else 'solid', label=_EDGE_STATUS_LEGEND[s])
+               for s in _EDGE_STATUS_STYLE]
     plt.legend(handles=handles, loc='best', frameon=False)
     if params_static['showplot']:
         plt.show()
     return fig
+
+
+# %% Mermaid output of the comparison
+def compare_mermaid(adjmat_true, adjmat_pred, direction='TB', title='Network comparison', legend=True, node_color='#ADD8E6', filepath=None):
+    """Create mermaid code of the comparison of two networks.
+
+    Same edge logic as the static plot of compare(): black = correct edge, red = extra edge (false positive),
+    black dashed = missing edge (false negative), green = reversed edge (arrow in the predicted direction).
+    The nodes are declared in the order of the first input network. Mermaid positions the nodes itself
+    (automatic layout), so the node coordinates of the static plot can not be reproduced.
+
+    Parameters
+    ----------
+    adjmat_true : pd.DataFrame
+        Adjacency matrix of the true network.
+    adjmat_pred : pd.DataFrame
+        Adjacency matrix of the predicted network.
+    direction : str
+        'TB' (top-bottom, default), 'BT', 'LR' or 'RL'.
+    title : str
+        Title of the diagram.
+    legend : bool
+        Add a legend.
+    node_color : str
+        Fill color of the nodes (same default as plot()).
+    filepath : str, optional
+        Save the code to disk. '.md' saves it in a ```mermaid fence, '.mmd' (or other) saves the raw code.
+
+    Returns
+    -------
+    str
+        Mermaid code.
+
+    Examples
+    --------
+    >>> code = bn.compare_mermaid(adjmat_true, adjmat_pred, filepath='compare.md')
+    """
+    from bnlearn.mermaid import to_mermaid, write_mermaid
+
+    _, _, adjmat_diff = _diff_adjmat(adjmat_true, adjmat_pred)
+    status = _edge_status(adjmat_diff)
+
+    nodes = [{'name': node, 'color': node_color} for node in adjmat_diff.columns]
+    # Same thickness logic as the static plot: 1.5 px per unit of edge weight, missing edges are thicker.
+    width = {s: 1.5 * (_DASHED_WIDTH if s == 'missing' else 1) for s in _EDGE_STATUS_STYLE}
+    edges = [{'source': u, 'target': v, 'color': _EDGE_STATUS_STYLE[s][0], 'dashed': _EDGE_STATUS_STYLE[s][1], 'width': width[s]}
+             for (u, v), s in status.items()]
+    entries = None
+    if legend:
+        entries = [{'label': _EDGE_STATUS_LEGEND[s], 'color': _EDGE_STATUS_STYLE[s][0], 'dashed': _EDGE_STATUS_STYLE[s][1], 'width': width[s]}
+                   for s in _EDGE_STATUS_STYLE]
+
+    code = to_mermaid(nodes, edges, direction=direction, title=title, legend=entries)
+    write_mermaid(code, filepath)
+    return code
 
 
 # %% Make graph layout
