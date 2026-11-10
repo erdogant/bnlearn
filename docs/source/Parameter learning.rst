@@ -39,7 +39,7 @@ Let's bring in our dataset:
 .. code-block:: python
 
     import bnlearn
-    df = bnlearn.import_example()
+    df = bnlearn.fetch(as_dataframe=True)
     df.head()
 
 .. table::
@@ -66,7 +66,7 @@ Next, we import the DAG structure:
 
 .. code-block:: python
 
-    DAG = bnlearn.import_BIF('sprinkler', CPD=False)
+    DAG = bnlearn.fetch('sprinkler', with_cpt=False)
     print(DAG)
 
 .. table::
@@ -143,7 +143,7 @@ Great! We have the probabilities! Let's check how much they differ from the trut
 
 .. code-block:: python
 
-    DAG_true = bnlearn.import_BIF('sprinkler', CPD=True)
+    DAG_true = bnlearn.fetch('sprinkler', with_cpt=True)
 
 True CPDs:
 
@@ -202,7 +202,7 @@ Let's bring in the **asia** dataset:
     import bnlearn
 
     # Load asia dataset
-    DAG = bnlearn.import_BIF('asia')
+    DAG = bnlearn.fetch('asia')
     # Plot
     G = bnlearn.plot(DAG)
 
@@ -304,7 +304,7 @@ The **Conditional Probabilistic Tables (CPTs)** or Conditional Probability Distr
 
     # Import one of the example models
     # sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'filepath/to/model.bif',
-    model = bn.import_BIF('asia', CPD=True)
+    model = bn.fetch('asia', with_cpt=True)
 
     # Print the CPD for the model
     CPDs = bn.print_CPD(model)

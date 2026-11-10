@@ -189,7 +189,7 @@ def test_hillclimb_supports_gaussian_scores(gaussian_data, scoretype):
     assert set(model["model"].nodes()) == set(gaussian_data.columns)
     assert scoretype in model["structure_scores"]
     assert np.isfinite(model["structure_scores"][scoretype])
-    
+
 
 # %% Parameter learning: linear-gaussian and CG
 def test_parameter_learning_linear_gaussian(gaussian_data):
@@ -244,8 +244,8 @@ def test_parameter_learning_cg_mixed():
 
 def test_parameter_learning_discrete_keys_stable(gaussian_data):
     """Discrete bayes path must not populate continuous_cpds (package test compatibility)."""
-    df = bn.import_example()
-    model = bn.import_BIF('sprinkler', CPD=False)
+    df = bn.fetch(as_dataframe=True)
+    model = bn.fetch('sprinkler', with_cpt=False)
     fitted = bn.parameter_learning.fit(model, df, methodtype='bayes')
     # The key is present but must be None for the discrete path
     assert fitted.get('continuous_cpds') is None

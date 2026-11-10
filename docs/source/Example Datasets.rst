@@ -4,13 +4,13 @@
 DataFrames
 ^^^^^^^^^^
 
-The **sprinkler** dataset is one of the few internal datasets to import a pandas dataframe. This dataset is readily one-hot coded and without missing values. Therefore it does not require any further pre-processing steps. Note that 
+The **sprinkler** dataset is one of the few internal datasets to import a pandas dataframe. This dataset is readily one-hot coded and without missing values. Therefore it does not require any further pre-processing steps. Note that
 
 .. code-block:: python
 
    import bnlearn as bn
    # Import dataset
-   df = bn.import_example('sprinkler')
+   df = bn.fetch('sprinkler', as_dataframe=True)
 
    print(df)
    #     Cloudy  Sprinkler  Rain  Wet_Grass
@@ -32,7 +32,7 @@ The **sprinkler** dataset is one of the few internal datasets to import a pandas
 Import DAG/BIF
 ^^^^^^^^^^^^^^^
 
-Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_BIF` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
+Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.fetch` is derived from a *bif* file. The *bif* file is a common format for Bayesian networks that can be used for the exchange of knowledge and experimental results in the community. More information can be found (here)[http://www.cs.washington.edu/dm/vfml/appendixes/bif.htm].
 
 
 .. code-block:: python
@@ -49,7 +49,7 @@ Each Bayesian DAG model that is loaded with :func:`bnlearn.bnlearn.import_BIF` i
 	bif_file= 'filepath/to/model.bif'
 
 	# Loading DAG with model parameters from bif file.
-	model = bn.import_BIF(bif_file)
+	model = bn.fetch(bif_file)
 
 
 
@@ -70,7 +70,7 @@ The learned bayesian network can be exported in one of common bayes network form
 	import bnlearn as bn
 
 	# Import dataset
-	df = bn.import_example('sprinkler')
+	df = bn.fetch('sprinkler', as_dataframe=True)
 	# build model
 	model = bn.structure_learning.fit(df)
 	model = bn.parameter_learning.fit(model, df)

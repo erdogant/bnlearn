@@ -6,9 +6,9 @@ All models can be saved and loading using the :func:`bnlearn.bnlearn.save` and :
 **Example of saving and loading models**
 
 .. code-block:: python
-    
+
 	# Load data
-	df = bn.import_example(data='asia')
+	df = bn.fetch(name='asia', as_dataframe=True)
 
 	# Learn structure
 	model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')

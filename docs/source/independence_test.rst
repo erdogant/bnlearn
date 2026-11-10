@@ -13,7 +13,7 @@ Lets compute the DAG for **asia data set** and examine the edge strength.
 	import bnlearn as bn
 
 	# Load example data set
-	df = bn.import_example(data='asia')
+	df = bn.fetch(name='asia', as_dataframe=True)
 
 	# Structure learning of sampled dataset
 	model = bn.structure_learning.fit(df)

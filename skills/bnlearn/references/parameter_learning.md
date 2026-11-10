@@ -4,7 +4,7 @@
 >
 > ```python
 > model = bn.parameter_learning.fit(
->     model,                  # output of structure_learning.fit / make_DAG / import_BIF
+>     model,                  # output of structure_learning.fit / make_DAG / fetch
 >     df,                     # DataFrame
 >     methodtype='bayes',     # discrete: 'bayes' | 'ml' | 'maximumlikelihood'
 >                             # continuous: 'linear-gaussian' | 'lg'
@@ -1282,11 +1282,11 @@ Therefore, do not claim that `n_jobs` controls every operation performed by
 ```python
 import bnlearn as bn
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 
-model = bn.import_BIF(
+model = bn.fetch(
     'sprinkler',
-    CPD=False
+    with_cpt=False
 )
 
 model_update = bn.parameter_learning.fit(
@@ -1305,11 +1305,11 @@ The CPDs are estimated using maximum likelihood.
 ```python
 import bnlearn as bn
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 
-model = bn.import_BIF(
+model = bn.fetch(
     'sprinkler',
-    CPD=False
+    with_cpt=False
 )
 
 model_update = bn.parameter_learning.fit(
@@ -1427,11 +1427,11 @@ For example:
 ```python
 import bnlearn as bn
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 
-model = bn.import_BIF(
+model = bn.fetch(
     'sprinkler',
-    CPD=False
+    with_cpt=False
 )
 
 model_update = bn.parameter_learning.fit(
@@ -1556,9 +1556,9 @@ bn.parameter_learning.fit(
 Correct:
 
 ```python
-model = bn.import_BIF(
+model = bn.fetch(
     'sprinkler',
-    CPD=False
+    with_cpt=False
 )
 
 bn.parameter_learning.fit(

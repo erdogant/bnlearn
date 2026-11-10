@@ -128,7 +128,7 @@ def get_edge_properties(model, color='#000000', weight=1, minscale=1, maxscale=5
 
     >>> # Example 2:
     >>> # Load asia DAG
-    >>> df = bn.import_example(data='asia')
+    >>> df = bn.fetch(name='asia', as_dataframe=True)
     >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)

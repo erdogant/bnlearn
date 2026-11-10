@@ -1,9 +1,9 @@
 import bnlearn as bn
-df = bn.import_example(data='titanic')
+df = bn.fetch(name='titanic', as_dataframe=True)
 df.to_csv(r'd:\temp\titanic.csv', index=False)
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 df.to_csv(r'd:\temp\asia.csv', index=False)
-df = bn.import_example(data='alarm')
+df = bn.fetch(name='alarm', as_dataframe=True)
 df.to_csv(r'd:\temp\alarm.csv', index=False)
 
 # %%
@@ -13,7 +13,7 @@ import bnlearn as bn
 bn.set_logger('info')
 
 # Load dataset
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
 # Perform structure learning
@@ -43,7 +43,7 @@ import pandas as pd
 import bnlearn as bn
 
 # Load the predictive maintenance dataset
-df = bn.import_example('predictive_maintenance')
+df = bn.fetch('predictive_maintenance', as_dataframe=True)
 print(df.head())
 
 del df['UDI']
@@ -74,7 +74,7 @@ cpd_dict = bn.print_CPD(model_cg)
 for cpd in model_cg['continuous_cpds']:
     print(f"\nNode: {cpd['variable']}")
     print(f"  Parents: {cpd['disc_parents']} (discrete), {cpd['cont_parents']} (continuous)")
-    
+
 
 # %%
 # =============================================================================
@@ -83,7 +83,7 @@ for cpd in model_cg['continuous_cpds']:
 import bnlearn as bn
 
 # Load the classic sprinkler DAG + CPDs
-model = bn.import_BIF('sprinkler')
+model = bn.fetch('sprinkler')
 bn.plot(model)   # optional visualization
 
 # -------------------------------------------------
@@ -216,7 +216,7 @@ dotgraph
 import bnlearn as bn
 
 # Load dataset
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
 # Perform structure learning
@@ -277,7 +277,7 @@ bn.plot(model)
 import bnlearn as bn
 
 # Load example mixed dataset
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
 scoretype = 'bic-g'
@@ -310,7 +310,7 @@ q1 = bn.inference.fit(model, variables=['acceleration'], evidence={'model_year':
 # bn.system_info()
 
 import bnlearn as bn
-model = bn.import_BIF('sprinkler')
+model = bn.fetch('sprinkler')
 
 # every returned row has Rain=1 and Cloudy=0
 df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})
@@ -322,7 +322,7 @@ import bnlearn as bn
 import numpy as np
 
 n = np.random.randint(10, 1000)
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 df = bn.sampling(DAG, n=n, methodtype='gibbs')
 model = bn.structure_learning.fit(df, start_dag=DAG)
 model = bn.structure_learning.fit(df, start_dag='test')
@@ -357,13 +357,13 @@ bn.plot(model)
 import bnlearn as bn
 import numpy as np
 
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 n = np.random.randint(10, 1000)
 df = bn.sampling(DAG, n=n, methodtype='gibbs')
 assert df.shape == (n, 4)
 
 n = np.random.randint(10, 1000)
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 df = bn.sampling(DAG, n=n, methodtype='bayes')
 assert df.shape == (n, 4)
 
@@ -373,7 +373,7 @@ assert df.shape == (n, 4)
 import bnlearn as bn
 
 # Load example mixed dataset
-df = bn.import_example(data='sprinkler')
+df = bn.fetch(name='sprinkler', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -414,7 +414,7 @@ for cpd in DAG.get_cpds():
 # Plot the DAG
 bn.plot(model)
 G = bn.plot(model, interactive=True)
-# 
+#
 # q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler':0})
 # print(q1.df)
 
@@ -464,7 +464,7 @@ print(q1.df)
 import bnlearn as bn
 
 # Load example mixed dataset
-df = bn.import_example(data='sprinkler')
+df = bn.fetch(name='sprinkler', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -479,7 +479,7 @@ bn.load(filepath)
 import bnlearn as bn
 
 # Load dataset
-df = bn.import_example('predictive_maintenance')
+df = bn.fetch('predictive_maintenance', as_dataframe=True)
 
 # Get discrete columns
 cols = ['Type', 'Machine failure', 'TWF', 'HDF', 'PWF', 'OSF', 'RNF']
@@ -555,7 +555,7 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
          ('Sprinkler', 'Wet_Grass'),
          ('Rain', 'Wet_Grass')]
- 
+
 # Get parent nodes from the edges
 parents = bn.get_parents(edges)
 print(parents)
@@ -700,7 +700,7 @@ q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprink
 import bnlearn as bn
 
 # Load asia DAG
-model = bn.import_BIF('asia')
+model = bn.fetch('asia')
 # plot ground truth
 G = bn.plot(model)
 
@@ -711,10 +711,10 @@ bn.print_CPD(model)
 # Lets create an example dataset with 100 samples and make inferences on the entire dataset.
 df = bn.sampling(model, n=100)
 
-# %% 
+# %%
 import bnlearn as bn
 # Load example DataFrame
-df_as = bn.import_example('titanic')
+df_as = bn.fetch('titanic', as_dataframe=True)
 dfhot, dfnum = bn.df2onehot(df_as)
 
 # Train model
@@ -741,7 +741,7 @@ query = bn.inference.fit(model_as_p, variables=['Parch', 'Sex', 'Survived'], evi
 
 #%%
 import bnlearn as bn
-model = bn.import_BIF('asia')
+model = bn.fetch('asia')
 G = bn.plot(model)
 bn.plot_graphviz(model)
 
@@ -821,7 +821,7 @@ bn.impute.mice(df, max_iter=5, string_columns='city')
 # %%
 import bnlearn as bn
 # Load example mixed dataset
-df = bn.import_example(data='sprinkler')
+df = bn.fetch(name='sprinkler', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -870,7 +870,7 @@ dot = bn.plot_graphviz(model)
 import bnlearn as bn
 import matplotlib.pyplot as plt
 
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 model = bn.structure_learning.fit(df)
 
 # Figure is visible and created
@@ -892,7 +892,7 @@ import matplotlib.pyplot as plt
 import bnlearn as bn
 
 # Load sprinkler dataset
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 
 
 cii_tests = ['chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence']
@@ -919,7 +919,7 @@ import matplotlib.pyplot as plt
 import bnlearn as bn
 
 # Load sprinkler dataset
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 df.columns
 
 # Learn the DAG in data using hillclimbsearch and BIC
@@ -944,7 +944,7 @@ dot
 # %%
 import bnlearn as bn
 # Load example mixed dataset
-df = bn.import_example(data='sprinkler')
+df = bn.fetch(name='sprinkler', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -1007,7 +1007,7 @@ from lingam.utils import make_dot
 #     / \      /  |  \
 #   -1   2    8   3    4
 #   x4   etc           x5
-# 
+#
 
 n = 1000
 # step 1
@@ -1038,7 +1038,7 @@ model = bn.structure_learning.fit(df, methodtype='direct-lingam')
 # When we no look at the output, we can see that the dependency values are very well recovered for the various variables.
 print(model['adjmat'])
 # target        x0        x1       x2   x3        x4       x5
-# source                                                     
+# source
 # x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
 # x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
 # x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
@@ -1051,7 +1051,7 @@ G = bn.plot(model)
 model = bn.independence_test(model, df, prune=False)
 print(model['adjmat'])
 # target        x0        x1       x2   x3        x4       x5
-# source                                                     
+# source
 # x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
 # x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
 # x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
@@ -1073,7 +1073,7 @@ bn.plot_graphviz(model, edge_filter='logp')
 import bnlearn as bn
 
 # Load example mixed dataset
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
 # Structure learning
@@ -1110,7 +1110,7 @@ df["origin"] = df["origin"].str.replace(".", "", regex=False).astype(int)
 df["car_name"] = df["car_name"].str.strip('"')
 df = df.drop(columns="origin_car")
 
-# df = bn.import_example(data='auto_mpg')
+# df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
 df.dropna(inplace=True)
 df.drop(['model year', 'origin', 'car name'], axis=1, inplace=True)
@@ -1184,7 +1184,7 @@ dotgraph
 import bnlearn as bn
 
 # Download dataset
-# df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+# df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
 #                  delim_whitespace=True, header=None,
 #                  names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
 
@@ -1194,7 +1194,7 @@ import bnlearn as bn
 
 
 # Load example mixed dataset
-# df = bn.import_example(data='auto_mpg')
+# df = bn.fetch(name='auto_mpg', as_dataframe=True)
 # del df['origin']
 # df=df.iloc[:,0:5]
 
@@ -1229,7 +1229,7 @@ dotgraph2
 # %% with pvalue
 import bnlearn as bn
 
-# df = bn.import_example(data='auto_mpg')
+# df = bn.fetch(name='auto_mpg', as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
 # Compute edge strength with the chi_square test statistic
@@ -1252,7 +1252,7 @@ from causallearn.search.FCMBased.lingam.utils import make_dot
 setgraphviz()
 
 # Load example mixed dataset
-# df = bn.import_example(data='auto_mpg')
+# df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
 from causallearn.search.FCMBased import lingam
 # model = lingam.ICALiNGAM()
@@ -1282,7 +1282,7 @@ import lingam
 from lingam.utils import make_dot
 
 import bnlearn as bn
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 labels = list(df.columns.values)
 
 
@@ -1290,11 +1290,11 @@ labels = list(df.columns.values)
 model = lingam.DirectLiNGAM(random_state=None)
 model.fit(df)
 
-# Using the causal_order_ properties, 
+# Using the causal_order_ properties,
 # we can see the causal ordering as a result of the causal discovery.
 print(model.causal_order_)
 
-# Also, using the adjacency_matrix_ properties, 
+# Also, using the adjacency_matrix_ properties,
 # we can see the adjacency matrix as a result of the causal discovery.
 print(model.adjacency_matrix_)
 
@@ -1368,7 +1368,7 @@ bn.plot(model, interactive=True)
 import bnlearn as bn
 
 # Load example mixed dataset
-df = bn.import_example(data='titanic')
+df = bn.fetch(name='titanic', as_dataframe=True)
 
 # Convert to onehot
 _, dfnum = bn.df2onehot(df)
@@ -1384,7 +1384,7 @@ G = bn.plot(model, interactive=False)
 model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 
 # Plot
-G = bn.plot(model, interactive=False, pos=G['pos'], params_static={'layout': 'spectral_layout'})
+G = bn.plot(model, interactive=False)
 # 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'graphviz_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
 # bn.plot(model, interactive=True, pos=G['pos'])
 
@@ -1398,7 +1398,7 @@ G = bn.plot(model, interactive=True)
 # %% compute causalities
 import bnlearn as bn
 # Load asia DAG
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 # print(df)
 
@@ -1508,7 +1508,7 @@ Xtest = bn.sampling(model, n=100)
 # %%
 import bnlearn as bn
 # Load asia DAG
-model = bn.import_BIF('asia')
+model = bn.fetch('asia')
 # plot ground truth
 G = bn.plot(model)
 
@@ -1524,7 +1524,7 @@ df = bn.sampling(model, n=10000)
 import bnlearn as bn
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1573,7 +1573,7 @@ bn.predict(DAG, df, variables=['d'])
 import bnlearn as bn
 
 # Load example dataset
-Xy_train = bn.import_example('titanic')
+Xy_train = bn.fetch('titanic', as_dataframe=True)
 Xy_train.drop(labels='Cabin', axis=1, inplace=True)
 Xy_train = Xy_train.dropna(axis=0)
 
@@ -1613,7 +1613,7 @@ bn.plot(DAG)
 import bnlearn as bn
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1654,13 +1654,13 @@ bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn
 
 # %% Import examples
 import bnlearn as bn
-df = bn.import_example(data='sprinkler', n=1000)
+df = bn.fetch(name='sprinkler', n=1000, as_dataframe=True)
 
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 
 # %% Working with continues data
 import bnlearn as bn
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
 edges = [
     ("cylinders", "displacement"),
@@ -1704,14 +1704,14 @@ import bnlearn as bn
 shapes = [(10000, 37), (10000, 223), (10000, 8), (10000, 11), (10000, 32), (352, 3)]
 for i, data in enumerate(['alarm', 'andes', 'asia', 'sachs', 'water', 'stormofswords']):
     print(data)
-    df = bn.import_example(data=data)
+    df = bn.fetch(name=data, as_dataframe=True)
     assert df.shape==shapes[i]
 
 
 # %% Notebook example
-# Example dataframe sprinkler_data.csv can be loaded with: 
+# Example dataframe sprinkler_data.csv can be loaded with:
 import bnlearn as bn
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # df = pd.read_csv('sprinkler_data.csv')
 model = bn.structure_learning.fit(df)
 
@@ -1734,7 +1734,7 @@ G = bn.plot(model,
 
 # %%
 import bnlearn as bn
-model = bn.import_BIF('asia')
+model = bn.fetch('asia')
 
 # Make single inference
 query = bn.inference.fit(model, variables=['lung', 'bronc', 'xray'], evidence={'smoke': 1})
@@ -1757,7 +1757,7 @@ print(Pout)
 
 # %%
 import bnlearn as bn
-model = bn.import_BIF('asia', CPD=True)
+model = bn.fetch('asia', with_cpt=True)
 CPDs = bn.print_CPD(model)
 CPDs.keys()
 # dict_keys(['asia', 'bronc', 'dysp', 'either', 'lung', 'smoke', 'tub', 'xray'])
@@ -1771,7 +1771,7 @@ print(model["model"].get_cpds(np.array(list(CPDs.keys()))[1]))
 
 # %% Issue 65: return (fig, ax)
 import bnlearn as bn
-model = bn.import_BIF('sprinkler', CPD=True)
+model = bn.fetch('sprinkler', with_cpt=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
 fig = bn.plot(model, params_static={'visible': True})
 fig2 = bn.plot(model, interactive=True)
@@ -1801,7 +1801,7 @@ fig2 = bn.plot(model, interactive=True)
 import bnlearn as bn
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1828,7 +1828,7 @@ import bnlearn as bn
 
 # %%
 # Load asia DAG
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
 # Make plot
@@ -1839,7 +1839,7 @@ G = bn.plot(model, interactive=True)
 import bnlearn as bn
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1860,7 +1860,7 @@ print(tabulate(CPD['Cloudy'], tablefmt="grid", headers="keys"))
 # %% Issue 37
 import bnlearn as bn
 # Load example DataFrame
-df_as = bn.import_example('titanic')
+df_as = bn.fetch('titanic', as_dataframe=True)
 dfhot, dfnum = bn.df2onehot(df_as)
 # Train model
 model_as = bn.structure_learning.fit(dfnum, methodtype='hc', scoretype='bic')
@@ -1884,7 +1884,7 @@ query = bn.inference.fit(model_as_p, variables=['Parch'], evidence={'Survived':0
 import bnlearn as bn
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1907,14 +1907,14 @@ bn.plot(model)
 
 # %%
 import bnlearn as bn
-model = bn.import_BIF('water')
+model = bn.fetch('water')
 # Sampling
 df = bn.sampling(model, n=1000, methodtype='bayes')
 
 
 # %% Naive Bayesian model
 import bnlearn as bn
-df = bn.import_example('random_discrete')
+df = bn.fetch('random_discrete', as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='nb', root_node="B", n_jobs=1)
 model = bn.structure_learning.fit(df, methodtype='hc', n_jobs=1)
@@ -1937,10 +1937,10 @@ bn.plot(model)
 # new_model = BayesianNetwork(model.edges())
 # cpds = BayesianEstimator(new_model, df).get_parameters(prior_type='dirichlet', pseudo_counts=1)
 # new_model.add_cpds(*cpds)
- 
+
 # %% LOAD BIF FILE
 import bnlearn as bn
-DAG = bn.import_BIF('water')
+DAG = bn.fetch('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -1948,7 +1948,7 @@ model = bn.parameter_learning.fit(DAG, df, scoretype='bdeu', smooth=None)
 
 # %%
 import bnlearn as bn
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 model = bn.structure_learning.fit(df)
 bn.plot(model)
 bn.plot(model, params_static={'layout':'spectral_layout'})
@@ -1961,7 +1961,7 @@ bn.plot(model, params_static={'layout':'circular_layout', "figsize": (15, 10)})
 # %%
 
 # Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 edges = [('Cloudy', 'Sprinkler'),
          ('Cloudy', 'Rain'),
@@ -1997,7 +1997,7 @@ bn.plot(DAG, interactive=False)
 # %%
 import bnlearn as bn
 
-raw = bn.import_example('stormofswords')
+raw = bn.fetch('stormofswords', as_dataframe=True)
 # Convert raw data into sparse datamatrix
 df = bn.vec2adjmat(raw['source'], raw['target'], raw['weight'])
 # df = bn.vec2df(raw['source'], raw['target'], raw['weight'])
@@ -2033,7 +2033,7 @@ query.df
 
 # %%
 import bnlearn as bn
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
@@ -2041,15 +2041,15 @@ bn.plot(model, interactive=False, node_size=10)
 
 
 # %% Check the stochastic component of bnlearn
-DAG = bn.import_BIF('sprinkler')
-df = bn.import_example('sprinkler')
+DAG = bn.fetch('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 adjmats = []
 
 for i in range(0, 10):
     # print(i)
     df = bn.sampling(DAG, n=10000)
     model = bn.structure_learning.fit(df)
-    # df = bn.import_example()
+    # df = bn.fetch(as_dataframe=True)
     # model = bn.structure_learning.fit(df)
     adjmats.append(model['adjmat'].values.ravel())
 
@@ -2063,7 +2063,7 @@ print(adjmat.sum(axis=0))
 # %% LOAD BIF FILE
 
 # Example 1: Plot the TRUE DAG
-DAG_1 = bn.import_BIF('sprinkler')
+DAG_1 = bn.fetch('sprinkler')
 graph = bn.plot(DAG_1)
 
 graph = bn.plot(DAG_1, params_static={'layout':'kamada_kawai_layout'})
@@ -2071,7 +2071,7 @@ graph = bn.plot(DAG_1, params_static={'layout':'spring_layout'})
 
 
 # Example 2: Download small spinkler example with 1000 samples
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 DAG_2 = bn.structure_learning.fit(df)
 bn.plot(DAG_2, pos=graph['pos'])
 
@@ -2082,7 +2082,7 @@ bn.plot(DAG_3, pos=graph['pos'])
 
 
 # %% LOAD BIF FILE
-DAG = bn.import_BIF('water')
+DAG = bn.fetch('water')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2116,7 +2116,7 @@ G = bn.plot(model2, interactive=False)
 
 # %% Adjust some edge properties
 # Load asia DAG
-df = bn.import_example(data='sprinkler')
+df = bn.fetch(name='sprinkler', as_dataframe=True)
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
 # Compute edge strength with the chi_square test statistic
@@ -2127,14 +2127,14 @@ bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/outpu
 
 # %% Adjust some edge properties
 # Load asia DAG
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 # Structure learning of sampled dataset
-model = bn.structure_learning.fit(df)
+model = bn.structure_learning.fit(df, root_node='bronc')
 # Make plot
 G = bn.plot(model)
 
 # Compute associations with the chi_square test statistic
-model1 = bn.independence_test(model, df, test='chi_square', prune=False)
+model1 = bn.independence_test(model, df, test='chi_square', prune=True)
 # Make plot
 bn.plot(model1, pos=G['pos'])
 
@@ -2235,7 +2235,7 @@ bn.plot(model2, pos=G['pos'])
 
 
 # %% Naive Bayesian model
-df = bn.import_example('random_discrete')
+df = bn.fetch('random_discrete', as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
 model = bn.independence_test(model, df, prune=True)
@@ -2265,7 +2265,7 @@ bn.print_CPD(DAG, checkmodel=True)
 # %% Adjust some edge properties
 
 # Load asia DAG
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 # Structure learning of sampled dataset
 model = bn.structure_learning.fit(df)
 # plot static
@@ -2294,7 +2294,7 @@ bn.plot(model, interactive=False, node_properties=node_properties, edge_properti
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 # https://pgmpy.org/models/naive.html
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
@@ -2304,7 +2304,7 @@ bn.plot(model, interactive=True, node_size=10)
 # %% Coloring networks
 
 # Load example dataset
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -2335,7 +2335,7 @@ bn.plot(model, interactive=True, params_interactive={'height': '800px', 'width':
 
 # %% Save and load trained models
 # Import example
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 # Learn structure
 model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
 # Save model
@@ -2350,7 +2350,7 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.models import BayesianNetwork, NaiveBayes
 from pgmpy.inference import VariableElimination
 
-df=bn.import_example(data='andes')
+df=bn.fetch(name='andes', as_dataframe=True)
 
 # PGMPY
 est = TreeSearch(df)
@@ -2397,7 +2397,7 @@ for cpd_bnlearn in model_bn['model'].get_cpds():
 # %% Example of interactive plotting
 
 # Import example
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 
 # Do the tan learning
 est = TreeSearch(df)
@@ -2420,7 +2420,7 @@ assert list(dag.edges())==model['model_edges']
 # %% Example of interactive plotting
 
 # Load example dataset
-df = bn.import_example(data='asia')
+df = bn.fetch(name='asia', as_dataframe=True)
 
 # Structure learning
 model = bn.structure_learning.fit(df)
@@ -2438,7 +2438,7 @@ bn.plot(model, interactive=True, node_size=10, params_interactive={'height': '80
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df)
 # bn.plot(model)
@@ -2453,7 +2453,7 @@ model = bn.structure_learning.fit(df.iloc[:, 0:100], methodtype='cs')
 bn.plot(model)
 
 # %% White_list edges
-DAG = bn.import_BIF('asia')
+DAG = bn.fetch('asia')
 # plot ground truth
 df = bn.sampling(DAG, n=1000)
 
@@ -2469,7 +2469,7 @@ bn.plot(model, node_color='#000000')
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
 
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
@@ -2478,16 +2478,16 @@ bn.plot(model, interactive=True, node_size=10)
 # %% Download example
 examples = ['titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'miserables']
 for example in examples:
-    df = bn.import_example(data=example)
+    df = bn.fetch(name=example, as_dataframe=True)
     # assert ~df.empty
 
 # %%
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 model = bn.structure_learning.fit(df)
 model = bn.structure_learning.fit(df, methodtype='hc')
 
 # %% Predict
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 edges = [('smoke', 'lung'),
          ('smoke', 'bronc'),
          ('lung', 'xray'),
@@ -2524,7 +2524,7 @@ bn.topological_sort(DAG)
 bn.topological_sort(DAG, '3')
 
 # %%
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 
 bn.topological_sort(DAG, 'Rain')
 bn.topological_sort(DAG)
@@ -2535,7 +2535,7 @@ bn.topological_sort(bn.adjmat2vec(DAG['adjmat']), 'Rain')
 
 # %%
 
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 df = bn.sampling(DAG, n=1000)
 model = bn.structure_learning.fit(df, methodtype='chow-liu', root_node='Wet_Grass')
 G = bn.plot(model)
@@ -2543,13 +2543,13 @@ bn.topological_sort(model, 'Rain')
 
 # %%
 # Example dataframe sprinkler_data.csv can be loaded with:
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 # df = pd.read_csv('sprinkler_data.csv')
 model = bn.structure_learning.fit(df)
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 df = bn.sampling(DAG, n=1000)
 
 # Structure learning
@@ -2564,7 +2564,7 @@ node_properties['Cloudy']['node_color']='r'
 G = bn.plot(model, node_properties=node_properties)
 
 # %% Chow-Liu algorithm
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 df = bn.sampling(DAG, n=1000)
 
 # Structure learning
@@ -2572,12 +2572,12 @@ model_hc_bic = bn.structure_learning.fit(df, methodtype='cl', root_node='Cloudy'
 G = bn.plot(model)
 
 # %% Load example dataframe from sprinkler
-DAG = bn.import_BIF('alarm')
+DAG = bn.fetch('alarm')
 to_vector = bn.adjmat2vec(DAG['adjmat'])
 to_adjmat = bn.vec2adjmat(to_vector['source'], to_vector['target'])
 
 # %% Load example dataframe from sprinkler
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df)
 # Plot
@@ -2586,7 +2586,7 @@ G = bn.plot(model)
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 
 # %% Try all methods vs score types
-df = bn.import_example()
+df = bn.fetch(as_dataframe=True)
 
 model_hc_bic = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 model_hc_k2 = bn.structure_learning.fit(df, methodtype='hc', scoretype='k2')
@@ -2603,7 +2603,7 @@ G = bn.plot(model_hc_bic)
 bn.compare(model_hc_bic, model_cl, pos=G['pos'])
 
 # %% Example with dataset
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 # Print cpds
 bn.print_CPD(DAG)
 # plot ground truth
@@ -2612,7 +2612,7 @@ df = bn.sampling(DAG, n=100)
 
 # %% Inference using custom DAG
 # Load asia DAG
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 # from tabulate import tabulate
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 print(df)
@@ -2682,7 +2682,7 @@ print(out)
 
 # %% compute causalities
 # Load asia DAG
-df = bn.import_example('asia')
+df = bn.fetch('asia', as_dataframe=True)
 # print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 # print(df)
 
@@ -2724,7 +2724,7 @@ q1 = bn.inference.fit(model_with_CPD, variables=['xray'], evidence={'smoke':1})
 
 # %% Example compare networks
 # Load asia DAG
-DAG = bn.import_BIF('asia')
+DAG = bn.fetch('asia')
 # plot ground truth
 G = bn.plot(DAG)
 # Sampling
@@ -2752,19 +2752,19 @@ bn.compare(model_bl, model_wl, pos=G['pos'])
 
 
 # %% PARAMETER LEARNING
-df = bn.import_example()
-DAG = bn.import_BIF('sprinkler', CPD=False)
+df = bn.fetch(as_dataframe=True)
+DAG = bn.fetch('sprinkler', with_cpt=False)
 model_update = bn.parameter_learning.fit(DAG, df)
 bn.plot(model_update)
 
-model_true = bn.import_BIF('sprinkler', CPD=True)
+model_true = bn.fetch('sprinkler', with_cpt=True)
 
 # %% Example with one-hot RAW dataset: sprinkler.
 # Load processed data
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 
 # Read raw data and process
-df_raw = bn.import_example(data='sprinkler')
+df_raw = bn.fetch(name='sprinkler', as_dataframe=True)
 df = bn.df2onehot(df_raw)[1]
 df.columns=df.columns.str.replace('_1.0', '')
 
@@ -2783,7 +2783,7 @@ q2.name_to_no
 q2.no_to_name,
 
 # %% LOAD BIF FILE
-DAG = bn.import_BIF('asia')
+DAG = bn.fetch('asia')
 # Sampling
 df = bn.sampling(DAG, n=1000)
 # Parameter learning
@@ -2807,7 +2807,7 @@ bn.print_CPD(model_update)
 
 
 # %% INFERENCE
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 bn.plot(DAG)
 q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprinkler': 0, 'Cloudy': 1})
 q2 = bn.inference.fit(DAG, variables=['Wet_Grass', 'Rain'], evidence={'Sprinkler': 1})
@@ -2819,8 +2819,8 @@ print(q2.df)
 
 
 # %% INFERENCE 2
-DAG = bn.import_BIF('asia')
-# DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('asia')
+# DAG = bn.fetch('sprinkler')
 bn.plot(DAG)
 q1 = bn.inference.fit(DAG, variables=['lung'], evidence={'bronc': 1, 'smoke': 1})
 q2 = bn.inference.fit(DAG, variables=['bronc', 'lung'], evidence={'smoke': 1, 'xray': 0, 'tub': 1})
@@ -2835,7 +2835,7 @@ print(q2.df)
 # %% Example with mixed dataset: titanic case
 import bnlearn as bn
 # Load example mixed dataset
-df_raw = bn.import_example(data='titanic')
+df_raw = bn.fetch(name='titanic', as_dataframe=True)
 # Convert to onehot
 dfhot, dfnum = bn.df2onehot(df_raw)
 
@@ -2863,8 +2863,8 @@ Pout = bn.predict(model, Xtest, variables=['Survived'])
 
 
 # %%
-DAG = bn.import_BIF('sprinkler', CPD=True)
-# DAG = bn.import_BIF('asia')
+DAG = bn.fetch('sprinkler', with_cpt=True)
+# DAG = bn.fetch('asia')
 bn.plot(DAG)
 bn.print_CPD(DAG)
 
@@ -2912,7 +2912,7 @@ edges = [('Cloudy', 'Sprinkler'),
          ('Sprinkler', 'Wet_Grass'),
          ('Rain', 'Wet_Grass')]
 
-# DAG = bn.import_BIF('sprinkler')
+# DAG = bn.fetch('sprinkler')
 DAG = bn.make_DAG(edges)
 bn.plot(DAG)
 bn.print_CPD(DAG)
@@ -3008,7 +3008,7 @@ q1 = bn.inference.fit(DAG, variables=['Wet_Grass'], evidence={'Rain': 1, 'Sprink
 
 
 # Import example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 # Define the network structure
 edges = [('Cloudy', 'Sprinkler'),
@@ -3044,4 +3044,3 @@ print(q1.values)
 
 
 # %%
-    

@@ -86,7 +86,7 @@ It is also possible to examine the topological ordering of your learned DAG usin
     import bnlearn as bn
 
     # Import DAG
-    DAG = bn.import_BIF('sprinkler')
+    DAG = bn.fetch('sprinkler')
     # Generate data using the DAG
     df = bn.sampling(DAG, n=1000)
     # Structure learning

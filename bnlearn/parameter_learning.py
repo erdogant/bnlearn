@@ -118,8 +118,8 @@ def fit(model, df, methodtype='auto', scoretype='bdeu', smooth=None, n_jobs=-1):
     --------
     >>> import bnlearn as bn
     >>>
-    >>> df = bn.import_example()
-    >>> model = bn.import_BIF('sprinkler', CPD=False)
+    >>> df = bn.fetch(as_dataframe=True)
+    >>> model = bn.fetch('sprinkler', with_cpt=False)
     >>>
     >>> # Parameter learning
     >>> model_update = bn.parameter_learning.fit(model, df)
@@ -473,4 +473,3 @@ def _validate_cg_parameters(continuous_cpds):
                 )
     logger.info('Conditional-Gaussian parameter check: OK (%d continuous nodes)' % len(continuous_cpds))
     return True
-

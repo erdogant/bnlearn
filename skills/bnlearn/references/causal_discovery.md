@@ -374,7 +374,7 @@ Example:
 ```python
 import bnlearn as bn
 
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 model = bn.structure_learning.fit(
     df,
@@ -1875,7 +1875,7 @@ outcome.
 import bnlearn as bn
 
 # Load data
-df = bn.import_example('predictive_maintenance')
+df = bn.fetch('predictive_maintenance', as_dataframe=True)
 
 # Learn structure
 model = bn.structure_learning.fit(

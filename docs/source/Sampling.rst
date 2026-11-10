@@ -21,7 +21,7 @@ where we explicitly encode our domain knowledge without requiring observational 
 	import bnlearn as bn
 
 	# Load example DAG with CPD
-	model = bn.import_BIF('sprinkler', CPD=True)
+	model = bn.fetch('sprinkler', with_cpt=True)
 
 	# Take 1000 samples from the CPD distribution
 	df = bn.sampling(model, n=1000, methodtype='bayes')
@@ -63,7 +63,7 @@ While Forward Sampling is better suited for full synthetic data generation, Gibb
 	import bnlearn as bn
 
 	# Load example DAG with CPD
-	model = bn.import_BIF('sprinkler', CPD=True)
+	model = bn.fetch('sprinkler', with_cpt=True)
 
 	# Take 1000 samples from the CPD distribution
 	df = bn.sampling(model, n=1000, methodtype='gibbs')
@@ -76,7 +76,7 @@ Another example with Gibbs sampling but now by creating some user-defined edges
 .. code-block:: python
 
 	# Load example dataset
-	df = bn.import_example('sprinkler')
+	df = bn.fetch('sprinkler', as_dataframe=True)
 
 	# Create some edges
 	edges = [('Cloudy', 'Sprinkler'),
@@ -126,7 +126,7 @@ For example, a Bayesian network can generate additional Sprinkler samples condit
 .. code-block:: python
 
     import bnlearn as bn
-    model = bn.import_BIF('sprinkler')
+    model = bn.fetch('sprinkler')
 
     # every returned row has Rain=1 and Cloudy=0
     df = bn.sampling(model, n=100, evidence={'Rain': 1, 'Cloudy': 0})

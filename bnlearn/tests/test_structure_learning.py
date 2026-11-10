@@ -9,12 +9,12 @@ from pgmpy.inference import VariableElimination
 
 @pytest.fixture
 def sprinkler():
-    return bn.import_example()
+    return bn.fetch(as_dataframe=True)
 
 
 @pytest.fixture
 def asia_sampling():
-    asia_dag = bn.import_BIF('sprinkler')
+    asia_dag = bn.fetch('sprinkler')
     return bn.sampling(asia_dag, n=1000)
 
 
@@ -132,7 +132,7 @@ def test_filtering_no_filter(asia_sampling):
 
 # @pytest.mark.skip(reason='find a faster way to test this')
 # def test_compare_pgmpy(sprinkler):
-#     andes = bn.import_example(data='andes')
+#     andes = bn.fetch(name='andes', as_dataframe=True)
 
 #     # PGMPY
 #     est = TreeSearch(andes)

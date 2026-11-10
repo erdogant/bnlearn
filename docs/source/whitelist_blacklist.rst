@@ -10,7 +10,7 @@ When variables are black listed, they are excluded from the search and the resul
 
     import bnlearn
     # Load example mixed dataset
-    df_raw = bnlearn.import_example(data='titanic')
+    df_raw = bnlearn.fetch(name='titanic', as_dataframe=True)
 
     # Convert to onehot
     dfhot, dfnum = bnlearn.df2onehot(df_raw)
@@ -33,7 +33,7 @@ When variables are black listed, they are excluded from the search and the resul
 
     import bnlearn
     # Load example mixed dataset
-    df_raw = bnlearn.import_example(data='titanic')
+    df_raw = bnlearn.fetch(name='titanic', as_dataframe=True)
 
     # Convert to onehot
     dfhot, dfnum = bnlearn.df2onehot(df_raw)

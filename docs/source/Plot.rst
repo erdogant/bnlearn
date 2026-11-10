@@ -23,7 +23,7 @@ The simplest way to create an interactive plot is by setting ``interactive=True`
     import bnlearn as bn
 
     # Load example dataset
-    df = bn.import_example(data='asia')
+    df = bn.fetch(name='asia', as_dataframe=True)
 
     # Learn the network structure
     model = bn.structure_learning.fit(df)
@@ -167,7 +167,7 @@ The library provides tools to compare different networks, which is particularly 
 .. code-block:: python
 
    # Load ground truth network
-   model = bn.import_BIF('asia')
+   model = bn.fetch('asia')
 
    # Plot ground truth
    G = bn.plot(model)
@@ -223,7 +223,7 @@ Node properties can be customized using the :func:`bnlearn.bnlearn.get_node_prop
 
     import bnlearn as bn
     # Load example data
-    df = bn.import_example(data='asia')
+    df = bn.fetch(name='asia', as_dataframe=True)
     # Learn structure
     model = bn.structure_learning.fit(df)
     # Get current node properties
@@ -256,7 +256,7 @@ Edge properties can be customized using the :func:`bnlearn.bnlearn.get_edge_prop
 
     import bnlearn as bn
     # Load asia DAG
-    df = bn.import_example(data='asia')
+    df = bn.fetch(name='asia', as_dataframe=True)
     # Structure learning of sampled dataset
     model = bn.structure_learning.fit(df)
     # Test for significance

@@ -22,7 +22,7 @@ Let's start by importing some data. We need a DAG and CPD (Conditional Probabili
     import bnlearn as bn
 
     # Import example dataset
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
 
     # Learn the structure from data
     model = bn.structure_learning.fit(df)
@@ -40,10 +40,10 @@ Here's another example demonstrating a complete workflow:
     import bnlearn as bn
 
     # Import a predefined DAG (Sprinkler network)
-    model = bn.import_BIF('sprinkler')
+    model = bn.fetch('sprinkler')
 
     # Import example dataset
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
 
     # Generate samples from the model
     df = bn.sampling(model)

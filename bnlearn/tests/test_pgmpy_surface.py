@@ -26,7 +26,7 @@ WETGRASS_GIVEN_RAIN = 0.9162
 
 @pytest.fixture(scope="module")
 def sprinkler_model():
-    return bn.import_BIF('sprinkler')
+    return bn.fetch('sprinkler')
 
 
 @pytest.fixture(scope="module")
@@ -55,10 +55,10 @@ probability ( B | A ) {
 """
 
 
-def test_import_BIF_from_bif_file(tmp_path):
+def test_fetch_from_bif_file(tmp_path):
     bif = tmp_path / "tiny.bif"
     bif.write_text(MINIMAL_BIF)
-    model = bn.import_BIF(str(bif))
+    model = bn.fetch(str(bif))
     assert set(model['model'].nodes()) == {'A', 'B'}
     assert list(model['model'].edges()) == [('A', 'B')]
     assert len(model['model'].get_cpds()) == 2

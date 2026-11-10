@@ -35,7 +35,7 @@ More formally, for a variable :math:`X_i` with parents :math:`Pa(X_i)`, the mode
 
     X_i = \beta_0 + \sum_{j \in Pa(X_i)} \beta_j X_j + \epsilon,
 
-where :math:`\epsilon \sim \mathcal{N}(0,\sigma^2)` is Gaussian noise. 
+where :math:`\epsilon \sim \mathcal{N}(0,\sigma^2)` is Gaussian noise.
 The structure learning algorithm searches for the directed acyclic graph (DAG) that maximizes a decomposable scoring function computed from these local linear regressions.
 
 
@@ -61,15 +61,15 @@ These Gaussian score functions can be used with score-based structure learning a
 
     # Import libraries
     import bnlearn as bn
-    
+
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
     # Perform structure learning
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-g')
     # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='aic-g')
     # model = bn.structure_learning.fit(df, methodtype='hc', scoretype='loglik-g')
-    
+
     # Compute edge strength
     model = bn.independence_test(model, df, prune=True)
 
@@ -139,18 +139,18 @@ We will establish dependencies between variables and then allow the model to inf
 
     # Step 1: Initialize root node
     x3 = np.random.uniform(size=n)
-    
+
     # Step 2: Create dependent variables
     x0 = 3.0 * x3 + np.random.uniform(size=n)
     x2 = 6.0 * x3 + np.random.uniform(size=n)
-    
+
     # Step 3: Create further dependencies
     x5 = 4.0 * x0 + np.random.uniform(size=n)
-    
+
     # Step 4: Create final dependencies
     x1 = 3.0 * x0 + 2.0 * x2 + np.random.uniform(size=n)
     x4 = 8.0 * x0 - 1.0 * x2 + np.random.uniform(size=n)
-    
+
     # Create DataFrame
     df = pd.DataFrame(np.array([x0, x1, x2, x3, x4, x5]).T,
                      columns=['x0', 'x1', 'x2', 'x3', 'x4', 'x5'])
@@ -176,23 +176,23 @@ Structure learning can be applied with the direct-lingam method for fitting:
     # Examine the output to see how well the dependency values are recovered
     print(model['adjmat'])
     # target        x0        x1       x2   x3        x4       x5
-    # source                                                     
+    # source
     # x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
     # x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
     # x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
     # x3      2.971198  0.000000  5.98564  0.0 -0.704964  0.00000
     # x4      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
     # x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
-    
+
     # Visualize the model
     bn.plot(model)
 
     # Compute edge strength with chi-square test statistic
     model = bn.independence_test(model, df, prune=False)
-    
+
     print(model['adjmat'])
     # target        x0        x1       x2   x3        x4       x5
-    # source                                                     
+    # source
     # x0      0.000000  2.987320  0.00000  0.0  8.057757  3.99624
     # x1      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
     # x2      0.000000  2.010043  0.00000  0.0 -0.915306  0.00000
@@ -231,14 +231,14 @@ In other words, the lingam-direct method allows you to model continuous and mixe
 
     # Import libraries
     import bnlearn as bn
-    
+
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
     del df['origin']
 
     # Perform structure learning
-    model = bn.structure_learning.fit(df, 
-                                    methodtype='direct-lingam', 
+    model = bn.structure_learning.fit(df,
+                                    methodtype='direct-lingam',
                                     params_lingam={'random_state': 2})
 
     # Compute edge strength
@@ -270,9 +270,9 @@ The ICA-LiNGAM method ('ica-lingam') is also from lingam and follows the same pr
 
     # Import libraries
     import bnlearn as bn
-    
+
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
     del df['origin']
 
     # Perform structure learning
@@ -312,9 +312,9 @@ DAG (pattern) construction involves three steps:
 
     # Import libraries
     import bnlearn as bn
-    
+
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
     # Perform structure learning
     model = bn.structure_learning.fit(df, methodtype='pc')

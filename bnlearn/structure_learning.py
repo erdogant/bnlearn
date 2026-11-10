@@ -238,7 +238,7 @@ def fit(df,
     >>> import bnlearn as bn
     >>>
     >>> # Load DAG
-    >>> model = bn.import_BIF('asia')
+    >>> model = bn.fetch('asia')
     >>>
     >>> # plot ground truth
     >>> G = bn.plot(model)
@@ -248,7 +248,7 @@ def fit(df,
     >>> # Sampling example
     >>>
     >>> # Load DAG
-    >>> model = bn.import_BIF('asia')
+    >>> model = bn.fetch('asia')
     >>> # Sampling
     >>> df = bn.sampling(model, n=10000)
     >>>
@@ -271,7 +271,7 @@ def fit(df,
     >>> # Model mixed data sets (both discrete and continuous variables)
     >>>
     >>> # Load DAG
-    >>> df = bn.import_example(data='auto_mpg')
+    >>> df = bn.fetch(name='auto_mpg', as_dataframe=True)
     >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df, methodtype='direct-lingam')

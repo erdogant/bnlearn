@@ -3,7 +3,7 @@ import pandas as pd
 import bnlearn as bn
 
 #%%
-df = bn.import_example(data='auto_mpg')
+df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
 edges = [
@@ -20,7 +20,7 @@ edges = [
 continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
 
 # %%
-df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original', 
+df = pd.read_csv('http://archive.ics.uci.edu/ml/machine-learning-databases/auto-mpg/auto-mpg.data-original',
                  delim_whitespace=True, header=None,
                  names = ['mpg', 'cylinders', 'displacement', 'horsepower', 'weight', 'acceleration', 'model year', 'origin', 'car name'])
 

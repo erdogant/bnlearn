@@ -86,7 +86,7 @@ The simplest example is:
 ```python
 import bnlearn as bn
 
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 
 df = bn.sampling(
     DAG,
@@ -375,7 +375,7 @@ by the model.
 ```python
 import bnlearn as bn
 
-DAG = bn.import_BIF('sprinkler')
+DAG = bn.fetch('sprinkler')
 
 df = bn.sampling(
     DAG,
@@ -789,7 +789,7 @@ by checking the relevant conditional distribution directly.
 ```python
 import bnlearn as bn
 
-model = bn.import_BIF('sprinkler')
+model = bn.fetch('sprinkler')
 
 df = bn.sampling(
     model,
@@ -955,7 +955,7 @@ A complete workflow is:
 import bnlearn as bn
 
 # Load example data
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 # Define structure
 edges = [
@@ -1005,7 +1005,7 @@ sampling()
 If an imported model already contains CPDs:
 
 ```python
-model = bn.import_BIF('sprinkler')
+model = bn.fetch('sprinkler')
 ```
 
 can be passed directly to sampling:

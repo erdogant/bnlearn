@@ -76,8 +76,8 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [Plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html) | ```bn.plot()``` |
 | [Plot Graphviz](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz) | ```bn.plot_graphviz()``` |
 | [Compare 2 Networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks) | ```bn.compare()``` |
-| [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_BIF) | ```bn.import_BIF()``` |
-| [Load Examples](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.import_example) | ```bn.import_example()``` |
+| [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.fetch) | ```bn.fetch()``` |
+| [Load Examples](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.fetch) | ```bn.fetch(as_dataframe=True)``` |
 | **Transformation Functions** | |
 | [Convert DAG to Undirected](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.to_undirected) | ```bn.to_undirected()``` |
 | [Convert to one-hot](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.df2onehot) | ```bn.df2onehot()``` |
@@ -161,7 +161,7 @@ import bnlearn as bn
 
     import bnlearn as bn
     # Example dataframe sprinkler_data.csv can be loaded with:
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
     # df = pd.read_csv('sprinkler_data.csv')
 
 Cloudy  Sprinkler  Rain  Wet_Grass
@@ -205,9 +205,9 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 
     import bnlearn as bn
     # Import dataframe
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
     # As an example we set the CPD at False which returns an "empty" DAG
-    model = bn.import_BIF('sprinkler', CPD=False)
+    model = bn.fetch('sprinkler', with_cpt=False)
     # Now we learn the parameters of the DAG using the df
     model_update = bn.parameter_learning.fit(model, df)
     # Make plot
@@ -216,7 +216,7 @@ Cloudy  Sprinkler  Rain  Wet_Grass
 # Example: Inference
 
     import bnlearn as bn
-    model = bn.import_BIF('sprinkler')
+    model = bn.fetch('sprinkler')
     query = bn.inference.fit(model, variables=['Rain'], evidence={'Cloudy':1,'Sprinkler':0, 'Wet_Grass':1})
     print(query)
     print(query.df)

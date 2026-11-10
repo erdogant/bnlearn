@@ -76,14 +76,14 @@ def sampling(DAG, n=1000, methodtype='bayes', evidence=None, do=None, seed=None)
     >>> # Import library
     >>> import bnlearn as bn
     >>> # Load DAG with model
-    >>> DAG = bn.import_BIF('sprinkler')
+    >>> DAG = bn.fetch('sprinkler')
     >>> # Sampling
     >>> df = bn.sampling(DAG, n=1000, methodtype='bayes')
     >>>
     >>> # Example 2:
     >>>
     >>> # Load example dataset
-    >>> df = bn.import_example('sprinkler')
+    >>> df = bn.fetch('sprinkler', as_dataframe=True)
     >>> edges = [('Cloudy', 'Sprinkler'),
     >>>         ('Cloudy', 'Rain'),
     >>>         ('Sprinkler', 'Wet_Grass'),

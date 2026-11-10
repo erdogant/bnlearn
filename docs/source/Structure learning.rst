@@ -94,7 +94,7 @@ Lets determine the best possible structure for the sprinkler dataset.
     from tabulate import tabulate
 
     # Load example
-    df = bn.import_example('sprinkler')
+    df = bn.fetch('sprinkler', as_dataframe=True)
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='ex', scoretype='bic')
     # Compute edge strength using chi-square independence test and remove (prune) the not-signficant edges
@@ -138,7 +138,7 @@ Lets examine the results using the **alarm** example that contains 37 nodes.
     from tabulate import tabulate
 
     # Load example
-    df = bn.import_example('alarm')
+    df = bn.fetch('alarm', as_dataframe=True)
 
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
@@ -300,7 +300,7 @@ Lets determine the best possible structure for the *titanic* dataset.
     from tabulate import tabulate
 
     # Load example
-    df_raw = bn.import_example(data='titanic')
+    df_raw = bn.fetch(name='titanic', as_dataframe=True)
     # Preprocessing raw dataset
     dfhot, dfnum = bn.df2onehot(df_raw)
 
@@ -356,7 +356,7 @@ Lets determine the best possible structure for the *asia* dataset.
     from tabulate import tabulate
 
     # Load example
-    df = bn.import_example('asia')
+    df = bn.fetch('asia', as_dataframe=True)
 
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='tan', class_node='lung')
@@ -466,7 +466,7 @@ Example for structure learning with the naivebayes model:
     import bnlearn as bn
 
     # Load example
-    df = bn.import_example('random_discrete')
+    df = bn.fetch('random_discrete', as_dataframe=True)
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='naivebayes', root_node="B")
     # Compute edge strength using chi-square independence test
@@ -514,7 +514,7 @@ Lets determine the best possible structure for the *water* dataset.
     # Load library
     import bnlearn as bn
     # Load example
-    df = bn.import_example('water')
+    df = bn.fetch('water', as_dataframe=True)
 
     # Structure learning
     model = bn.structure_learning.fit(df, methodtype='cs')

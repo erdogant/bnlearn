@@ -10,13 +10,13 @@ Lets create a small example to understand how it exactly works..
 **Predict example**
 
 .. code-block:: python
-    
+
     # Import bnlearn
     import bnlearn as bn
-    
+
     # Load example DataFrame
-    df = bn.import_example('asia')
-    
+    df = bn.fetch('asia', as_dataframe=True)
+
     # The dataframe consists four boolean variables
     print(df)
     #       smoke  lung  bronc  xray
@@ -70,7 +70,7 @@ Lets create a small example to understand how it exactly works..
     # 997      0     1      0     1
     # 998      0     1      0     1
     # 999      0     1      1     1
-    
+
     # Without the predict function we can only make a single inference at the time (see below).
     # To asses an entire dataframe, such as *Xtest*, it is a lot of work though.
 
@@ -90,7 +90,7 @@ Lets create a small example to understand how it exactly works..
     | bronc(1) | xray(1) |            0.6201 |
     +----------+---------+-------------------+
 
-    
+
     # With the predict function we can now easily asses the entire dataframe for the specified input variables.
     # In this case we are going to asses bronc and xray for the entire dataframe.
     # The inference on the dataset is performed sample-wise by using all the available nodes as evidence (obviously, with the exception of the node whose values we are predicting).
@@ -110,7 +110,7 @@ Lets create a small example to understand how it exactly works..
     # 997      0     1  0.544772
     # 998      0     1  0.544772
     # 999      0     1  0.544772
-    
+
     # The first line shows bronc=1, xray=1 with P=0.62. This is the same Probabilty and results as demonstrated by the single query.
     # This line is returned as it had the maximum probability as you can see in the query.
 

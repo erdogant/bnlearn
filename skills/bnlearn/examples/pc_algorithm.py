@@ -22,7 +22,7 @@ import bnlearn as bn
 
 
 # %% Data — use a dataset with real dependencies
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 print('\n[bnlearn] > Data shape:', df.shape)
 print(df.head())
 

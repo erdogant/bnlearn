@@ -29,7 +29,7 @@ import bnlearn as bn
 
 
 # %% Load example dataset
-df = bn.import_example('sprinkler')
+df = bn.fetch('sprinkler', as_dataframe=True)
 
 print('\n[bnlearn] > Example data:')
 print(df.head())

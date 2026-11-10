@@ -10,7 +10,7 @@ import bnlearn as bn
 
 @pytest.fixture
 def sprinkler_model():
-    df = bn.import_example('sprinkler')
+    df = bn.fetch('sprinkler', as_dataframe=True)
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     model = bn.independence_test(model, df, test='chi_square', prune=False)
     return model, df
@@ -66,7 +66,7 @@ def test_plot_edges_p_value_no_error(sprinkler_model):
 
 
 def test_plot_requires_independence_for_p_value_labels():
-    df = bn.import_example('sprinkler')
+    df = bn.fetch('sprinkler', as_dataframe=True)
     model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
     # No independence_test: edge_filter='p_value' should fall back (no crash)
     fig = bn.plot(model, interactive=False, edge_filter='p_value',

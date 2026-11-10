@@ -8,7 +8,7 @@ In this example, we will learn the structure of the Titanic dataset.
 	import bnlearn as bn
 
 	# Load example mixed dataset
-	df = bn.import_example(data='titanic')
+	df = bn.fetch(name='titanic', as_dataframe=True)
 
 	# Convert to one-hot encoding
 	dfhot, dfnum = bn.df2onehot(df)
@@ -118,7 +118,7 @@ The first step is to import the dataset. For unstructured data, use the ``df2one
 
     import bnlearn as bn
     # Load dataset with 10,000 samples
-    df = bn.import_example('asia', n=10000)
+    df = bn.fetch('asia', n=10000, as_dataframe=True)
     # Print to screen
     print(df)
 
@@ -526,7 +526,7 @@ In the following example we will load the auto mpg dataset and learn the structu
     import bnlearn as bn
 
     # Load data set
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
     del df['origin']
 
     # Structure learning

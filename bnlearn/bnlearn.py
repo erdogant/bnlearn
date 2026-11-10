@@ -323,7 +323,7 @@ def print_CPD(DAG, checkmodel=False):
     >>> import bnlearn as bn
     >>>
     >>> # Load example dataset
-    >>> df = bn.import_example('sprinkler')
+    >>> df = bn.fetch('sprinkler', as_dataframe=True)
     >>>
     >>> # Set edges
     >>> edges = [('Cloudy', 'Sprinkler'),
@@ -431,7 +431,7 @@ def dag2adjmat(model):
     --------
     >>> import bnlearn as bn
     >>> # Load DAG
-    >>> DAG = bn.import_BIF('sprinkler')
+    >>> DAG = bn.fetch('sprinkler')
     >>> # Extract edges from model and store in adjacency matrix
     >>> adjmat=bn.dag2adjmat(DAG['model'])
 
@@ -554,12 +554,12 @@ def query2df(query, variables=None, groupby=None):
 
 
 # %% Model Sprinkler
-def _example_sprinkler_model(CPD=True):
+def _example_sprinkler_model(with_cpt=True):
     """Create DAG-model for the sprinkler example.
 
     Parameters
     ----------
-    CPD : bool, optional
+    with_cpt : bool, optional
         Directed Acyclic Graph (DAG).. The default is True.
 
     Returns
@@ -573,7 +573,7 @@ def _example_sprinkler_model(CPD=True):
                            ('Sprinkler', 'Wet_Grass'),
                            ('Rain', 'Wet_Grass')])
 
-    if CPD:
+    if with_cpt:
         # Cloudy
         cpt_cloudy = TabularCPD(variable='Cloudy', variable_card=2, values=[[0.5], [0.5]])
         # Sprinkler
@@ -675,7 +675,7 @@ def topological_sort(adjmat, start=None):
     Example
     -----------
     import bnlearn as bn
-    DAG = bn.import_BIF('sprinkler')
+    DAG = bn.fetch('sprinkler')
     bn.topological_sort(DAG, 'Rain')
     bn.topological_sort(DAG)
 
@@ -715,118 +715,136 @@ def topological_sort(adjmat, start=None):
 
 
 # %% Example data
-def import_example(data='sprinkler', url=None, sep=',', n=10000):
-    """Load example dataset.
-
-    Parameters
-    ----------
-    data: str, (default: sprinkler)
-        Pre-defined examples.
-            * 'sprinkler'
-            * 'alarm'
-            * 'andes'
-            * 'asia'
-            * 'sachs'
-            * 'water'
-        Continous data sets:
-            * 'auto_mpg'
-    n: int, optional
-        Number of samples to generate. The default is 10000.
-
-    Returns
-    -------
-    df: pd.DataFrame()
-
-    """
-
-    if (data=='alarm') or (data=='andes') or (data=='asia') or (data=='sachs') or (data=='water'):
-        try:
-            DAG = import_BIF(data)
-            df = bn.sampling(DAG, n=n)
-        except ValueError as e:
-            logger.error(f'Error: Loading data not possible! - {e}')
-            df = None
-
-    else:
-        df = dz.get(data, url=url, sep=sep, n=n)
-
-    return df
-
-
-# %% Make DAG
 def import_DAG(filepath='sprinkler', CPD=True, checkmodel=True):
-    logger.warning("import_DAG() is deprecated and will be removed in a future version. Use import_BIF() instead.")
-    return import_BIF(filepath=filepath, CPD=CPD, checkmodel=checkmodel)
+    """Deprecated. Use `bn.fetch()` instead."""
+    logger.warning(
+        "import_DAG() is deprecated and will be removed in a future version. "
+        "Use bn.fetch() instead."
+    )
+    return fetch(name=filepath, with_cpt=CPD, checkmodel=checkmodel)
 
-def import_BIF(filepath='sprinkler', CPD=True, checkmodel=True):
-    """Import Directed Acyclic Graph.
+def example(data='sprinkler', url=None, sep=',', n=10000):
+    """Deprecated. Use `bn.fetch(..., as_dataframe=True)` instead."""
+    logger.warning(
+        "example() is deprecated and will be removed in a future version. "
+        "Use bn.fetch(name, as_dataframe=True) instead."
+    )
+    return fetch(name=data, as_dataframe=True, n=n, url=url, sep=sep)
+
+def fetch(name='sprinkler', as_dataframe=False, n=10000, with_cpt=True, checkmodel=True, url=None, sep=','):
+    """Load example models or datasets.
 
     Parameters
     ----------
-    filepath: str, (default: sprinkler)
-        Pre-defined examples are depicted below, or provide the absolute file path to the .bif model file.. The default is 'sprinkler'.
-        'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'filepath/to/model.bif',
-    CPD : bool, optional
-        Directed Acyclic Graph (DAG). The default is True.
-    checkmodel : bool
-        Check the validity of the model. The default is True
+    name : str, default 'sprinkler'
+        Name of the example or path to a .bif file.
+        Pre-defined examples:
+            - Discrete: 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water'
+            - Continuous: 'auto_mpg'
+        You can also provide a path to a .bif file.
+
+    as_dataframe : bool, default False
+        - False → return model (dict with 'model' and 'adjmat')
+        - True  → return a pandas DataFrame
+
+    n : int, default 10000
+        Number of samples to generate when `as_dataframe=True`.
+
+    with_cpt : bool, default True
+        Include Conditional Probability Tables in the model.
+
+    checkmodel : bool, default True
+        Validate the model structure and CPTs.
+
+    url : str, optional
+        Custom URL (used for some datasets).
+
+    sep : str, default ','
+        Separator for custom files.
 
     Returns
     -------
-    dict containing model and adjmat.
-        model : BayesianNetwork
-        adjmat : Adjacency matrix
+    dict or pd.DataFrame
+        - If as_dataframe=False: {'model': BayesianNetwork, 'adjmat': pd.DataFrame}
+        - If as_dataframe=True : pd.DataFrame
 
     Examples
     --------
+    >>> # Load model
     >>> import bnlearn as bn
-    >>> model = bn.import_BIF('sprinkler')
-    >>> fig = bn.plot(model)
+    >>> model = bn.fetch('asia')
+    >>> model = bn.fetch('asia', with_cpt=True)
 
+    >>> # Load dataset
+    >>> df = bn.fetch('asia', as_dataframe=True)
+    >>> df = bn.fetch('asia', as_dataframe=True, n=5000)
+    >>> df = bn.fetch('titanic', as_dataframe=True)
+
+    >>> # Load from bif file
+    >>> model = bn.fetch('path/to/model.bif')
     """
+
+    # -------------------------------------------------
+    # 1. Return DataFrame (old example() behavior)
+    # -------------------------------------------------
+    if as_dataframe:
+        # Discrete examples → sample from the model
+        if name in ['alarm', 'andes', 'asia', 'sachs', 'water']:
+            try:
+                model_dict = fetch(name, as_dataframe=False, with_cpt=True, checkmodel=False)
+                df = bn.sampling(model_dict, n=n)
+            except Exception as e:
+                logger.error(f'Error loading data: {e}')
+                df = None
+        else:
+            # Continuous / other examples
+            df = dz.get(name, url=url, sep=sep, n=n)
+
+        return df
+
+    # -------------------------------------------------
+    # 2. Return Model (old fetch() behavior)
+    # -------------------------------------------------
     out = {}
     model = None
-    # filepath= filepath.lower()
-    logger.info('Import <%s>' %(filepath))
+    logger.info(f'Import <{name}>')
 
-    # Load data
-    if filepath=='sprinkler':
-        # example data for sprinkler
-        model = _example_sprinkler_model(CPD=CPD)
-    elif (filepath=='asia') or (filepath=='alarm') or (filepath=='andes') or (filepath=='sachs') or (filepath=='water'):
-        # Get the data properties
-        dataproperties = dz.get_dataproperties(filepath)
-        # Get path to data
-        # PATH_TO_DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    if name == 'sprinkler':
+        model = _example_sprinkler_model(with_cpt=with_cpt)
+
+    elif name in ['asia', 'alarm', 'andes', 'sachs', 'water']:
+        dataproperties = dz.get_dataproperties(name)
         PATH_TO_DATA = dataproperties['curpath']
-        getfile = os.path.join(PATH_TO_DATA, filepath +'.bif')
-        if not os.path.isfile(getfile):
+        bif_file = os.path.join(PATH_TO_DATA, name + '.bif')
+
+        if not os.path.isfile(bif_file):
             PATH_TO_DATA = dz.download_from_url(dataproperties['filename'], url=dataproperties['url'])
             _ = dz.unzip(PATH_TO_DATA)
+            bif_file = os.path.join(PATH_TO_DATA, name + '.bif')
 
-        model = _bif2bayesian(getfile)
+        model = _bif2bayesian(bif_file)
+
     else:
-        if os.path.isfile(filepath):
-            model = _bif2bayesian(filepath)
+        # Assume it's a file path
+        if os.path.isfile(name):
+            model = _bif2bayesian(name)
         else:
-            logger.info('filepath does not exist! <%s>' %(filepath))
+            logger.error(f'File or example does not exist: {name}')
             return out
 
-    # Setup adjacency matrix
+    # Create adjacency matrix
     adjmat = dag2adjmat(model)
 
-    # Store
-    out['model']=model
-    out['adjmat']=adjmat
+    out['model'] = model
+    out['adjmat'] = adjmat
 
-    # check_model check for the model structure and the associated CPD and returns True if everything is correct otherwise throws an exception
-    if (model is not None) and CPD and checkmodel:
+    # Optional model check
+    if model is not None and with_cpt and checkmodel:
         check_model(out['model'])
         if logger.isEnabledFor(logging.DEBUG):
             print_CPD(out)
 
     return out
-
 
 # %% Pre-processing of input raw dataset
 def df2onehot(df, y_min=10, perc_min_num=0.8, dtypes='pandas', excl_background=None):
@@ -908,7 +926,7 @@ def predict(model, df, variables, to_df=True, method='max'):
     Examples
     --------
     >>> import bnlearn as bn
-    >>> model = bn.import_BIF('sprinkler')
+    >>> model = bn.fetch('sprinkler')
     >>>
     >>> # Make single inference
     >>> query = bn.inference.fit(model, variables=['Rain', 'Cloudy'], evidence={'Wet_Grass':1})
@@ -1091,7 +1109,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False):
     Examples
     --------
     >>> import bnlearn as bn
-    >>> df = bn.import_example(data='asia')
+    >>> df = bn.fetch(name='asia', as_dataframe=True)
     >>>
     >>> # Structure learning of sampled dataset
     >>> model = bn.structure_learning.fit(df)
@@ -1231,7 +1249,7 @@ def structure_scores(model, df, scoring_method='auto', **kwargs):
     >>> import bnlearn as bn
     >>> # Load example dataset
     >>>
-    >>> df = bn.import_example('sprinkler')
+    >>> df = bn.fetch('sprinkler', as_dataframe=True)
     >>> edges = [('Cloudy', 'Sprinkler'), ('Cloudy', 'Rain'), ('Sprinkler', 'Wet_Grass'), ('Rain', 'Wet_Grass')]
     >>>
     >>> # Make the Bayesian DAG
@@ -1263,7 +1281,7 @@ def structure_scores(model, df, scoring_method='auto', **kwargs):
         adjmat = model.get('adjmat', None)
         model_edges = model.get('model_edges', None)
         model = model.get('model', None)
-    
+
     if scoring_method is not None and isinstance(scoring_method, str) and scoring_method != 'auto':
         scoring_method = [scoring_method]
     if scoring_method=='auto' and (selected_score in g_scores):

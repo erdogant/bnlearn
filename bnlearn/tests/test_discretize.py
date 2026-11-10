@@ -7,7 +7,7 @@ matplotlib.use('Agg')  # Use non-interactive backend for tests
 
 def test_discritize():
     # Load data set
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
     # Define the edges
     edges = [
         ("cylinders", "displacement"),

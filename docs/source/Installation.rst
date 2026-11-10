@@ -98,7 +98,7 @@ Then run the following code, which should generate a figure:
 .. code-block:: python
 
    import bnlearn as bn
-   df = bn.import_example()
+   df = bn.fetch(as_dataframe=True)
    model = bn.structure_learning.fit(df)
    G = bn.plot(model)
 

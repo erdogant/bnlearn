@@ -103,7 +103,7 @@ def vec2df(source, target, weights=None):
     >>> df = bn.vec2df(source, target, weights=weights)
 
     >>> import bnlearn as bn
-    >>> vec = bn.import_example("stormofswords")
+    >>> vec = bn.fetch("stormofswords", as_dataframe=True)
     >>> df = bn.vec2df(vec['source'], vec['target'], weights=vec['weight'])
 
     """

@@ -6,14 +6,14 @@ Examples
 Working with Raw Data
 =====================
 
-Let's demonstrate how to process a dataset containing mixed variables using the Titanic dataset as an example. This dataset contains both continuous and categorical variables and can be easily imported using :func:`bnlearn.bnlearn.import_example`.
+Let's demonstrate how to process a dataset containing mixed variables using the Titanic dataset as an example. This dataset contains both continuous and categorical variables and can be easily imported using :func:`bnlearn.bnlearn.fetch` with ``as_dataframe=True``.
 The function :func:`bnlearn.bnlearn.df2onehot` helps convert the mixed dataset into a one-hot matrix. By default, the unique non-zero values must be above 80% per variable, and the minimum number of samples must be at least 10 per variable.
 
 .. code-block:: python
 
     import bnlearn as bn
     # Load Titanic dataset containing mixed variables
-    df_raw = bn.import_example(data='titanic')
+    df_raw = bn.fetch(name='titanic', as_dataframe=True)
 
     # Pre-process the input dataset
     dfhot, dfnum = bn.df2onehot(df_raw)
@@ -72,7 +72,7 @@ Example 1: Basic Structure Learning
 
     import bnlearn as bn
     # Load dataframe
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
     # Learn structure
     model = bn.structure_learning.fit(df)
     # Get adjacency matrix
@@ -111,7 +111,7 @@ Let's load our dataset:
 .. code-block:: python
 
     import bnlearn as bn
-    df = bn.import_example()
+    df = bn.fetch(as_dataframe=True)
     df.head()
 
 .. table::
@@ -187,7 +187,7 @@ Let's learn the structure of a more complex dataset and compare it to another on
 
     import bnlearn as bn
     # Load Asia DAG
-    model_true = bn.import_BIF('asia')
+    model_true = bn.fetch('asia')
     # Plot ground truth
     G = bn.plot(model_true)
     dot = bn.plot_graphviz(model_true)
@@ -236,9 +236,9 @@ Extracting adjacency matrix after Parameter learning:
 
     import bnlearn as bn
     # Load dataframe
-    df = bnlearn.import_example()
+    df = bnlearn.fetch(as_dataframe=True)
     # Import DAG
-    DAG = bnlearn.import_BIF('sprinkler', CPD=False)
+    DAG = bnlearn.fetch('sprinkler', with_cpt=False)
     # Learn parameters
     model = bnlearn.parameter_learning.fit(DAG, df)
     # adjacency matrix:
@@ -282,7 +282,7 @@ Import example dataset of the sprinkler dataset.
     import bnlearn as bn
     from tabulate import tabulate
 
-    df = bn.import_example('sprinkler')
+    df = bn.fetch('sprinkler', as_dataframe=True)
     print(tabulate(df.head(), tablefmt="grid", headers="keys"))
 
 .. table::

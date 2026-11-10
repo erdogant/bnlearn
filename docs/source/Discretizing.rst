@@ -45,7 +45,7 @@ After all continuous variables are categorized, the normal structure learning pr
     import pandas as pd
 
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
     # Print dataset overview
     print(df)
@@ -206,7 +206,7 @@ A limitation of this approach is that you need to pre-define the edges before ap
     import bnlearn as bn
 
     # Load dataset
-    df = bn.import_example(data='auto_mpg')
+    df = bn.fetch(name='auto_mpg', as_dataframe=True)
 
     # Print dataset overview
     print(df)
