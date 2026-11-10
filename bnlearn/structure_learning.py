@@ -6,10 +6,10 @@
 # Licence     : See licences
 # ------------------------------------
 
-
 # %% Libraries
 import logging
 logger = logging.getLogger("bnlearn")
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,13 +19,11 @@ from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.estimators import AIC, BDeu, BDs, BIC, K2, StructureScore
 from pgmpy.causal_discovery import ExpertKnowledge
 from pgmpy.models import NaiveBayes
-
 # from pgmpy import causal_discovery
 from pgmpy.estimators import PC as ConstraintBasedEstimator
 
 import lingam
-import bnlearn
-from bnlearn.utils import adjmat2vec, infer_data_type
+import bnlearn as bn
 
 
 # %% Gaussian scoring methods
@@ -204,10 +202,10 @@ def fit(df,
         Defines the exit condition. If the improvement in score is less than `epsilon`, the learned model is returned. (only in case of methodtype='hc')
     max_iter: int (default: 1e6)
         The maximum number of iterations allowed. Returns the learned model when the number of iterations is greater than `max_iter`. (only in case of methodtype='hc')
-    root_node: String. (only for chow-liu, Tree-augmented Naive Bayes (TAN))
+    root_node: String. (only for "cl","tan")
         The root node for treeSearch based methods.
     class_node: String
-        The class node is required for Tree-augmented Naive Bayes (TAN)
+        The class node that is required for "tan"
     fixed_edges: iterable, Only in case of HillClimbSearch.
         A list of edges that will always be there in the final learned model. The algorithm will add these edges at the start of the algorithm and will never change it.
     return_all_dags : Bool, (default: False)
@@ -366,9 +364,9 @@ def fit(df,
 
     # Store
     out['model_edges'] = list(out['model'].edges())
-    out['adjmat'] = bnlearn.dag2adjmat(out['model'])
+    out['adjmat'] = bn.dag2adjmat(out['model'])
     out['config'] = config
-    out['structure_scores'] = bnlearn.structure_scores(out, df)
+    out['structure_scores'] = bn.structure_scores(out, df)
 
     # return
     return out
@@ -748,7 +746,7 @@ def SetScoringType(df, scoretype, **kwargs):
 
     # Resolve 'auto' to the appropriate score based on detected column types.
     if scoretype == 'auto':
-        dtype = infer_data_type(df)['dtype']
+        dtype = bn.utils.infer_data_type(df)['dtype']
         if dtype == 'continuous':
             scoretype = 'bic-g'
         elif dtype == 'mixed':
@@ -853,8 +851,8 @@ def _lingam(df,
     adjmat.columns.name = 'target'
 
     # Compute edges
-    # out['model_edges'] = bnlearn.adjmat2vec(adjmat, min_weight=0, rem_weight=0, absolute=True)
-    out['model_edges'] = adjmat2vec(adjmat.abs()>0)
+    # out['model_edges'] = bn.utils.adjmat2vec(adjmat, min_weight=0, rem_weight=0, absolute=True)
+    out['model_edges'] = bn.utils.adjmat2vec(adjmat.abs()>0)
     out['model_edges'] = list(zip(out['model_edges']['source'], out['model_edges']['target']))
 
     # Using the causal_order_ properties,
