@@ -544,17 +544,7 @@ def plot(model,
     }
     params_interactive = {**defaults, **params_interactive}
 
-    defaults = {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None,
-                'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout_custom',
-                'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8,
-                'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
-    params_static = {**defaults, **params_static}
-
-    if (params_static.get('width') is not None) or (params_static.get('height') is not None):
-        params_static['figsize'] = (
-            15 if params_static['width'] is None else params_static['width'],
-            10 if params_static['height'] is None else params_static['height'],
-        )
+    params_static = resolve_static_params(params_static)
 
     out = {}
     G = nx.DiGraph()
@@ -603,24 +593,15 @@ def plot(model,
     else:
         if ('bayes' in str(type(bnmodel)).lower()) or ('pgmpy' in str(type(bnmodel)).lower()) or ('lingam' in model['config']['method']):
             logger.info('Plot based on Bayesian model')
-            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
-                pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
+            pos = compute_static_layout(G, pos=pos, scale=scale, layout=params_static['layout'])
         elif 'networkx' in str(type(bnmodel)):
             logger.info('Plot based on networkx model')
             G = bnmodel
-            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
-                pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
+            pos = compute_static_layout(G, pos=pos, scale=scale, layout=params_static['layout'])
         else:
             logger.info('Plot based on adjacency matrix')
             G = bn.network.adjmat2graph(model['adjmat'].abs() > 0)
-            if params_static['layout'] == 'graphviz_layout_custom' and pos is None:
-                logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
-                pos = hierarchical_layout(G, scale=scale)
-            pos = bn.network.graphlayout(G, pos=pos, scale=scale, layout=params_static['layout'])
+            pos = compute_static_layout(G, pos=pos, scale=scale, layout=params_static['layout'])
 
         fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos,
                            edge_colors, edge_weights, showplot=params_static['showplot'],
@@ -636,8 +617,50 @@ def plot(model,
     return out
 
 
+# %% Shared static-plot helpers
+def _static_defaults():
+    """Default parameters of the static plot (shared by plot() and network.compare())."""
+    return {'minscale': 1, 'maxscale': 5, 'figsize': (15, 10), 'height': None, 'width': None,
+            'font_size': 14, 'font_family': 'sans-serif', 'alpha': 0.8, 'layout': 'graphviz_layout_custom',
+            'font_color': 'k', 'facecolor': '#ffffff', 'node_shape': 'o', 'edge_alpha': 0.8,
+            'arrowstyle': '-|>', 'arrowsize': 20, 'visible': True, 'showplot': True, 'dpi': 200}
+
+
+def resolve_static_params(params_static=None, width=None, height=None):
+    """Merge user-defined static parameters with the defaults.
+
+    An explicit width and/or height overrides figsize (same behaviour as plot()).
+    """
+    params_static = {**_static_defaults(), **(params_static or {})}
+    width = params_static.get('width') if width is None else width
+    height = params_static.get('height') if height is None else height
+    if (width is not None) or (height is not None):
+        params_static['width'], params_static['height'] = width, height
+        params_static['figsize'] = (15 if width is None else width, 10 if height is None else height)
+    return params_static
+
+
+def compute_static_layout(G, pos=None, scale=1, layout='graphviz_layout_custom'):
+    """Compute node coordinates using the same logic as plot().
+
+    The default layout 'graphviz_layout_custom' is the hierarchical top-down layout. It requires a
+    DAG; when the graph contains cycles (e.g., a comparison of two networks with reversed edges)
+    it falls back to 'graphviz_layout' (which itself falls back to spring_layout).
+    """
+    if pos is not None:
+        return bn.network.graphlayout(G, pos=pos, scale=scale, layout=layout)
+    if layout == 'graphviz_layout_custom':
+        try:
+            logger.info('Using hierarchical top-down layout (graphviz_layout_custom).')
+            return hierarchical_layout(G, scale=scale)
+        except nx.NetworkXUnfeasible:
+            logger.warning('Graph contains cycles; hierarchical layout is not possible. Using graphviz_layout instead.')
+            layout = 'graphviz_layout'
+    return bn.network.graphlayout(G, pos=pos, scale=scale, layout=layout)
+
+
 # %% Static plot
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_filter='weight'):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_filter='weight', edge_labels=None, edge_styles=None, edge_arrowstyles=None):
 
     # Create figure
     fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
@@ -645,9 +668,24 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
 
     # Make networkx
     nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
-    nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
+    if edge_styles is None and edge_arrowstyles is None:
+        nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
+    else:
+        # Optional per-edge line style (e.g., 'dashed') and arrow style (e.g., '<|-|>'), aligned with G.edges().
+        # Edges are drawn per (style, arrowstyle) group, which works for all networkx versions.
+        edgelist = list(G.edges())
+        styles = edge_styles if edge_styles is not None else ['solid'] * len(edgelist)
+        arrows = edge_arrowstyles if edge_arrowstyles is not None else [params_static['arrowstyle']] * len(edgelist)
+        for key in dict.fromkeys(zip(styles, arrows)):
+            idx = [i for i in range(len(edgelist)) if (styles[i], arrows[i]) == key]
+            nx.draw_networkx_edges(G, pos, edgelist=[edgelist[i] for i in idx], style=key[0], arrowstyle=key[1], arrowsize=params_static['arrowsize'],
+                                   edge_color=[edge_colors[i] for i in idx], width=[edge_weights[i] for i in idx], alpha=params_static['edge_alpha'])
 
-    if edge_filter == 'weight':
+    if edge_labels is not None:
+        # Custom labels, e.g., provided by network.compare()
+        if len(edge_labels) > 0:
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+    elif edge_filter == 'weight':
         edge_label = nx.get_edge_attributes(G, 'value')
         edge_label = {key: float(f'{value:.2f}'[:4]) for key, value in edge_label.items()}
         nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)

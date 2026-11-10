@@ -15,7 +15,6 @@ import pandas as pd
 import numpy as np
 import community
 import networkx as nx
-from sklearn.preprocessing import minmax_scale
 from sklearn.preprocessing import MinMaxScaler
 from ismember import ismember
 import bnlearn
@@ -23,11 +22,9 @@ import bnlearn
 # %% Make graph from adjacency matrix
 def to_graph(adjmat):
     assert float(nx.__version__)>2, 'This function requires networkx to be v2 or higher. Try to: pip install --upgrade networkx'
-    config = dict()
     adjmat = is_DataFrame(adjmat)
     logger.info('Making graph')
     G=nx.from_pandas_adjacency(adjmat)
-
     return(G)
 
 
@@ -112,97 +109,6 @@ def cluster(G):
 
     return(G, labx)
 
-# %% Compute cluster comparison
-def cluster_comparison_centralities(G, width=5, height=4, showfig=False, methodtype='default', layout='spring_layout'):
-    config=dict()
-    config['showfig']=showfig
-    config['width']=width
-    config['height']=height
-    logger.info('Compute a dozen of centralities and clusterlabels')
-    # compute labx for each of the centralities
-    centralities=['betweenness', 'closeness', 'eigenvector', 'degree', 'edge', 'harmonic', 'katz', 'local', 'out_degree', 'percolation', 'second_order', 'subgraph', 'subgraph_exp', 'information']
-
-    # Compute best positions for the network
-    layout_func = getattr(nx, layout)
-    pos = layout_func(G)
-
-    # Cluster data nd store label in G
-    [G, score] = cluster(G)
-
-    # Compute centrality score for each of the centralities and store in G
-    for centrality in centralities:
-        [G, score]=compute_centrality(G, centrality=centrality)
-
-    # Store
-    df=pd.DataFrame([*G.nodes.values()])
-    df.set_index(np.array([*G.nodes.keys()]), inplace=True)
-
-    # Make plots
-    for centrality in centralities:
-        if config['showfig']:
-            plot(G, node_color=df['clusterlabel'], node_size=df[centrality], pos=pos, cmap='Set1', title=centrality, width=config['width'], height=config['height'], methodtype='default')
-
-    return(G, df)
-
-# %% Make plot
-def plot(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype=None, layout='spring_layout'):
-    # https://networkx.github.io/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx.html
-    config = {}
-    config['filename']=filename
-    config['width']=width
-    config['height']=height
-    config['node_size_scale']=node_size_scale
-
-    logger.info('Creating network plot')
-    ##### DEPRECATED IN LATER VERSION #####
-    if methodtype is not None:
-        logger.warning('Methodtype will be removed in future version. Please use "layout" instead')
-        if methodtype=='circular':
-            layout = 'draw_circular'
-        elif methodtype=='kawai':
-            layout = 'draw_kamada_kawai'
-        else:
-            layout = 'spring_layout'
-    ##### END BLOCK #####
-
-    if 'pandas' in str(type(node_size)):
-        node_size=node_size.values
-
-    # scaling node sizes
-    if config['node_size_scale']!=None and 'numpy' in str(type(node_size)):
-        logger.info('Scaling node sizes')
-        node_size=minmax_scale(node_size, feature_range=(node_size_scale[0], node_size_scale[1]))
-
-    # Setup figure
-    fig = plt.figure(figsize=(config['width'], config['height']))
-
-    # Make the graph
-    try:
-        # Get the layout
-        layout_func = getattr(nx, layout)
-        layout_func(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    except:
-        logger.warning('Warning: [%s] layout not found. The [spring_layout] is used instead.' %(layout))
-        nx.spring_layout(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-
-    # if methodtype=='circular':
-    #     nx.draw_circular(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    # elif methodtype=='kawai':
-    #     nx.draw_kamada_kawai(G, labels=node_label, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-    # else:
-        # nx.draw_networkx(G, labels=node_label, pos=pos, node_size=node_size, alhpa=alpha, node_color=node_color, cmap=cmap, font_size=font_size, with_labels=True)
-
-    plt.title(title)
-    plt.grid(True)
-    plt.show()
-
-    # Savefig
-    if not isinstance(config['filename'], type(None)):
-        logger.info('Saving figure')
-        plt.savefig(config['filename'])
-
-    return(fig)
-
 # %% Normalize in good d3 range
 def normalize_size(getsizes, minscale=0.1, maxscale=4):
     getsizes = MinMaxScaler(feature_range=(minscale, maxscale)).fit_transform(getsizes).flatten()
@@ -285,42 +191,50 @@ def G2df(G, node_color=None, node_label=None, node_size=100, edge_distance_minma
 
     return(df_nodes, df_edges)
 
-# %% Make plot
-def bokeh(G, node_color=None, node_label=None, node_size=100, node_size_scale=[25, 200], alpha=0.8, font_size=18, cmap='Set1', width=40, height=30, pos=None, filename=None, title=None, methodtype='default'):
-    import networkx as nx
-    from bokeh.io import show, output_file
-    from bokeh.models import Plot, Range1d, MultiLine, Circle, HoverTool, BoxZoomTool, ResetTool
-    from bokeh.models.graphs import from_networkx
-    from bokeh.palettes import Spectral4
-
-    SAME_CLUB_COLOR, DIFFERENT_CLUB_COLOR = "black", "red"
-    edge_attrs = {}
-
-    for start_node, end_node, _ in G.edges(data=True):
-        edge_color = SAME_CLUB_COLOR if G.nodes[start_node]["club"] == G.nodes[end_node]["club"] else DIFFERENT_CLUB_COLOR
-        edge_attrs[(start_node, end_node)] = edge_color
-
-    nx.set_edge_attributes(G, edge_attrs, "edge_color")
-
-    # Show with Bokeh
-    plot = Plot(plot_width=400, plot_height=400,
-                x_range=Range1d(-1.1, 1.1), y_range=Range1d(-1.1, 1.1))
-    plot.title.text = "Graph Interaction Demonstration"
-
-    node_hover_tool = HoverTool(tooltips=[("index", "@index"), ("club", "@club")])
-    plot.add_tools(node_hover_tool, BoxZoomTool(), ResetTool())
-
-    graph_renderer = from_networkx(G, nx.spring_layout, scale=1, center=(0, 0))
-
-    graph_renderer.node_renderer.glyph = Circle(size=15, fill_color=Spectral4[0])
-    graph_renderer.edge_renderer.glyph = MultiLine(line_color="edge_color", line_alpha=0.8, line_width=1)
-    plot.renderers.append(graph_renderer)
-
-    output_file("interactive_graphs.html")
-    show(plot)
 
 # %% Comparison of two networks
-def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8, layout='spring_layout'):
+def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height=None, layout='graphviz_layout_custom',
+            scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None):
+    """Compare two networks and plot the differences.
+
+    The figure uses the same static plot logic as bnlearn.plot (shared layout, node/edge styling,
+    figure parameters). Edges: black = correct edge, red = extra edge (false positive),
+    black dashed = missing edge (false negative), green = reversed edge (the edge exists in both
+    networks but in opposite directions, i.e., a false positive and a false negative between the same
+    two nodes). The arrow of a reversed edge points in the predicted (wrong) direction.
+
+    Parameters
+    ----------
+    adjmat_true : pd.DataFrame
+        Adjacency matrix of the true network.
+    adjmat_pred : pd.DataFrame
+        Adjacency matrix of the predicted network.
+    pos : dict, optional
+        Existing node coordinates, e.g., ``bn.plot(truth)['pos']``. The default is None, in which case
+        the layout is computed from the first input network (adjmat_true) with the same logic as plot(),
+        so the nodes are positioned as in ``bn.plot(truth)`` and the second network is mapped on top of it.
+    showfig : bool
+        Show the confusion matrix and the network plot.
+    width, height : float, optional
+        Figure size. Overrules params_static['figsize'].
+    layout : str
+        Layout of the network. Default 'graphviz_layout_custom' (hierarchical top-down), as in plot().
+    scale : float
+        Scale of the layout.
+    title : str
+        Title of the network plot.
+    node_color, node_size : optional
+        Overrule the default node color and size.
+    params_static : dict, optional
+        Static plot parameters, identical to those of plot() (font_size, alpha, arrowstyle, dpi, ...).
+
+    Returns
+    -------
+    scores : dict
+        Confusion matrix scores.
+    adjmat_diff : pd.DataFrame
+        1: correct edge, 2: extra edge (false positive), -1: missing edge (false negative).
+    """
     # Make sure columns and indices to match
     [IArow, IBrow]=ismember(adjmat_true.index.values, adjmat_pred.index.values)
     [IAcol, IBcol]=ismember(adjmat_true.columns.values, adjmat_pred.columns.values)
@@ -347,7 +261,9 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8
         classnames=['Disconnected', 'Connected'],
         title='',
         cmap=plt.cm.Blues,
-        showfig=showfig
+        showfig=showfig,
+        xlabel='Predicted network',
+        ylabel='True network'
     )
 
     # Setup graph
@@ -356,33 +272,82 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=15, height=8
     adjmat_diff[(adjmat_true.astype(int) - adjmat_pred.astype(int))>0]=-1
 
     if showfig:
-        # Setup graph
-        #    G_true = adjmat2graph(adjmat_true)
-        G_diff = adjmat2graph(adjmat_diff)
-        # Graph layout
-        pos = graphlayout(G_diff, pos=pos, scale=1, layout=layout)
-        # Bootup figure
-        plt.figure(figsize=(width, height))
-        # nodes
-        nx.draw_networkx_nodes(G_diff, pos, node_size=700)
-        # edges
-        colors = [G_diff[u][v]['color'] for u, v in G_diff.edges()]
-        #weights = [G_diff[u][v]['weight'] for u,v in G_diff.edges()]
-        nx.draw_networkx_edges(G_diff, pos, arrowstyle='->', edge_color=colors, width=1)
-        # Labels
-        nx.draw_networkx_labels(G_diff, pos, font_size=20, font_family='sans-serif')
-        # Get labels of weights
-        #labels = nx.get_edge_attributes(G,'weight')
-        # Plot weights
-        nx.draw_networkx_edge_labels(G_diff, pos, edge_labels=nx.get_edge_attributes(G_diff, 'weight'))
-        # Making figure nice
-        # plt.legend(['Nodes','TN','FP','test'])
-        ax = plt.gca()
-        ax.set_axis_off()
-        plt.show()
+        _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height,
+                      node_color=node_color, node_size=node_size, params_static=params_static)
 
     # Return
     return(scores, adjmat_diff)
+
+
+# %% Plot the difference graph using the static plot logic of bnlearn.plot
+def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
+                  width=None, height=None, node_color=None, node_size=None, params_static=None):
+    # Lazy import to prevent circular imports (plot imports network).
+    from matplotlib.lines import Line2D
+    from bnlearn.plot import resolve_static_params, compute_static_layout, get_node_properties, get_edge_properties, _plot_properties, _plot_static
+
+    # Same parameter handling as plot()
+    params_static = resolve_static_params(params_static, width=width, height=height)
+    if layout is not None:
+        params_static['layout'] = layout
+
+    # Graph with all nodes (also isolated). Values in adjmat_diff: 1=correct, 2=extra (FP), -1=missing (FN)
+    G = adjmat2graph(adjmat_diff)
+
+    # Node and edge properties, same defaults as plot()
+    # Created with the same functions as plot(), so node size/color and edge thickness are identical.
+    model_diff = {'adjmat': adjmat_diff.astype(float)}
+    node_properties = get_node_properties(model_diff, node_size=800)
+    edge_properties = get_edge_properties(model_diff, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+    # Only color and line/arrow style differ: they indicate the status of the edge.
+    # correct: black solid | extra (FP): red solid | missing (FN): black dashed
+    # reversed (FP and FN between the same two nodes): ONE green edge with only the arrow of the wrong
+    # (predicted) direction. The FN edge in the true direction is not drawn.
+    arrow = params_static['arrowstyle']
+    for (u, v), props in edge_properties.items():
+        value = adjmat_diff.loc[u, v]
+        props['color'], props['style'], props['arrowstyle'] = {1: ('k', 'solid', arrow), 2: ('r', 'solid', arrow), -1: ('k', 'dashed', arrow)}[value]
+    for (u, v) in list(edge_properties.keys()):
+        if (u, v) in edge_properties and (v, u) in edge_properties and u != v:
+            if adjmat_diff.loc[u, v] == 2 and adjmat_diff.loc[v, u] == -1:
+                edge_properties[(u, v)].update({'color': 'g', 'style': 'solid', 'arrowstyle': arrow})
+                del edge_properties[(v, u)]
+                G.remove_edge(v, u)
+    nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+    edge_styles = [edge_properties[e]['style'] for e in edgelist]
+    edge_arrowstyles = [edge_properties[e]['arrowstyle'] for e in edgelist]
+
+    # Layout: the node positions are determined by the FIRST input network (the truth), using the same
+    # logic as plot(). The differences with the second network are drawn on top of these positions.
+    # (The diff graph itself is not used for the layout, as it can contain cycles and extra edges.)
+    if pos is None:
+        G_truth = adjmat2graph(adjmat_true.astype(int))
+        pos = compute_static_layout(G_truth, pos=None, scale=scale, layout=params_static['layout'])
+    else:
+        pos = dict(pos)
+    # Safety net: nodes without coordinates (e.g., a user-provided pos that is incomplete)
+    missing = [node for node in G.nodes() if node not in pos]
+    if len(missing) > 0:
+        logger.warning('No coordinates for nodes %s in <pos>. These are positioned using the layout of the diff graph.' %(missing))
+        pos_fill = compute_static_layout(G, pos=None, scale=scale, layout=params_static['layout'])
+        pos.update({node: pos_fill[node] for node in missing})
+
+    # Draw using the shared static plotter. Edge colors indicate the status, therefore no numeric labels.
+    fig = _plot_static(adjmat_diff, params_static, nodelist, node_colors, node_sizes, G, pos,
+                       edge_colors, edge_weights, title=title, visible=params_static['visible'],
+                       showplot=False, dpi=params_static['dpi'], edge_filter=None, edge_labels={},
+                       edge_styles=edge_styles, edge_arrowstyles=edge_arrowstyles)
+
+    # Legend
+    handles = [Line2D([0], [0], color='k', lw=2, label='Correct edge'),
+               Line2D([0], [0], color='r', lw=2, label='Extra edge (false positive)'),
+               Line2D([0], [0], color='k', lw=2, linestyle='--', label='Missing edge (false negative)'),
+               Line2D([0], [0], color='g', lw=2, label='Reversed edge')]
+    plt.legend(handles=handles, loc='best', frameon=False)
+    if params_static['showplot']:
+        plt.show()
+    return fig
+
 
 # %% Make graph layout
 def graphlayout(G, pos, scale=1, layout='graphviz_layout'):
@@ -411,6 +376,7 @@ def graphlayout(G, pos, scale=1, layout='graphviz_layout'):
     else:
         logger.info('Existing coordinates from <pos> are used.')
     return pos
+
 
 # %% Convert to pandas dataframe
 def is_DataFrame(data):
