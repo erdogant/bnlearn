@@ -167,9 +167,9 @@ After all continuous variables are categorized, the causal discovery approach fo
     model = bn.independence_test(model, df)
 
     # Create visualizations
-    bn.plot(model, edge_filter='logp')
-    bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'filepath': r'c:\temp\auto_mpg_distfit.html'})
-    dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+    bn.plot(model, edge_label='logp')
+    bn.plot(model, edge_label='logp', interactive=True, params_interactive={'filepath': r'c:\temp\auto_mpg_distfit.html'})
+    dotgraph = bn.plot_graphviz(model, edge_label='logp')
     dotgraph
 
 .. |figd2a| image:: ../figs/auto_mpg_distfit.png
@@ -297,11 +297,11 @@ We will learn the structure on the discretized continuous data. Note that the da
 
     # Create 3 types of visualizations
     # Static
-    bn.plot(model, edge_filter='logp')
+    bn.plot(model, edge_label='logp')
     # Static but with graphviz
-    bn.plot_graphviz(model, edge_filter='logp')
+    bn.plot_graphviz(model, edge_label='logp')
     # Interactive
-    G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'filepath': r'c:\auto_mpg.html'})
+    G = bn.plot(model, edge_label='logp', interactive=True, params_interactive={'filepath': r'c:\auto_mpg.html'})
 
 .. |fig2b| image:: ../figs/fig2b.png
 
@@ -345,8 +345,8 @@ After fitting the model on the DAG and dataframe, we can perform the independenc
     model = bn.independence_test(model, df, prune=True)
 
     # Create visualizations
-    bn.plot(model, edge_filter='p_value')
-    bn.plot_graphviz(model, edge_filter='p_value')
+    bn.plot(model, edge_label='p_value')
+    bn.plot_graphviz(model, edge_label='p_value')
     bn.plot(model, interactive=True)
 
 .. |fig3b| image:: ../figs/fig_cont_1b.png

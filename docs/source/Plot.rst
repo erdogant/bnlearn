@@ -32,11 +32,11 @@ The simplest way to create an interactive plot is by setting ``interactive=True`
     model = bn.independence_test(model, df, prune=True)
 
     # Make normal static plot
-    G = bn.plot(model, edge_filter='logp')
+    G = bn.plot(model, edge_label='logp')
 
     # Create interactive plot with default settings
     G = bn.plot(model,
-                edge_filter='logp',
+                edge_label='logp',
                 interactive=True,
                 params_interactive={'filepath': r'd:\temp\dag.html',
                                     'layout': 'dagre',

@@ -1128,7 +1128,7 @@ def independence_test(model, df, test="chi_square", alpha=0.05, prune=False):
     -----
     ``model['independence_test']`` is a DataFrame with columns
     ``source``, ``target``, ``stat_test``, ``p_value``, ``<test>``, ``dof``.
-    Plotting uses ``edge_filter='p_value'`` or ``'logp'``.
+    Plotting uses ``edge_label='p_value'`` or ``'logp'``.
 
     """
     # Imports

@@ -48,7 +48,7 @@ from ismember import ismember
 
 
 # %% Entry point
-def plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=None, edge_filter=None):
+def plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=None, edge_label=None, edge_style=None, return_mermaid=False, showfig=True):
     """Create the interactive plot.
 
     Parameters
@@ -65,28 +65,43 @@ def plot_interactive(model, params_interactive, nodelist, node_colors, node_size
         Title of the plot.
     edge_properties : dict, optional
         ``{(source, target): {'p_value', 'logp', 'value', ...}}`` from ``get_edge_properties``.
-    edge_filter : str or None, optional
+    edge_label : str or None, optional
         'weight', 'p_value' or 'logp'. The matching value is highlighted in the edge hover.
         'p_value' and 'logp' require ``bn.independence_test`` to be applied on the model.
+    edge_style : dict, optional
+        Per-edge overrides for the flowgraph: ``{(source, target): {'color': css color, 'style': 'solid' | 'dashed' | 'dotted', 'label': str}}``.
+        Used by ``bn.compare`` to show the status of an edge. Edges that are not in the dict keep the default style.
+        Ignored by 'd3graph'.
+    return_mermaid : bool, optional
+        True: return the Mermaid flowchart text instead of an HTML file. Nothing is written and no browser is opened.
+        Always uses the flowgraph, because that is the chart that has a Mermaid export.
+    showfig : bool, optional
+        True: open the HTML in the browser / notebook. False: only create the HTML file.
 
     Returns
     -------
     str or None
         Absolute path of the HTML file, or None when nothing was created.
+        With ``return_mermaid=True``: the Mermaid text.
 
     """
     chart_type = params_interactive['type']
+    if return_mermaid and chart_type != 'flowgraph':
+        logger.info("return_mermaid requires type='flowgraph'; 'flowgraph' is used.")
+        chart_type = 'flowgraph'
 
     if chart_type == 'd3graph':
+        if edge_style:
+            logger.info("edge_style is not supported by type='d3graph'; use type='flowgraph'.")
         tooltip = _node_tooltips_d3graph(model, nodelist)
         return _plot_interactive_d3graph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip)
 
     if chart_type == 'flowgraph':
         # Neat CPD tables for edges (CPD of the target) and nodes (own CPD)
-        edge_tooltip = _edge_tooltips(model, edgelist, edge_properties=edge_properties, edge_filter=edge_filter)
+        edge_tooltip = _edge_tooltips(model, edgelist, edge_properties=edge_properties, edge_label=edge_label)
         node_tooltip = _node_cpd_tooltips(model, nodelist)
         tooltip = [node_tooltip.get(n, None) for n in nodelist] if node_tooltip else nodelist
-        return _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=edge_tooltip)
+        return _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=edge_tooltip, edge_style=edge_style, return_mermaid=return_mermaid, showfig=showfig)
 
     logger.warning(f"D3Block for {chart_type} not implemented in bnlearn.")
     return None
@@ -139,11 +154,12 @@ def _cpd_html_for_node(node, cpds, cg, parent=None, max_rows=8, max_cols=6):
 
 
 # %% Interactive flowgraph
-def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=None):
+def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, tooltip, edge_tooltip=None, edge_style=None, return_mermaid=False, showfig=True):
     """Create an interactive flowgraph (layered process diagram) with d3blocks.
 
     ``edge_tooltip`` is an optional dict ``{(source, target): html}``. d3blocks only
     supports plain-text edge hovers, so the HTML is injected into the generated file.
+    ``edge_style`` is an optional dict ``{(source, target): {'color', 'style', 'label'}}`` with per-edge overrides.
     """
     D3Blocks = _import_d3blocks()
 
@@ -173,6 +189,13 @@ def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_
     X['source'] = X['source'].astype(str).str.replace(' ', '_')
     X['target'] = X['target'].astype(str).str.replace(' ', '_')
     X['weight'] = edge_weights
+    if edge_style:
+        # Per-edge color / line style / label. Edges without an entry get the d3blocks defaults.
+        props = [edge_style.get((u, v), {}) for u, v in edgelist]
+        defaults = {'color': '#8c8c8c', 'style': 'solid', 'label': ''}
+        for col, default in defaults.items():
+            if any(col in p for p in props):
+                X[col] = [p.get(col, default) for p in props]
 
     nodes = {}
     for i, name in enumerate(nodelist):
@@ -188,11 +211,11 @@ def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_
         for (u, v), h in edge_tooltip.items():
             edge_html[str(u).replace(' ', '_') + '->' + str(v).replace(' ', '_')] = h
     node_has_html = any(isinstance(t, str) and 'bn-cpd' in t for t in (tooltip or []))
-    patch = len(edge_html) > 0 or node_has_html
     show_notebook = params_interactive['notebook']
+    patch = len(edge_html) > 0 or node_has_html
 
     d3b = D3Blocks()
-    d3b.flowgraph(
+    out_mm = d3b.flowgraph(
         X,
         nodes=nodes,
         direction=params_interactive['direction'],
@@ -203,18 +226,24 @@ def _plot_interactive_flowgraph(params_interactive, nodelist, node_colors, node_
         filepath=params_interactive['filepath'],
         figsize=params_interactive['figsize'],
         notebook=False if patch else show_notebook,
-        showfig=False if patch else True,
+        showfig=showfig and not patch,  # when patching, the browser is opened after the patch
         show_side_panel=params_interactive['show_side_panel'],
         show_top_panel=params_interactive['show_top_panel'],
         dark_mode=params_interactive['dark_mode'],
         color_background=params_interactive['bgcolor'],
+        return_mermaid=return_mermaid,
     )
+
+    # Mermaid: no HTML was written or opened.
+    if return_mermaid:
+        return out_mm
 
     filepath = os.path.abspath(d3b.config['filepath'])
     if patch:
-        # If patching fails (d3blocks changed?), the plain graph is still shown.
+        # The HTML file always gets the tooltips. If patching fails (d3blocks changed?), the plain graph is still shown.
         _inject_edge_tooltips(filepath, edge_html)
-        _open_html(filepath, notebook=show_notebook, figsize=params_interactive['figsize'])
+        if showfig:
+            _open_html(filepath, notebook=show_notebook, figsize=params_interactive['figsize'])
     return filepath
 
 
@@ -420,10 +449,10 @@ def _node_cpd_tooltips(model, nodelist, max_rows=8, max_cols=6):
     return out
 
 
-def _edge_stat_html(model, edge, edge_properties=None, edge_filter=None):
+def _edge_stat_html(model, edge, edge_properties=None, edge_label=None):
     """Small table with the edge strength from ``bn.independence_test`` (None if unavailable).
 
-    The value of ``edge_filter`` ('logp', 'p_value' or 'weight') is highlighted.
+    The value of ``edge_label`` ('logp', 'p_value' or 'weight') is highlighted.
     """
     indep = model.get('independence_test', None) if isinstance(model, dict) else None
     props = (edge_properties or {}).get(edge, {}) or {}
@@ -463,7 +492,7 @@ def _edge_stat_html(model, edge, edge_properties=None, edge_filter=None):
 
     # 'weight' is the edge value in the adjacency matrix; only informative when not trivially 1.
     value = num(props.get('value'), '%.2f')
-    if value is not None and (edge_filter == 'weight' or float(props.get('value')) != 1):
+    if value is not None and (edge_label == 'weight' or float(props.get('value')) != 1):
         rows.append(('weight', 'weight', value))
 
     if not rows:
@@ -471,14 +500,14 @@ def _edge_stat_html(model, edge, edge_properties=None, edge_filter=None):
     # Columns: one column per statistic (header row = labels, single row = values)
     head, vals = [], []
     for key, label, text in rows:
-        hl = ' hl' if key == edge_filter else ''
+        hl = ' hl' if key == edge_label else ''
         head.append('<th class="%s">%s</th>' % (hl.strip(), label))
         vals.append('<td class="%s">%s</td>' % (hl.strip(), text))
     return ('<div class="bn-cpd-title">Edge strength</div><table class="bn-cpd"><tr>%s</tr><tr>%s</tr></table>'
             % (''.join(head), ''.join(vals)))
 
 
-def _edge_tooltips(model, edgelist, edge_properties=None, edge_filter=None, max_rows=8, max_cols=6):
+def _edge_tooltips(model, edgelist, edge_properties=None, edge_label=None, max_rows=8, max_cols=6):
     """Edge hover HTML: edge strength (independence test) followed by the CPD of the target node.
 
     Returns
@@ -490,7 +519,7 @@ def _edge_tooltips(model, edgelist, edge_properties=None, edge_filter=None, max_
     out = {}
     for edge in edgelist:
         key = (str(edge[0]), str(edge[1]))
-        parts = [_edge_stat_html(model, (edge[0], edge[1]), edge_properties=edge_properties, edge_filter=edge_filter), cpd_html.get(key)]
+        parts = [_edge_stat_html(model, (edge[0], edge[1]), edge_properties=edge_properties, edge_label=edge_label), cpd_html.get(key)]
         parts = [x for x in parts if x]
         if parts:
             out[key] = '<div class="bn-sep"></div>'.join(parts)
