@@ -75,7 +75,7 @@ These Gaussian score functions can be used with score-based structure learning a
 
     # Create visualizations
     bn.plot(model)
-    dotgraph = bn.plot_graphviz(model)
+    dotgraph = bn.plot(model, output='graphviz')
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_bic_g')
 
@@ -246,7 +246,7 @@ In other words, the lingam-direct method allows you to model continuous and mixe
 
     # Create visualizations
     bn.plot(model)
-    dotgraph = bn.plot_graphviz(model)
+    dotgraph = bn.plot(model, output='graphviz')
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
 
@@ -283,7 +283,7 @@ The ICA-LiNGAM method ('ica-lingam') is also from lingam and follows the same pr
 
     # Create visualizations
     bn.plot(model)
-    dotgraph = bn.plot_graphviz(model)
+    dotgraph = bn.plot(model, output='graphviz')
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_ica')
 
@@ -324,7 +324,7 @@ DAG (pattern) construction involves three steps:
 
     # Create visualizations
     bn.plot(model)
-    dotgraph = bn.plot_graphviz(model)
+    dotgraph = bn.plot(model, output='graphviz')
     dotgraph
     dotgraph.view(filename=r'dotgraph_auto_mpg_PC')
 

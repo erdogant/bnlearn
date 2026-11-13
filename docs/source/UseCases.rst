@@ -17,12 +17,12 @@ In this example, we will learn the structure of the Titanic dataset.
 	# model = bn.structure_learning.fit(dfnum, methodtype='cl', black_list=['Embarked','Parch','Name'], root_node='Survived', bw_list_method='nodes')
 	model = bn.structure_learning.fit(dfnum)
 	# Plot
-	G = bn.plot(model, interactive=False)
+	G = bn.plot(model, output='static')
 
 	# Compute edge strength with chi-square test statistic
 	model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 	# Plot with edge labels
-	G = bn.plot(model, interactive=False, pos=G['pos'], edge_label='p_value')
+	G = bn.plot(model, output='static', pos=G['pos'], edge_label='p_value')
 
 	# Parameter learning
 	model = bn.parameter_learning.fit(model, dfnum)
@@ -380,8 +380,10 @@ Lets plot the learned DAG and examine the structure!
 .. code-block:: python
 
     # Plot the DAG
-    bn.plot(model, interactive=False)
-    bn.plot(model, interactive=True)
+    F = bn.plot(model, output='static')
+    D = bn.plot(model, output='graphviz')
+    H = bn.plot(model, output='interactive')
+    M = bn.plot(model, output='mermaid')
 
     # Plot differences between expert-DAG and the computed-DAG
     bn.compare(model, DAG)
@@ -536,11 +538,8 @@ In the following example we will load the auto mpg dataset and learn the structu
     model = bn.independence_test(model, df, prune=True)
 
     # Plot
-    bn.plot(model)
-
-    # Plot with graphviz
-    dotgraph = bn.plot_graphviz(model)
-    dotgraph
+    bn.plot(model, output='static')
+    D = bn.plot(model, output='graphviz')
     dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
 
 .. |fig9a| image:: ../figs/fig_auto_mpg_lingam_a.png

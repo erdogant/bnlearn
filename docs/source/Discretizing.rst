@@ -167,9 +167,10 @@ After all continuous variables are categorized, the causal discovery approach fo
     model = bn.independence_test(model, df)
 
     # Create visualizations
-    bn.plot(model, edge_label='logp')
-    bn.plot(model, edge_label='logp', interactive=True, params_interactive={'filepath': r'c:\temp\auto_mpg_distfit.html'})
-    dotgraph = bn.plot_graphviz(model, edge_label='logp')
+    fig =      bn.plot(model, edge_label='logp', output='static')
+    html =     bn.plot(model, edge_label='logp', output='interactive', params_interactive={'filepath': r'c:\temp\auto_mpg_distfit.html'})
+    mermaid =  bn.plot(model, edge_label='logp', output='mermaid')
+    dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
     dotgraph
 
 .. |figd2a| image:: ../figs/auto_mpg_distfit.png
@@ -241,8 +242,8 @@ A limitation of this approach is that you need to pre-define the edges before ap
     DAG = bn.make_DAG(edges)
 
     # Create visualizations
-    bn.plot(DAG)
-    bn.plot_graphviz(DAG)
+    bn.plot(DAG, output='static')
+    bn.plot(DAG, output='graphviz')
 
 .. _fig_auto_mpg_DAG_edges:
 
@@ -296,12 +297,9 @@ We will learn the structure on the discretized continuous data. Note that the da
     # [bnlearn] >Edge [weight <-> mpg] [P=0.999112] is excluded because it was not significant (P<0.05) with [chi_square]
 
     # Create 3 types of visualizations
-    # Static
-    bn.plot(model, edge_label='logp')
-    # Static but with graphviz
-    bn.plot_graphviz(model, edge_label='logp')
-    # Interactive
-    G = bn.plot(model, edge_label='logp', interactive=True, params_interactive={'filepath': r'c:\auto_mpg.html'})
+    bn.plot(model, edge_label='logp', output='static')
+    bn.plot(model, edge_label='logp', output='graphviz')
+    bn.plot(model, edge_label='logp', output='interactive', params_interactive={'filepath': r'c:\auto_mpg.html'})
 
 .. |fig2b| image:: ../figs/fig2b.png
 
@@ -345,9 +343,9 @@ After fitting the model on the DAG and dataframe, we can perform the independenc
     model = bn.independence_test(model, df, prune=True)
 
     # Create visualizations
-    bn.plot(model, edge_label='p_value')
-    bn.plot_graphviz(model, edge_label='p_value')
-    bn.plot(model, interactive=True)
+    bn.plot(model, output='static', edge_label='p_value')
+    bn.plot(model, output='graphviz', edge_label='p_value')
+    bn.plot(model, output='interactive')
 
 .. |fig3b| image:: ../figs/fig_cont_1b.png
 

@@ -147,7 +147,7 @@ Lets examine the results using the **alarm** example that contains 37 nodes.
     G = bn.plot(model, params_static={'figsize': (25, 15), 'dpi': 300, 'font_size': 18}, edge_label=None)
 
     # Create graphviz
-    dot = bn.plot_graphviz(model)
+    dot = bn.plot(model, output='graphviz')
     # Show dot file
     dot
 

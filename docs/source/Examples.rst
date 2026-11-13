@@ -22,8 +22,8 @@ The function :func:`bnlearn.bnlearn.df2onehot` helps convert the mixed dataset i
     DAG = bn.structure_learning.fit(dfnum)
 
     # Plot
-    G = bn.plot(DAG)
-    bn.plot_graphviz(DAG)
+    G = bn.plot(DAG, output='static')
+    D = bn.plot(DAG, output='graphviz')
 
 .. _fig-titanic:
 
@@ -141,7 +141,7 @@ From the ``bnlearn`` library, we'll use the :class:`~bnlearn.structure_learning.
     import bnlearn as bn
     model = bn.structure_learning.fit(df)
     G = bn.plot(model)
-    dot = bn.plot_graphviz(DAG)
+    dot = bn.plot(DAG, output='graphviz')
 
 .. |logo3| image:: ../figs/fig_sprinkler_sl.png
     :scale: 60%
@@ -190,7 +190,7 @@ Let's learn the structure of a more complex dataset and compare it to another on
     model_true = bn.fetch('asia')
     # Plot ground truth
     G = bn.plot(model_true)
-    dot = bn.plot_graphviz(model_true)
+    dot = bn.plot(model_true, output='graphviz')
 
 .. _fig2a_asia_groundtruth:
 

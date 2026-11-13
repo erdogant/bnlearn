@@ -132,11 +132,10 @@ def test_example_1():
     # Wet_Grass   False      False  False      False
 
     # Plot
-    G = bn.plot(DAG)
-    bn.plot_graphviz(DAG)
-
-    # Interactive plotting
-    G = bn.plot(DAG, interactive=True)
+    G = bn.plot(DAG, output='static')
+    D = bn.plot(DAG, output='graphviz')
+    M = bn.plot(DAG, output='mermaid')
+    G = bn.plot(DAG, output='interactive')
 
 def test_hypergeo_test():
     import bnlearn
@@ -251,15 +250,14 @@ def test_bnlearn_example_1():
     model = bn.independence_test(model, df, test="chi_square", alpha=0.05, prune=True)
 
     # Make plot
-    G = bn.plot(model, interactive=False)
-
+    G = bn.plot(model, output='static')
     # Ceate dotgraph plot
-    dotgraph = bn.plot_graphviz(model)
+    dotgraph = bn.plot(model, output='graphviz')
     # Create pdf
     dotgraph.view(filename=r'c:/temp/bnlearn_plot')
 
     # Make plot interactive
-    G = bn.plot(model, interactive=True)
+    G = bn.plot(model, output='interactive')
 
     # Show edges
     print(model['model_edges'])

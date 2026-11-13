@@ -74,7 +74,6 @@ Because probabilistic graphical models can be difficult to use, ``Bnlearn`` cont
 | [Generate Default CPTs for All Edges](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.build_cpts_from_structure) | ```bn.build_cpts_from_structure()``` |
 | **Make Plots** | |
 | [Plotting](https://erdogant.github.io/bnlearn/pages/html/Plot.html) | ```bn.plot()``` |
-| [Plot Graphviz](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.plot_graphviz) | ```bn.plot_graphviz()``` |
 | [Compare 2 Networks](https://erdogant.github.io/bnlearn/pages/html/Plot.html#comparison-of-two-networks) | ```bn.compare()``` |
 | [Load DAG (bif files)](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.fetch) | ```bn.fetch()``` |
 | [Load Examples](https://erdogant.github.io/bnlearn/pages/html/bnlearn.bnlearn.html#bnlearn.bnlearn.fetch) | ```bn.fetch(as_dataframe=True)``` |

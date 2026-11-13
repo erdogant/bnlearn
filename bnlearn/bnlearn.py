@@ -37,15 +37,14 @@ import bnlearn as bn
 try:
     from bnlearn.sampling import sampling as bn_sampling
     from bnlearn.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
-    from bnlearn.plot import plot, plot_graphviz, get_node_properties, get_edge_properties, hierarchical_layout
+    # from bnlearn.plot import plot, get_node_properties, get_edge_properties, hierarchical_layout
     from bnlearn.plot import normalize_independence_frame
-    from bnlearn.utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
+    from bnlearn.utils import vec2adjmat, adjmat2vec, adjmat2dict
 except:
     from sampling import sampling as bn_sampling
     from CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
-    from plot import plot, plot_graphviz, get_node_properties, get_edge_properties, hierarchical_layout
     from plot import normalize_independence_frame
-    from utils import vec2adjmat, adjmat2vec, vec2df, adjmat2dict, _normalize_weights
+    from utils import vec2adjmat, adjmat2vec, adjmat2dict
 
 
 # %%  Convert adjmat to bayesian model

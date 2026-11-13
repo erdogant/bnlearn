@@ -1054,8 +1054,10 @@ dfhot, dfnum = bn.df2onehot(df)
 ## 18.8 Visualization, CPD inspection, scores, I/O
 
 ```python
-bn.plot(model)                    # static matplotlib plot
-bn.plot_graphviz(model)           # graphviz
+G = bn.plot(model, output='static')             # static matplotlib plot -> output Figure
+D = bn.plot(model, output='graphviz')           # graphviz -> output Dotgraph
+H = bn.plot(model, output='interactive')        # interactive -> output HTML
+M = bn.plot(model, output='mermaid')            # mermaid -> output Mermaid
 bn.print_CPD(model)               # print all CPDs
 bn.structure_scores(model, df, scoring_method=['bic', 'k2', 'bdeu', 'bds'])
 bn.save(model, filepath='bn')

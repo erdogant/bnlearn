@@ -136,5 +136,5 @@ print(model['adjmat'])
 # x5      0.000000  0.000000  0.00000  0.0  0.000000  0.00000
 
 # Visualize the model
-bn.plot_graphviz(model)
+bn.plot(model, output='graphviz')
 

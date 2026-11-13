@@ -24,7 +24,7 @@ def test_discritize():
     # Plot the DAG
     bn.plot(DAG)
     # Plot the DAG using graphviz
-    bn.plot_graphviz(DAG)
+    bn.plot(DAG, output='graphviz')
     # A good habbit is to set the columns with continuous data as float
     continuous_columns = ["mpg", "displacement", "horsepower", "weight", "acceleration"]
     # Discretize the continous columns by specifying

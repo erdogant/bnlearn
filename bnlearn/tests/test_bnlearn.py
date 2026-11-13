@@ -441,8 +441,8 @@ def test_edge_properties():
     assert edge_properties[('A', 'D')].get('color')
     assert edge_properties[('A', 'D')].get('weight')
     # Make plot
-    # assert bn.plot(model, edge_properties=edge_properties, interactive=False)
-    # assert bn.plot(model, interactive=False)
+    # assert bn.plot(model, edge_properties=edge_properties, output='static')
+    # assert bn.plot(model, output='static')
 
     edges = [('A', 'B'), ('A', 'C'), ('A', 'D')]
     # Create DAG and store in model
