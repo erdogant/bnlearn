@@ -626,7 +626,7 @@ def to_undirected(adjmat):
 
 
 # %% Comparison of two networks
-def compare(model_1, model_2, pos=None, showfig=True, figsize=(15, 8)):
+def compare(model_1, model_2, pos=None, showfig=True, figsize=(10,10)):
     """Compare networks of two models.
 
     Parameters

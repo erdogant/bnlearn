@@ -28,7 +28,7 @@ except:
 
 # GLOBAL
 _EDGE_LABEL_ATTR = {'weight': 'value', 'p_value': 'p_value', 'logp': 'logp'}
-OUTPUTS = ('static', 'interactive', 'mermaid')
+OUTPUTS = ('static', 'interactive', 'mermaid', 'graphviz')
 
 # %%
 def _resolve_output(output='static'):
@@ -369,93 +369,10 @@ def hierarchical_layout(G, scale=1, n_passes=4):
     return pos
 
 
-# %% plot_graphviz
-def plot_graphviz(model,
-                  edge_label='auto',
-                  params={'prediction_feature_indices': None,
-                          'prediction_target_label': "Y(pred)",
-                          'prediction_line_color': "red",
-                          'prediction_coefs': None,
-                          'prediction_feature_importance': None,
-                          'path': None,
-                          'path_color': None,
-                          'detect_cycle': False,
-                          'ignore_shape': False},
-                  verify_certificate=True):
-    """Plot a causal or Bayesian network using Graphviz based on an adjacency matrix.
-
-    This function visualizes the causal or Bayesian model structure in
-    model['adjmat'] using the Graphviz library.
-
-    Parameters
-    ----------
-    model : dict
-        A dictionary containing the network model.
-    edge_label : str or None
-        None: Do not show numeric edge labels.
-        'auto': Automatically choose for logp and otherwise weight when available
-        'weight': Show the adjacency / coefficient values.
-        'p_value': Show raw edge p-values (requires independence_test).
-        'logp': Show -log10(p_value) strength (requires independence_test).
-    params : dict, optional
-        Visualization parameters (see docstring of bnlearn.plot_graphviz).
-    verify_certificate : bool (default: True)
-
-    Returns
-    -------
-    dot_graph : graphviz.Source or None
-    """
-    from lingam.utils import make_dot
-    dot_graph = None
-
-
-    if model['adjmat'].sum().sum() == 0:
-        logger.info('Nothing to plot because no edges are present between nodes. ')
-        return None
-    if model.get('config', {}).get('method') == 'DBN':
-        logger.info('DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
-        return None
-
-    GraphvizPath = setgraphviz(verify_certificate=verify_certificate)
-    if GraphvizPath is None:
-        logger.error('Graphviz is not found in path and can therefore cause an error in producing the dot image.')
-    defaults = {'prediction_feature_indices': None, 'prediction_target_label': "Y(pred)",
-                'prediction_line_color': "red", 'prediction_coefs': None,
-                'prediction_feature_importance': None, 'path': None, 'path_color': None,
-                'detect_cycle': False, 'ignore_shape': False}
-    params = {**defaults, **params}
-
-    model = copy.deepcopy(model)
-
-    logger.info(f'Setting edge mode to {edge_label}.')
-    # Set edge label
-    edge_label = _set_edge_label(model, edge_label)
-    indep = model.get('independence_test')
-    if indep is not None and edge_label in ('logp', 'p_value') and 'stat_test' in indep.columns:
-        Iloc = indep['stat_test'].astype(bool)
-        source = indep['source'].loc[Iloc]
-        target = indep['target'].loc[Iloc]
-        logger.info(f'Number of significant edges detected: {int(Iloc.sum())}')
-        if edge_label == 'logp':
-            logp = compute_logp(indep['p_value'])
-            adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum')
-        else:
-            adjmat = vec2adjmat(source, target, weights=indep['p_value'].loc[Iloc], symmetric=True, aggfunc='sum')
-    else:
-        edges = sum(1 for item in (model.get('model_edges') or []) if isinstance(item, tuple))
-        logger.info(f'Number of edges detected: {edges}')
-        adjmat = model['adjmat'].copy()
-
-    node_labels = list(adjmat.T.columns) if edge_label is not None else None
-
-    if node_labels is not None and len(node_labels) > 0:
-        dot_graph = make_dot(adjmat.T.values.astype(float), labels=node_labels, lower_limit=0, **params)
-
-    return dot_graph
-
-
 # %% plot
 def plot(model,
+         output='static',
+         prune=False,
          edge_label='auto',
          pos=None,
          scale=1,
@@ -464,6 +381,18 @@ def plot(model,
          node_size=None,
          node_properties=None,
          edge_properties=None,
+         params_static={
+             'figsize': (10, 10)},
+         params_graphviz={
+             'prediction_feature_indices': None,
+             'prediction_target_label': "Y(pred)",
+             'prediction_line_color': "red",
+             'prediction_coefs': None,
+             'prediction_feature_importance': None,
+             'path': None,
+             'path_color': None,
+             'detect_cycle': False,
+             'ignore_shape': False},
          params_interactive={
              'type': 'flowgraph',       # choose between 'd3graph' or 'flowgraph'
              'figsize': [None, None],
@@ -480,8 +409,6 @@ def plot(model,
              'minmax_distance': [50, 100],
              'font_color': None,
              'show_slider': True},
-         params_static=None,
-         output='static',
          params_mermaid=None,
          ):
     """
@@ -491,14 +418,17 @@ def plot(model,
     ----------
     model : dict
         Learned model from the .fit() function.
+    output : str, optional
+        'static': Static matplotlib plot (default).
+        'graphviz': Graphviz plot.
+        'interactive': Interactive web-based graph (d3blocks).
+        'mermaid': Mermaid code (flowchart). The code is returned in out['mermaid'].
+    prune: bool (default: False)
+        True: Keep only edges that are significant (<=alpha) based on the independence test.
     pos : graph, optional
         Coordinates of the network. If provided, the same structure will be used to plot the network. The default is None.
     scale : int, optional
         Scaling parameter for the network. A larger number will linearly increase the network. The default is 1.
-    output : str, optional
-        'static': Static matplotlib plot (default).
-        'interactive': Interactive web-based graph (d3blocks).
-        'mermaid': Mermaid code (flowchart). The code is returned in out['mermaid'].
     title : str, optional
         Title for the plots.
     node_color : str, optional
@@ -522,9 +452,7 @@ def plot(model,
         (save the code; '.md' adds a ```mermaid fence, else raw code), 'show': True (print the code)}.
     params_static : dict, optional
         Dictionary containing various settings for static plots. Missing keys get the default (see _static_defaults).
-        layout: 'graphviz_layout_custom', 'graphviz_layout', 'spring_layout',
-        'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout',
-        'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
+        layout: 'graphviz_layout_custom', 'graphviz_layout', 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'circular_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout'.
 
     Returns
     -------
@@ -538,7 +466,7 @@ def plot(model,
         return None
 
     if model.get('config', {}).get('method') == 'DBN' and output == 'interactive':
-        logger.info('DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        logger.info('DynamicBayesianNetwork (DBN) can not be plot with interactive.')
         return None
     
     # Set edge_label
@@ -546,8 +474,15 @@ def plot(model,
 
     model = copy.deepcopy(model)
     model['adjmat'] = model['adjmat'].astype(float)
-    params_interactive = resolve_interactive_params(params_interactive)
+
+    # Graphviz
+    if output == 'graphviz':
+        Ggraphviz = plot_graphviz(model, edge_label=edge_label, prune=prune, params=params_graphviz, verify_certificate=True)
+        return Ggraphviz
+    
+    # Set params
     params_static = resolve_static_params(params_static)
+    params_interactive = resolve_interactive_params(params_interactive)
 
     out = {}
     G = nx.DiGraph()
@@ -561,8 +496,10 @@ def plot(model,
         node_properties = get_node_properties(model, node_size=node_size_default)
     if edge_properties is None:
         edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
-
-    edge_properties = _filter_significant_edges(model, edge_properties, edge_label)
+    
+    # Set edge properties
+    edge_properties = _filter_significant_edges(model, edge_properties, edge_label, prune)
+    # set node properties
     for key in node_properties.keys():
         if node_properties[key]['node_size'] is None:
             node_properties[key]['node_size'] = node_size_default
@@ -637,9 +574,9 @@ def _format_edge_label(value, edge_label):
     return float(f'{value:.2f}'[:4])
 
 
-def _filter_significant_edges(model, edge_properties, edge_label):
+def _filter_significant_edges(model, edge_properties, edge_label, prune):
     """Keep only the significant edges when edge_label is 'p_value' or 'logp'."""
-    if edge_label in ('p_value', 'logp') and model.get('independence_test') is not None:
+    if prune and edge_label in ('p_value', 'logp') and model.get('independence_test') is not None:
         indep = model['independence_test']
         if 'stat_test' in indep.columns and len(indep) > 0:
             sig = indep.loc[indep['stat_test'].astype(bool), ['source', 'target']]
@@ -653,10 +590,38 @@ def _filter_significant_edges(model, edge_properties, edge_label):
 # %% Shared static-plot helpers
 def _static_defaults():
     """Default parameters of the static plot. Single source for plot() and compare(), so both figures look the same."""
-    return {'minscale': 1, 'maxscale': 5, 'figsize': (10, 10), 'width': None, 'height': None, 'font_size': 10,
-            'font_family': 'sans-serif', 'alpha': 0.8, 'node_shape': 'o', 'layout': 'graphviz_layout_custom',
-            'font_color': '#000000', 'facecolor': 'white', 'edge_alpha': 0.8, 'arrowstyle': '-|>', 'arrowsize': 20,
-            'visible': True, 'showplot': True, 'dpi': 200}
+    return {'minscale': 1,
+            'maxscale': 5,
+            'figsize': (10, 10),
+            'width': None,
+            'height': None,
+            'font_size': 10,
+            'font_family': 'sans-serif',
+            'alpha': 0.8,
+            'node_shape': 'o',
+            'layout': 'graphviz_layout_custom',
+            'font_color': '#000000',
+            'facecolor': 'white',
+            'edge_alpha': 0.8,
+            'arrowstyle': '-|>',
+            'arrowsize': 20,
+            'visible': True,
+            'showplot': True,
+            'dpi': 200}
+
+
+def _graphviz_defaults():
+    """Default parameters of the graphviz plot."""
+    return {
+        'prediction_feature_indices': None,
+        'prediction_target_label': "Y(pred)",
+        'prediction_line_color': "red",
+        'prediction_coefs': None,
+        'prediction_feature_importance': None,
+        'path': None,
+        'path_color': None,
+        'detect_cycle': False,
+        'ignore_shape': False}
 
 
 def _interactive_defaults():
@@ -677,13 +642,16 @@ def _interactive_defaults():
         # d3graph
         'minmax_distance': [50, 100],
         'font_color': None,
-        'show_slider': True,
-    }
+        'show_slider': True}
 
 
-def resolve_interactive_params(params_interactive=None):
+def resolve_graphviz_params(params=None):
+    """Merge user-defined graphviz parameters with the defaults."""
+    return {**_graphviz_defaults(), **(params or {})}
+
+def resolve_interactive_params(params=None):
     """Merge user-defined interactive parameters with the defaults."""
-    return {**_interactive_defaults(), **(params_interactive or {})}
+    return {**_interactive_defaults(), **(params or {})}
 
 
 def resolve_static_params(params_static=None, width=None, height=None):
@@ -719,6 +687,81 @@ def compute_static_layout(G, pos=None, scale=1, layout='graphviz_layout_custom')
             layout = 'graphviz_layout'
     return bn.network.graphlayout(G, pos=pos, scale=scale, layout=layout)
 
+# %% plot_graphviz
+def plot_graphviz(model,
+                  edge_label='auto',
+                  prune=False,
+                  params=None,
+                  verify_certificate=True):
+    """Plot a causal or Bayesian network using Graphviz based on an adjacency matrix.
+
+    This function visualizes the causal or Bayesian model structure in
+    model['adjmat'] using the Graphviz library.
+
+    Parameters
+    ----------
+    model : dict
+        A dictionary containing the network model.
+    prune: bool (default: False)
+        True: Keep only edges that are significant (<=alpha) based on the independence test.
+    edge_label : str or None
+        None: Do not show numeric edge labels.
+        'auto': Automatically choose for logp and otherwise weight when available
+        'weight': Show the adjacency / coefficient values.
+        'p_value': Show raw edge p-values (requires independence_test).
+        'logp': Show -log10(p_value) strength (requires independence_test).
+    params : dict, optional
+        Visualization parameters (see docstring of bnlearn.plot_graphviz).
+    verify_certificate : bool (default: True)
+
+    Returns
+    -------
+    dot_graph : graphviz.Source or None
+    """
+    from lingam.utils import make_dot
+    dot_graph = None
+
+    if model['adjmat'].sum().sum() == 0:
+        logger.info('Nothing to plot because no edges are present between nodes. ')
+        return None
+    if model.get('config', {}).get('method') == 'DBN':
+        logger.info('DynamicBayesianNetwork (DBN) can not be plot with Graphviz.')
+        return None
+
+    GraphvizPath = setgraphviz(verify_certificate=verify_certificate)
+    if GraphvizPath is None:
+        logger.error('Graphviz is not found in path and can therefore cause an error in producing the dot image.')
+
+    # Defaults
+    params = resolve_graphviz_params(params)
+
+    model = copy.deepcopy(model)
+
+    # Set edge label
+    logger.info(f'Setting edge mode to {edge_label}.')
+    edge_label = _set_edge_label(model, edge_label)
+    indep = model.get('independence_test')
+    if prune and (indep is not None) and edge_label in ('logp', 'p_value') and 'stat_test' in indep.columns:
+        Iloc = indep['stat_test'].astype(bool)
+        source = indep['source'].loc[Iloc]
+        target = indep['target'].loc[Iloc]
+        logger.info(f'Number of significant edges detected: {int(Iloc.sum())}')
+        if edge_label == 'logp':
+            logp = compute_logp(indep['p_value'])
+            adjmat = vec2adjmat(source, target, weights=logp.loc[Iloc], symmetric=True, aggfunc='sum')
+        else:
+            adjmat = vec2adjmat(source, target, weights=indep['p_value'].loc[Iloc], symmetric=True, aggfunc='sum')
+    else:
+        edges = sum(1 for item in (model.get('model_edges') or []) if isinstance(item, tuple))
+        logger.info(f'Number of edges detected: {edges}')
+        adjmat = model['adjmat'].copy()
+
+    node_labels = list(adjmat.T.columns) if edge_label is not None else None
+
+    if node_labels is not None and len(node_labels) > 0:
+        dot_graph = make_dot(adjmat.T.values.astype(float), labels=node_labels, lower_limit=0, **params)
+
+    return dot_graph
 
 # %% Static plot
 def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_label='weight', edge_labels=None, edge_styles=None, edge_arrowstyles=None):
