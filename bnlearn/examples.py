@@ -28,9 +28,9 @@ model = bn.independence_test(model, df, prune=True)
 #     CPDs[cpd.variable] = bn.query2df(cpd)['p']
 
 # Static plot
-G = bn.plot(model, edge_label='logp', interactive=False)
+G = bn.plot(model, edge_label='logp', output='static')
 # dotgraph
-dotgraph = bn.plot_graphviz(model, edge_label='logp')
+dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph
 # Interactive graph
 G = bn.plot(model, edge_label='logp', output='interactive', params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html'})
@@ -64,7 +64,7 @@ model_cg= bn.independence_test(model_cg, df, prune=True)
 # Visualize
 _ = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', edge_label='logp')
 G = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', output='interactive', edge_label='logp')
-dotgraph = bn.plot_graphviz(model_cg)
+dotgraph = bn.plot(model_cg, output='graphviz')
 dotgraph
 
 # Inspect discrete CPTs
@@ -190,7 +190,7 @@ _ = bn.plot(model, output='interactive')
 # model = bn.independence_test(model, df, prune=True)
 # fig = bn.plot(model, edge_label='weight')
 
-# dotgraph = bn.plot_graphviz(model, edge_label='weight')
+# dotgraph = bn.plot(model, edge_label='weight', output='graphviz')
 # dotgraph
 
 
@@ -206,7 +206,7 @@ DAG['adjmat'].columns.tolist()
 # ['A', 'B', 'C', 'D', 'E']
 bn.plot(DAG)
 
-dotgraph = bn.plot_graphviz(DAG)
+dotgraph = bn.plot(DAG, output='graphviz')
 dotgraph
 
 
@@ -230,7 +230,7 @@ model = bn.independence_test(model, df, prune=True)
 
 # Create visualizations
 G = bn.plot(model)
-# dotgraph = bn.plot_graphviz(model)
+# dotgraph = bn.plot(model, output='graphviz')
 # dotgraph
 # dotgraph.view(filename=r'dotgraph_auto_mpg_lingam_direct')
 
@@ -292,7 +292,7 @@ model = bn.independence_test(model, df)
 
 bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_label='logp')
+dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph
 
 # Parameter learning
@@ -381,7 +381,7 @@ model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
 G = bn.plot(model, output='interactive', edge_label='logp')
-bn.plot_graphviz(model)
+bn.plot(model, output='graphviz')
 
 #%%
 import bnlearn as bn
@@ -497,7 +497,7 @@ model = bn.independence_test(model, df, test='chi_square', prune=True)
 # Plot the best DAG
 # bn.plot(model, edge_label='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
-# dotgraph = bn.plot_graphviz(model, edge_label='logp')
+# dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 # dotgraph
 
 # Store to pdf
@@ -743,7 +743,7 @@ query = bn.inference.fit(model_as_p, variables=['Parch', 'Sex', 'Survived'], evi
 import bnlearn as bn
 model = bn.fetch('asia')
 G = bn.plot(model)
-bn.plot_graphviz(model)
+bn.plot(model, output='graphviz')
 
 # %% Impute categorical values
 import bnlearn as bn
@@ -860,9 +860,9 @@ bn.check_model(CPD)
 bn.check_model(model)
 
 bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
-bn.plot(model, interactive=False)
+bn.plot(model, output='static')
 
-dot = bn.plot_graphviz(model)
+dot = bn.plot(model, output='graphviz')
 
 
 # %% Issue #103
@@ -911,7 +911,7 @@ for cii_test in cii_tests:
 
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_label='logp')
+dot = bn.plot(model, edge_label='logp', output='graphviz')
 dot
 
 # %%
@@ -938,7 +938,7 @@ model = bn.independence_test(model, df, test='chi_square', prune=False)
 bn.plot(model, edge_label='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_label='logp')
+dot = bn.plot(model, edge_label='logp', output='graphviz')
 dot
 
 # %%
@@ -956,7 +956,7 @@ bn.plot(model, edge_label='logp');
 # bn.plot(model, output='interactive')
 
 # Dot graph
-dotgraph = bn.plot_graphviz(model)
+dotgraph = bn.plot(model, output='graphviz')
 dotgraph
 # Create pdf
 # dotgraph.view(filename=r'c:/temp/dotgraph')
@@ -967,9 +967,9 @@ bn.plot(model2)
 bn.plot(model2, edge_label='logp');
 
 # Dot graph
-dotgraph2 = bn.plot_graphviz(model2)
+dotgraph2 = bn.plot(model2, output='graphviz')
 dotgraph2
-dotgraph2 = bn.plot_graphviz(model2, edge_label='logp')
+dotgraph2 = bn.plot(model2, edge_label='logp', output='graphviz')
 dotgraph2
 # dotgraph.view(filename=r'c:/temp/dotgraph2')
 
@@ -1065,9 +1065,9 @@ print(model['causal_order'])
 
 # We can draw a causal graph by utility funciton.
 G = bn.plot(model, pos=G['pos'])
-bn.plot_graphviz(model)
+bn.plot(model, output='graphviz')
 bn.plot(model, edge_label='logp', pos=G['pos'])
-bn.plot_graphviz(model, edge_label='logp')
+bn.plot(model, edge_label='logp', output='graphviz')
 
 # %% Continous and mixed
 import bnlearn as bn
@@ -1085,7 +1085,7 @@ model = bn.independence_test(model, df)
 
 bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_label='logp')
+dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph
 
 # Parameter learning
@@ -1174,7 +1174,7 @@ model = bn.independence_test(model, df)
 
 bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_label='logp')
+dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph
 
 
@@ -1214,13 +1214,13 @@ bn.plot(model, edge_label='logp');
 # bn.plot(model, output='interactive')
 
 
-dotgraph = bn.plot_graphviz(model)
+dotgraph = bn.plot(model, output='graphviz')
 dotgraph
 # Create pdf
 if dotgraph is not None:
     	dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_ICALiNGAM')
 
-dotgraph2 = bn.plot_graphviz(model, edge_label='logp')
+dotgraph2 = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph2
 
 # Parameter learning
@@ -1236,11 +1236,11 @@ model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam 
 model2 = bn.independence_test(model, df, prune=False)
 
 bn.plot(model)
-dotgraph = bn.plot_graphviz(model)
+dotgraph = bn.plot(model, output='graphviz')
 dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_pvalue')
 
 bn.plot(model2)
-dotgraph = bn.plot_graphviz(model2)
+dotgraph = bn.plot(model2, output='graphviz')
 dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_pvalue3')
 
 
@@ -1357,7 +1357,7 @@ model = bn.parameter_learning.fit(DAG, df)
 
 # Print CPDs
 # CPD = bn.print_CPD(model)
-bn.plot(model, interactive=False)
+bn.plot(model, output='static')
 
 bn.plot(model, output='interactive')
 
@@ -1378,13 +1378,13 @@ _, dfnum = bn.df2onehot(df)
 model = bn.structure_learning.fit(dfnum)
 
 # Plot
-G = bn.plot(model, interactive=False)
+G = bn.plot(model, output='static')
 
 # Compute edge strength with the chi_square test statistic
 model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 
 # Plot
-G = bn.plot(model, interactive=False)
+G = bn.plot(model, output='static')
 # 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'graphviz_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
 # bn.plot(model, output='interactive', pos=G['pos'])
 
@@ -1407,14 +1407,14 @@ model = bn.structure_learning.fit(df, scoretype='bic', methodtype='hc')
 model = bn.structure_learning.fit(df, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
-DAG = bn.plot(model, interactive=False)
+DAG = bn.plot(model, output='static')
 bn.plot(model, output='interactive', node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
-bn.plot(model, interactive=False, pos=DAG['pos'])
+bn.plot(model, output='static', pos=DAG['pos'])
 bn.plot(model, output='interactive', node_color='#000000')
 
 # Print the CPDs
@@ -1507,7 +1507,7 @@ G = bn.plot(DAG, output='interactive')
 model = bn.parameter_learning.fit(DAG, df)
 # Plot
 G = bn.plot(model)
-graphiz = bn.plot_graphviz(model)
+graphiz = bn.plot(model, output='graphviz')
 graphiz.view()
 G = bn.plot(model, output='interactive')
 
@@ -1567,7 +1567,7 @@ bn.check_model(CPD)
 bn.check_model(model)
 
 bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
-bn.plot(model, interactive=False)
+bn.plot(model, output='static')
 
 
 # %% Issue 88 (fixed)
@@ -1675,7 +1675,7 @@ DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
 bn.plot(DAG, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 # bn.plot(DAG, output='interactive')
-# bn.plot(DAG, interactive=False)
+# bn.plot(DAG, output='static')
 
 
 # %% Import examples
@@ -2017,7 +2017,7 @@ df = bn.vec2df(source, target, weights=weights)
 DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
 bn.plot(DAG, output='interactive')
-bn.plot(DAG, interactive=False)
+bn.plot(DAG, output='static')
 
 
 # %%
@@ -2031,7 +2031,7 @@ df = bn.vec2adjmat(raw['source'], raw['target'], raw['weight'])
 DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])))
 # Make plot
 bn.plot(DAG, output='interactive')
-bn.plot(DAG, interactive=False)
+bn.plot(DAG, output='static')
 
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, df)
@@ -2063,7 +2063,7 @@ df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
-bn.plot(model, interactive=False, node_size=10)
+bn.plot(model, output='static', node_size=10)
 
 
 # %% Check the stochastic component of bnlearn
@@ -2137,7 +2137,7 @@ assert len(model2['model_edges'])<len(model['model_edges'])
 
 # Plot
 G = bn.plot(model1, output='interactive')
-G = bn.plot(model2, interactive=False)
+G = bn.plot(model2, output='static')
 
 
 # %% Adjust some edge properties
@@ -2313,7 +2313,7 @@ node_properties['xray']['node_size']=20
 
 # Plot
 params_static={'edge_alpha': 0.6, 'arrowstyle': '->', 'arrowsize': 60}
-bn.plot(model, interactive=False, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
+bn.plot(model, output='static', node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
 # bn.plot(model, output='interactive', node_properties=node_properties, edge_properties=edge_properties, params_static=params_static);
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
@@ -2341,11 +2341,11 @@ node_properties = bn.get_node_properties(model)
 # Set color
 node_properties['xray']['node_color']='#8A0707'
 node_properties['xray']['node_size']=50
-bn.plot(model, interactive=False)
-bn.plot(model, interactive=False, node_properties=node_properties)
-bn.plot(model, interactive=False, node_properties=node_properties, params_static={'font_color': '#8A0707'})
-bn.plot(model, interactive=False, params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'times new roman', 'alpha': 0.8, 'node_shape': 'o', 'facecolor': 'white', 'font_color': 'r'})
-bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'times new roman', 'alpha': 0.8, 'node_shape': 'o', 'facecolor': 'white', 'font_color': '#000000'})
+bn.plot(model, output='static')
+bn.plot(model, output='static', node_properties=node_properties)
+bn.plot(model, output='static', node_properties=node_properties, params_static={'font_color': '#8A0707'})
+bn.plot(model, output='static', params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'times new roman', 'alpha': 0.8, 'node_shape': 'o', 'facecolor': 'white', 'font_color': 'r'})
+bn.plot(model, output='static', node_color='#8A0707', node_size=800, params_static={'width': 15, 'height': 8, 'font_size': 14, 'font_family': 'times new roman', 'alpha': 0.8, 'node_shape': 'o', 'facecolor': 'white', 'font_color': '#000000'})
 
 # Add some parameters for the interactive plot
 node_properties = bn.get_node_properties(model)
@@ -2453,7 +2453,7 @@ model = bn.structure_learning.fit(df)
 
 model = bn.independence_test(model, df)
 
-bn.plot(model, interactive=False, node_size=800)
+bn.plot(model, output='static', node_size=800)
 
 # Add some parameters for the interactive plot
 bn.plot(model, output='interactive', node_size=10, params_interactive={'height': '600px'})
