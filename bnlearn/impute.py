@@ -24,7 +24,7 @@ def knn_imputer(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', st
 def knn(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_columns=None, scaling=True):
     """Impute missing values.
 
-    Impute missing values in a DataFrame using KNN imputation for numeric columns. String columns are not included in the encoding.
+    Impute missing values in a DataFrame using KNN imputation for both numeric and categorical columns.
 
     Parameters
     ----------
@@ -73,6 +73,7 @@ def knn(df, n_neighbors=2, weights="uniform", metric='nan_euclidean', string_col
     2  27.0  55000.0  Los Angeles
 
     """
+    logger.info('Start imputation using method: KNN')
     # Set columsn to categorical or float
     df, string_columns = _typing(df, string_columns)
 
@@ -228,6 +229,7 @@ def mice(df, max_iter=10, estimator=None, string_columns=None, scaling=True):
     2  27.0  55123.7  Los Angeles
 
     """
+    logger.info('Start imputation using method: Multiple Imputation by Chained Equations (MICE)')
     # Set columsn to categorical or float
     df, string_columns = _typing(df, string_columns)
 
