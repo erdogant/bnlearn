@@ -111,8 +111,6 @@ from bnlearn.impute import knn_imputer, mice_imputer
 from bnlearn.discretize import discretize, discretize_value
 from bnlearn.learn_discrete_bayes_net import discretize_all
 from bnlearn.sampling import sampling
-from bnlearn.plot import plot_mermaid
-from bnlearn.network import compare_mermaid
 
 
 from packaging import version

@@ -250,7 +250,8 @@ def _edge_status(adjmat_diff):
 
 
 def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height=None, layout='graphviz_layout_custom',
-            scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None):
+            scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None,
+            output='static', params_interactive=None, params_mermaid=None):
     """Compare two networks and plot the differences.
 
     The figure uses the same static plot logic as bnlearn.plot (shared layout, node/edge styling,
@@ -283,6 +284,17 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
         Overrule the default node color and size.
     params_static : dict, optional
         Static plot parameters, identical to those of plot() (font_size, alpha, arrowstyle, dpi, ...).
+    output : str
+        'static': Static matplotlib plot (default).
+        'interactive': Interactive web-based graph (d3blocks flowgraph). Edge status is shown by color,
+        dashed line and edge label (extra / missing / reversed); the layout is made by d3blocks.
+        'mermaid': Mermaid code (flowchart), printed and optionally saved. Use compare_mermaid() to get the code as a string.
+        The confusion matrix is shown for every output type (when showfig=True).
+    params_interactive : dict, optional
+        Settings for output='interactive', same keys as in plot() ('direction', 'layout', 'filepath', 'notebook',
+        'dark_mode', 'figsize', 'animate', 'show_side_panel', 'show_top_panel', 'bgcolor').
+    params_mermaid : dict, optional
+        Settings for output='mermaid': {'direction': 'TB', 'legend': True, 'filepath': None, 'show': True}.
 
     Returns
     -------
@@ -312,33 +324,38 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
     )
 
     if showfig:
-        _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height,
-                      node_color=node_color, node_size=node_size, params_static=params_static)
+        if output == 'static':
+            _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height,
+                          node_color=node_color, node_size=node_size, params_static=params_static)
+        elif output == 'interactive':
+            _plot_compare_interactive(adjmat_diff, title=title, node_color=node_color, node_size=node_size,
+                                      params_interactive=params_interactive, params_static=params_static)
+        else:
+            from bnlearn.mermaid import compare_mermaid_code, write_mermaid
+            params_mermaid = {**{'direction': 'TB', 'legend': True, 'filepath': None, 'show': True}, **(params_mermaid or {})}
+            code = compare_mermaid_code(adjmat_diff, direction=params_mermaid['direction'], title=title,
+                                         legend=params_mermaid['legend'], node_color=node_color or '#ADD8E6')
+            write_mermaid(code, params_mermaid['filepath'])
+            if params_mermaid['show']:
+                print(code)
 
     # Return
     return(scores, adjmat_diff)
 
 
-# %% Plot the difference graph using the static plot logic of bnlearn.plot
-def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
-                  width=None, height=None, node_color=None, node_size=None, params_static=None):
-    # Lazy import to prevent circular imports (plot imports network).
-    from matplotlib.lines import Line2D
-    from bnlearn.plot import resolve_static_params, compute_static_layout, get_node_properties, get_edge_properties, _plot_properties, _plot_static
-
-    # Same parameter handling as plot()
-    params_static = resolve_static_params(params_static, width=width, height=height)
-    if layout is not None:
-        params_static['layout'] = layout
+# %% Shared graph and properties of the comparison (static and interactive plot)
+def _compare_properties(adjmat_diff, params_static, node_color=None, node_size=None):
+    """Graph, node and edge properties of the comparison, created with the same functions as plot()."""
+    from bnlearn.plot import get_node_properties, get_edge_properties, _plot_properties
 
     # Graph with all nodes (also isolated). Values in adjmat_diff: 1=correct, 2=extra (FP), -1=missing (FN)
     G = adjmat2graph(adjmat_diff)
 
-    # Node and edge properties, same defaults as plot()
-    # Created with the same functions as plot(), so node size/color and edge thickness are identical.
+    # Node size/color and edge thickness are identical to plot()
     model_diff = {'adjmat': adjmat_diff.astype(float)}
     node_properties = get_node_properties(model_diff, node_size=800)
     edge_properties = get_edge_properties(model_diff, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+
     # Only color and line/arrow style differ: they indicate the status of the edge.
     # correct: black solid | extra (FP): red solid | missing (FN): black dashed
     # reversed (FP and FN between the same two nodes): ONE green edge with only the arrow of the wrong
@@ -355,6 +372,24 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
         if status[edge] == 'missing':
             edge_properties[edge]['weight'] = _DASHED_WIDTH
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(G, node_properties, edge_properties, node_color, node_size)
+    return {'G': G, 'status': status, 'edge_properties': edge_properties, 'nodelist': nodelist, 'node_colors': node_colors,
+            'node_sizes': node_sizes, 'edgelist': edgelist, 'edge_colors': edge_colors, 'edge_weights': edge_weights}
+
+
+# %% Plot the difference graph using the static plot logic of bnlearn.plot
+def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
+                  width=None, height=None, node_color=None, node_size=None, params_static=None):
+    # Lazy import to prevent circular imports (plot imports network).
+    from matplotlib.lines import Line2D
+    from bnlearn.plot import resolve_static_params, compute_static_layout, _plot_static
+
+    # Same parameter handling as plot()
+    params_static = resolve_static_params(params_static, width=width, height=height)
+    if layout is not None:
+        params_static['layout'] = layout
+
+    props = _compare_properties(adjmat_diff, params_static, node_color=node_color, node_size=node_size)
+    G, edge_properties, edgelist = props['G'], props['edge_properties'], props['edgelist']
     edge_styles = [edge_properties[e]['style'] for e in edgelist]
     edge_arrowstyles = [edge_properties[e]['arrowstyle'] for e in edgelist]
 
@@ -374,9 +409,9 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
         pos.update({node: pos_fill[node] for node in missing})
 
     # Draw using the shared static plotter. Edge colors indicate the status, therefore no numeric labels.
-    fig = _plot_static(adjmat_diff, params_static, nodelist, node_colors, node_sizes, G, pos,
-                       edge_colors, edge_weights, title=title, visible=params_static['visible'],
-                       showplot=False, dpi=params_static['dpi'], edge_filter=None, edge_labels={},
+    fig = _plot_static(adjmat_diff, params_static, props['nodelist'], props['node_colors'], props['node_sizes'], G, pos,
+                       props['edge_colors'], props['edge_weights'], title=title, visible=params_static['visible'],
+                       showplot=False, dpi=params_static['dpi'], edge_label=None, edge_labels={},
                        edge_styles=edge_styles, edge_arrowstyles=edge_arrowstyles)
 
     # Legend
@@ -388,59 +423,20 @@ def _plot_compare(adjmat_true, adjmat_diff, pos=None, scale=1, layout='graphviz_
     return fig
 
 
-# %% Mermaid output of the comparison
-def compare_mermaid(adjmat_true, adjmat_pred, direction='TB', title='Network comparison', legend=True, node_color='#ADD8E6', filepath=None):
-    """Create mermaid code of the comparison of two networks.
+# %% Interactive plot of the difference graph: same code path as bn.plot(output='interactive')
+def _plot_compare_interactive(adjmat_diff, title='Network comparison', node_color=None, node_size=None, params_interactive=None, params_static=None):
+    """Interactive comparison. The edge status is shown by color, dashed line and label (same colors as the static plot)."""
+    from matplotlib.colors import to_hex
+    from bnlearn.plot import resolve_static_params, resolve_interactive_params
+    from bnlearn.plot_interactive import plot_interactive
 
-    Same edge logic as the static plot of compare(): black = correct edge, red = extra edge (false positive),
-    black dashed = missing edge (false negative), green = reversed edge (arrow in the predicted direction).
-    The nodes are declared in the order of the first input network. Mermaid positions the nodes itself
-    (automatic layout), so the node coordinates of the static plot can not be reproduced.
-
-    Parameters
-    ----------
-    adjmat_true : pd.DataFrame
-        Adjacency matrix of the true network.
-    adjmat_pred : pd.DataFrame
-        Adjacency matrix of the predicted network.
-    direction : str
-        'TB' (top-bottom, default), 'BT', 'LR' or 'RL'.
-    title : str
-        Title of the diagram.
-    legend : bool
-        Add a legend.
-    node_color : str
-        Fill color of the nodes (same default as plot()).
-    filepath : str, optional
-        Save the code to disk. '.md' saves it in a ```mermaid fence, '.mmd' (or other) saves the raw code.
-
-    Returns
-    -------
-    str
-        Mermaid code.
-
-    Examples
-    --------
-    >>> code = bn.compare_mermaid(adjmat_true, adjmat_pred, filepath='compare.md')
-    """
-    from bnlearn.mermaid import to_mermaid, write_mermaid
-
-    _, _, adjmat_diff = _diff_adjmat(adjmat_true, adjmat_pred)
-    status = _edge_status(adjmat_diff)
-
-    nodes = [{'name': node, 'color': node_color} for node in adjmat_diff.columns]
-    # Same thickness logic as the static plot: 1.5 px per unit of edge weight, missing edges are thicker.
-    width = {s: 1.5 * (_DASHED_WIDTH if s == 'missing' else 1) for s in _EDGE_STATUS_STYLE}
-    edges = [{'source': u, 'target': v, 'color': _EDGE_STATUS_STYLE[s][0], 'dashed': _EDGE_STATUS_STYLE[s][1], 'width': width[s]}
-             for (u, v), s in status.items()]
-    entries = None
-    if legend:
-        entries = [{'label': _EDGE_STATUS_LEGEND[s], 'color': _EDGE_STATUS_STYLE[s][0], 'dashed': _EDGE_STATUS_STYLE[s][1], 'width': width[s]}
-                   for s in _EDGE_STATUS_STYLE]
-
-    code = to_mermaid(nodes, edges, direction=direction, title=title, legend=entries)
-    write_mermaid(code, filepath)
-    return code
+    props = _compare_properties(adjmat_diff, resolve_static_params(params_static), node_color=node_color, node_size=node_size)
+    labels = {'correct': '', 'extra': 'extra', 'missing': 'missing', 'reversed': 'reversed'}
+    edge_style = {edge: {'color': to_hex(_EDGE_STATUS_STYLE[s][0]), 'style': 'dashed' if _EDGE_STATUS_STYLE[s][1] else 'solid', 'label': labels[s]}
+                  for edge, s in props['status'].items()}
+    params_interactive = resolve_interactive_params(params_interactive)
+    return plot_interactive({'adjmat': adjmat_diff}, params_interactive, props['nodelist'], props['node_colors'], props['node_sizes'],
+                            props['edgelist'], props['edge_colors'], props['edge_weights'], title, edge_style=edge_style)
 
 
 # %% Make graph layout

@@ -22,11 +22,22 @@ import bnlearn as bn
 try:
     from bnlearn.utils import vec2adjmat, adjmat2vec, _normalize_weights
     from bnlearn.plot_interactive import plot_interactive
-    from bnlearn.mermaid import to_mermaid, write_mermaid
 except:
     from utils import vec2adjmat, adjmat2vec, _normalize_weights
     from plot_interactive import plot_interactive
-    from mermaid import to_mermaid, write_mermaid
+
+# GLOBAL
+_EDGE_LABEL_ATTR = {'weight': 'value', 'p_value': 'p_value', 'logp': 'logp'}
+OUTPUTS = ('static', 'interactive', 'mermaid')
+
+# %%
+def _resolve_output(output='static'):
+    """Validate the output type. An unknown value must not silently end up as a static plot."""
+    output = 'static' if output is None else str(output).lower()
+    if output not in OUTPUTS:
+        raise ValueError("[bnlearn] >output should be one of %s, got '%s'." % (str(OUTPUTS), output))
+    return output
+
 
 # %% Get node properties
 def get_node_properties(model, node_color='#ADD8E6', node_size=None):

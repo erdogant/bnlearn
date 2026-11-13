@@ -28,12 +28,12 @@ model = bn.independence_test(model, df, prune=True)
 #     CPDs[cpd.variable] = bn.query2df(cpd)['p']
 
 # Static plot
-G = bn.plot(model, edge_filter='logp', interactive=False)
+G = bn.plot(model, edge_label='logp', interactive=False)
 # dotgraph
-dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model, edge_label='logp')
 dotgraph
 # Interactive graph
-G = bn.plot(model, edge_filter='logp', interactive=True, params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html'})
+G = bn.plot(model, edge_label='logp', output='interactive', params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html'})
 
 
 # %%
@@ -62,8 +62,8 @@ model_cg = bn.parameter_learning.fit(model_cg, df, methodtype='cg')
 model_cg= bn.independence_test(model_cg, df, prune=True)
 
 # Visualize
-_ = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', edge_filter='logp')
-G = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', interactive=True, edge_filter='logp')
+_ = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', edge_label='logp')
+G = bn.plot(model_cg, title='Predictive Maintenance: Mixed Dataset DAG', output='interactive', edge_label='logp')
 dotgraph = bn.plot_graphviz(model_cg)
 dotgraph
 
@@ -185,12 +185,12 @@ model = bn.structure_learning.fit(df, methodtype='direct-lingam')
 
 print(model['adjmat'])
 _ = bn.plot(model)
-_ = bn.plot(model, interactive=True)
+_ = bn.plot(model, output='interactive')
 
 # model = bn.independence_test(model, df, prune=True)
-# fig = bn.plot(model, edge_filter='weight')
+# fig = bn.plot(model, edge_label='weight')
 
-# dotgraph = bn.plot_graphviz(model, edge_filter='weight')
+# dotgraph = bn.plot_graphviz(model, edge_label='weight')
 # dotgraph
 
 
@@ -290,9 +290,9 @@ model = bn.structure_learning.fit(df, methodtype='hc', scoretype=scoretype)
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_filter='logp')
+bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model, edge_label='logp')
 dotgraph
 
 # Parameter learning
@@ -350,7 +350,7 @@ model = bn.structure_learning.fit(df, start_dag=DAG)
 bn.plot(model)
 
 # Nothing is changed for the DAG. Only the CPDs are estimated now.
-# bn.compare(DAG, model)
+bn.compare(DAG, model)
 
 
 # %%
@@ -380,7 +380,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-G = bn.plot(model, interactive=True, edge_filter='logp')
+G = bn.plot(model, output='interactive', edge_label='logp')
 bn.plot_graphviz(model)
 
 #%%
@@ -413,7 +413,7 @@ for cpd in DAG.get_cpds():
 
 # Plot the DAG
 bn.plot(model)
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, output='interactive')
 #
 # q1 = bn.inference.fit(model, variables=['Wet_Grass'], evidence={'Sprinkler':0})
 # print(q1.df)
@@ -495,9 +495,9 @@ model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 
 # Plot the best DAG
-# bn.plot(model, edge_filter='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+# bn.plot(model, edge_label='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
-# dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+# dotgraph = bn.plot_graphviz(model, edge_label='logp')
 # dotgraph
 
 # Store to pdf
@@ -704,7 +704,7 @@ model = bn.fetch('asia')
 # plot ground truth
 G = bn.plot(model)
 
-Gi = bn.plot(model, interactive=True)
+Gi = bn.plot(model, output='interactive')
 
 bn.print_CPD(model)
 
@@ -859,7 +859,7 @@ CPD = bn.print_CPD(model)
 bn.check_model(CPD)
 bn.check_model(model)
 
-bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 bn.plot(model, interactive=False)
 
 dot = bn.plot_graphviz(model)
@@ -906,12 +906,12 @@ for cii_test in cii_tests:
     model = bn.independence_test(model, df, test='chi_square', prune=False)
 
     # Plot the best DAG
-    bn.plot(model, edge_filter='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+    bn.plot(model, edge_label='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
     bn.plot(model)
 
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_filter='logp')
+dot = bn.plot_graphviz(model, edge_label='logp')
 dot
 
 # %%
@@ -935,10 +935,10 @@ model = bn.structure_learning.fit(df, methodtype='hillclimbsearch', scoretype='b
 model = bn.independence_test(model, df, test='chi_square', prune=False)
 
 # Plot the best DAG
-bn.plot(model, edge_filter='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
+bn.plot(model, edge_label='logp', params_static={'maxscale': 4, 'figsize': (15, 15), 'font_size': 14, 'arrowsize': 10})
 
 # Plot using graphiviz
-dot = bn.plot_graphviz(model, edge_filter='logp')
+dot = bn.plot_graphviz(model, edge_label='logp')
 dot
 
 # %%
@@ -952,8 +952,8 @@ model = bn.structure_learning.fit(df)
 # Plot
 # bn.plot(model, params_static={'figsize': (5, 5), 'font_size': 8, 'arrowsize': 15, 'layout': 'spring_layout'}, node_size=1000)
 bn.plot(model);
-bn.plot(model, edge_filter='logp');
-# bn.plot(model, interactive=True)
+bn.plot(model, edge_label='logp');
+# bn.plot(model, output='interactive')
 
 # Dot graph
 dotgraph = bn.plot_graphviz(model)
@@ -964,12 +964,12 @@ dotgraph
 # Compute edge strength with the chi_square test statistic
 model2 = bn.independence_test(model, df, test='chi_square', prune=False)
 bn.plot(model2)
-bn.plot(model2, edge_filter='logp');
+bn.plot(model2, edge_label='logp');
 
 # Dot graph
 dotgraph2 = bn.plot_graphviz(model2)
 dotgraph2
-dotgraph2 = bn.plot_graphviz(model2, edge_filter='logp')
+dotgraph2 = bn.plot_graphviz(model2, edge_label='logp')
 dotgraph2
 # dotgraph.view(filename=r'c:/temp/dotgraph2')
 
@@ -1066,8 +1066,8 @@ print(model['causal_order'])
 # We can draw a causal graph by utility funciton.
 G = bn.plot(model, pos=G['pos'])
 bn.plot_graphviz(model)
-bn.plot(model, edge_filter='logp', pos=G['pos'])
-bn.plot_graphviz(model, edge_filter='logp')
+bn.plot(model, edge_label='logp', pos=G['pos'])
+bn.plot_graphviz(model, edge_label='logp')
 
 # %% Continous and mixed
 import bnlearn as bn
@@ -1083,9 +1083,9 @@ model = bn.structure_learning.fit(df, methodtype='pc', params_pc={'pearsonr': 'c
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_filter='logp')
+bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model, edge_label='logp')
 dotgraph
 
 # Parameter learning
@@ -1172,9 +1172,9 @@ model = bn.structure_learning.fit(df, methodtype='ex')
 # Compute edge strength
 model = bn.independence_test(model, df)
 
-bn.plot(model, edge_filter='logp')
+bn.plot(model, edge_label='logp')
 
-dotgraph = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph = bn.plot_graphviz(model, edge_label='logp')
 dotgraph
 
 
@@ -1202,7 +1202,7 @@ import bnlearn as bn
 model = bn.structure_learning.fit(df, methodtype='direct-lingam', params_lingam = {'random_state': 2})
 # model = bn.structure_learning.fit(df, methodtype='ica-lingam', params_lingam = {'random_state': 2})
 bn.plot(model)
-bn.plot(model, edge_filter='logp')
+bn.plot(model, edge_label='logp')
 
 # Compute edge strength with the chi_square test statistic
 model = bn.independence_test(model, df, prune=True)
@@ -1210,8 +1210,8 @@ model = bn.independence_test(model, df, prune=True)
 # Plot
 # bn.plot(model, params_static={'dpi': 100, 'figsize': (15, 10), 'font_size': 8, 'arrowsize': 15, 'arrowsize': 10, 'minscale': 1, 'maxscale': 5}, node_size=1000)
 bn.plot(model)
-bn.plot(model, edge_filter='logp');
-# bn.plot(model, interactive=True)
+bn.plot(model, edge_label='logp');
+# bn.plot(model, output='interactive')
 
 
 dotgraph = bn.plot_graphviz(model)
@@ -1220,7 +1220,7 @@ dotgraph
 if dotgraph is not None:
     	dotgraph.view(filename=r'c:/temp/dotgraph_bnlearn_ICALiNGAM')
 
-dotgraph2 = bn.plot_graphviz(model, edge_filter='logp')
+dotgraph2 = bn.plot_graphviz(model, edge_label='logp')
 dotgraph2
 
 # Parameter learning
@@ -1299,7 +1299,7 @@ print(model.causal_order_)
 print(model.adjacency_matrix_)
 
 make_dot(model.adjacency_matrix_, labels=labels)
-bn.plot(model, interactive=True, edge_filter='logp')
+bn.plot(model, output='interactive', edge_label='logp')
 
 
 # %% issue #98
@@ -1359,7 +1359,7 @@ model = bn.parameter_learning.fit(DAG, df)
 # CPD = bn.print_CPD(model)
 bn.plot(model, interactive=False)
 
-bn.plot(model, interactive=True)
+bn.plot(model, output='interactive')
 
 
 
@@ -1386,13 +1386,13 @@ model = bn.independence_test(model, dfnum, test='chi_square', prune=True)
 # Plot
 G = bn.plot(model, interactive=False)
 # 'spring_layout', 'planar_layout', 'shell_layout', 'spectral_layout', 'pydot_layout', 'graphviz_layout', 'circular_layout', 'spring_layout', 'random_layout', 'bipartite_layout', 'multipartite_layout',
-# bn.plot(model, interactive=True, pos=G['pos'])
+# bn.plot(model, output='interactive', pos=G['pos'])
 
 # Parameter learning
 model = bn.parameter_learning.fit(model, dfnum)
 
 # Plot
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, output='interactive')
 
 
 # %% compute causalities
@@ -1408,14 +1408,14 @@ model = bn.structure_learning.fit(df, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
 DAG = bn.plot(model, interactive=False)
-bn.plot(model, interactive=True, node_color='#000000')
+bn.plot(model, output='interactive', node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
 bn.plot(model, interactive=False, pos=DAG['pos'])
-bn.plot(model, interactive=True, node_color='#000000')
+bn.plot(model, output='interactive', node_color='#000000')
 
 # Print the CPDs
 bn.print_CPD(model)
@@ -1456,8 +1456,8 @@ from datazets import datazets
 df = datazets.get(url=r'https://raw.githubusercontent.com/washingtonpost/data-police-shootings/master/v2/fatal-police-shootings-data.csv', overwrite=True)
 del df['id']
 del df['name']
-del df['county']
-del df['state']
+# del df['county']
+# del df['state']
 del df['date']
 del df['agency_ids']
 del df['latitude']
@@ -1466,31 +1466,55 @@ del df['race_source']
 
 # dfhot, dfnum = bn.df2onehot(df, y_min=2)
 
+# Impute missing values
+df.isna().sum()
+df = bn.impute.mice(df)
+# df = df.dropna()
+df.isna().sum()
+
+# =============================================================================
+# HNET
+# =============================================================================
+from hnet import hnet
+hn = hnet()
+hn.association_learning(df)
+hn.plot()
+hn.d3graph()
+
+# =============================================================================
+# BAYES
+# =============================================================================
 # Structure learning
-DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic') # hillclimbsearch
+DAG = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
 
 # Constrained based
 # DAG = bn.structure_learning.fit(df, methodtype='cs')
-
 # Set class node (endpoint)
-df = df.dropna()
-DAG = bn.structure_learning.fit(df, methodtype='tan', class_node='threat_type')
+# DAG = bn.structure_learning.fit(df, methodtype='tan', class_node='threat_type')
 
 # Plot
 G = bn.plot(DAG)
-G = bn.plot(DAG, interactive=True)
+G = bn.plot(DAG, output='interactive')
 
 # Structure learning
 DAG = bn.independence_test(DAG, df, prune=True)
 
 # Plot
 G = bn.plot(DAG)
-G = bn.plot(DAG, interactive=True)
+G = bn.plot(DAG, output='interactive')
 
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, df)
+# Plot
+G = bn.plot(model)
+graphiz = bn.plot_graphviz(model)
+graphiz.view()
+G = bn.plot(model, output='interactive')
+
 # Make inference
 q1 = bn.inference.fit(model, variables=['threat_type'], evidence={'flee_status': 'foot'})
+q1 = bn.inference.fit(model, variables=['threat_type'], do={'flee_status': 'foot'})
+
 q1 = bn.inference.fit(model, variables=['gender'], evidence={'threat_type': 'accident', 'armed_with': 'gun'})
 
 # No connection in the DAG, thus the evidence should not influence the outcome
@@ -1503,6 +1527,8 @@ print(q1.df)
 
 # Create test dataset
 Xtest = bn.sampling(model, n=100)
+G = bn.plot(model, output='mermaid')
+G['mermaid']
 
 
 # %%
@@ -1512,7 +1538,7 @@ model = bn.fetch('asia')
 # plot ground truth
 G = bn.plot(model)
 
-Gi = bn.plot(model, interactive=True)
+Gi = bn.plot(model, output='interactive')
 
 bn.print_CPD(model)
 
@@ -1540,7 +1566,7 @@ CPD = bn.print_CPD(model)
 bn.check_model(CPD)
 bn.check_model(model)
 
-bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 bn.plot(model, interactive=False)
 
 
@@ -1629,7 +1655,7 @@ CPD = bn.print_CPD(model)
 bn.check_model(CPD) # Input should be model
 bn.check_model(model)
 
-bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
 
 # %%
 import bnlearn as bn
@@ -1647,8 +1673,8 @@ df = bn.adjmat2vec(adjmat)
 # Make DAG
 DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
-bn.plot(DAG, interactive=True, params_interactive={'filepath': r'c:/temp/bnlearn.html'})
-# bn.plot(DAG, interactive=True)
+bn.plot(DAG, output='interactive', params_interactive={'filepath': r'c:/temp/bnlearn.html'})
+# bn.plot(DAG, output='interactive')
 # bn.plot(DAG, interactive=False)
 
 
@@ -1687,7 +1713,7 @@ model_mle = bn.parameter_learning.fit(DAG, df_disc)
 
 # Make plot
 bn.plot(model_mle)
-bn.plot(model_mle, interactive=True)
+bn.plot(model_mle, output='interactive')
 # bn.independence_test(model, df)
 
 print(model_mle["model"].get_cpds("mpg"))
@@ -1726,11 +1752,11 @@ edge_properties[('Cloudy', 'Rain')]['weight']=5
 G = bn.plot(model,
             node_properties=node_properties,
             edge_properties=edge_properties,
-            interactive=True,
+            output='interactive',
             params_interactive={'notebook': False},
             )
 
-# G = bn.plot(model, interactive=True, params_interactive={'notebook': True}, node_properties=node_properties, edge_properties=edge_properties)
+# G = bn.plot(model, output='interactive', params_interactive={'notebook': True}, node_properties=node_properties, edge_properties=edge_properties)
 
 # %%
 import bnlearn as bn
@@ -1774,7 +1800,7 @@ import bnlearn as bn
 model = bn.fetch('sprinkler', with_cpt=True)
 df = bn.sampling(model, n=1000, methodtype='bayes')
 fig = bn.plot(model, params_static={'visible': True})
-fig2 = bn.plot(model, interactive=True)
+fig2 = bn.plot(model, output='interactive')
 
 
 # %% Issue Mail:
@@ -1817,7 +1843,7 @@ CPD = bn.print_CPD(model)
 bn.check_model(CPD) # Input should be model
 bn.check_model(model)
 
-bn.plot(model, interactive=True)
+bn.plot(model, output='interactive')
 
 # %%
 import bnlearn as bn
@@ -1833,7 +1859,7 @@ df = bn.fetch(name='asia', as_dataframe=True)
 model = bn.structure_learning.fit(df)
 # Make plot
 G = bn.plot(model)
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, output='interactive')
 
 # %% Issue MAIL: Store CPDs after printing.
 import bnlearn as bn
@@ -1990,7 +2016,7 @@ df = bn.vec2df(source, target, weights=weights)
 # Make DAG
 DAG = bn.make_DAG(list(zip(source, target)))
 # Make plot
-bn.plot(DAG, interactive=True)
+bn.plot(DAG, output='interactive')
 bn.plot(DAG, interactive=False)
 
 
@@ -2004,7 +2030,7 @@ df = bn.vec2adjmat(raw['source'], raw['target'], raw['weight'])
 # Make the actual Bayesian DAG
 DAG = bn.make_DAG(list(zip(raw['source'], raw['target'])))
 # Make plot
-bn.plot(DAG, interactive=True)
+bn.plot(DAG, output='interactive')
 bn.plot(DAG, interactive=False)
 
 # Parameter learning
@@ -2014,7 +2040,7 @@ DAG_learned = bn.structure_learning.fit(df.iloc[:, 0:50])
 # Keep only significant edges
 DAG_learned = bn.independence_test(DAG_learned, df, prune=True)
 # Plot
-bn.plot(DAG_learned, interactive=True)
+bn.plot(DAG_learned, output='interactive')
 
 fig_properties = bn.plot(model, params_static={'layout':'spectral_layout'})
 fig_properties = bn.plot(model, params_static={'layout':'planar_layout'})
@@ -2110,7 +2136,7 @@ assert len(model2['model_edges'])<len(model1['model_edges'])
 assert len(model2['model_edges'])<len(model['model_edges'])
 
 # Plot
-G = bn.plot(model1, interactive=True)
+G = bn.plot(model1, output='interactive')
 G = bn.plot(model2, interactive=False)
 
 
@@ -2123,7 +2149,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 # Make plot
 bn.plot(model)
-bn.plot(model, interactive=True, params_interactive={'filepath': r'c:/temp/output.html'})
+bn.plot(model, output='interactive', params_interactive={'filepath': r'c:/temp/output.html'})
 
 # %% Adjust some edge properties
 # Load asia DAG
@@ -2288,7 +2314,7 @@ node_properties['xray']['node_size']=20
 # Plot
 params_static={'edge_alpha': 0.6, 'arrowstyle': '->', 'arrowsize': 60}
 bn.plot(model, interactive=False, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static)
-# bn.plot(model, interactive=True, node_properties=node_properties, edge_properties=edge_properties, params_static=params_static);
+# bn.plot(model, output='interactive', node_properties=node_properties, edge_properties=edge_properties, params_static=params_static);
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
@@ -2298,7 +2324,7 @@ df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
-bn.plot(model, interactive=True, node_size=10)
+bn.plot(model, output='interactive', node_size=10)
 
 
 # %% Coloring networks
@@ -2325,12 +2351,12 @@ bn.plot(model, interactive=False, node_color='#8A0707', node_size=800, params_st
 node_properties = bn.get_node_properties(model)
 node_properties['xray']['node_color']='#8A0707'
 node_properties['xray']['node_size']=50
-bn.plot(model, interactive=True)
-bn.plot(model, interactive=True, node_properties=node_properties)
-bn.plot(model, interactive=True, node_color='#8A0707')
-bn.plot(model, interactive=True, node_size=5)
-bn.plot(model, interactive=True, node_properties=node_properties, node_size=20)
-bn.plot(model, interactive=True, params_interactive={'height': '800px', 'width': '70%', 'layout': None, 'bgcolor': '#0f0f0f0f'})
+bn.plot(model, output='interactive')
+bn.plot(model, output='interactive', node_properties=node_properties)
+bn.plot(model, output='interactive', node_color='#8A0707')
+bn.plot(model, output='interactive', node_size=5)
+bn.plot(model, output='interactive', node_properties=node_properties, node_size=20)
+bn.plot(model, output='interactive', params_interactive={'height': '800px', 'width': '70%', 'layout': None, 'bgcolor': '#0f0f0f0f'})
 
 
 # %% Save and load trained models
@@ -2430,10 +2456,10 @@ model = bn.independence_test(model, df)
 bn.plot(model, interactive=False, node_size=800)
 
 # Add some parameters for the interactive plot
-bn.plot(model, interactive=True, node_size=10, params_interactive={'height': '600px'})
+bn.plot(model, output='interactive', node_size=10, params_interactive={'height': '600px'})
 
 # Add more parameters for the interactive plot
-bn.plot(model, interactive=True, node_size=10, params_interactive={'height': '800px', 'width': '70%', 'notebook': False, 'heading': 'bnlearn causal diagram', 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'})
+bn.plot(model, output='interactive', node_size=10, params_interactive={'height': '800px', 'width': '70%', 'notebook': False, 'heading': 'bnlearn causal diagram', 'layout': None, 'font_color': False, 'bgcolor': '#ffffff'})
 
 # %% TAN : Tree-augmented Naive Bayes (TAN)
 # https://pgmpy.org/examples/Structure%20Learning%20with%20TAN.html
@@ -2442,8 +2468,8 @@ df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df)
 # bn.plot(model)
-bn.plot(model, interactive=True)
-# bn.plot(model, interactive=True, params = {'height':'800px'})
+bn.plot(model, output='interactive')
+# bn.plot(model, output='interactive', params = {'height':'800px'})
 
 
 # %% Large dataset
@@ -2473,7 +2499,7 @@ df = bn.fetch(as_dataframe=True)
 # Structure learning
 model = bn.structure_learning.fit(df, methodtype='tan', root_node='Cloudy', class_node='Rain')
 bn.plot(model)
-bn.plot(model, interactive=True, node_size=10)
+bn.plot(model, output='interactive', node_size=10)
 
 # %% Download example
 examples = ['titanic', 'sprinkler', 'alarm', 'andes', 'asia', 'sachs', 'water', 'miserables']
@@ -2691,13 +2717,13 @@ model = bn.structure_learning.fit(df, scoretype='bic', methodtype='hc')
 model = bn.structure_learning.fit(df, scoretype='k2', methodtype='hc')
 
 # Plot the DAG
-bn.plot(model, interactive=True, node_color='#000000')
+bn.plot(model, output='interactive', node_color='#000000')
 
 # Test for independence
 model = bn.independence_test(model, df, prune=False)
 
 # Plot the DAG
-bn.plot(model, interactive=True, node_color='#000000')
+bn.plot(model, output='interactive', node_color='#000000')
 # Print the CPDs
 bn.print_CPD(model)
 # Comparison
@@ -2735,7 +2761,7 @@ model = bn.structure_learning.fit(df)
 # Structure learning of sampled dataset
 model_sl = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic')
 # Plot based on structure learning of sampled data
-bn.plot(model_sl, pos=G['pos'], interactive=True, params_interactive={'height': '800px'})
+bn.plot(model_sl, pos=G['pos'], output='interactive', params_interactive={'height': '800px'})
 # Compare networks and make plot
 bn.compare(model, model_sl, pos=G['pos'])
 
@@ -2802,7 +2828,7 @@ G = bn.plot(model2)
 
 # Plot
 G = bn.plot(model)
-G = bn.plot(model, interactive=True)
+G = bn.plot(model, output='interactive')
 bn.print_CPD(model_update)
 
 
@@ -2845,7 +2871,7 @@ dfnum.loc[0:50, 'Survived'] = 2
 DAG = bn.structure_learning.fit(dfnum, methodtype='hc', black_list=['Embarked', 'Parch', 'Name'], bw_list_method='edges')
 # Plot
 G = bn.plot(DAG)
-G = bn.plot(DAG, interactive=True)
+G = bn.plot(DAG, output='interactive')
 # Parameter learning
 model = bn.parameter_learning.fit(DAG, dfnum)
 # Make inference
