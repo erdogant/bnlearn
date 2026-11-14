@@ -107,6 +107,7 @@ Contents
   :caption: Structure learning
 
   Structure learning
+  hnet_skeleton
 
 
 .. toctree::

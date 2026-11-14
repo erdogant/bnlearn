@@ -6,12 +6,22 @@ import bnlearn as bn
 from hnet import hnet
 
 df = bn.fetch(name='sprinkler', as_dataframe=True)
-df = bn.impute.mice(df)
-model = bn.structure_learning.fit(df, methodtype='hc', skeleton='hnet', params_hnet={'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'})
+# df = bn.impute.mice(df)
+# model = bn.structure_learning.fit(df, methodtype='hc', skeleton='hnet', params_hnet={'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'})
 model = bn.structure_learning.fit(df)
 
-bn.plot(model)
+G = bn.plot(model, params_static={'layout': 'graphviz_layout_custom'})
+D = bn.plot(model, output='graphviz')
+M = bn.plot(model, output='mermaid')
+H = bn.plot(model, output='interactive', params_interactive={'showfig': False})
 
+ # 'adjmat': target     Cloudy  Sprinkler   Rain  Wet_Grass
+ # source                                        
+ # Cloudy      False      False   True      False
+ # Sprinkler    True      False  False       True
+ # Rain        False      False  False       True
+ # Wet_Grass   False      False  False      False,
+ 
 # %%
 
 import bnlearn as bn
@@ -396,7 +406,7 @@ model = bn.structure_learning.fit(df)
 model = bn.independence_test(model, df, test='chi_square', prune=True)
 model = bn.parameter_learning.fit(model, df)
 
-G = bn.plot(model, output='interactive', edge_label='logp')
+G = bn.plot(model, output='static', edge_label='logp')
 bn.plot(model, output='graphviz')
 
 #%%

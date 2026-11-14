@@ -467,10 +467,8 @@ def _hnet_skeleton(df, params_hnet):
     Description
     -----------
     HNET tests for associations between categorical-categorical and categorical-numeric variable pairs, and
-    combines the p-values per variable pair using Fishers method (``simmatP_cat``). The p-values are converted to -log10(P)
-    here, and p=0 (underflow, a very strong association) is set to 1e-323 as hnet does at label level. ``simmatLogP_cat``
-    is not used because hnet replaces its infinite values by the maximum of the other finite values in the column,
-    which can be 0, and that removes the strongest associations.
+    combines the p-values per variable pair using Fishers method. The -log10(P) values (``simmatLogP_cat``) are used.
+    This requires a version of hnet in which very small p-values are not capped or removed in ``simmatLogP_cat``.
     HNET has no test for numeric-numeric pairs; these are tested here with the Pearson correlation test
     (marginal, without conditioning) and corrected using the same multiple test correction.
     The association of a pair is the maximum -log10(P) of both directions, i.e., the pair is part of the skeleton if
@@ -512,17 +510,11 @@ def _hnet_skeleton(df, params_hnet):
     # Categorical-categorical and categorical-numeric pairs. HNET requires at least one categorical variable.
     if len(num_cols) < len(cols):
         logger.info('Compute skeleton with HNET across [%d] variables.' %(len(cols)))
-        logp_hnet = hn.association_learning(df.copy()).get('simmatLogP_cat', logp)
-
-        # Check returned variables
-        unknown = (set(logp_hnet.index) | set(logp_hnet.columns)) - set(cols)
-        if len(unknown) > 0:
-            logger.warning('The not overlapping variables by HNET are removed: %s' % unknown)
-
-        # Keep only variables present in df
-        logp_hnet = logp_hnet.loc[logp_hnet.index.isin(cols), logp_hnet.columns.isin(cols)]
-        # Insert HNET results into the complete matrix
-        logp.loc[logp_hnet.index, logp_hnet.columns] = logp_hnet.values
+        logp_cat = hn.association_learning(df.copy())['simmatLogP_cat']
+        unknown = (set(logp_cat.index) | set(logp_cat.columns)) - set(cols)
+        if len(unknown) > 0: raise ValueError('[bnlearn] >HNET returned variables that are not in the dataframe: %s' %(unknown))
+        # HNET drops variables without any association (dropna=True); these keep logp=0 and become isolated nodes.
+        logp.loc[logp_cat.index, logp_cat.columns] = logp_cat.fillna(0).values
 
     # Numeric-numeric pairs.
     pairs = list(itertools.combinations(num_cols, 2))
