@@ -23,7 +23,6 @@ H = bn.plot(model, output='interactive', params_interactive={'showfig': False})
  # Wet_Grass   False      False  False      False,
  
 # %%
-
 import bnlearn as bn
 df = bn.fetch(name='titanic', as_dataframe=True)
 df.to_csv(r'd:\temp\titanic.csv', index=False)
