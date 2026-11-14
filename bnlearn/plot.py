@@ -68,7 +68,8 @@ def plot(model,
              # d3graph
              'minmax_distance': [50, 100],
              'font_color': None,
-             'show_slider': True},
+             'show_slider': True,
+             'showfig': True},
          params_mermaid=None,
          ):
     """
@@ -180,7 +181,7 @@ def plot(model,
 
     nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, edge_p_value, edge_value =  _plot_properties(G, node_properties, edge_properties, node_color, node_size)
     if output == 'interactive':
-        fig = plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=edge_properties, edge_label=edge_label, return_mermaid=False, showfig=True)
+        fig = plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=edge_properties, edge_label=edge_label, return_mermaid=False, showfig=params_interactive['showfig'])
     elif output == 'mermaid':
         out['mermaid'] = plot_interactive(model, params_interactive, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, title, edge_properties=edge_properties, edge_label=edge_label, return_mermaid=True, showfig=False)
     else:
@@ -614,6 +615,15 @@ def hierarchical_layout(G, scale=1, n_passes=4):
             best_c = c
             best = [l[:] for l in ordered]
 
+    # Deterministic micro-offset breaks exact collinearity of long edges
+    # that would otherwise be drawn exactly on top of intermediate nodes.
+    # The offset is tiny relative to inter-node spacing, so visual order and
+    # crossing minimisation are preserved.
+    import hashlib
+    def _node_x_offset(node, scale, max_offset=0.04):
+        h = int(hashlib.md5(str(node).encode('utf-8')).hexdigest()[:8], 16)
+        return ((h % 1000) / 999.0 - 0.5) * 2 * max_offset * scale
+
     pos = {}
     for layer_idx, layer in enumerate(best):
         n = len(layer)
@@ -621,9 +631,19 @@ def hierarchical_layout(G, scale=1, n_passes=4):
              if n_layers > 1 else 0.0)
         for i, node in enumerate(layer):
             x = ((-1.0 + 2.0 * i / (n - 1)) * scale if n > 1 else 0.0)
+            x += _node_x_offset(node, scale)          # <-- the actual fix
             pos[node] = np.array([x, y])
 
     return pos
+    # pos = {}
+    # for layer_idx, layer in enumerate(best):
+    #     n = len(layer)
+    #     y = ((1.0 - 2.0 * layer_idx / (n_layers - 1)) * scale
+    #          if n_layers > 1 else 0.0)
+    #     for i, node in enumerate(layer):
+    #         x = ((-1.0 + 2.0 * i / (n - 1)) * scale if n > 1 else 0.0)
+    #         pos[node] = np.array([x, y])
+    # return pos
 
 
 # %% Shared helpers (static plot and mermaid)
