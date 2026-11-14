@@ -10,6 +10,7 @@
 import logging
 logger = logging.getLogger("bnlearn")
 
+import itertools
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +18,7 @@ import matplotlib.pyplot as plt
 # from pgmpy.estimators import LogLikelihoodCondGauss, AICCondGauss, BICCondGauss
 from pgmpy.estimators import ExhaustiveSearch, HillClimbSearch, TreeSearch
 from pgmpy.estimators import AIC, BDeu, BDs, BIC, K2, StructureScore
+from pgmpy.base import DAG
 from pgmpy.causal_discovery import ExpertKnowledge
 from pgmpy.models import NaiveBayes
 # from pgmpy import causal_discovery
@@ -125,6 +127,8 @@ def fit(df,
         return_all_dags=False,
         params_lingam = {'random_state': None, 'prior_knowledge': None, 'apply_prior_knowledge_softly': False, 'measure': 'pwling'},
         params_pc = {'ci_test': 'chi_square', 'alpha': 0.05},
+        skeleton=None,
+        params_hnet = {'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'},
         n_jobs=-1,
         ):
     """Structure learning fit model.
@@ -223,6 +227,22 @@ def fit(df,
         * 'ci_test': 'chi_square', 'pearsonr', 'g_sq', 'log_likelihood', 'freeman_tuckey', 'modified_log_likelihood', 'neyman', 'cressie_read', 'power_divergence'
         * 'alpha': 0.05
 
+    skeleton : str or None, (default : None)
+        Restrict the search space of the score-based search to a skeleton (undirected graph).
+        Only in case of methodtype='hc'.
+            * None   : No skeleton; every edge can be added by the search.
+            * 'hnet' : The skeleton is derived with HNET (https://github.com/erdogant/hnet), which tests for associations
+                       between categorical-categorical and categorical-numeric variable pairs. Numeric-numeric pairs
+                       can not be tested by HNET and are tested using the Pearson correlation test instead.
+                       Edges are only added to the DAG if they are part of the skeleton, and their direction is
+                       determined by the score. Requires: <pip install "hnet>=1.3.2">
+    params_hnet : dict: {'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'}
+        Only used when skeleton='hnet'. All keys are passed to ``hnet.hnet`` (e.g., 'perc_min_num', 'dtypes'), except
+        that k=1 is always used because combinatoric features are not variables of the DAG.
+        * 'alpha': Variable pairs are part of the skeleton if the (multiple-test corrected) p-value <= alpha.
+        * 'y_min': Minimum number of samples in a group.
+        * 'multtest': Multiple test correction method. The numeric-numeric tests are corrected with the same method.
+
     Returns
     -------
     dict with keys:
@@ -231,6 +251,7 @@ def fit(df,
         'adjmat' : Adjacency matrix
         'config' : Configurations
         'structure_scores' : Structure scores (the lower the better)
+        'skeleton' : Only if skeleton is used. Dict with 'edges' (undirected), 'adjmat' and 'logp' (-log10(P) per variable pair).
 
     Examples
     --------
@@ -268,6 +289,14 @@ def fit(df,
 
     Examples
     --------
+    >>> # Hill climbing within a skeleton that is derived with HNET
+    >>> model = bn.fetch('asia')
+    >>> df = bn.sampling(model, n=10000)
+    >>> model_sl = bn.structure_learning.fit(df, methodtype='hc', skeleton='hnet')
+    >>> print(model_sl['skeleton']['edges'])
+
+    Examples
+    --------
     >>> # Model mixed data sets (both discrete and continuous variables)
     >>>
     >>> # Load DAG
@@ -294,10 +323,13 @@ def fit(df,
     # Default PC
     defaults_pc = {'ci_test': 'chi_square', 'alpha': 0.05}
     params_pc = {**defaults_pc, **params_pc}
+    # Default HNET
+    defaults_hnet = {'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'}
+    params_hnet = {**defaults_hnet, **params_hnet}
 
     out = []
     # Set config
-    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'n_jobs': n_jobs}
+    config = {'method': methodtype, 'scoring': scoretype, 'black_list': black_list, 'white_list': white_list, 'bw_list_method': bw_list_method, 'start_dag': start_dag, 'max_indegree': max_indegree, 'tabu_length': tabu_length, 'epsilon': epsilon, 'max_iter': max_iter, 'root_node': root_node, 'class_node': class_node, 'fixed_edges': fixed_edges, 'return_all_dags': return_all_dags, 'skeleton': skeleton, 'params_hnet': params_hnet, 'n_jobs': n_jobs}
     # Make some checks
     config = _make_checks(df, config)
     # Make sure columns are of type string
@@ -327,19 +359,27 @@ def fit(df,
 
     # HillClimbSearch
     if config['method']=='hc' or config['method']=='hillclimbsearch':
+        black_list_hc, white_list_hc, bw_list_method_hc = config['black_list'], config['white_list'], bw_list_method
+        skeleton_out = None
+        if config['skeleton']=='hnet':
+            # The skeleton is computed on the remaining nodes (after optional filtering on nodes).
+            skeleton_out = _hnet_skeleton(df, params_hnet)
+            black_list_hc, white_list_hc, bw_list_method_hc = _skeleton_to_search_space(skeleton_out['edges'], config)
+        # Now run HC
         out = _hillclimbsearch(df,
                                scoretype=config['scoring'],
-                               black_list=config['black_list'],
-                               white_list=config['white_list'],
+                               black_list=black_list_hc,
+                               white_list=white_list_hc,
                                start_dag=config['start_dag'],
                                max_indegree=config['max_indegree'],
                                tabu_length=config['tabu_length'],
-                               bw_list_method=bw_list_method,
+                               bw_list_method=bw_list_method_hc,
                                epsilon=config['epsilon'],
                                max_iter=config['max_iter'],
                                fixed_edges=config['fixed_edges'],
                                n_jobs=config['n_jobs'],
                                )
+        if skeleton_out is not None: out['skeleton'] = skeleton_out
 
     # Constraint-based Structure Learning
     if config['method']=='cs' or config['method']=='constraintsearch' or config['method']=='pc':
@@ -389,6 +429,8 @@ def _make_checks(df, config):
         config['black_list'] = None
 
     if (config['method']!='hc') and (config['bw_list_method']=='edges'): raise Exception('[bnlearn] >The "bw_list_method=%s" does not work with "methodtype=%s"' %(config['bw_list_method'], config['method']))
+    if config['skeleton'] not in (None, 'hnet'): raise Exception('[bnlearn] >"skeleton=%s" is invalid. Choose from: None, "hnet".' %(str(config['skeleton'])))
+    if (config['skeleton'] is not None) and (config['method'] not in ('hc', 'hillclimbsearch')): raise Exception('[bnlearn] >The "skeleton=%s" only works with "methodtype=hc" and not with "methodtype=%s"' %(config['skeleton'], config['method']))
     if (config['method']=='tan') and (config['class_node'] is None): raise Exception('[bnlearn] >The treeSearch method TAN requires setting the <class_node> parameter: "%s"' %(str(config['class_node'])))
     if ((config['method']=='nb') | (config['method']=='naivebayes')) and (config['root_node'] is None): raise Exception('[bnlearn] >The <%s> method requires setting the "root_node" parameter: "%s"' %(config['method'], str(config['class_node'])))
 
@@ -416,6 +458,109 @@ def _make_checks(df, config):
     if (config['class_node'] is not None) and config['method']!='tan':
         logger.warning('Warning: max_indegree only works in case of methodtype="tan"')
     return config
+
+
+# %% Skeleton
+def _hnet_skeleton(df, params_hnet):
+    """Derive an undirected skeleton using HNET.
+
+    Description
+    -----------
+    HNET tests for associations between categorical-categorical and categorical-numeric variable pairs, and
+    combines the p-values per variable pair using Fishers method (``simmatP_cat``). The p-values are converted to -log10(P)
+    here, and p=0 (underflow, a very strong association) is set to 1e-323 as hnet does at label level. ``simmatLogP_cat``
+    is not used because hnet replaces its infinite values by the maximum of the other finite values in the column,
+    which can be 0, and that removes the strongest associations.
+    HNET has no test for numeric-numeric pairs; these are tested here with the Pearson correlation test
+    (marginal, without conditioning) and corrected using the same multiple test correction.
+    The association of a pair is the maximum -log10(P) of both directions, i.e., the pair is part of the skeleton if
+    either direction is significant: HNET tests numeric-categorical pairs in one direction only.
+
+    Parameters
+    ----------
+    df : pd.DataFrame()
+        Input dataframe. It is not modified.
+    params_hnet : dict
+        Parameters for hnet.hnet. k=1 is always used.
+
+    Returns
+    -------
+    dict with keys:
+        'edges' : list of undirected edges as (source, target) with source before target in the column order.
+        'adjmat' : Symmetric boolean adjacency matrix.
+        'logp' : Symmetric -log10(P) matrix.
+
+    """
+    try:
+        from hnet import hnet
+    except ImportError as e:
+        raise ImportError('[bnlearn] >skeleton="hnet" requires the hnet library. Try: <pip install "hnet>=1.3.2">') from e
+    import df2onehot
+    from statsmodels.stats.multitest import multipletests
+    from bnlearn.CITests import pearsonr
+
+    params = {**params_hnet, 'k': 1, 'verbose': 'warning'}
+    alpha = params.get('alpha', 0.05)
+    cols = list(df.columns)
+    logp = pd.DataFrame(0.0, index=cols, columns=cols)
+
+    # HNET modifies the input dataframe in place; give it a copy.
+    hn = hnet(**params)
+    _, dtypes = df2onehot.set_dtypes(df.copy(), dtypes=hn.dtypes, deep_extract=False, perc_min_num=hn.perc_min_num, num_if_decimal=True)
+    num_cols = [c for c, t in zip(cols, dtypes) if t == 'num']
+
+    # Categorical-categorical and categorical-numeric pairs. HNET requires at least one categorical variable.
+    if len(num_cols) < len(cols):
+        logger.info('Compute skeleton with HNET across [%d] variables.' %(len(cols)))
+        logp_hnet = hn.association_learning(df.copy()).get('simmatLogP_cat', logp)
+
+        # Check returned variables
+        unknown = (set(logp_hnet.index) | set(logp_hnet.columns)) - set(cols)
+        if len(unknown) > 0:
+            logger.warning('The not overlapping variables by HNET are removed: %s' % unknown)
+
+        # Keep only variables present in df
+        logp_hnet = logp_hnet.loc[logp_hnet.index.isin(cols), logp_hnet.columns.isin(cols)]
+        # Insert HNET results into the complete matrix
+        logp.loc[logp_hnet.index, logp_hnet.columns] = logp_hnet.values
+
+    # Numeric-numeric pairs.
+    pairs = list(itertools.combinations(num_cols, 2))
+    if len(pairs) > 0:
+        logger.info('Compute skeleton for [%d] numeric-numeric pairs with pearsonr.' %(len(pairs)))
+        pvalues = np.array([pearsonr(X=i, Y=j, Z=[], data=df, boolean=False)[1] for i, j in pairs], dtype=float)
+        pvalues = np.nan_to_num(pvalues, nan=1.0)
+        if params.get('multtest') is not None:
+            pvalues = multipletests(pvalues, method=params['multtest'])[1]
+        for (i, j), p in zip(pairs, pvalues):
+            logp.loc[i, j] = -np.log10(max(p, 1e-323))
+
+    # Symmetrize: a pair is associated if either direction is.
+    logp = pd.DataFrame(np.maximum(logp.values, logp.values.T), index=cols, columns=cols)
+    np.fill_diagonal(logp.values, 0.0)
+    adjmat = logp >= -np.log10(alpha)
+    np.fill_diagonal(adjmat.values, False)
+    adjmat.index.name, adjmat.columns.name = 'source', 'target'
+    edges = [(cols[i], cols[j]) for i, j in zip(*np.where(np.triu(adjmat.values, k=1)))]
+    logger.info('Skeleton contains [%d] edges.' %(len(edges)))
+    return {'edges': edges, 'adjmat': adjmat, 'logp': logp}
+
+
+def _skeleton_to_search_space(skeleton_edges, config):
+    """Convert skeleton edges into the search space of hillclimbsearch.
+
+    Returns black_list, white_list and bw_list_method such that only edges (in both directions) of the skeleton can be added.
+    A user defined white_list of edges is intersected with the skeleton, a black_list of edges is kept as is,
+    and fixed_edges are always allowed. Lists with nodes are already applied when filtering the dataframe.
+
+    """
+    search_space = set(skeleton_edges) | {(j, i) for i, j in skeleton_edges}
+    black_list = None
+    if config['bw_list_method']=='edges':
+        if config['white_list'] is not None: search_space &= set(map(tuple, config['white_list']))
+        black_list = config['black_list']
+    search_space |= set(map(tuple, config['fixed_edges']))
+    return black_list, sorted(search_space), 'edges'
 
 
 # %% TreeSearch methods
@@ -626,6 +771,13 @@ def _hillclimbsearch(df,
     # forbidden_edges <- black_list, search_space <- white_list, required_edges <- fixed_edges.
     expert_knowledge = None
     use_edge_lists = bw_list_method=='edges'
+    if use_edge_lists and (white_list is not None) and len(white_list)==0:
+        # An empty search space: no edge can be added. (An empty list would otherwise be seen as no restriction.)
+        logger.info('The search space is empty. Return DAG without edges.')
+        best_model = DAG()
+        best_model.add_nodes_from(df.columns)
+        out['model'] = best_model
+        return out
     if use_edge_lists and ((black_list is not None) or (white_list is not None)):
         logger.info('Filter edges based on black_list/white_list')
     if (use_edge_lists and (black_list or white_list)) or fixed_edges:

@@ -50,6 +50,8 @@ dev = [
     "pytest",
     "pytest-cov",
 ]
+# Required for structure_learning.fit(methodtype="hc", skeleton="hnet").
+hnet = ["hnet>=1.3.2"]
 
 [project.urls]
 Homepage = "https://erdogant.github.io/bnlearn"

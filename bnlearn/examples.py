@@ -1,4 +1,20 @@
 import bnlearn as bn
+bn.set_logger('info')
+
+# %% hnet + bnlearn
+import bnlearn as bn
+from hnet import hnet
+
+df = bn.fetch(name='sprinkler', as_dataframe=True)
+df = bn.impute.mice(df)
+model = bn.structure_learning.fit(df, methodtype='hc', skeleton='hnet', params_hnet={'alpha': 0.05, 'y_min': 10, 'multtest': 'holm'})
+model = bn.structure_learning.fit(df)
+
+bn.plot(model)
+
+# %%
+
+import bnlearn as bn
 df = bn.fetch(name='titanic', as_dataframe=True)
 df.to_csv(r'd:\temp\titanic.csv', index=False)
 df = bn.fetch(name='asia', as_dataframe=True)
