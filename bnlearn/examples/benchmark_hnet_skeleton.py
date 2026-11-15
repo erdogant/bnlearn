@@ -159,7 +159,7 @@ def to_rst(df_n, summary, n_samples):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     parser.add_argument('--n_networks', type=int, default=20, help='Number of random networks per sample size.')
-    parser.add_argument('--n_samples', type=int, nargs='+', default=[500, 1000, 10000], help='Sample sizes.')
+    parser.add_argument('--n_samples', type=int, nargs='+', default=[1000, 5000, 10000], help='Sample sizes.')
     parser.add_argument('--min_nodes', type=int, default=8)
     parser.add_argument('--max_nodes', type=int, default=12)
     parser.add_argument('--multtest', default='holm', help="Multiple test correction of hnet (params_hnet): 'holm', 'fdr_bh', ..., or 'none'.")
