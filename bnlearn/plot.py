@@ -635,15 +635,6 @@ def hierarchical_layout(G, scale=1, n_passes=4):
             pos[node] = np.array([x, y])
 
     return pos
-    # pos = {}
-    # for layer_idx, layer in enumerate(best):
-    #     n = len(layer)
-    #     y = ((1.0 - 2.0 * layer_idx / (n_layers - 1)) * scale
-    #          if n_layers > 1 else 0.0)
-    #     for i, node in enumerate(layer):
-    #         x = ((-1.0 + 2.0 * i / (n - 1)) * scale if n > 1 else 0.0)
-    #         pos[node] = np.array([x, y])
-    # return pos
 
 
 # %% Shared helpers (static plot and mermaid)
@@ -703,7 +694,7 @@ def _static_defaults():
             'arrowsize': 20,
             'visible': True,
             'showplot': True,
-            'dpi': 200,
+            'dpi': 125,
             }
 
 

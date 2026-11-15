@@ -335,14 +335,18 @@ def compare(model1, model2, pos=None, showfig=True, width=None, height=None, lay
     if showfig:
         if output == 'static' and side_by_side:
             # _plot_side_by_side(adjmat_true, adjmat_pred, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height, node_color=node_color, node_size=node_size, params_static=params_static, title1=title1, title2=title2)
-            fig, axes = plt.subplots(1, 2, figsize=(14, 7))
-            # Make plot 1
-            G = bn.plot(model1, edge_label=edge_label, output='static', params_static=params_static, title=title1, ax=axes[0])
-            # Make plot 2
-            bn.plot(model2, edge_label=edge_label, output='static', params_static=params_static, pos=G['pos'], title=title2, ax=axes[1])
-            # Setup figure
-            plt.tight_layout()
-            plt.show()
+            _plot_side_by_side(model1, model2, adjmat_true, adjmat_pred, pos=pos, scale=scale, layout=layout,
+                       title=title, width=width, height=height, node_color=node_color, node_size=node_size,
+                       params_static=params_static, title1=title1, title2=title2, edge_label=edge_label)
+            
+            # fig, axes = plt.subplots(1, 2, figsize=(14, 7))
+            # # Make plot 1
+            # G = bn.plot(model1, edge_label=edge_label, output='static', params_static=params_static, title=title1, ax=axes[0])
+            # # Make plot 2
+            # bn.plot(model2, edge_label=edge_label, output='static', params_static=params_static, pos=G['pos'], title=title2, ax=axes[1])
+            # # Setup figure
+            # plt.tight_layout()
+            # plt.show()
 
         elif output == 'static' and not side_by_side:
             _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height, node_color=node_color, node_size=node_size, params_static=params_static)
@@ -361,90 +365,65 @@ def compare(model1, model2, pos=None, showfig=True, width=None, height=None, lay
 
 
 # %% Side-by-side static plot: network 1 (left) and network 2 (right)
-# def _plot_side_by_side(adjmat_true, adjmat_pred, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
-#                        width=None, height=None, node_color=None, node_size=None, params_static=None, title1='DAG by model 1', title2='DAG by model 2'):
-#     """Plot network 1 (left) and network 2 (right) side-by-side with a shared layout.
+def _plot_side_by_side(model1,
+                       model2,
+                       adjmat_true,
+                       adjmat_pred,
+                       pos=None,
+                       scale=1,
+                       layout='graphviz_layout_custom',
+                       title='Network comparison',
+                       width=None,
+                       height=None,
+                       node_color=None,
+                       node_size=None,
+                       params_static=None,
+                       title1='DAG by model 1',
+                       title2='DAG by model 2',
+                       edge_label='auto',
+                       ):
+    """Plot network 1 (left) and network 2 (right) side-by-side with a shared layout.
 
-#     Edges that differ between the two networks (present in only one, or reversed) are colored red.
-#     Edges shared with the same direction keep the default edge color.
-#     """
-#     from bn.plot import resolve_static_params, compute_static_layout, get_node_properties, get_edge_properties, _plot_properties
+    Uses bn.plot for both panels so styling stays consistent with the rest of the library.
+    Edges that differ between the two networks (present in only one, or reversed) are colored red.
+    Edges shared with the same direction keep the default edge color.
+    """
+    from .plot import get_edge_properties, resolve_static_params
 
-#     params_static = resolve_static_params(params_static, width=width, height=height)
-#     if layout is not None:
-#         params_static['layout'] = layout
+    params_static = resolve_static_params(params_static, width=width, height=height)
+    if layout is not None:
+        params_static['layout'] = layout
 
-#     # Shared layout from network 1
-#     G_truth = adjmat2graph(adjmat_true.astype(int))
-#     if pos is None:
-#         pos = compute_static_layout(G_truth, pos=None, scale=scale, layout=params_static['layout'])
-#     else:
-#         pos = dict(pos)
+    # Color edges that are not present (same direction) in the other network red.
+    edges_true = set(adjmat2graph(adjmat_true.astype(int)).edges())
+    edges_pred = set(adjmat2graph(adjmat_pred.astype(int)).edges())
+    ep1 = get_edge_properties(model1, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+    ep2 = get_edge_properties(model2, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+    for e in ep1:
+        if e not in edges_pred:
+            ep1[e]['color'] = 'r'
+    for e in ep2:
+        if e not in edges_true:
+            ep2[e]['color'] = 'r'
+    
+    # Create figure
+    figsize = params_static['figsize']
+    fig, axes = plt.subplots(1, 2, figsize=figsize, dpi=params_static.get('dpi', 125))
+    ps = {**params_static, 'showplot': False}
+    
+    # Make plot 1
+    out1 = bn.plot(model1, edge_label=edge_label, output='static', params_static=ps, edge_properties=ep1, node_color=node_color, node_size=node_size, title=title1, ax=axes[0], pos=pos, scale=scale)
+    # Make plot 2
+    bn.plot(model2, edge_label=edge_label, output='static', params_static=ps, edge_properties=ep2, node_color=node_color, node_size=node_size, pos=out1['pos'], title=title2, ax=axes[1], scale=scale)
+    
+    # Finalize figure
+    if title: fig.suptitle(title)
+    fig.tight_layout()
+    if params_static.get('showplot', True):
+        plt.show()
 
-#     # Fill missing coordinates from the union graph if needed
-#     G_pred = adjmat2graph(adjmat_pred.astype(int))
-#     all_nodes = set(G_truth.nodes()) | set(G_pred.nodes())
-#     missing = [node for node in all_nodes if node not in pos]
-#     if len(missing) > 0:
-#         logger.warning('No coordinates for nodes %s in <pos>. These are positioned using the layout of the combined graph.' % (missing))
-#         G_union = nx.compose(G_truth, G_pred)
-#         pos_fill = compute_static_layout(G_union, pos=None, scale=scale, layout=params_static['layout'])
-#         pos.update({node: pos_fill[node] for node in missing})
+    return fig
 
-#     # Directed edge sets for difference coloring
-#     edges_true = set(G_truth.edges())
-#     edges_pred = set(G_pred.edges())
-
-#     def _props_for(adjmat, other_edges):
-#         """Build graph properties; color edges red when they are not present (same direction) in the other network."""
-#         model = {'adjmat': adjmat.astype(float)}
-#         node_properties = get_node_properties(model, node_size=800)
-#         edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
-#         G = adjmat2graph(adjmat.astype(int))
-#         nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(
-#             G, node_properties, edge_properties, node_color, node_size)
-#         # Override color for edges that differ (not present with the same direction in the other network)
-#         edge_colors = ['r' if e not in other_edges else c for e, c in zip(edgelist, edge_colors)]
-#         return G, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights
-
-#     G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t = _props_for(adjmat_true, edges_pred)
-#     G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p = _props_for(adjmat_pred, edges_true)
-
-#     figsize = params_static.get('figsize', (15, 8))
-#     if width is None and height is None:
-#         figsize = (max(figsize[0], 12) * 1.6, figsize[1])
-#     else:
-#         w = width if width is not None else (figsize[0] * 1.6)
-#         h = height if height is not None else figsize[1]
-#         figsize = (w, h)
-
-#     fig, axes = plt.subplots(1, 2, figsize=figsize, dpi=params_static.get('dpi', 100))
-#     arrowstyle = params_static.get('arrowstyle', '-|>')
-#     font_size = params_static.get('font_size', 10)
-#     alpha = params_static.get('alpha', 0.8)
-
-#     panels = [
-#         (axes[0], title1, G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t),
-#         (axes[1], title2, G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p),
-#     ]
-
-#     for ax, panel_title, G, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights in panels:
-#         ax.set_title(panel_title)
-#         pos_panel = {n: pos[n] for n in G.nodes() if n in pos}
-#         nx.draw_networkx_nodes(G, pos_panel, nodelist=nodelist, node_color=node_colors,
-#                                node_size=node_sizes, alpha=alpha, ax=ax)
-#         nx.draw_networkx_edges(G, pos_panel, edgelist=edgelist, edge_color=edge_colors,
-#                                width=edge_weights, ax=ax, arrows=True, arrowstyle=arrowstyle,
-#                                alpha=alpha)
-#         nx.draw_networkx_labels(G, pos_panel, ax=ax, font_size=font_size)
-#         ax.set_axis_off()
-
-#     if title:
-#         fig.suptitle(title)
-#     fig.tight_layout()
-#     if params_static.get('showplot', True):
-#         plt.show()
-#     return fig
 
 # %% Shared graph and properties of the comparison (static and interactive plot)
 def _compare_properties(adjmat_diff, params_static, node_color=None, node_size=None):
