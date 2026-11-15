@@ -347,16 +347,21 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
 
 
 # %% Side-by-side static plot: network 1 (left) and network 2 (right)
+# %% Side-by-side static plot: network 1 (left) and network 2 (right)
 def _plot_side_by_side(adjmat_true, adjmat_pred, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
                        width=None, height=None, node_color=None, node_size=None, params_static=None, label1='DAG by model 1', label2='DAG by model 2'):
-    """Plot true (left) and predicted (right) networks side-by-side with a shared layout."""
+    """Plot network 1 (left) and network 2 (right) side-by-side with a shared layout.
+
+    Edges that differ between the two networks (present in only one, or reversed) are colored red.
+    Edges shared with the same direction keep the default edge color.
+    """
     from bnlearn.plot import resolve_static_params, compute_static_layout, get_node_properties, get_edge_properties, _plot_properties
 
     params_static = resolve_static_params(params_static, width=width, height=height)
     if layout is not None:
         params_static['layout'] = layout
 
-    # Shared layout from the true network
+    # Shared layout from network 1
     G_truth = adjmat2graph(adjmat_true.astype(int))
     if pos is None:
         pos = compute_static_layout(G_truth, pos=None, scale=scale, layout=params_static['layout'])
@@ -373,17 +378,24 @@ def _plot_side_by_side(adjmat_true, adjmat_pred, pos=None, scale=1, layout='grap
         pos_fill = compute_static_layout(G_union, pos=None, scale=scale, layout=params_static['layout'])
         pos.update({node: pos_fill[node] for node in missing})
 
-    def _props_for(adjmat):
+    # Directed edge sets for difference coloring
+    edges_true = set(G_truth.edges())
+    edges_pred = set(G_pred.edges())
+
+    def _props_for(adjmat, other_edges):
+        """Build graph properties; color edges red when they are not present (same direction) in the other network."""
         model = {'adjmat': adjmat.astype(float)}
         node_properties = get_node_properties(model, node_size=800)
         edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
         G = adjmat2graph(adjmat.astype(int))
         nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(
             G, node_properties, edge_properties, node_color, node_size)
+        # Override color for edges that differ (not present with the same direction in the other network)
+        edge_colors = ['r' if e not in other_edges else c for e, c in zip(edgelist, edge_colors)]
         return G, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights
 
-    G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t = _props_for(adjmat_true)
-    G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p = _props_for(adjmat_pred)
+    G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t = _props_for(adjmat_true, edges_pred)
+    G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p = _props_for(adjmat_pred, edges_true)
 
     figsize = params_static.get('figsize', (15, 8))
     if width is None and height is None:
