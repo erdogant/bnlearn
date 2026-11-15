@@ -41,6 +41,9 @@ bn.set_logger('info')
 df = bn.fetch(name='auto_mpg', as_dataframe=True)
 del df['origin']
 
+# Constrained structure learning
+model_cs = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', skeleton='hnet')
+
 # Perform structure learning
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
 model = bn.parameter_learning.fit(model, df, methodtype='cg')
@@ -58,8 +61,9 @@ G = bn.plot(model, edge_label='logp', output='static')
 dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
 dotgraph
 # Interactive graph
-G = bn.plot(model, edge_label='logp', output='interactive', params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html'})
+G = bn.plot(model, edge_label='logp', output='interactive', params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html', 'showfig': False})
 
+bn.compare(model, model_cs, side_by_side=True, figsize=(15, 10), label1='HC+HNET', label2='HC')
 
 # %%
 

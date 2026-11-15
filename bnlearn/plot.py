@@ -703,7 +703,8 @@ def _static_defaults():
             'arrowsize': 20,
             'visible': True,
             'showplot': True,
-            'dpi': 200}
+            'dpi': 200,
+            }
 
 
 def _graphviz_defaults():
@@ -738,7 +739,9 @@ def _interactive_defaults():
         # d3graph
         'minmax_distance': [50, 100],
         'font_color': None,
-        'show_slider': True}
+        'show_slider': True,
+        'showfig': True,
+        }
 
 
 def resolve_graphviz_params(params=None):

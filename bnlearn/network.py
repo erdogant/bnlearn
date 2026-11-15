@@ -263,13 +263,17 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
     Parameters
     ----------
     adjmat_true : pd.DataFrame
-        Adjacency matrix of the true network.
+        Adjacency matrix of the network 1.
     adjmat_pred : pd.DataFrame
-        Adjacency matrix of the predicted network.
+        Adjacency matrix of the network 2.
     pos : dict, optional
         Existing node coordinates, e.g., ``bn.plot(truth)['pos']``. The default is None, in which case
         the layout is computed from the first input network (adjmat_true) with the same logic as plot(),
         so the nodes are positioned as in ``bn.plot(truth)`` and the second network is mapped on top of it.
+    side_by_side : bool, optional
+            If True (and output='static'), plot the network 1 (left pane) and the network 2
+            (right pane) side-by-side, sharing the same node layout. The difference overlay plot is
+            skipped in this mode. Default is False.
     showfig : bool
         Show the confusion matrix and the network plot.
     width, height : float, optional
@@ -319,29 +323,103 @@ def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height
         title='',
         cmap=plt.cm.Blues,
         showfig=showfig,
-        xlabel='Predicted network',
-        ylabel='True network'
+        xlabel='Network 2',
+        ylabel='Network 1'
     )
 
     if showfig:
-        if output == 'static':
-            _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height,
-                          node_color=node_color, node_size=node_size, params_static=params_static)
+        if output == 'static' and side_by_side:
+            _plot_side_by_side(adjmat_true, adjmat_pred, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height, node_color=node_color, node_size=node_size, params_static=params_static, label1=label1, label2=label2)
+        elif output == 'static' and not side_by_side:
+            _plot_compare(adjmat_true, adjmat_diff, pos=pos, scale=scale, layout=layout, title=title, width=width, height=height, node_color=node_color, node_size=node_size, params_static=params_static)
         elif output == 'interactive':
-            _plot_compare_interactive(adjmat_diff, title=title, node_color=node_color, node_size=node_size,
-                                      params_interactive=params_interactive, params_static=params_static)
+            _plot_compare_interactive(adjmat_diff, title=title, node_color=node_color, node_size=node_size, params_interactive=params_interactive, params_static=params_static)
         else:
             from bnlearn.mermaid import compare_mermaid_code, write_mermaid
             params_mermaid = {**{'direction': 'TB', 'legend': True, 'filepath': None, 'show': True}, **(params_mermaid or {})}
-            code = compare_mermaid_code(adjmat_diff, direction=params_mermaid['direction'], title=title,
-                                         legend=params_mermaid['legend'], node_color=node_color or '#ADD8E6')
+            code = compare_mermaid_code(adjmat_diff, direction=params_mermaid['direction'], title=title, legend=params_mermaid['legend'], node_color=node_color or '#ADD8E6')
             write_mermaid(code, params_mermaid['filepath'])
             if params_mermaid['show']:
-                print(code)
+                logger.debug(code)
 
     # Return
     return(scores, adjmat_diff)
 
+
+# %% Side-by-side static plot: network 1 (left) and network 2 (right)
+def _plot_side_by_side(adjmat_true, adjmat_pred, pos=None, scale=1, layout='graphviz_layout_custom', title='Network comparison',
+                       width=None, height=None, node_color=None, node_size=None, params_static=None, label1='DAG by model 1', label2='DAG by model 2'):
+    """Plot true (left) and predicted (right) networks side-by-side with a shared layout."""
+    from bnlearn.plot import resolve_static_params, compute_static_layout, get_node_properties, get_edge_properties, _plot_properties
+
+    params_static = resolve_static_params(params_static, width=width, height=height)
+    if layout is not None:
+        params_static['layout'] = layout
+
+    # Shared layout from the true network
+    G_truth = adjmat2graph(adjmat_true.astype(int))
+    if pos is None:
+        pos = compute_static_layout(G_truth, pos=None, scale=scale, layout=params_static['layout'])
+    else:
+        pos = dict(pos)
+
+    # Fill missing coordinates from the union graph if needed
+    G_pred = adjmat2graph(adjmat_pred.astype(int))
+    all_nodes = set(G_truth.nodes()) | set(G_pred.nodes())
+    missing = [node for node in all_nodes if node not in pos]
+    if len(missing) > 0:
+        logger.warning('No coordinates for nodes %s in <pos>. These are positioned using the layout of the combined graph.' % (missing))
+        G_union = nx.compose(G_truth, G_pred)
+        pos_fill = compute_static_layout(G_union, pos=None, scale=scale, layout=params_static['layout'])
+        pos.update({node: pos_fill[node] for node in missing})
+
+    def _props_for(adjmat):
+        model = {'adjmat': adjmat.astype(float)}
+        node_properties = get_node_properties(model, node_size=800)
+        edge_properties = get_edge_properties(model, minscale=params_static['minscale'], maxscale=params_static['maxscale'])
+        G = adjmat2graph(adjmat.astype(int))
+        nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights, _, _ = _plot_properties(
+            G, node_properties, edge_properties, node_color, node_size)
+        return G, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights
+
+    G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t = _props_for(adjmat_true)
+    G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p = _props_for(adjmat_pred)
+
+    figsize = params_static.get('figsize', (15, 8))
+    if width is None and height is None:
+        figsize = (max(figsize[0], 12) * 1.6, figsize[1])
+    else:
+        w = width if width is not None else (figsize[0] * 1.6)
+        h = height if height is not None else figsize[1]
+        figsize = (w, h)
+
+    fig, axes = plt.subplots(1, 2, figsize=figsize, dpi=params_static.get('dpi', 100))
+    arrowstyle = params_static.get('arrowstyle', '-|>')
+    font_size = params_static.get('font_size', 10)
+    alpha = params_static.get('alpha', 0.8)
+
+    panels = [
+        (axes[0], label1, G_true, nodelist_t, node_colors_t, node_sizes_t, edgelist_t, edge_colors_t, edge_weights_t),
+        (axes[1], label2, G_pred, nodelist_p, node_colors_p, node_sizes_p, edgelist_p, edge_colors_p, edge_weights_p),
+    ]
+
+    for ax, panel_title, G, nodelist, node_colors, node_sizes, edgelist, edge_colors, edge_weights in panels:
+        ax.set_title(panel_title)
+        pos_panel = {n: pos[n] for n in G.nodes() if n in pos}
+        nx.draw_networkx_nodes(G, pos_panel, nodelist=nodelist, node_color=node_colors,
+                               node_size=node_sizes, alpha=alpha, ax=ax)
+        nx.draw_networkx_edges(G, pos_panel, edgelist=edgelist, edge_color=edge_colors,
+                               width=edge_weights, ax=ax, arrows=True, arrowstyle=arrowstyle,
+                               alpha=alpha)
+        nx.draw_networkx_labels(G, pos_panel, ax=ax, font_size=font_size)
+        ax.set_axis_off()
+
+    if title:
+        fig.suptitle(title)
+    fig.tight_layout()
+    if params_static.get('showplot', True):
+        plt.show()
+    return fig
 
 # %% Shared graph and properties of the comparison (static and interactive plot)
 def _compare_properties(adjmat_diff, params_static, node_color=None, node_size=None):

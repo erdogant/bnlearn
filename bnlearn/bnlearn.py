@@ -625,7 +625,7 @@ def to_undirected(adjmat):
 
 
 # %% Comparison of two networks
-def compare(model_1, model_2, pos=None, showfig=True, figsize=(10,10)):
+def compare(model_1, model_2, pos=None, showfig=True, side_by_side=False, label1='DAG by model 1', label2='DAG by model 2', figsize=(10,10)):
     """Compare networks of two models.
 
     Parameters
@@ -648,7 +648,7 @@ def compare(model_1, model_2, pos=None, showfig=True, figsize=(10,10)):
         adjmat_diff : Adjacency matrix depicting the differences between the two input models.
 
     """
-    scores, adjmat_diff = bn.network.compare(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1])
+    scores, adjmat_diff = bn.network.compare(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], side_by_side=side_by_side, label1=label1, label2=label2)
     return(scores, adjmat_diff)
 
 # %%
