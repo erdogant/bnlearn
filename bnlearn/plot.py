@@ -71,6 +71,7 @@ def plot(model,
              'show_slider': True,
              'showfig': True},
          params_mermaid=None,
+         ax=None,
          ):
     """
     Plot the learned structure.
@@ -200,10 +201,10 @@ def plot(model,
         fig = _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos,
                            edge_colors, edge_weights, showplot=params_static['showplot'],
                            visible=params_static['visible'], title=title, dpi=params_static['dpi'],
-                           edge_label=edge_label)
+                           edge_label=edge_label, ax=ax)
 
     out['fig'] = fig
-    out['ax'] = fig
+    out['ax'] = ax
     out['pos'] = pos
     out['G'] = G
     out['node_properties'] = node_properties
@@ -335,7 +336,6 @@ def get_node_properties(model, node_color='#ADD8E6', node_size=None):
     >>> bn.plot(model, output='static', node_properties=node_properties)
 
     """
-    # https://networkx.org/documentation/networkx-1.7/reference/generated/networkx.drawing.nx_pylab.draw_networkx_nodes.html
     nodes = {}
     defaults = {'node_color': node_color, 'node_size': node_size}
     adjmat = model.get('adjmat', None)
@@ -788,15 +788,21 @@ def compute_static_layout(G, pos=None, scale=1, layout='graphviz_layout_custom')
 
 
 # %% Static plot
-def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_label='weight', edge_labels=None, edge_styles=None, edge_arrowstyles=None):
+def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos, edge_colors, edge_weights, title, visible=True, showplot=True, dpi=100, edge_label='weight', edge_labels=None, edge_styles=None, edge_arrowstyles=None, ax=None):
     # Create figure
-    fig = plt.figure(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
+    created_ax = ax is None
+    if created_ax:
+        fig, ax = plt.subplots(figsize=params_static['figsize'], facecolor=params_static['facecolor'], dpi=dpi)
+    else:
+        fig = ax.figure
+    
+    # Set fig visibility
     fig.set_visible(visible)
 
     # Make networkx
-    nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'])
+    nx.draw_networkx_nodes(G, pos, nodelist=nodelist, node_size=node_sizes, alpha=params_static['alpha'], node_color=node_colors, node_shape=params_static['node_shape'], ax=ax)
     if edge_styles is None and edge_arrowstyles is None:
-        nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'])
+        nx.draw_networkx_edges(G, pos, arrowstyle=params_static['arrowstyle'], arrowsize=params_static['arrowsize'], edge_color=edge_colors, width=edge_weights, alpha=params_static['edge_alpha'], ax=ax)
     else:
         # Optional per-edge line style (e.g., 'dashed') and arrow style (e.g., '<|-|>'), aligned with G.edges().
         # Edges are drawn per (style, arrowstyle) group, which works for all networkx versions.
@@ -806,25 +812,25 @@ def _plot_static(model, params_static, nodelist, node_colors, node_sizes, G, pos
         for key in dict.fromkeys(zip(styles, arrows)):
             idx = [i for i in range(len(edgelist)) if (styles[i], arrows[i]) == key]
             nx.draw_networkx_edges(G, pos, edgelist=[edgelist[i] for i in idx], style=key[0], arrowstyle=key[1], arrowsize=params_static['arrowsize'],
-                                   edge_color=[edge_colors[i] for i in idx], width=[edge_weights[i] for i in idx], alpha=params_static['edge_alpha'])
+                                   edge_color=[edge_colors[i] for i in idx], width=[edge_weights[i] for i in idx], alpha=params_static['edge_alpha'], ax=ax)
 
     if edge_labels is not None:
         # Custom labels, e.g., provided by network.compare()
         if len(edge_labels) > 0:
-            nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels)
+            nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, ax=ax)
     elif edge_label in _EDGE_LABEL_ATTR:
         edge_label = nx.get_edge_attributes(G, _EDGE_LABEL_ATTR[edge_label])
         edge_label = {key: _format_edge_label(value, edge_label) for key, value in edge_label.items()}
-        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label)
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_label, ax=ax)
 
     # Draw final figure
-    nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'])
+    nx.draw_networkx_labels(G, pos, font_size=params_static['font_size'], font_family=params_static['font_family'], font_color=params_static['font_color'], ax=ax)
 
     # Making figure nice
-    # fig = plt.gca()
-    # fig.set_axis_off()
-    plt.title(title)
-    if showplot:
+    ax.set_title(title)
+    # ax.set_axis_off()
+    
+    if showplot and created_ax:
         plt.show()
     return fig
 

@@ -43,27 +43,21 @@ del df['origin']
 
 # Constrained structure learning
 model_cs = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg', skeleton='hnet')
-
+model_cs = bn.independence_test(model_cs, df, prune=False)
+Gcs = bn.plot(model_cs, edge_label='logp', output='static', pos=G['pos'], title='HC+HNET')
 # Perform structure learning
 model = bn.structure_learning.fit(df, methodtype='hc', scoretype='bic-cg')
-model = bn.parameter_learning.fit(model, df, methodtype='cg')
-# Compute edge strength
-model = bn.independence_test(model, df, prune=True)
+model = bn.independence_test(model, df, prune=False)
+G = bn.plot(model, edge_label='logp', output='static', params_static={'layout': 'graphviz_layout_custom'}, title='HC')
 
-# DAG = model['model']
-# CPDs = {}
-# for cpd in DAG.get_cpds():
-#     CPDs[cpd.variable] = bn.query2df(cpd)['p']
-
-# Static plot
-G = bn.plot(model, edge_label='logp', output='static')
 # dotgraph
-dotgraph = bn.plot(model, edge_label='logp', output='graphviz')
-dotgraph
+bn.plot(model, edge_label='logp', output='graphviz')
 # Interactive graph
 G = bn.plot(model, edge_label='logp', output='interactive', params_interactive={'type':'flowgraph', 'layout':'dagre', 'filepath':r'd:\temp\out1.html', 'showfig': False})
 
-bn.compare(model, model_cs, side_by_side=True, figsize=(15, 10), label1='HC+HNET', label2='HC')
+# Comparison
+bn.compare(model, model_cs, side_by_side=True, figsize=(10, 10), title1='HC+HNET', title2='HC', params_static={'layout': 'graphviz_layout_custom'}, confusion_matrix=True)
+bn.compare(model, model_cs, side_by_side=False, figsize=(10, 10), title1='HC+HNET', title2='HC', params_static={'layout': 'graphviz_layout_custom'}, confusion_matrix=True)
 
 # %%
 

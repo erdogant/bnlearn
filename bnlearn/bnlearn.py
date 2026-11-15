@@ -625,14 +625,25 @@ def to_undirected(adjmat):
 
 
 # %% Comparison of two networks
-def compare(model_1, model_2, pos=None, showfig=True, side_by_side=False, label1='DAG by model 1', label2='DAG by model 2', figsize=(10,10)):
+def compare(model1,
+            model2,
+            pos=None,
+            title1='DAG by model 1',
+            title2='DAG by model 2',
+            edge_label='auto',
+            params_static={},
+            figsize=(10,10),
+            confusion_matrix=True,
+            side_by_side=False,
+            showfig=True,
+            ):
     """Compare networks of two models.
 
     Parameters
     ----------
-    model_1 : dict
+    model1 : dict
         Results of model 1.
-    model_2 : dict
+    model2 : dict
         Results of model 2.
     pos : graph, optional
         Coordinates of the network. If there are provided, the same structure will be used to plot the network.. The default is None.
@@ -648,8 +659,10 @@ def compare(model_1, model_2, pos=None, showfig=True, side_by_side=False, label1
         adjmat_diff : Adjacency matrix depicting the differences between the two input models.
 
     """
-    scores, adjmat_diff = bn.network.compare(model_1['adjmat'], model_2['adjmat'], pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], side_by_side=side_by_side, label1=label1, label2=label2)
-    return(scores, adjmat_diff)
+    params_static['figsize'] = figsize
+    scores, adjmat_diff = bn.network.compare(model1, model2, pos=pos, showfig=showfig, width=figsize[0], height=figsize[1], side_by_side=side_by_side, title1=title1, title2=title2, edge_label=edge_label, confusion_matrix=confusion_matrix)
+    # return
+    return scores, adjmat_diff
 
 # %%
 def topological_sort(adjmat, start=None):
