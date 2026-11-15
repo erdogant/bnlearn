@@ -39,12 +39,12 @@ try:
     from bnlearn.CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
     # from bnlearn.plot import plot, get_node_properties, get_edge_properties, hierarchical_layout
     from bnlearn.plot import normalize_independence_frame
-    from bnlearn.utils import vec2adjmat, adjmat2vec, adjmat2dict
+    from bnlearn.utils import vec2adjmat, adjmat2vec, adjmat2dict, disable_tqdm, log_prefix
 except:
     from sampling import sampling as bn_sampling
     from CITests import chi_square, g_sq, log_likelihood, freeman_tuckey, modified_log_likelihood, neyman, cressie_read
     from plot import normalize_independence_frame
-    from utils import vec2adjmat, adjmat2vec, adjmat2dict
+    from utils import vec2adjmat, adjmat2vec, adjmat2dict, disable_tqdm, log_prefix
 
 
 # %%  Convert adjmat to bayesian model
@@ -960,9 +960,10 @@ def predict(model, df, variables, to_df=True, method='max'):
     P = np.array([None] *dfX.shape[0])
 
     evidences = list(map(lambda x: dfU.iloc[x, :].to_dict(), range(dfU.shape[0])))
+    desc = f'{log_prefix()} Make predictions'
     dfU_shape = dfU.shape[1]
     # for i in tqdm(range(dfU.shape[0])):
-    for evidence in tqdm(evidences):
+    for evidence in tqdm(evidences, disable=disable_tqdm(), desc=desc):
         # Get input data and create a dict.
         # evidence = dfU.iloc[i, :].to_dict()
         # Do the inference.

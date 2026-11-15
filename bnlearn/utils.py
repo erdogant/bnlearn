@@ -10,6 +10,7 @@ import logging
 import numpy as np
 import pandas as pd
 from ismember import ismember
+from datetime import datetime
 
 logger = logging.getLogger('bnlearn')
 
@@ -17,6 +18,11 @@ logger = logging.getLogger('bnlearn')
 if not hasattr(logging, 'TRACE'):
     logging.TRACE = 5
     logging.addLevelName(logging.TRACE, 'TRACE')
+
+# %% LOGGER
+def get_logger():
+    """Return the bnlearn package logger."""
+    return logger
 
 
 def set_logger(verbose='info'):
@@ -64,13 +70,52 @@ def set_logger(verbose='info'):
             level = legacy.get(verbose, logging.INFO)
     else:
         raise TypeError(f'[bnlearn] verbose must be str, int, or None; got {type(verbose)}')
-    logger.setLevel(level)
+    # logger.setLevel(level)
+    # Apply level on the package logger. Keep handlers at the lowest level so
+    # that *only* the logger level controls what is emitted (raising a handler
+    # to WARNING would permanently hide DEBUG even after set_logger('debug')).
+    _apply_level('bnlearn', level)
+    # Keep dependency loggers in sync. df2onehot's own set_logger() is unreliable.
+    _apply_level('hnet', level)
+    _apply_level('df2onehot', level)
+
     return level
 
 
-def get_logger():
-    """Return the bnlearn package logger."""
-    return logger
+def _apply_level(name, level):
+    """Set *level* on logger *name* and all of its existing children."""
+    pkg = logging.getLogger(name)
+    pkg.setLevel(level)
+    for handler in pkg.handlers:
+        # Handler stays open; logger level is the filter.
+        handler.setLevel(logging.DEBUG)
+
+    prefix = name + '.'
+    for child_name in list(logging.Logger.manager.loggerDict):
+        if child_name.startswith(prefix):
+            logging.getLogger(child_name).setLevel(level)
+
+
+def log_prefix(level='INFO'):
+    """Return a logger-formatted prefix suitable for tqdm descriptions.
+
+    Examples
+    --------
+    >>> from hnet.utils import log_prefix
+    >>> print(log_prefix())
+    [15-11-2026 11:39:05] [hnet] [INFO]
+    """
+    return (
+        f'[{datetime.now().strftime("%d-%m-%Y %H:%M:%S")}] '
+        f'[{logger.name}] '
+        f'[{level}]'
+    )
+
+
+def disable_tqdm():
+    """Return True when tqdm progress bars should be disabled (level >= WARNING)."""
+    return logging.getLogger('hnet').getEffectiveLevel() >= logging.WARNING
+
 
 # %%  Convert vector into sparse dataframe
 def vec2df(source, target, weights=None):

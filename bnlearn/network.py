@@ -250,8 +250,8 @@ def _edge_status(adjmat_diff):
 
 
 def compare(adjmat_true, adjmat_pred, pos=None, showfig=True, width=None, height=None, layout='graphviz_layout_custom',
-            scale=1, title='Network comparison', node_color=None, node_size=None, params_static=None,
-            output='static', params_interactive=None, params_mermaid=None):
+            scale=1, title='Network comparison', node_color=None, node_size=None, side_by_side=False, params_static=None,
+            output='static', params_interactive=None, params_mermaid=None, label1='DAG by model 1', label2='DAG by model 2'):
     """Compare two networks and plot the differences.
 
     The figure uses the same static plot logic as bnlearn.plot (shared layout, node/edge styling,
@@ -477,7 +477,7 @@ def is_DataFrame(data):
     elif isinstance(data, pd.DataFrame):
         pass
     else:
-        print('[bnlearn] >Typing should be pd.DataFrame()!')
+        logger.info('Typing should be pd.DataFrame()!')
         data=None
 
     return(data)
